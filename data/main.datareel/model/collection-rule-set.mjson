@@ -1,0 +1,44 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "CollectionRuleSet",
+            "propertyDescriptors": [
+                {"@": "appliedDisjunctively"},
+                {"@": "rules"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/collection-rule-set.mjson"
+            },
+            "exportName": "CollectionRuleSet",
+            "module": {
+                "%": "data/main.datareel/model/collection-rule-set"
+            },
+            "modulePrototype":{"@": "collectionRuleSetPrototype"}
+        }
+    },
+    "collectionRuleSetPrototype": {
+        "object": "data/main.datareel/model/collection-rule-set"
+    },
+
+    "appliedDisjunctively": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "appliedDisjunctively",
+            "valueType": "boolean"
+        }
+    },
+    "rules": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "rules",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "CollectionRule_descriptor"}               
+        }
+    },
+    "CollectionRule_descriptor": {
+        "object": "data/main.datareel/model/collection-rule.mjson"
+    }
+
+}

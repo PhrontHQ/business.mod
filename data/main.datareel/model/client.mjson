@@ -1,0 +1,78 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Client",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "notes"},
+                {"@": "photoOfClientSpace"},
+                {"@": "clientOrders"},
+                {"@": "billingAddress"},
+                {"@": "mapCache"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/client.mjson"
+            },
+            "exportName": "Client",
+            "module": {
+                "%": "data/main.datareel/model/client"
+            },
+            "object":{"@": "client"}
+        }
+    },
+    "client": {
+        "object": "data/main.datareel/model/client"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "id",
+            "valueType": "string"
+        }
+    },
+    "notes": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "notes",
+            "valueType": "string"
+        }
+    },
+    "photoOfClientSpace": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "photoOfClientSpace",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "image_descriptor"}       
+        }
+    },
+    "clientOrders": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "clientOrders",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "client-order_descriptor"}       
+        }
+    },
+    "billingAddress": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "billingAddress",
+            "valueType": "string"
+        }
+    },
+    "mapCache": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "closestShowroomAddress",
+            "valueType": "string"
+        }
+    },
+    "client-order_descriptor": {
+        "object": "data/main.datareel/model/client-order.mjson"
+    },
+    "image_descriptor": {
+        "object": "data/main.datareel/model/image.mjson"
+    }
+
+}

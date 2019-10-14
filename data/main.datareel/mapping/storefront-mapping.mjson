@@ -1,0 +1,38 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "DesignerDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "name": {"<->": "fields.Name"},
+                    "product": {"<->": "fields.Product"},
+                                    "converter": {"@": "productForeignKeyConverter"},
+                    "background": {"<->": "fields.Background"}
+
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+           
+            "requisitePropertyNames": [
+                "id","name"
+            ]
+        }
+    },
+
+    "DesignerDescriptor": {
+        "object": "data/main.datareel/model/designer.mjson"
+    },
+    "productForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-property-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }
+    }
+
+
+}

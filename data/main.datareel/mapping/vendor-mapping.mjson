@@ -1,0 +1,35 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "VendorDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "firstName": {"<->": "firstName"},
+                    "lastName": {"<->": "lastName"},
+                    "email": {"<->": "email"},
+                    "phone": {"<->": "phone"},
+                    "addresses": {"<->": "addresses",
+                                    "converter": {"@": "addressesConverter"}}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "firstName","lastName","email","phone","addresses"
+            ]
+        }
+    },
+
+    "VendorDescriptor": {
+        "object": "data/main.datareel/model/vendor.mjson"
+    },
+    "addressesConverter": {
+        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
+        }
+    }
+}

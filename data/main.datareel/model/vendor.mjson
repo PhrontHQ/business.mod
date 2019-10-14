@@ -1,0 +1,68 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Vendor",
+            "propertyDescriptors": [
+                {"@": "firstName"},
+                {"@": "lastName"},
+                {"@": "email"},
+                {"@": "phone"},
+                {"@": "addresses"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/vendor.mjson"
+            },
+            "exportName": "Vendor",
+            "module": {
+                "%": "data/main.datareel/model/vendor"
+            },
+            "object":{"@": "vendor"}
+        }
+    },
+    "vendor": {
+        "object": "data/main.datareel/model/vendor"
+    },
+    "firstName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "firstName",
+            "valueType": "string"
+        }
+    },
+    "lastName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "lastName",
+            "valueType": "string"
+        }
+    },
+    "email": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "email",
+            "valueType": "string"
+        }
+    },
+    "phone": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "vendorPhoneNumber",
+            "valueType": "string"
+        }
+    },
+    "addresses": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "addresses",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "addresses_descriptor"}       
+       }
+    },
+
+    "addresses_descriptor": {
+        "object": "data/main.datareel/model/address.mjson"
+    }
+
+}

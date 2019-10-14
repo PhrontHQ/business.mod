@@ -1,0 +1,36 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "ProductVariantPricePair"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "compareAtPrice": {"<->": "compareAtPrice",
+                                    "converter": {"@": "MoneyForeignKeyConverter"}},
+                    "price": {
+                                    "<->": "price",
+                                    "converter": {"@": "MoneyForeignKeyConverter"}}
+
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "compareAtPrice","price"
+            ]
+        }
+    },
+
+    "ProductVariantPricePair": {
+        "object": "data/main.datareel/model/product-variant-price-pair.mjson"
+    },
+    "MoneyForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
+        }
+    }
+
+}

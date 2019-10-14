@@ -1,0 +1,96 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Collection",
+            "propertyDescriptors": [
+                {"@": "title"},
+                {"@": "description"},   
+                {"@": "descriptionHtml"},   
+                {"@": "image"},   
+                {"@": "ruleSet"},   
+                {"@": "products"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/collection.mjson"
+            },
+            "exportName": "Collection",
+            "module": {
+                "%": "data/main.datareel/model/collection"
+            },
+            "modulePrototype": {"@": "collectionPrototype"}
+        }
+    },
+    "collectionPrototype": {
+        "object": "data/main.datareel/model/collection"
+    },
+    "title": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "title",
+            "valueType": "string"
+        }
+    },
+    "description": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "description",
+            "valueType": "string"
+        }
+    },
+    "descriptionHtml": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "descriptionHtml",
+            "valueType": "string"
+        }
+    },
+    "image": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "image",
+            "valueType": "string",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "Image_descriptor"}               
+        }
+    },
+    "Image_descriptor": {
+        "object": "data/main.datareel/model/image.mjson"
+    },
+    "ruleSet": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "ruleSet",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "CollectionRuleSet_descriptor"}               
+        }
+    },
+    "CollectionRuleSet_descriptor": {
+        "object": "data/main.datareel/model/collection-rule-set.mjson"
+    },
+
+    "type": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "type",
+            "valueType": "string"
+        }
+    },
+    "products": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "products",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "product_descriptor"}               
+        }
+    },
+
+    "product_descriptor": {
+        "object": "data/main.datareel/model/product.mjson"
+    }
+
+
+
+}

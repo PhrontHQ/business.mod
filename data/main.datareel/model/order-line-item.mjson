@@ -1,0 +1,78 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "OrderLineItem",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "quantity"},
+                {"@": "productItem"},
+                {"@": "price"},
+                {"@": "totalCost"},
+                {"@": "belongsToOrder"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/order-line-item.mjson"
+            },
+            "exportName": "OrderLineItem",
+            "module": {
+                "%": "data/main.datareel/model/order-line-item"
+            },
+            "object":{"@": "orderLineItem"}
+        }
+    },
+    "orderLineItem": {
+        "object": "data/main.datareel/model/order-line-item"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "quantity": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "quantity",
+            "valueType": "number"
+        }
+    },
+    "productItem": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "productItem",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "product_descriptor"}       
+        }
+    },
+    "price": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "price",
+            "valueType": "number",
+            "definition": "productItem.unitCost"
+        }
+    },
+    "totalCost": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "totalCost",
+            "valueType": "number"
+        }
+    },
+    "belongsToOrder": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "belongsToOrder",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "client-order_descriptor"}       
+        }
+    },
+    "product_descriptor": {
+        "object": "data/main.datareel/model/product.mjson"
+    },
+    "client-order_descriptor": {
+        "object": "data/main.datareel/model/client-order.mjson"
+    }
+}

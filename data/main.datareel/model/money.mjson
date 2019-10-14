@@ -1,0 +1,37 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Money",
+            "propertyDescriptors": [
+                {"@": "amount"},
+                {"@": "currencyCode"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/money.mjson"
+            },
+            "exportName": "Money",
+            "module": {
+                "%": "data/main.datareel/model/money"
+            },
+            "object":{"@": "Money"}
+        }
+    },
+    "Money": {
+        "object": "data/main.datareel/model/money"
+    },
+    "amount": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "amount",
+            "valueType": "number"
+        }
+    },
+    "currencyCode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "currencyCode",
+            "valueType": "string"
+        }
+    }
+}

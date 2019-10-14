@@ -1,0 +1,45 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "CollectionDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "title": {"<->": "title"},
+                    "description": {"<->": "description"},
+                    "descriptionHtml": {"<->": "descriptionHtml"},
+                    "image": {"<->": "image",
+                                    "converter": {"@": "imageConverter"},
+                                         "debug":true},
+                    "products": {"<->": "products.edges.map{node}",
+                                    "converter": {"@": "productConverter"},
+                                         "debug":true},
+                    "type": {"<->": "type"},
+                    "url": {"<->": "url"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "title","description","descriptionHtml","image","products","type","url"
+            ]
+        }
+    },
+    "imageConverter": {
+        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
+        }
+    },
+    "productConverter": {
+        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
+        }
+    },
+
+    "CollectionDescriptor": {
+        "object": "data/main.datareel/model/collection.mjson"
+    }
+}

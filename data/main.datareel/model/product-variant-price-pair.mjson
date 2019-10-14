@@ -1,0 +1,42 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ProductVariantPricePair",
+            "propertyDescriptors": [
+                {"@": "compareAtPrice"},
+                {"@": "price"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/product-variant-price-pair.mjson"
+            },
+            "exportName": "ProductVariantPricePair",
+            "module": {
+                "%": "data/main.datareel/model/product-variant-price-pair"
+            },
+            "object":{"@": "ProductVariantPricePair"}
+        }
+    },
+    "ProductVariantPricePair": {
+        "object": "data/main.datareel/model/product-variant-price-pair"
+    },
+    "compareAtPrice": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "compareAtPrice",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "money_descriptor"}       
+        }
+    },
+    "price": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "price",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "money_descriptor"}       
+        }
+    },
+    "money_descriptor": {
+        "object": "data/main.datareel/model/money.mjson"
+    }
+}

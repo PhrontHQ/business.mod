@@ -1,0 +1,46 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "CollectionRule",
+            "propertyDescriptors": [
+                {"@": "column"},
+                {"@": "condition"},
+                {"@": "relation"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/collection-rule.mjson"
+            },
+            "exportName": "CollectionRule",
+            "module": {
+                "%": "data/main.datareel/model/collection-rule-set"
+            },
+            "modulePrototype":{"@": "collectionRulePrototype"}
+        }
+    },
+    "collectionRulePrototype": {
+        "object": "data/main.datareel/model/collection-rule"
+    },
+
+    "column": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "productProperty",
+            "valueType": "string"
+        }
+    },
+    "condition": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "condition",
+            "valueType": "string"           
+        }
+    },
+    "relation": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "relation",
+            "valueType": "string"
+        }
+    }
+}

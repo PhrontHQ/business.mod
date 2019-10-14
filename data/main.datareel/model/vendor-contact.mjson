@@ -1,0 +1,70 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "VendorContact",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "vendors"},
+                {"@": "photos"},
+                {"@": "phoneNumber"},
+                {"@": "email"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/vendor-contact.mjson"
+            },
+            "exportName": "VendorContact",
+            "module": {
+                "%": "data/main.datareel/model/vendor-contact"
+            },
+            "object":{"@": "vendorContact"}
+        }
+    },
+    "vendorContact": {
+        "object": "data/main.datareel/model/vendor-contact"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "vendors": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "vendors",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "vendor_descriptor"}
+        }
+    },
+    "photos": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "photos",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "image_descriptor"}
+        }
+    },
+    "phoneNumber": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "phoneNumber",
+            "valueType": "string"
+        }
+    },
+    "email": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "email",
+            "valueType": "string"
+        }
+    },
+    "vendor_descriptor": {
+        "object": "data/main.datareel/model/vendor.mjson"
+    },
+    "image_descriptor": {
+        "object": "data/main.datareel/model/image.mjson"
+    }
+
+}

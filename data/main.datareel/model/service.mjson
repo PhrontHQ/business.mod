@@ -1,0 +1,153 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Service",
+            "propertyDescriptors": [
+                {"@": "duration"},
+                {"@": "requirements"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/service.mjson"
+            },
+            "exportName": "Service",
+            "module": {
+                "%": "data/main.datareel/model/service"
+            },
+            "object":{"@": "service"}
+        }
+    },
+    "service": {
+        "object": "data/main.datareel/model/service"
+    },
+
+    "duration": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "duration",
+            "valueType": "number"
+        }
+    },
+    "requirements": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "orders",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "order_line_item"}       
+        }
+    },
+     "images": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "images",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "image_descriptor"}
+        }
+    },
+    "description": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": { 
+            "name": "description",
+            "valueType": "string"
+        }
+    },
+    "descriptionHtml": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": { 
+            "name": "descriptionHtml",
+            "valueType": "string"
+        }
+    },
+    "link": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": { 
+            "name": "link",
+            "valueType": "string"
+        }
+    },
+    "type": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": { 
+            "name": "type",
+            "valueType": "string"
+        }
+    },
+    "unitCost": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": { 
+            "name": "unitCost",
+            "valueType": "number"
+        }
+    },
+    "tags": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": { 
+            "name": "tags",
+            "valueType": "array"
+        }
+    },
+    "settings": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": { 
+            "name": "settings",
+            "valueType": "array"
+        }
+    },
+     "notes": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": { 
+            "name": "notes",
+            "valueType": "string"
+        }
+    },
+    "vendor": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "vendors",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "vendor_descriptor"}       
+        }
+    },
+    "storefront": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "storefront",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "storefront_descriptor"}       
+        }
+    },
+    "totalInventory": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "totalInventory",
+            "valueType": "number"
+        }
+    },
+    "totalVariants": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "totalVariants",
+            "valueType": "number"
+        }
+    },
+    "updatedAt": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "updatedAt",
+            "valueType": "date"
+        }
+    },
+    "order_line_item": {
+        "object": "data/main.datareel/model/order-line-item.mjson"
+    },
+    "vendor_descriptor": {
+        "object": "data/main.datareel/model/vendor.mjson"
+    },
+    "storefront_descriptor": {
+        "object": "data/main.datareel/model/storefront.mjson"
+    },
+    "image_descriptor": {
+        "object": "data/main.datareel/model/image.mjson"
+    }
+
+}

@@ -1,0 +1,15 @@
+{
+    "root": {
+        "prototype": "montage/data/service/data-service",
+        "values": {
+            "name": "DataService",
+            "childServices": [
+                {"@": "phrontService"}
+            ]
+        }
+    },
+
+    "phrontService": {
+        "object": "data/main.datareel/phront-service.mjson"
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Image",
+            "propertyDescriptors": [
+                {"@": "altText"},
+                {"@": "originalSrc"},
+                {"@": "transformedSrc"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/image.mjson"
+            },
+            "exportName": "Image",
+            "module": {
+                "%": "data/main.datareel/model/image"
+            },
+            "modulePrototype":{"@": "ImagePrototype"}
+        }
+    },
+    "ImagePrototype": {
+        "object": "data/main.datareel/model/image"
+    },
+
+    "altText": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "altText",
+            "valueType": "string"
+        }
+    },
+    "originalSrc": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "originalSrc",
+            "valueType": "URL"           
+        }
+    },
+    "transformedSrc": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "transformedSrc",
+            "valueType": "URL"
+        }
+    }
+}

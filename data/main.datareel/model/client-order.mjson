@@ -1,0 +1,107 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ClientOrder",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "client"},
+                {"@": "orderLineItems"},
+                {"@": "fulfillBy"},
+                {"@": "invoice"},
+                {"@": "orderNumber"},
+                {"@": "status"},
+                {"@": "orderTotalCost"},
+                {"@": "billTo"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/client-order.mjson"
+            },
+            "exportName": "ClientOrder",
+            "module": {
+                "%": "data/main.datareel/model/client-order"
+            },
+            "object":{"@": "clientOrder"}
+
+        }
+    },
+    "clientOrder": {
+        "object": "data/main.datareel/model/client-order"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "client": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "client",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "client_descriptor"}       
+        }
+    },
+    "orderLineItems": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "orderLineItems",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "order-line-item_descriptor"}       
+        }
+    },
+    "fulfillBy": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "fulfillBy",
+            "valueType": "string"
+        }
+    },
+    "invoice": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "invoice",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "image_descriptor"}
+        }
+    },
+    "orderNumber": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "orderNumber",
+            "valueType": "string"
+        }
+    },
+    "status": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "status",
+            "valueType": "string"
+        }
+    },
+    "orderTotalCost": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "orderTotalCost",
+            "valueType": "number"
+        }
+    },
+    "billTo": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "billTo",
+            "valueType": "array"
+        }
+    },
+    "client_descriptor": {
+        "object": "data/main.datareel/model/client.mjson"
+    },
+    "order-line-item_descriptor": {
+        "object": "data/main.datareel/model/order-line-item.mjson"
+    },
+    "image_descriptor": {
+        "object": "data/main.datareel/model/image.mjson"
+    }
+
+}

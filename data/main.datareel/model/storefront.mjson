@@ -1,0 +1,29 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Storefront",
+            "propertyDescriptors": [
+                {"@": "name"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/storefront.mjson"
+            },
+            "exportName": "Storefront",
+            "module": {
+                "%": "data/main.datareel/model/storefront"
+            },
+            "object":{"@": "storefront"}
+      }
+    },
+    "storefront": {
+        "object": "data/main.datareel/model/storefront"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    }
+}
