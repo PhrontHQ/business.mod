@@ -1,0 +1,119 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Organization",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "type"},
+                {"@": "email"},
+                {"@": "phone"},
+                {"@": "addresses"},
+                {"@": "parent"},
+                {"@": "suborganizations"},
+                {"@": "tags"},
+                {"@": "mainContact"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/organization.mjson"
+            },
+            "exportName": "Organization",
+            "module": {
+                "%": "data/main.datareel/model/organization"
+            },
+            "object":{"@": "organization"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "organization": {
+        "object": "data/main.datareel/model/organization"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "type": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "type",
+            "valueType": "string"
+        }
+    },
+    "email": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "email",
+            "valueType": "string"
+        }
+    },
+    "phone": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "phone",
+            "valueType": "string"
+        }
+    },
+    "addresses": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "addresses",
+            "valueType": "array",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "addresses_descriptor"}       
+       }
+    },
+
+    "parent": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "parent",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "root"}
+       }
+    },
+
+    "suborganizations": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "suborganizations",
+            "valueType": "array",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "root"}
+       }
+    },
+
+    "addresses_descriptor": {
+        "object": "data/main.datareel/model/address.mjson"
+    },
+
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/object.mjson"
+    },
+
+    "tags": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "tags",
+            "valueType": "string",
+            "cardinality": -1
+       }
+    },
+
+    "mainContact": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "mainContact",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "personDescriptor"}
+       }
+    },
+    "personDescriptor": {
+        "object": "data/main.datareel/model/person.mjson"
+    }
+
+}

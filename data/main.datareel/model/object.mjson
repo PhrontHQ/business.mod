@@ -1,0 +1,54 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Object",
+            "propertyDescriptors": [
+                {"@": "originId"},
+                {"@": "creationDate"},
+                {"@": "modificationDate"},
+                {"@": "publicationDate"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/object.mjson"
+            },
+            "exportName": "Object",
+            "module": {
+                "%": "data/main.datareel/model/object"
+            },
+            "object":{"@": "object"}
+        }
+    },
+    "object": {
+        "object": "data/main.datareel/model/object"
+    },
+    "originId": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "originId",
+            "valueType": "string"
+        }
+    },
+    "creationDate": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "creationDate",
+            "valueType": "date"
+        }
+    },
+    "modificationDate": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "modificationDate",
+            "valueType": "date"
+        }
+    },
+   "publicationDate": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "publicationDate",
+            "valueType": "date"
+        }
+    }
+
+}

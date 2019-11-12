@@ -5,25 +5,41 @@
             "name": "PhrontService",
             "exportName": "PhrontService",
             "mappings": [
+                {"@": "objectMapping"},
                 {"@": "collectionMapping"},
                 {"@": "productVariantMapping"},
                 {"@": "productMapping"},
+                {"@": "serviceMapping"},
                 {"@": "productVariantPricePairMapping"},
                 {"@": "moneyMapping"},
-                {"@": "vendorMapping"},
-                {"@": "addressMapping"}
+                {"@": "organizationMapping"},
+                {"@": "addressMapping"},
+                {"@": "imageMapping"},
+                {"@": "personMapping"}
             ],
             "types": [
+                {"@": "object"},
                 {"@": "collection"},
                 {"@": "product"},
+                {"@": "service"},
                 {"@": "productVariant"},
                 {"@": "productVariantPricePair"},
                 {"@": "money"},
-                {"@": "vendor"},
-                {"@": "address"}
+                {"@": "organization"},
+                {"@": "address"},
+                {"@": "image"},
+                {"@": "person"}
             ]
         }
     },  
+
+    "object": {
+        "object": "data/main.datareel/model/object.mjson"
+    },
+
+    "objectMapping": {
+        "object": "data/main.datareel/mapping/object-mapping.mjson"
+    },
 
     "collection": {
         "object": "data/main.datareel/model/collection.mjson"
@@ -39,6 +55,14 @@
 
     "productMapping": {
         "object": "data/main.datareel/mapping/product-mapping.mjson"
+    },
+
+    "service": {
+        "object": "data/main.datareel/model/service.mjson"
+    },
+
+    "serviceMapping": {
+        "object": "data/main.datareel/mapping/service-mapping.mjson"
     },
 
     "productVariant": {
@@ -65,12 +89,12 @@
         "object": "data/main.datareel/mapping/money-mapping.mjson"
     },
 
-    "vendor": {
-        "object": "data/main.datareel/model/vendor.mjson"
+    "organization": {
+        "object": "data/main.datareel/model/organization.mjson"
     },
 
-    "vendorMapping": {
-        "object": "data/main.datareel/mapping/vendor-mapping.mjson"
+    "organizationMapping": {
+        "object": "data/main.datareel/mapping/organization-mapping.mjson"
     },
 
     "address": {
@@ -79,6 +103,22 @@
 
     "addressMapping": {
         "object": "data/main.datareel/mapping/address-mapping.mjson"
+    },
+
+    "image": {
+        "object": "data/main.datareel/model/image.mjson"
+    },
+
+    "imageMapping": {
+        "object": "data/main.datareel/mapping/image-mapping.mjson"
+    },
+
+    "person": {
+        "object": "data/main.datareel/model/person.mjson"
+    },
+
+    "personMapping": {
+        "object": "data/main.datareel/mapping/person-mapping.mjson"
     }
 
 }

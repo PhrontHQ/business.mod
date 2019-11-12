@@ -1,50 +1,39 @@
 var Object = require("./object").Object;
 
 /**
- * @class Address
+ * @class Organization
  * @extends Object
  */
 
 
-exports.Address = Object.specialize(/** @lends Address.prototype */ {
+exports.Organization = Object.specialize(/** @lends Organization.prototype */ {
 
     name: {
         value: undefined
     },
-    firstName: {
+    type: {
         value: undefined
     },
-    lastName: {
+    email: {
         value: undefined
     },
     phone: {
         value: undefined
     },
-    company: {
+    addresses: {
         value: undefined
     },
-    address1: {
+    parent: {
         value: undefined
     },
-    address2: {
+    suborganizations: {
         value: undefined
     },
-    city: {
+    tags: {
         value: undefined
     },
-    provinceCode: {
-        value: undefined
-    },
-    zip: {
-        value: undefined
-    },
-    country: {
-        value: undefined
-    },
-    latitude: {
-        value: undefined
-    },
-    longitude: {
+    mainContact: {
         value: undefined
     }
+
 });

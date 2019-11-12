@@ -61,7 +61,7 @@
         }
     },
     "vendor_descriptor": {
-        "object": "data/main.datareel/model/vendor.mjson"
+        "object": "data/main.datareel/model/organization.mjson"
     },
     "image_descriptor": {
         "object": "data/main.datareel/model/image.mjson"

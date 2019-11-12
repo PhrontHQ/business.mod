@@ -2,26 +2,32 @@
     "root": {
         "prototype": "montage/core/meta/module-object-descriptor",
         "values": {
-            "name": "Vendor",
+            "name": "Person",
             "propertyDescriptors": [
                 {"@": "firstName"},
                 {"@": "lastName"},
                 {"@": "email"},
                 {"@": "phone"},
-                {"@": "addresses"}
+                {"@": "images"},
+                {"@": "addresses"},
+                {"@": "tags"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/vendor.mjson"
+                "%": "data/main.datareel/model/person.mjson"
             },
-            "exportName": "Vendor",
+            "exportName": "Person",
             "module": {
-                "%": "data/main.datareel/model/vendor"
+                "%": "data/main.datareel/model/person"
             },
-            "object":{"@": "vendor"}
+            "object":{"@": "person"},
+            "parent":{"@": "objectDescriptor"}
         }
     },
-    "vendor": {
-        "object": "data/main.datareel/model/vendor"
+    "person": {
+        "object": "data/main.datareel/model/person"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/object.mjson"
     },
     "firstName": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -47,9 +53,20 @@
     "phone": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "vendorPhoneNumber",
+            "name": "phone",
             "valueType": "string"
         }
+    },
+    "images": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "images",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "image_descriptor"}
+        }
+    },
+    "image_descriptor": {
+        "object": "data/main.datareel/model/image.mjson"
     },
     "addresses": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -60,9 +77,16 @@
             "valueDescriptor": {"@": "addresses_descriptor"}       
        }
     },
-
     "addresses_descriptor": {
         "object": "data/main.datareel/model/address.mjson"
+    },
+    "tags": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "tags",
+            "valueType": "string",
+            "cardinality": -1       
+       }
     }
 
 }

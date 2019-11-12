@@ -9,14 +9,12 @@
                     "title": {"<->": "title"},
                     "description": {"<->": "description"},
                     "descriptionHtml": {"<->": "descriptionHtml"},
-                    "image": {"<->": "image",
+                    "image": {"<->": "imageId",
                                     "converter": {"@": "imageConverter"},
                                          "debug":true},
-                    "products": {"<->": "products.edges.map{node}",
+                    "products": {"<->": "productIds",
                                     "converter": {"@": "productConverter"},
-                                         "debug":true},
-                    "type": {"<->": "type"},
-                    "url": {"<->": "url"}
+                                         "debug":true}
                 }
             },
             "rawDataMapping": {
@@ -24,18 +22,20 @@
                 }
             },
             "requisitePropertyNames": [
-                "title","description","descriptionHtml","image","products","type","url"
+                "title","description","descriptionHtml","image"
             ]
         }
     },
     "imageConverter": {
-        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
+            "convertExpression": "id == $"
         }
     },
     "productConverter": {
-        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
+            "convertExpression": "$.has(id)"
         }
     },
 

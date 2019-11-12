@@ -6,10 +6,10 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
-                    "compareAtPrice": {"<->": "compareAtPrice",
+                    "compareAtPrice": {"<->": "compareAtPriceId",
                                     "converter": {"@": "MoneyForeignKeyConverter"}},
                     "price": {
-                                    "<->": "price",
+                                    "<->": "priceId",
                                     "converter": {"@": "MoneyForeignKeyConverter"}}
 
                 }
@@ -28,8 +28,9 @@
         "object": "data/main.datareel/model/product-variant-price-pair.mjson"
     },
     "MoneyForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
+            "convertExpression": "id == $"
         }
     }
 

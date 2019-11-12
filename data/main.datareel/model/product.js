@@ -1,4 +1,4 @@
-var Montage = require("montage").Montage,
+var Object = require("./object").Object,
     OrderLineItem = require("./order-line-item").OrderLineItem;
 
 /**
@@ -8,35 +8,37 @@ var Montage = require("montage").Montage,
 
 
 
-exports.Product = Montage.specialize(/** @lends Product.prototype */ {
+exports.Product = Object.specialize(/** @lends Product.prototype */ {
 
     title: {
         value: undefined
     },
-    orders: {
-        value: undefined
-    },
-    _pictures: {
-        value: null
-    },
-
-    pictures: {
-        get: function () {
-            return this._pictures;
-        },
-        set: function (value) {
-            if (this._pictures !== value) {
-                this._pictures = value;
-            }
-        }
-    },
     description: {
         value: undefined
+    },
+    descriptionHtml: {
+        value: undefined
+    },
+    collections: {
+        value: null
+    },
+    _images: {
+        value: null
+    },
+    images: {
+        get: function () {
+            return this._images;
+        },
+        set: function (value) {
+            if (this._images !== value) {
+                this._images = value;
+            }
+        }
     },
     link: {
         value: undefined
     },
-    type: {
+    productType: {
         value: undefined
     },            
     unitCost: {
@@ -90,6 +92,11 @@ exports.Product = Montage.specialize(/** @lends Product.prototype */ {
     },            
     grossSales: {
         value: undefined
-    }       
-
+    },
+    orders: {
+        value: undefined
+    },
+    tags: {
+        value: undefined
+    }
 });

@@ -4,8 +4,10 @@
         "values": {
             "name": "Service",
             "propertyDescriptors": [
+                {"@": "preWorkDuration"},
                 {"@": "duration"},
-                {"@": "requirements"}
+                {"@": "postWorkDuration"},
+                {"@": "requiredResources"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/service.mjson"
@@ -14,11 +16,26 @@
             "module": {
                 "%": "data/main.datareel/model/service"
             },
-            "object":{"@": "service"}
+            "object":{"@": "service"},
+            "parent":{"@": "productObjectDescriptor"}
+
         }
     },
+
+    "productObjectDescriptor": {
+        "object": "data/main.datareel/model/product.mjson"
+    },
+
     "service": {
         "object": "data/main.datareel/model/service"
+    },
+
+    "preWorkDuration": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "preWorkDuration",
+            "valueType": "number"
+        }
     },
 
     "duration": {
@@ -28,126 +45,26 @@
             "valueType": "number"
         }
     },
-    "requirements": {
+
+    "postWorkDuration": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "orders",
+            "name": "postWorkDuration",
+            "valueType": "number"
+        }
+    },
+
+    "requiredResources": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "requiredResources",
             "cardinality": -1,
-            "valueDescriptor": {"@": "order_line_item"}       
+            "valueDescriptor": {"@": "objectDescriptor"}       
         }
     },
-     "images": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "images",
-            "cardinality": -1,
-            "valueDescriptor": {"@": "image_descriptor"}
-        }
-    },
-    "description": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
-            "name": "description",
-            "valueType": "string"
-        }
-    },
-    "descriptionHtml": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
-            "name": "descriptionHtml",
-            "valueType": "string"
-        }
-    },
-    "link": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
-            "name": "link",
-            "valueType": "string"
-        }
-    },
-    "type": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
-            "name": "type",
-            "valueType": "string"
-        }
-    },
-    "unitCost": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
-            "name": "unitCost",
-            "valueType": "number"
-        }
-    },
-    "tags": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
-            "name": "tags",
-            "valueType": "array"
-        }
-    },
-    "settings": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
-            "name": "settings",
-            "valueType": "array"
-        }
-    },
-     "notes": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
-            "name": "notes",
-            "valueType": "string"
-        }
-    },
-    "vendor": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "vendors",
-            "cardinality": 1,
-            "valueDescriptor": {"@": "vendor_descriptor"}       
-        }
-    },
-    "storefront": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "storefront",
-            "cardinality": 1,
-            "valueDescriptor": {"@": "storefront_descriptor"}       
-        }
-    },
-    "totalInventory": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "totalInventory",
-            "valueType": "number"
-        }
-    },
-    "totalVariants": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "totalVariants",
-            "valueType": "number"
-        }
-    },
-    "updatedAt": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "updatedAt",
-            "valueType": "date"
-        }
-    },
-    "order_line_item": {
-        "object": "data/main.datareel/model/order-line-item.mjson"
-    },
-    "vendor_descriptor": {
-        "object": "data/main.datareel/model/vendor.mjson"
-    },
-    "storefront_descriptor": {
-        "object": "data/main.datareel/model/storefront.mjson"
-    },
-    "image_descriptor": {
-        "object": "data/main.datareel/model/image.mjson"
+
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/object.mjson"
     }
 
 }

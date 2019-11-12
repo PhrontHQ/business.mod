@@ -1,0 +1,55 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "OrganizationDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "name": {"<->": "name"},
+                    "type": {"<->": "type"},
+                    "email": {"<->": "email"},
+                    "phone": {"<->": "phone"},
+                    "addresses": {"<->": "addressIds",
+                                    "converter": {"@": "addressesConverter"}},
+                    "parent": {"<->": "parent"},
+                    "suborganizations": {"<->": "suborganizations",
+                                    "converter": {"@": "suborganizationsConverter"}},
+                    "tags": {"<->": "tags"},
+                    "mainContact": {"<->":"mainContactId",
+                                    "converter": {"@": "mainContactConverter"}}
+
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "name","type","email","phone","addresses","tags","mainContact"
+            ]
+        }
+    },
+
+    "OrganizationDescriptor": {
+        "object": "data/main.datareel/model/organization.mjson"
+    },
+    "addressesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }
+    },
+    "suborganizationsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }    
+    },
+    "mainContactConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    }
+}

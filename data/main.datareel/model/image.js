@@ -1,13 +1,20 @@
-var Montage = require("montage").Montage;
+var Object = require("./object").Object;
 
 /**
- * @class CollectionRule
+ * @class Image
  * Models https://help.shopify.com/en/api/graphql-admin-api/reference/object/image
- * @extends Montage
+ * @extends Object
  */
 
 
-exports.Image = Montage.specialize(/** @lends Image.prototype */ {
+exports.Image = Object.specialize(/** @lends Image.prototype */ {
+    constructor: {
+        value: function Image() {
+            this.super();
+            //console.log("Phront Image created");
+            return this;
+        }
+    },
 
     altText: {
         value: undefined
@@ -16,6 +23,9 @@ exports.Image = Montage.specialize(/** @lends Image.prototype */ {
         value: undefined
     },
     transformedSrc: {
+        value: undefined
+    },
+    exifMetadata: {
         value: undefined
     }
 

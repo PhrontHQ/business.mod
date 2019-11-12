@@ -9,7 +9,7 @@
                     "name": {"<->": "Name"},
                     "quantity": {"<->": "Quantity"},
                     "product": {
-                                    "<->": "product",
+                                    "<->": "productId",
                                     "converter": {"@": "productForeignKeyConverter"}},
                     "totalCost": {"<->": "Total Cost ($)"}
 
@@ -25,7 +25,7 @@
             },
 
             "requisitePropertyNames": [
-                "id"
+                "name","quantity","product","totalCost"
             ]
         }
     },

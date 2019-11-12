@@ -6,9 +6,8 @@
             "propertyDescriptors": [
                 {"@": "title"},
                 {"@": "product"},
-                {"@": "image"},
+                {"@": "images"},
                 {"@": "price"},
-                {"@": "requiresShipping"},   
                 {"@": "selectedOptions"},
                 {"@": "sku"},
                 {"@": "availableForSale"},
@@ -23,13 +22,16 @@
             "module": {
                 "%": "data/main.datareel/model/product-variant"
             },
-            "object":{"@": "ProductVariant"}
+            "object":{"@": "ProductVariant"},
+            "parent":{"@": "objectDescriptor"}
         }
     },
     "ProductVariant": {
         "object": "data/main.datareel/model/product-variant"
     },
-
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/object.mjson"
+    },
     "title": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -42,36 +44,31 @@
         "values": {
             "name": "product",
             "cardinality": 1,
+            "inversePropertyName": "variants",
             "valueDescriptor": {"@": "productDescriptor"}       
         }
     },
-     "image": {
+     "images": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "image",
-            "cardinality": 1,
+            "name": "images",
+            "cardinality": -1,
             "valueDescriptor": {"@": "image_descriptor"}
         }
     },
     "price": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": { 
-            "name": "description",
+            "name": "price",
             "valueType": "number"
-        }
-    },
-    "requiresShipping": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
-            "name": "requiresShipping",
-            "valueType": "booleam"
         }
     },
     "selectedOptions": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": { 
             "name": "selectedOptions",
-            "valueType": "array"
+            "valueType": "object",
+            "cardinality": -1
         }
     },
     "sku": {
@@ -107,7 +104,7 @@
         "values": {
             "name": "presentmentPrices",
             "cardinality": -1,
-            "valueDescriptor": {"@": "ProductVariantPricePair_descriptor"}       
+            "valueType": "object"
         }
     },
     "productDescriptor": {

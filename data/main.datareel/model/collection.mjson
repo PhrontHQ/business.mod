@@ -4,6 +4,7 @@
         "values": {
             "name": "Collection",
             "propertyDescriptors": [
+                {"@": "originId"},
                 {"@": "title"},
                 {"@": "description"},   
                 {"@": "descriptionHtml"},   
@@ -18,16 +19,26 @@
             "module": {
                 "%": "data/main.datareel/model/collection"
             },
-            "modulePrototype": {"@": "collectionPrototype"}
+            "modulePrototype": {"@": "collectionPrototype"},
+            "parent":{"@": "objectDescriptor"}
+
         }
     },
     "collectionPrototype": {
         "object": "data/main.datareel/model/collection"
     },
+    "originId": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "originId",
+            "valueType": "string"
+        }
+    },
     "title": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "title",
+            "localizable": true,
             "valueType": "string"
         }
     },
@@ -35,6 +46,7 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "description",
+            "localizable": true,
             "valueType": "string"
         }
     },
@@ -42,6 +54,7 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "descriptionHtml",
+             "localizable": true,
             "valueType": "string"
         }
     },
@@ -51,6 +64,7 @@
             "name": "image",
             "valueType": "string",
             "cardinality": 1,
+            "localizable": true,
             "valueDescriptor": {"@": "Image_descriptor"}               
         }
     },
@@ -89,8 +103,11 @@
 
     "product_descriptor": {
         "object": "data/main.datareel/model/product.mjson"
-    }
+    },
 
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/object.mjson"
+    }
 
 
 }

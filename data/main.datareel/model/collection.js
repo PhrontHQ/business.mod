@@ -1,13 +1,13 @@
-var Montage = require("montage").Montage;
+var Object = require("./object").Object;
 
 /**
  * @class Collection
- * Models https://help.shopify.com/en/api/graphql-admin-api/reference/object/collection
+ * Models afrer https://help.shopify.com/en/api/graphql-admin-api/reference/object/collection
  * @extends Montage
  */
 
 
-exports.Collection = Montage.specialize(/** @lends Collection.prototype */ {
+exports.Collection = Object.specialize(/** @lends Collection.prototype */ {
 
     title: {
         value: undefined

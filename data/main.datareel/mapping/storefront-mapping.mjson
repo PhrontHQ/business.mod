@@ -6,10 +6,10 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
-                    "name": {"<->": "fields.Name"},
-                    "product": {"<->": "fields.Product"},
+                    "name": {"<->": "name"},
+                    "product": {"<->": "productId"},
                                     "converter": {"@": "productForeignKeyConverter"},
-                    "background": {"<->": "fields.Background"}
+                    "background": {"<->": "background"}
 
                 }
             },

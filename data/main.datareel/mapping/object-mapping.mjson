@@ -1,0 +1,26 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "ObjectDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "originId": {"<->": "originId"},
+                    "creationDate": {"<->": "creationDate"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "originId","creationDate"
+            ]
+        }
+    },
+
+    "ObjectDescriptor": {
+        "object": "data/main.datareel/model/object.mjson"
+    }
+}

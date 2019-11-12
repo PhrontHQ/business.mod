@@ -1,0 +1,20 @@
+
+https://dba.stackexchange.com/questions/27732/set-names-to-attributes-when-creating-json-with-row-to-json
+
+select 
+   c.id,
+   (select row_to_json(_) from (select c.name, c.email) as _) as properties,
+   c.type
+from
+   "Organization" as c
+
+//Simplified with just id as a column and the json as a second one:
+select c.id, (select row_to_json(_) from (select c.name, c.email) as _) from "Organization" as c
+
+select (select row_to_json(_) from (select c.name, c.email) as _) from "Organization" as c
+
+//Without alias:
+select (select row_to_json(_) from (select id, name, email, "addressIds") as _) as rows from "Organization"
+
+//Resulting columns returned would be named row_to_json, which we don't really care about
+select (select row_to_json(_) from (select id, name, email, "addressIds") as _) from "Organization"

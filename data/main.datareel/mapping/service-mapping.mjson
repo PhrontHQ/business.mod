@@ -1,0 +1,27 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "ServiceObjectDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "preWorkDuration": {"<->": "preWorkDuration"},
+                    "duration": {"<->": "duration"},
+                    "postWorkDuration": {"<->": "postWorkDuration"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "preWorkDuration","duration","preWorkDuration"
+            ]
+        }
+    },
+
+    "ServiceObjectDescriptor": {
+        "object": "data/main.datareel/model/service.mjson"
+    }
+}

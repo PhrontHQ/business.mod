@@ -5,21 +5,22 @@
             "name": "Product",
             "propertyDescriptors": [
                 {"@": "title"},
-                {"@": "orders"},
-                {"@": "images"},
                 {"@": "description"},
                 {"@": "descriptionHtml"},   
+                {"@": "collections"},
+                {"@": "images"},
+                {"@": "variants"},
                 {"@": "link"},
-                {"@": "type"},
+                {"@": "productType"},
                 {"@": "unitCost"},
-                {"@": "settings"},
                 {"@": "notes"},
-                {"@": "vendor"},
+                {"@": "vendors"},
                 {"@": "locations"},
                 {"@": "totalInventory"},
                 {"@": "totalVariants"},
                 {"@": "updatedAt"},
-                {"@": "variants"}
+                {"@": "orders"},
+                {"@": "tags"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/product.mjson"
@@ -28,11 +29,16 @@
             "module": {
                 "%": "data/main.datareel/model/product"
             },
-            "object":{"@": "product"}
+            "object":{"@": "product"},
+            "parent":{"@": "objectDescriptor"}
         }
     },
     "product": {
         "object": "data/main.datareel/model/product"
+    },
+
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/object.mjson"
     },
 
     "title": {
@@ -40,22 +46,6 @@
         "values": {
             "name": "title",
             "valueType": "string"
-        }
-    },
-    "orders": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "orders",
-            "cardinality": -1,
-            "valueDescriptor": {"@": "order_line_item"}       
-        }
-    },
-     "images": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "images",
-            "cardinality": -1,
-            "valueDescriptor": {"@": "image_descriptor"}
         }
     },
     "description": {
@@ -72,17 +62,45 @@
             "valueType": "string"
         }
     },
-    "link": {
+    "collections": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": { 
+            "name": "collections",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "collectionDescriptor"}       
+        }
+    },
+    "images": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "images",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "image_descriptor"}
+        }
+    },
+    "image_descriptor": {
+        "object": "data/main.datareel/model/image.mjson"
+    },
+    "variants": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "variants",
+            "cardinality": -1,
+            "inversePropertyName": "product",
+            "valueDescriptor": {"@": "variant_descriptor"}
+        }
+    },
+   "link": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": { 
             "name": "link",
             "valueType": "string"
         }
     },
-    "type": {
+    "productType": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": { 
-            "name": "type",
+            "name": "productType",
             "valueType": "string"
         }
     },
@@ -100,13 +118,6 @@
             "valueType": "array"
         }
     },
-    "settings": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
-            "name": "settings",
-            "valueType": "array"
-        }
-    },
      "notes": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": { 
@@ -114,12 +125,12 @@
             "valueType": "string"
         }
     },
-    "vendor": {
+    "vendors": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "vendor",
-            "cardinality": 1,
-            "valueDescriptor": {"@": "vendor_descriptor"}       
+            "name": "vendors",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "organization_descriptor"}       
         }
     },
     "storefront": {
@@ -151,14 +162,6 @@
             "valueType": "date"
         }
     },
-    "variants": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "variants",
-            "cardinality": -1,
-            "valueDescriptor": {"@": "variant_descriptor"}
-        }
-    },
     "locations": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -167,18 +170,34 @@
             "valueDescriptor": {"@": "address_descriptor"}       
         }
     },
+    "orders": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "orders",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "order_line_item"}       
+        }
+    },
+    "tags": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "tags",
+            "cardinality": -1,
+            "valueType": "string"       
+        }
 
+    },
+    "collectionDescriptor": {
+        "object": "data/main.datareel/model/collection.mjson"
+    },
     "order_line_item": {
         "object": "data/main.datareel/model/order-line-item.mjson"
     },
-    "vendor_descriptor": {
-        "object": "data/main.datareel/model/vendor.mjson"
+    "organization_descriptor": {
+        "object": "data/main.datareel/model/organization.mjson"
     },
     "storefront_descriptor": {
         "object": "data/main.datareel/model/storefront.mjson"
-    },
-    "image_descriptor": {
-        "object": "data/main.datareel/model/image.mjson"
     },
     "variant_descriptor": {
         "object": "data/main.datareel/model/product-variant.mjson"

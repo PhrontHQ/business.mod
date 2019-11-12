@@ -2,7 +2,7 @@
     "root": {
         "prototype": "montage/data/service/expression-data-mapping",
         "values": {
-            "objectDescriptor": {"@": "VendorDescriptor"},
+            "objectDescriptor": {"@": "PersonDescriptor"},
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
@@ -10,8 +10,9 @@
                     "lastName": {"<->": "lastName"},
                     "email": {"<->": "email"},
                     "phone": {"<->": "phone"},
-                    "addresses": {"<->": "addresses",
-                                    "converter": {"@": "addressesConverter"}}
+                    "addresses": {"<->": "addressIds",
+                                    "converter": {"@": "addressesConverter"}},
+                    "tags": {"<->": "tags"}
                 }
             },
             "rawDataMapping": {
@@ -24,12 +25,13 @@
         }
     },
 
-    "VendorDescriptor": {
-        "object": "data/main.datareel/model/vendor.mjson"
+    "PersonDescriptor": {
+        "object": "data/main.datareel/model/person.mjson"
     },
     "addressesConverter": {
-        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
+            "convertExpression": "$.has(id)"
         }
-    }
+    }   
 }

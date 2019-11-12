@@ -6,7 +6,12 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
-                    "altText": {"<->": "altText"}
+                    "altText": {"<->": "altText"},
+                    "originalSrc": {"<->": "originalSrc"},
+                    "transformedSrc": {"<->": "transformedSrc"},
+                    "exifMetadata": {"<->": "exifMetadata",
+                        "converter": {"@": "jsonbConverter"}
+                    }
                 }
             },
             "rawDataMapping": {
@@ -14,12 +19,16 @@
                 }
             },
             "requisitePropertyNames": [
-                "id"
+                "altText","originalSrc","transformedSrc"
             ]
         }
     },
 
-    "RoleDescriptor": {
-        "object": "data/model/image.mjson"
+    "ImageDescriptor": {
+        "object": "data/main.datareel/model/image.mjson"
+    },
+    "jsonbConverter": {
+        "prototype": "../converter/postgresql-jsonb-converter"
     }
+
 }

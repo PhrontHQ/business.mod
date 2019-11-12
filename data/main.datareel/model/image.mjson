@@ -6,7 +6,8 @@
             "propertyDescriptors": [
                 {"@": "altText"},
                 {"@": "originalSrc"},
-                {"@": "transformedSrc"}
+                {"@": "transformedSrc"},
+                {"@": "exifMetadata"}
             ],
             "objectDescriptorModule": {
                 "%":"data/main.datareel/model/image.mjson"
@@ -15,17 +16,21 @@
             "module": {
                 "%": "data/main.datareel/model/image"
             },
-            "modulePrototype":{"@": "ImagePrototype"}
+            "modulePrototype":{"@": "ImagePrototype"},
+            "parent":{"@": "objectDescriptor"}
         }
     },
     "ImagePrototype": {
         "object": "data/main.datareel/model/image"
     },
-
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/object.mjson"
+    },
     "altText": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "altText",
+            "localizable": true,
             "valueType": "string"
         }
     },
@@ -42,5 +47,13 @@
             "name": "transformedSrc",
             "valueType": "URL"
         }
+    },
+    "exifMetadata": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "exifMetadata",
+            "valueType": "object"
+        }
     }
+
 }

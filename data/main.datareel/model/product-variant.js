@@ -1,4 +1,4 @@
-var Montage = require("montage").Montage;
+var Object = require("./object").Object;
 
 /**
  * @class ProductVariant
@@ -7,7 +7,7 @@ var Montage = require("montage").Montage;
 
 
 
-exports.ProductVariant = Montage.specialize(/** @lends Product.prototype */ {
+exports.ProductVariant = Object.specialize(/** @lends Product.prototype */ {
 
     title: {
         value: undefined
@@ -15,13 +15,10 @@ exports.ProductVariant = Montage.specialize(/** @lends Product.prototype */ {
     product: {
         value: undefined
     },
-    image: {
+    images: {
         value: null
     },
     price: {
-        value: undefined
-    },
-    requiresShipping: {
         value: undefined
     },
     selectedOptions: {

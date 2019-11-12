@@ -25,11 +25,15 @@
             "module": {
                 "%": "data/main.datareel/model/address"
             },
-            "object":{"@": "address"}
+            "object":{"@": "address"},
+            "parent":{"@": "objectDescriptor"}
         }
     },
     "address": {
         "object": "data/main.datareel/model/address"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/object.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -55,7 +59,7 @@
      "phone": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "vendorPhoneNumber",
+            "name": "phone",
             "valueType": "string"
         }
     },

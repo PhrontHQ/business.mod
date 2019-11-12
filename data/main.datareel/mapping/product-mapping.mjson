@@ -7,31 +7,37 @@
             "objectMapping": {
                 "rules": {
                     "title": {"<->": "title"},
-                    "unitCost": {"<->": "fields.property('Unit Cost')", "debug":true},
-                    "orders": {
-                                    "<->": "fields.Orders",
-                                    "converter": {"@": "ordersForeignKeyConverter"}},
-                    "images": {"<->": "images.edges.map{node}",
-                                    "converter": {"@": "picturesConverter"},
-                                         "debug":true},
                     "description": {"<->": "description"},
                     "descriptionHtml": {"<->": "descriptionHtml"},
-
-                    "link": {"<->": "Link"},
-                    "type": {"<->": "Type"},
-                    "settings": {"<->": "fSettings"},
-                    "notes": {"<->": "Notes"},
-                    "vendor": {
-                                    "<->": "metafields.edges.map{node}.filter{key == 'vendor'}.last().value",
-                                    "converter": {"@": "vendorsForeignKeyConverter"},
-                                         "debug":true},
-                    "grossSales": {"<->": "fields.property('Gross Sales')"},
-                    "variants": {"<->": "variants.edges.map{node}",
-                                    "converter": {"@": "variantsConverter"},
-                                         "debug":true},
-                    "locations": {"<->": "metafields.edges.map{node}.filter{key == 'locations'}.last().value",
-                                    "converter": {"@": "locationsForeignKeyConverter"},
-                                         "debug":true}
+                    "collections": {
+                        "<->": "collectionIds",
+                        "converter": {"@": "collectionsConverter"}
+                    },
+                    "images": {
+                        "<->": "imageIds",
+                        "converter": {"@": "imagesConverter"},
+                        "debug":true
+                    },
+                    "variants": {
+                        "<->": "variantIds",
+                        "converter": {"@": "variantsConverter"},
+                        "debug":true
+                    },
+                    "orders": {
+                        "<->": "orderIds",
+                        "converter": {"@": "ordersForeignKeyConverter"}
+                    },
+                    "link": {"<->": "link"},
+                    "productType": {"<->": "productType"},
+                    "notes": {"<->": "notes"},
+                    "vendors": {
+                        "<->": "vendorIds",
+                        "converter": {"@": "vendorsForeignKeyConverter"},
+                        "debug":true
+                    },
+                    "tags": {
+                        "<->": "tags"
+                    }
                 }
             },
             "rawDataMapping": {
@@ -39,7 +45,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "title","description","descriptionHtml","images","link","type","vendor","variants", "locations"
+                "title","description","descriptionHtml","images","link","productType","vendors","variants"
             ]
         }
     },
@@ -53,20 +59,28 @@
             "convertExpression": "$.has(id)"
         }
     },
-    "picturesConverter": {
-        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+    "collectionsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
+            "convertExpression": "$.has(id)"
+        }
+    },
+    "imagesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
         }
     },
     "vendorsForeignKeyConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
-            "convertExpression": "id == $"
+            "convertExpression": "$.has(id)"
         }
     },
     "variantsConverter": {
-        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
+            "convertExpression": "$.has(id)"
         }
     },
     "locationsForeignKeyConverter": {
