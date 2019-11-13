@@ -10,19 +10,31 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     DESCENDING = DataOrdering.DESCENDING,
     evaluate = require("montage/frb/evaluate"),
     Set = require("montage/collections/set"),
-    XMLHttpRequest = require("xhr2"),
-    querystring = require('querystring'),
+
+    //Not needed at all as not used
+    // XMLHttpRequest = require("xhr2"),
+    // querystring = require('querystring'),
     // Require sqlstring to add additional escaping capabilities
-    sqlString = require('sqlstring'),
+    //sqlString = require('sqlstring'),
+
+    
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     uuid = require("montage/core/uuid"),
+
+
     // Require the aws-sdk. This is a dev dependency, so if being used
     // outside of a Lambda execution environment, it must be manually installed.
     // Todo check the new version of the SDK coming at:
     //  https://github.com/aws/aws-sdk-js-v3/tree/master/clients/node/client-rds-data-node
     //  https://www.npmjs.com/package/@aws-sdk/client-rds-data-node
+
+    //Benoit, these 2 are node.js specific, we need to see how to deal with that.
     AWS = require('aws-sdk'),
     https = require('https'),
+      // //For browser
+      // https = null,
+
+
     pgutils = require('./pg-utils'),
     prepareValue = pgutils.prepareValue,
     escapeIdentifier = pgutils.escapeIdentifier,
@@ -33,16 +45,19 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
 
 
 
-    /**********************************************************************/
-    /** Enable HTTP Keep-Alive per https://vimeo.com/287511222          **/
-    /** This dramatically increases the speed of subsequent HTTP calls  **/
-    /**********************************************************************/
-    const sslAgent = new https.Agent({
-        keepAlive: true,
-        maxSockets: 50, // same as aws-sdk
-        rejectUnauthorized: true  // same as aws-sdk
-    })
-    sslAgent.setMaxListeners(0); // same as aws-sdk
+    //Node.js specific
+    if(https) {
+      /**********************************************************************/
+      /** Enable HTTP Keep-Alive per https://vimeo.com/287511222          **/
+      /** This dramatically increases the speed of subsequent HTTP calls  **/
+      /**********************************************************************/
+      const sslAgent = new https.Agent({
+          keepAlive: true,
+          maxSockets: 50, // same as aws-sdk
+          rejectUnauthorized: true  // same as aws-sdk
+      })
+      sslAgent.setMaxListeners(0); // same as aws-sdk
+    }
 
 /*
     var params = {
@@ -98,7 +113,7 @@ var createTableTemplatePrefix = `CREATE TABLE :schema.":table"
 * @class
 * @extends RawDataService
 */
-exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends OfflineDataService.prototype */ {
+exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends PhrontService.prototype */ {
 
     /***************************************************************************
      * Initializing
@@ -242,7 +257,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Off
       value: function(criteria, mapping) {
         var objectRule,
             rule,    
-            syntax = criteria.syntax,
+            syntax = criteria ? criteria.syntax : null,
             property,
             propertyName,
             propertyDescriptor,
@@ -255,10 +270,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Off
           //We need to transform the criteria into a SQL equivalent. Hard-coded for a single object for now
 
           //Hard coded Find an object with it's originId:
-          if(Object.keys(criteria.parameters).length === 1 && criteria.parameters.hasOwnProperty("originId")) {
+          if(criteria && criteria.parameters && Object.keys(criteria.parameters).length === 1 && criteria.parameters.hasOwnProperty("originId")) {
             condition = `"originId" = '${criteria.parameters.originId}'`;
           }
-          else if(syntax.type == "equals") {
+          else if(syntax && syntax.type == "equals") {
             var args = syntax.args;
             
             if(args[0].type === "property") {
@@ -290,7 +305,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Off
             }
 
           }
-          else if(syntax.type == "has") {
+          else if(syntax && syntax.type == "has") {
             var args = syntax.args;
             propertyName = args[1].args[1].value;
             rawProperty = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
@@ -305,7 +320,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Off
             condition = `${escapedRawProperty} in ${escapedValue}`
 
           }
-          else {
+          else if(criteria && criteria.expression || criteria.syntax || criteria.parameters) {
             console.error("missing implementation of criteria ",criteria);
           }
           return condition;

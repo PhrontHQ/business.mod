@@ -1,0 +1,124 @@
+{
+    "root": {
+        "prototype": "data/main.datareel/service/phront-client-service",
+        "values": {
+            "name": "PhrontClientService",
+            "exportName": "PhrontClientService",
+            "mappings": [
+                {"@": "objectMapping"},
+                {"@": "collectionMapping"},
+                {"@": "productVariantMapping"},
+                {"@": "productMapping"},
+                {"@": "serviceMapping"},
+                {"@": "productVariantPricePairMapping"},
+                {"@": "moneyMapping"},
+                {"@": "organizationMapping"},
+                {"@": "addressMapping"},
+                {"@": "imageMapping"},
+                {"@": "personMapping"}
+            ],
+            "types": [
+                {"@": "object"},
+                {"@": "collection"},
+                {"@": "product"},
+                {"@": "service"},
+                {"@": "productVariant"},
+                {"@": "productVariantPricePair"},
+                {"@": "money"},
+                {"@": "organization"},
+                {"@": "address"},
+                {"@": "image"},
+                {"@": "person"}
+            ]
+        }
+    },  
+
+    "object": {
+        "object": "data/main.datareel/model/object.mjson"
+    },
+
+    "objectMapping": {
+        "object": "data/main.datareel/mapping/object-mapping.mjson"
+    },
+
+    "collection": {
+        "object": "data/main.datareel/model/collection.mjson"
+    },
+
+    "collectionMapping": {
+        "object": "data/main.datareel/mapping/collection-mapping.mjson"
+    },
+
+    "product": {
+        "object": "data/main.datareel/model/product.mjson"
+    },
+
+    "productMapping": {
+        "object": "data/main.datareel/mapping/product-mapping.mjson"
+    },
+
+    "service": {
+        "object": "data/main.datareel/model/service.mjson"
+    },
+
+    "serviceMapping": {
+        "object": "data/main.datareel/mapping/service-mapping.mjson"
+    },
+
+    "productVariant": {
+        "object": "data/main.datareel/model/product-variant.mjson"
+    },
+
+    "productVariantMapping": {
+        "object": "data/main.datareel/mapping/product-variant-mapping.mjson"
+    },
+
+    "productVariantPricePair": {
+        "object": "data/main.datareel/model/product-variant-price-pair.mjson"
+    },
+
+    "productVariantPricePairMapping": {
+        "object": "data/main.datareel/mapping/product-variant-price-pair-mapping.mjson"
+    },
+
+    "money": {
+        "object": "data/main.datareel/model/money.mjson"
+    },
+
+    "moneyMapping": {
+        "object": "data/main.datareel/mapping/money-mapping.mjson"
+    },
+
+    "organization": {
+        "object": "data/main.datareel/model/organization.mjson"
+    },
+
+    "organizationMapping": {
+        "object": "data/main.datareel/mapping/organization-mapping.mjson"
+    },
+
+    "address": {
+        "object": "data/main.datareel/model/address.mjson"
+    },
+
+    "addressMapping": {
+        "object": "data/main.datareel/mapping/address-mapping.mjson"
+    },
+
+    "image": {
+        "object": "data/main.datareel/model/image.mjson"
+    },
+
+    "imageMapping": {
+        "object": "data/main.datareel/mapping/image-mapping.mjson"
+    },
+
+    "person": {
+        "object": "data/main.datareel/model/person.mjson"
+    },
+
+    "personMapping": {
+        "object": "data/main.datareel/mapping/person-mapping.mjson"
+    }
+
+}

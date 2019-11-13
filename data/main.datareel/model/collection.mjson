@@ -19,10 +19,14 @@
             "module": {
                 "%": "data/main.datareel/model/collection"
             },
+            "object":{"@": "collection"},
             "modulePrototype": {"@": "collectionPrototype"},
             "parent":{"@": "objectDescriptor"}
 
         }
+    },
+    "collection": {
+        "object": "data/main.datareel/model/collection"
     },
     "collectionPrototype": {
         "object": "data/main.datareel/model/collection"

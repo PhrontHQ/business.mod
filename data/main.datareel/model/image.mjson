@@ -17,6 +17,7 @@
                 "%": "data/main.datareel/model/image"
             },
             "modulePrototype":{"@": "ImagePrototype"},
+            "object":{"@": "ImagePrototype"},
             "parent":{"@": "objectDescriptor"}
         }
     },
