@@ -482,8 +482,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             //       console.log("organization found by name");
             //   }
                 var operation = new DataOperation();
-                  operation.objectDescriptor = readOperation.objectDescriptor;
-                  console.log("executeDStatement "+data.records);
+
+                operation.objectDescriptor = readOperation.objectDescriptor;
+
+                console.log("executed Statement err:",err, "data:",data);
 
               if (err) {
                 // an error occurred
