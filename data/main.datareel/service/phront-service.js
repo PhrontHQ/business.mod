@@ -320,7 +320,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             condition = `${escapedRawProperty} in ${escapedValue}`
 
           }
-          else if(criteria && criteria.expression || criteria.syntax || criteria.parameters) {
+          else if((criteria && criteria.expression) || (criteria && criteria.syntax) || (criteria && criteria.parameters)) {
             console.error("missing implementation of criteria ",criteria);
           }
           return condition;
