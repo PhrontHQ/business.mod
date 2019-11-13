@@ -52,7 +52,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         value: function (event) {
             console.log("WebSocket opened");
             self._socketOpenPromiseResolve(true);
-            this._socket.send("Echo....");
+            //this._socket.send("Echo....");
             //this.dispatchEvent(event, true, false);
         }
     },
