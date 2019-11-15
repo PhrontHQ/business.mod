@@ -138,7 +138,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
   
               self._streamByOperationId.set(readOperation.id, stream);
   
-              self._socket.send(serializer.serializeObject(readOperation));
+              self._socket.send(self._serializer.serializeObject(readOperation));
   
             });
   
