@@ -106,7 +106,7 @@
     },
 
     "product_descriptor": {
-        "object": "data/main.datareel/model/product.mjson"
+        "object": "data/main.datareel/model/service.mjson"
     },
 
     "objectDescriptor": {
