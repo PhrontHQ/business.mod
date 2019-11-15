@@ -487,7 +487,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 operation.referrerId = readOperation.id;
                 operation.dataDescriptor = readOperation.dataDescriptor;
 
-                console.log("executed Statement err:",err, "data:",data);
+                //console.log("executed Statement err:",err, "data:",data);
 
               if (err) {
                 // an error occurred
@@ -1226,7 +1226,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                 record.id = uuid.generate();
 
-                var tableName = self.tableForObjectDescriptor(createOperation.objectDescriptor),
+                var tableName = self.tableForObjectDescriptor(objectDescriptor),
                     schemaName = rawDataOperation.schema,
                     recordKeys = Object.keys(record),
                     escapedRecordKeys = recordKeys.map(key => escapeIdentifier(key)),

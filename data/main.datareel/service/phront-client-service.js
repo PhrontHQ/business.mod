@@ -27,14 +27,19 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
 exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/** @lends PhrontClientService.prototype */ {
     constructor: {
         value: function PhrontClientService() {
+            var self = this;
+            
             this.super();
 
-            this._socket = new WebSocket("wss://77mq8uupuc.execute-api.us-west-2.amazonaws.com/dev");
+            if( typeof WebSocket !== "undefined") {
+                this._socket = new WebSocket("wss://77mq8uupuc.execute-api.us-west-2.amazonaws.com/dev");
 
-            this._socket.addEventListener("open", this);
-            this._socket.addEventListener("error", this);
-            this._socket.addEventListener("close", this);
-            this._socket.addEventListener("message", this);
+                this._socket.addEventListener("open", this);
+                this._socket.addEventListener("error", this);
+                this._socket.addEventListener("close", this);
+                this._socket.addEventListener("message", this);    
+            }
+
 
             this._streamByOperationId = new Map();
 
@@ -71,6 +76,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             console.log("received socket message ",event);
             try {
                 serializedOperation = event.data;
+                console.log("<---- receive operation "+serializedOperation);
+
             } catch (e) {
                 return console.warn("Invalid WebSocket message format:", event.data);
             }
@@ -134,7 +141,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
             this._socketOpenPromise.then(function() {
                 var objectDescriptor = query.type,
-                readOperation = new DataOperation();
+                readOperation = new DataOperation(),
+                serializedOperation;
     
               //We need to turn this into a Read Operation. Difficulty is to turn the query's criteria into
               //one that doesn't rely on objects. What we need to do before handing an operation over to another context
@@ -146,8 +154,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
               readOperation.criteria = query.criteria;
   
               self._streamByOperationId.set(readOperation.id, stream);
-  
-              self._socket.send(self._serializer.serializeObject(readOperation));
+              serializedOperation = self._serializer.serializeObject(readOperation);
+              console.log("----> send operation "+serializedOperation);
+              self._socket.send(serializedOperation);
   
             });
   

@@ -2,7 +2,7 @@ console.log('montage-testing', 'Start');
 
 module.exports = require("montage-testing").run(require, [
     
-    "montage/core/serialization/deserializer/montage-deserializer",
+    // "montage/core/serialization/deserializer/montage-deserializer",
     "spec/phront-service"
     
 ]).then(function () {

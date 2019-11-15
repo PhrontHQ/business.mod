@@ -5,42 +5,67 @@ var PhrontService = require("phront-data/data/main.datareel/service/phront-servi
     MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
     Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
     Criteria = require("montage/core/criteria").Criteria,
+    //DataStream = require("montage/data/service/data-stream").DataStream,
+    //DataQuery = require("montage/data/model/data-query").DataQuery,
     Montage = require("montage/core/core").Montage,
+    //to test client side
+    //clientMainService = require("../data/client-main.datareel/main.mjson").montageObject,
+    //ClientCollection = require("phront-data/data/main.datareel/model/collection").Collection,
+    //operationCoordinator = new OperationCoordinator,
     phrontService = mainService.childServices[0],
+    //sphrontClientService = clientMainService.childServices[0],
     types = phrontService.types;
 
+
+
+//Hack phrontClientService and Augment operationCoordinator for tests, 
+//making it assume the role of the WebSocket for phrontClientService
+/*
+phrontClientService._socketOpenPromise = Promise.resolve(true);
+operationCoordinator.send = function(serializedOperation) {
+    this.handleEvent({
+        "body":serializedOperation
+    })
+    .then(function(serializedHandledOperation) {
+        phrontClientService.handleMessage({data:serializedHandledOperation});
+    },function(error) {
+        console.error(error);
+    });
+}
+phrontClientService._socket = operationCoordinator;
+*/
 
 describe("PhrontService -Create Database", function() {
 
 	it("can create the storage for an ObjectDescriptor ", function (done) {
 
       
-        // function importObjectDescriptor(iType) {
-        //     console.log("create "+iType.name);
-        //     iOperation = new DataOperation();
-        //     iOperation.type = DataOperation.Type.Create;
-        //     iOperation.data = iType;
+        function importObjectDescriptor(iType) {
+            console.log("create "+iType.name);
+            iOperation = new DataOperation();
+            iOperation.type = DataOperation.Type.Create;
+            iOperation.data = iType;
             
-        //     phrontService.handleCreateOperation(iOperation)
-        //     .then(function(createCompletedOperation) {
-        //         console.log("createCompletedOperation:",createCompletedOperation.objectDescriptor.name);
-        //     },
-        //     function(createFailedOperation) {
-        //         console.log("createFailedOperation:",createFailedOperation.objectDescriptor.name);
-        //     });
+            phrontService.handleCreateOperation(iOperation)
+            .then(function(createCompletedOperation) {
+                console.log("createCompletedOperation:",createCompletedOperation.objectDescriptor.name);
+            },
+            function(createFailedOperation) {
+                console.log("createFailedOperation:",createFailedOperation.objectDescriptor.name);
+            });
 
-        // }
+        }
 
 
-        // for(var i=0, countI = types.length, iType, iOperation;i<countI; i++) {
-        //     importObjectDescriptor(types[i]);
-        // }
+        for(var i=0, countI = types.length, iType, iOperation;i<countI; i++) {
+            importObjectDescriptor(types[i]);
+        }
     });
     
-    it("can import data for an ObjectDescriptor from another source", function (done) {
-        var phrontService = mainService.childServices[0];
-            types = phrontService.types;
-    });
+    // it("can import data for an ObjectDescriptor from another source", function (done) {
+    //     var phrontService = mainService.childServices[0];
+    //         types = phrontService.types;
+    // });
 
 });
 
@@ -49,85 +74,122 @@ describe("PhrontService -Read data from serialized operations", function() {
     var serializer = new MontageSerializer().initWithRequire(require),
         deserializer = new Deserializer();
 
-/*
-  var operation = JSON.parse(event.body),
-  objectDescriptorModuleId = operation.objectDescriptor,
-  objectDescriptor = phrontService.objectDescriptorForObjectDescriptorModuleId(objectDescriptorModuleId);
-  
-  operation.dataDescriptor = objectDescriptor;
+        it("can feth an image from an id without OperationCoordinator", function (done) {
+            //Create a ReadOperation
+            var objectDescriptor = phrontService.objectDescriptorWithModuleId("data/main.datareel/model/image");
 
-  console.log("objectDescriptor is ",objectDescriptor);
-  console.log("operation is ",operation);
+            //This ends up calling module-object-descriptor.js:149 - getObjectDescriptorWithModuleId()
+            //which causes node to try to phront-data/node_modules/montage/core/meta/module-object-descriptor.mjson
+            //whih is bogus....
+            //console.log("Montage.getInfoForObject(objectDescriptor): ", Montage.getInfoForObject(objectDescriptor));
+
+            readOperation = new DataOperation();
+            readOperation.type = DataOperation.Type.Read;
+            readOperation.dataDescriptor = objectDescriptor.module.id;
+            readOperation.criteria = new Criteria().initWithExpression("id == $", "1f9bd2d1-e120-4214-8ff1-273fd49c3a14");
+
+            //Serialize operation
+            var serializedOperation = serializer.serializeObject(readOperation),
+                deserializedOperation,
+                objectRequires,
+                module,
+                isSync = true,
+                resultOperatationPromise,
+                self = this,
+                completedSerializedOperation;
+
+            deserializer.init(serializedOperation, require, objectRequires, module, isSync);
+            deserializedOperation = deserializer.deserializeObject();
+
+            return phrontService.handleReadOperation(deserializedOperation)
+            .then(function(operationCompleted) {
+                //serialize
+                completedSerializedOperation = serializer.serializeObject(operationCompleted);
+                console.log("completedSerializedOperation:",completedSerializedOperation);
 
 
-  return phrontService.handleReadOperation(operation) 
-  .then(function(readUpdatedOperation) {
-    var records = readUpdatedOperation.data;
-    console.log("readUpdatedOperation",readUpdatedOperation,records);
-    //Having the whole objectDescriptor here creates a circular issue using simple JSON.stringify
-    readUpdatedOperation.dataDescriptor = readUpdatedOperation.objectDescriptor.module.id;
 
-    readUpdatedOperation.referrer = operation.id;
-    return readUpdatedOperation;    
-  });
-  */
 
-    //Create a ReadOperation
-    var objectDescriptor = phrontService.objectDescriptorWithModuleId("data/main.datareel/model/image");
+            },function(operationFailed) {
+                //serialize
+                return self._serializer.serializeObject(operationFailed);
+            });
 
-    console.log("Montage.getInfoForObject(objectDescriptor): ", Montage.getInfoForObject(objectDescriptor));
-
-    readOperation = new DataOperation();
-    readOperation.type = DataOperation.Type.Read;
-    readOperation.dataDescriptor = objectDescriptor.module.id;
-    //readOperation.criteria = new Criteria().initWithSyntax(self.convertSyntax, v)
-    readOperation.criteria = new Criteria().initWithExpression("id == $", "1f9bd2d1-e120-4214-8ff1-273fd49c3a14");
-
-    //Serialize operation
-    var serializedOperation = serializer.serializeObject(readOperation),
-        operationCoordinator = new OperationCoordinator;
-
-        //Simulate the event passed by the socket:
-        operationCoordinator.handleEvent({
-            "body":serializedOperation
-        })
-        .then(function(serializedCompletedOperation) {
-            console.log("serializedCompletedOperation:",serializedCompletedOperation);
-        },
-        function(serializedFailedOperation) {
-            console.log("serializedFailedOperation:",serializedFailedOperation);
         });
 
 
+        // it("can feth an image from an id ", function (done) {
+        //     //Create a ReadOperation
+        //     var objectDescriptor = phrontService.objectDescriptorWithModuleId("data/main.datareel/model/image");
 
-    // //Deserialize operation
-    // var deserializedOperation,
-    // objectRequires,
-    // module,
-    // isSync = true;
+        //     //console.log("Montage.getInfoForObject(objectDescriptor): ", Montage.getInfoForObject(objectDescriptor));
 
-    // // - objectRequires is an object that contains label->key 
-    // // that would be used if a matching label exsists in the serialzation, 
-    // // instead of creating a new one
-    // deserializer.init(serializedOperation, require, objectRequires, module, isSync);
-    // deserializedOperation = deserializer.deserializeObject();
+        //     readOperation = new DataOperation();
+        //     readOperation.type = DataOperation.Type.Read;
+        //     readOperation.dataDescriptor = objectDescriptor.module.id;
+        //     readOperation.criteria = new Criteria().initWithExpression("id == $", "1f9bd2d1-e120-4214-8ff1-273fd49c3a14");
 
-    // console.log("deserializedOperation is ",deserializedOperation);
+        //     //Serialize operation
+        //     var serializedOperation = serializer.serializeObject(readOperation),
+        //         operationCoordinator = new OperationCoordinator;
 
-    // //Execute operation
-    // phrontService.handleReadOperation(deserializedOperation)
-    // .then(function(readCompletedOperation) {
-    //     console.log("readCompletedOperation:",readCompletedOperation.dataDescriptor);
+        //     //Simulate the event passed by the socket:
+        //     operationCoordinator.handleEvent({
+        //         "body":serializedOperation
+        //     })
+        //     .then(function(serializedCompletedOperation) {
+        //             // //Deserialize operation
+        //             var deserializedOperation,
+        //             objectRequires,
+        //             module,
+        //             isSync = true;
 
-    //     //serialize
-    //     var serializedCompletedOperation = serializer.serializeObject(readCompletedOperation);
+        //             deserializer.init(serializedCompletedOperation, require, objectRequires, module, isSync);
+        //             deserializedOperation = deserializer.deserializeObject();
 
-    //     return serializedCompletedOperation;
+        //         console.log("deserializedOperation:",deserializedOperation);
+                
+        //     },
+        //     function(serializedFailedOperation) {
+        //         console.log("serializedFailedOperation:",serializedFailedOperation);
+        //     });
+        // });
+    
 
-    // },
-    // function(createFailedOperation) {
-    //     console.log("createFailedOperation:",createFailedOperation.objectDescriptor.name);
-    // });
+        // it("can feth a collection and its products", function (done) {
 
+        //     return new Promise(function(resolve,reject) {
+
+
+        //         var collectionQuery = DataQuery.withTypeAndCriteria(ClientCollection),
+        //             collectionDataStream =  new DataStream();
+
+
+        //         collectionDataStream.query = collectionQuery;
+
+        //         clientMainService.fetchData(
+        //             collectionQuery,
+        //             null,
+        //             collectionDataStream
+        //         ).then(
+        //             function (collections) {
+        //                 console.log("collections: collections");
+        //                 resolve(collections);
+        //             },
+        //             function (error) {
+        //                 reject(error);
+        //             }
+        //         );
+        //     })
+        //     .then(function(collections) {
+        //         expect(Array.isArray(collections)).toBe(true);
+        //         done();
+        //     },function(error) {
+        //         console.error(error);
+        //         done();
+        //     });
+
+        // });
+   
 
 });

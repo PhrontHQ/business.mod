@@ -1,0 +1,26 @@
+{
+  "_comment": [
+    "# If you use npm to generate or modify this file, make sure",
+    "# to restore the file's 4 space indents after the generation",
+    "# or modification so it matches other source files in the",
+    "# project. npm only generates files with 2 space indents",
+    "# (see https://github.com/npm/npm/pull/3180#issuecomment-16336516)."
+  ],
+  "name": "phront-service-usage",
+  "main": "index.js",
+  "version": "1.0.0-alpha.1",
+  "license": "BSD-3-Clause",
+  "author": "Pront. (https://phront.com/)",
+  "repository": {
+    "type": "git",
+    "url": "PhrontHQ/phront-data/tree/master/test"
+  },
+  "scripts": {},
+  "mappings": {
+    "montage": "../../node_modules/montage",
+    "collections": "../../node_modules/montage/node_modules/collections",
+    "montage-testing": "../../node_modules/montage-testing",
+    "phront-data": "../../"
+  },
+  "private": true
+}

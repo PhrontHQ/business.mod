@@ -1,0 +1,16 @@
+{
+    "phrontClientDataService": {
+        "object": "phront-data/data/main.datareel/phront-client-service.mjson"
+    },
+
+    "root": {
+        "prototype": "montage/data/service/data-service",
+        "values": {
+            "name": "EtiamaDataService",
+            "isUniquing": true,
+            "childServices": [
+                {"@": "phrontClientDataService"}
+            ]
+        }
+    }
+}
