@@ -7,6 +7,15 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch test-JSON-parse-reviver",
+            "program": "${workspaceFolder}/sandbox/test-JSON-parse-reviver.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch via NPM",
             "runtimeExecutable": "/Users/benoit/.nvm/versions/node/v10.16.3/bin/npm",
             "cwd": "${workspaceFolder}",
