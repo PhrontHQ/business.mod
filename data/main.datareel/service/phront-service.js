@@ -471,7 +471,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             // if(rawDataOperation.sql.indexOf('"name" = ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1) {
             //   console.log(rawDataOperation.sql);
             // }
-            console.log("executeStatement "+rawDataOperation.sql);
+            //console.log("executeStatement "+rawDataOperation.sql);
 
             self._executeStatement(rawDataOperation, function(err, data) {
               //console.timeEnd("PhrontService handleReadOperation "+timeID);
@@ -491,7 +491,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
               if (err) {
                 // an error occurred
-                console.log(err, err.stack, rawDataOperation); 
+                console.log("!!! handleReadOperation FAILED:",err, err.stack, rawDataOperation.sql); 
                 operation.type = DataOperation.Type.ReadFailed;
                 //Should the data be the error?
                 operation.data = err;
