@@ -67,15 +67,24 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
     handleMessage: {
         value: function (event) {
-            var operation;
+            var serializedOperation;
             console.log("received socket message ",event);
             try {
-                operation = JSON.parse(event.data);
+                serializedOperation = event.data;
             } catch (e) {
                 return console.warn("Invalid WebSocket message format:", event.data);
             }
 
-            if(operation) {
+            if(serializedOperation) {
+                var deserializedOperation,
+                operation,
+                objectRequires,
+                module,
+                isSync = true;
+
+                this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
+                operation = this._deserializer.deserializeObject();
+
                 var referrer = operation.referrerId,
                 type = operation.type,
                 records = operation.data,
