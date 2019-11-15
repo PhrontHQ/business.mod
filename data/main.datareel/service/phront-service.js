@@ -217,7 +217,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           //One way to do this is to replace every object in a criteria's parameters by it's data identifier.
           //Another is to serialize the criteria.
           readOperation.type = DataOperation.Type.Read;
-          readOperation.objectDescriptor = objectDescriptor;
+          readOperation.dataDescriptor = objectDescriptor.module.id;
           readOperation.criteria = query.criteria;
 
           //Where do we put the "select part" ? The list of properties, default + specific ones asked by developer and
@@ -334,7 +334,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     mapReadOperationToRawStatement: {
       value: function(readOperation,rawDataOperation) {
           //Now we need to transform the operation into SQL:
-          var objectDescriptor = readOperation.objectDescriptor,
+          var objectDescriptor = this.objectDescriptorWithModuleId(readOperation.dataDescriptor),
           mapping = this.mappingWithType(objectDescriptor),
           rawDataPrimaryKeys = mapping.rawDataPrimaryKeys,
           operationName = readOperation.name,
@@ -454,13 +454,14 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         //   return this.handleReadObjectDescriptorOperation(readOperation);
         // } else {
           var rawDataOperation = {},
+              objectDescriptor = this.objectDescriptorWithModuleId(readOperation.dataDescriptor),
               dataChanges = data,
               changesIterator,
               aProperty, aValue, addedValues, removedValues, aPropertyDescriptor,
               self = this;
 
           //This adds the right access key, db name. etc... to the RawOperation.
-          this.mapObjectDescriptorToRawOperation(readOperation.objectDescriptor,rawDataOperation);
+          this.mapObjectDescriptorToRawOperation(objectDescriptor,rawDataOperation);
           this.mapReadOperationToRawStatement(readOperation,rawDataOperation);
 
           return new Promise(function(resolve,reject) {
@@ -483,7 +484,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             //   }
                 var operation = new DataOperation();
 
-                operation.objectDescriptor = readOperation.objectDescriptor;
+                operation.referrerId = readOperation.id;
+                operation.dataDescriptor = readOperation.dataDescriptor;
 
                 console.log("executed Statement err:",err, "data:",data);
 
@@ -537,7 +539,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             mappingPromises,
             i, countI;
 
-        operation.objectDescriptor = objectDescriptor;
+        operation.dataDescriptor = objectDescriptor.module.id;
 
         //When we have an operation to deal with, we'll know which it is.
         //Here we don't know if this record is a newly created object or one we fetched.  
@@ -554,7 +556,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             if(!dataObjectChanges) {
               //No changes to save for that object, we cancel.
               var createCancelledOperation = new DataOperation();
-              createCancelledOperation.referrer = operation;
+              createCancelledOperation.referrerId = operation.id;
               createCancelledOperation.type = DataOperation.Type.CreateCancelled;
 
               //What else should we put on a CreateCancelled opration? A reason?
@@ -626,13 +628,13 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                         var updateCompletedOperation = new DataOperation();
                         updateCompletedOperation.type = DataOperation.Type.UpdateCompleted;
                         updateCompletedOperation.data = object;
-                        updateCompletedOperation.objectDescriptor = objectDescriptor;
+                        updateCompletedOperation.dataDescriptor = objectDescriptor.module.id;
                         resolve(updateCompletedOperation);
                     }, function(rawUpdateFailedOperation) {
                         var updateFailedOperation = new DataOperation();
                         updateFailedOperation.type = DataOperation.Type.UpdateFailed;
                         updateFailedOperation.data = object;
-                        updateFailedOperation.objectDescriptor = objectDescriptor;
+                        updateFailedOperation.dataDescriptor = objectDescriptor.module.id;
 
                         reject(updateFailedOperation);
                     });
@@ -654,14 +656,15 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
               //Record dataIdentifier for object
               var createCompletedOperation = new DataOperation(),
                     rawData = createCompletedRawOperation.data,
-                    dataIdentifier = self.dataIdentifierForTypeRawData(createCompletedRawOperation.objectDescriptor,rawData);
+                    objectDescriptor = self.objectDescriptorWithModuleId(createCompletedRawOperation.dataDescriptor),
+                    dataIdentifier = self.dataIdentifierForTypeRawData(objectDescriptor,rawData);
 
               self.recordSnapshot(dataIdentifier, rawData);
               self.rootService.registerUniqueObjectWithDataIdentifier(object, dataIdentifier);
 
             //   var objectIdentifer =  self.dataIdentifierForObject(object);
             //   console.log("objectIdentifer: ",objectIdentifer," for newly inserted object: ",object);
-              createCompletedOperation.referrer = operation;
+              createCompletedOperation.referrerId = operation.id;
 
               createCompletedOperation.type = DataOperation.Type.CreateCompleted;
               createCompletedOperation.data = object;
@@ -670,7 +673,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             }, function(createFailedRawOperation) {
               //TODO needs a more dedicated type of error
               var createFailedOperation = new DataOperation();
-              createFailedOperation.referrer = operation;
+              createFailedOperation.referrerId = operation.id;
               createFailedOperation.type = DataOperation.Type.CreateFailed;
               createFailedOperation.data = object;
               reject(createFailedOperation);
@@ -720,7 +723,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     saveRawData: {
       value: function (record, object) {
         var rawDataOperation = {},
-          objectDescriptor = this.objectDescriptorForObject;
+          objectDescriptor = this.objectDescriptorForObject(object);
 
         this.mapObjectDescriptorToRawOperation(objectDescriptor,rawDataOperation);
 
@@ -1159,7 +1162,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           return new Promise(function(resolve,reject) {
             self.performCreateObjectDescriptorOperation(rawDataOperation,function(err, data) {
               var operation = new DataOperation();
-              operation.objectDescriptor = createOperation.data;
+              operation.dataDescriptor = createOperation.dataDescriptor;
 
               if (err) {
                 // an error occurred
@@ -1174,7 +1177,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 //console.log(data);
                 operation.type = DataOperation.Type.CreateCompleted;
                 //Not sure there's much we can provide as data?
-                operation.data = operation.objectDescriptor;
+                operation.data = operation.dataDescriptor;
 
                 resolve(operation);      
               }    
@@ -1204,10 +1207,11 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             if(data instanceof ObjectDescriptor) {
                 return this.handleCreateObjectDescriptorOperation(createOperation);
             } else {
-              var rawDataOperation = {};
+              var rawDataOperation = {},
+                  objectDescriptor = this.objectDescriptorWithModuleId(createOperation.dataDescriptor);
 
               //This adds the right access key, db name. etc... to the RawOperation.
-              this.mapObjectDescriptorToRawOperation(createOperation.objectDescriptor,rawDataOperation);
+              this.mapObjectDescriptorToRawOperation(objectDescriptor,rawDataOperation);
 
 
               var self = this,
@@ -1279,7 +1283,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 return new Promise(function(resolve,reject) {
                   self._executeStatement(rawDataOperation, function(err, data) {
                     var operation = new DataOperation();
-                    operation.objectDescriptor = createOperation.objectDescriptor;
+                    operation.dataDescriptor = createOperation.dataDescriptor;
                     if (err) {
                       // an error occurred
                       console.log(err, err.stack, rawDataOperation); 
@@ -1314,12 +1318,12 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 criteria = updateOperation.criteria,
                 dataChanges = data,
                 changesIterator,
-                objectDescriptor = updateOperation.objectDescriptor,
+                objectDescriptor = this.objectDescriptorWithModuleId(updateOperation.dataDescriptor),
                 aProperty, aValue, addedValues, removedValues, aPropertyDescriptor,
                 record = {};
 
             //This adds the right access key, db name. etc... to the RawOperation.
-            this.mapObjectDescriptorToRawOperation(data.objectDescriptor,rawDataOperation);
+            this.mapObjectDescriptorToRawOperation(objectDescriptor,rawDataOperation);
 
 
             /*
@@ -1420,7 +1424,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             return new Promise(function(resolve,reject) {
               self._executeStatement(rawDataOperation, function(err, data) {
                 var operation = new DataOperation();
-                operation.objectDescriptor = objectDescriptor;
+                operation.dataDescriptor = objectDescriptor.module.id;
                 if (err) {
                   // an error occurred
                   console.log(err, err.stack, rawDataOperation); 

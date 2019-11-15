@@ -10,8 +10,8 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     DESCENDING = DataOrdering.DESCENDING,
     evaluate = require("montage/frb/evaluate"),
     Set = require("montage/collections/set"),
-
-    
+    MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
+    Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     uuid = require("montage/core/uuid"),
     PhrontClientService;
@@ -29,7 +29,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         value: function PhrontClientService() {
             this.super();
 
-            this._socket = new WebSocket("wss://77z1bsd4pb.execute-api.us-west-2.amazonaws.com/dev");
+            this._socket = new WebSocket("wss://77mq8uupuc.execute-api.us-west-2.amazonaws.com/dev");
 
             this._socket.addEventListener("open", this);
             this._socket.addEventListener("error", this);
@@ -43,6 +43,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 self._socketOpenPromiseReject = reject;
             });
 
+            this._serializer = new MontageSerializer().initWithRequire(require);
+            this._deserializer = new Deserializer();
 
             return this;
         }
@@ -74,10 +76,10 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             }
 
             if(operation) {
-                var referrerId = operation.referrerId,
+                var referrer = operation.referrerId,
                 type = operation.type,
                 records = operation.data,
-                stream = this._streamByOperationId.get(referrerId);
+                stream = this._streamByOperationId.get(referrer);
 
                 if(records && records.length > 0) {
   
@@ -107,6 +109,16 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
+    /*
+      overriden to efficently counters the data structure
+      returned by AWS RDS DataAPI efficently
+    */
+   addOneRawData: {
+        value: function (stream, rawData, context) {
+        return this.super(stream, JSON.parse(rawData[0].stringValue), context);
+        }
+    },
+
     fetchData: {
         value: function (query, stream) {
             var self = this;
@@ -121,18 +133,12 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
               //One way to do this is to replace every object in a criteria's parameters by it's data identifier.
               //Another is to serialize the criteria.
               readOperation.type = DataOperation.Type.Read;
-              readOperation.objectDescriptor = objectDescriptor.module.id;
-  
-              // if(this.objectDescriptorForObjectDescriptorModuleId(objectDescriptor.module.id) === objectDescriptor ) {
-              //         console.log("good");
-              // }
-  
-              //readOperation.criteria = query.criteria;
-              readOperation.id = uuid.generate();
+              readOperation.dataDescriptor = objectDescriptor.module.id;  
+              readOperation.criteria = query.criteria;
   
               self._streamByOperationId.set(readOperation.id, stream);
   
-              self._socket.send(JSON.stringify(readOperation));
+              self._socket.send(serializer.serializeObject(readOperation));
   
             });
   
