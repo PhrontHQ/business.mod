@@ -74,13 +74,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         value: function (event) {
             var serializedOperation;
             console.log("received socket message ",event);
-            try {
                 serializedOperation = event.data;
-                console.log("<---- receive operation "+serializedOperation);
+                //console.log("<---- receive operation "+serializedOperation);
 
-            } catch (e) {
-                return console.warn("Invalid WebSocket message format:", event.data);
-            }
 
             if(serializedOperation) {
                 var deserializedOperation,
@@ -89,19 +85,25 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 module,
                 isSync = true;
 
-                this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
-                operation = this._deserializer.deserializeObject();
+                try {
+                    this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
+                    operation = this._deserializer.deserializeObject();
+                } catch (e) {
+                    return console.error("Invalid Operation Serialization:", event.data);
+                }
 
-                var referrer = operation.referrerId,
-                type = operation.type,
-                records = operation.data,
-                stream = this._streamByOperationId.get(referrer);
-
-                if(records && records.length > 0) {
-  
-                    //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
-                    this.addRawData(stream, records);   
-                    this.rawDataDone(stream);    
+                if(operation) {
+                    var referrer = operation.referrerId,
+                    type = operation.type,
+                    records = operation.data,
+                    stream = this._streamByOperationId.get(referrer);
+    
+                    if(records && records.length > 0) {
+      
+                        //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
+                        this.addRawData(stream, records);   
+                        this.rawDataDone(stream);    
+                    }    
                 }
   
             }
@@ -155,7 +157,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
   
               self._streamByOperationId.set(readOperation.id, stream);
               serializedOperation = self._serializer.serializeObject(readOperation);
-              console.log("----> send operation "+serializedOperation);
+              //console.log("----> send operation "+serializedOperation);
               self._socket.send(serializedOperation);
   
             });
