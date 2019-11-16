@@ -45,7 +45,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                 resultOperatationPromise = phrontService.handleCreateOperation(deserializedOperation);
             }
             else {
-                console.error("OperationCoordinator not programmed to handle type of operation ",deserializedOperation);
+                console.error("OperationCoordinator: not programmed to handle type of operation ",deserializedOperation);
                 resultOperatationPromise = Promise.reject(null);
             }
 
@@ -54,7 +54,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                 return self._serializer.serializeObject(operationCompleted);
 
             },function(operationFailed) {
-                //serialize
+                console.error("OperationCoordinator: resultOperatationPromise failed ",operationFailed);
                 return self._serializer.serializeObject(operationFailed);
             });
         
