@@ -58,7 +58,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     handleOpen: {
         value: function (event) {
             console.log("WebSocket opened");
-            self._socketOpenPromiseResolve(true);
+            this._socketOpenPromiseResolve(true);
             //this._socket.send("Echo....");
             //this.dispatchEvent(event, true, false);
         }
