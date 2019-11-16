@@ -54,7 +54,7 @@
         "object": "data/main.datareel/model/product.mjson"
     },
     "ordersForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-property-value-to-object-converter",
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "$.has(id)"
         }

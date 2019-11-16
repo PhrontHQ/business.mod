@@ -33,13 +33,13 @@
         "object": "data/main.datareel/model/vendor-contact.mjson"
     },
     "vendorForeignKeysConverter": {
-        "prototype": "montage/data/converter/raw-property-value-to-object-converter",
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "$.has(id)"
         }
     },
     "detectionsForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-property-value-to-object-converter",
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "sensorId == $.id && rawData == $.icd101aReport.detection"
         }

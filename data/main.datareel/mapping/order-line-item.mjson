@@ -34,13 +34,13 @@
         "object": "data/main.datareel/model/order-line-item.mjson"
     },
     "productForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-property-value-to-object-converter",
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "$.has(id)"
         }
     },
     "detectionsForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-property-value-to-object-converter",
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "properties": {
             "convertExpression": "sensorId == $.id && rawData == $.icd101aReport.detection"
         }
