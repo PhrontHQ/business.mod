@@ -48,6 +48,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                     //serialize
                     var operationDataKBSize = sizeof(readOperationCompleted) / 1024;
                     if(operationDataKBSize < 128) {
+                        console.log("readOperationCompleted size is "+operationDataKBSize);
                         return gatewayClient
                         .postToConnection({
                             ConnectionId: event.requestContext.connectionId,
@@ -56,7 +57,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                         .promise();
                     }
                     else {
-                        console.error("readOperationCompleted is "+operationDataKBSize+"KB, need to split:");
+                        console.error("!!!!!! readOperationCompleted is "+operationDataKBSize+"KB, need to split:");
                     }
     
                 },function(readOperationFailed) {
