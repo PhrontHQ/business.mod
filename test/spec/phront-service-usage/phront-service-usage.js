@@ -29,15 +29,22 @@ operationCoordinator.send = function(serializedOperation) {
         mockCallback,
         mockGateway =  {
         postToConnection: function(params) {
-                /* params looks like:
-                    {
-                        ConnectionId: event.requestContext.connectionId,
-                        Data: self._serializer.serializeObject(readOperationCompleted)
-                    }
-                */
-               var serializedHandledOperation = params.Data;
-               phrontClientService.handleMessage({data:serializedHandledOperation});
-                
+                this._promise = new Promise(function(resolve,reject) { 
+                    /* params looks like:
+                        {
+                            ConnectionId: event.requestContext.connectionId,
+                            Data: self._serializer.serializeObject(readOperationCompleted)
+                        }
+                    */
+                var serializedHandledOperation = params.Data;
+                phrontClientService.handleMessage({data:serializedHandledOperation});
+                resolve(true);
+
+                });
+                return this;
+            },
+            promise: function() {
+                return this._promise;
             }
         };
 

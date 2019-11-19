@@ -60,13 +60,25 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                         .promise();
                     }
                     else {
+                        /*
+                            Failing:
+                            Large ReadOperation split in 1 sub operations: operationDataKBSize:230.927734375, integerSizeQuotient:1, sizeRemainder:102.927734375, operationData.length:0, integerLengthQuotient:170, lengthRemainder: 0
+
+
+                        */
                         var integerSizeQuotient = Math.floor(operationDataKBSize / 128),
                             sizeRemainder = operationDataKBSize % 128,
+                            sizeRemainderRatio = sizeRemainder/operationDataKBSize,
                             operationData = readOperationCompleted.data,
                             integerLengthQuotient = Math.floor(operationData.length / integerSizeQuotient),
                             lengthRemainder = operationData.length % integerSizeQuotient,
                             i=0, countI = integerSizeQuotient, iChunk, iReadUpdateOperation,
                             promises = [];
+
+                            if(lengthRemainder === 0 && sizeRemainder > 0) {
+                                lengthRemainder = Math.floor(operationData.length*sizeRemainderRatio);
+                                integerLengthQuotient = operationData.length-lengthRemainder;
+                            }
 
                             iReadUpdateOperation = new DataOperation();
                             iReadUpdateOperation.type = DataOperation.Type.ReadUpdate;
