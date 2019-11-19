@@ -6,6 +6,7 @@ MontageSerializer = require("montage/core/serialization/serializer/montage-seria
 Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
 DataOperation = require("montage/data/service/data-operation").DataOperation,
 phrontService = require("data/main.datareel/main.mjson").montageObject.childServices[0],
+DataOperation = require("montage/data/service/data-operation").DataOperation,
 sizeof = require('object-sizeof');
 
 
@@ -41,6 +42,8 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
         
             this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
             deserializedOperation = this._deserializer.deserializeObject();
+            console.log("handleEvent(...)",deserializedOperation);
+
             if(deserializedOperation.type ===  DataOperation.Type.Read) {
                 return phrontService.handleReadOperation(deserializedOperation)
                 .then(function(readOperationCompleted) {
@@ -53,11 +56,44 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                         .postToConnection({
                             ConnectionId: event.requestContext.connectionId,
                             Data: self._serializer.serializeObject(readOperationCompleted)
-                        })
-                        .promise();
+                        });
+                        // .promise();
                     }
                     else {
-                        throw "!!!!!! readOperationCompleted is "+operationDataKBSize+"KB, need to split:";
+                        var integerSizeQuotient = Math.floor(operationDataKBSize / 128),
+                            sizeRemainder = operationDataKBSize % 128,
+                            operationData = readOperationCompleted.data,
+                            integerLengthQuotient = Math.floor(operationData.length / integerSizeQuotient),
+                            lengthRemainder = operationData.length % integerSizeQuotient,
+                            i=0, countI = integerSizeQuotient, iChunk, iReadUpdateOperation;
+
+                            iReadUpdateOperation = new DataOperation();
+                            iReadUpdateOperation.type = DataOperation.Type.ReadUpdate;
+                            iReadUpdateOperation.dataDescriptor = readOperationCompleted.dataDescriptor;
+                            iReadUpdateOperation.criteria = readOperationCompleted.dataDescriptor;
+                            iReadUpdateOperation.referrerId = readOperationCompleted.referrerId;
+
+                            for(;(i<countI);i++) {
+                                if((readOperationCompleted.type === DataOperation.Type.ReadCompleted) && i === (countI-1) && (lengthRemainder === 0)) {
+                                    iReadUpdateOperation.type = DataOperation.Type.ReadCompleted;
+                                }
+                                iReadUpdateOperation.data = operationData.splice(0,integerLengthQuotient);
+                                gatewayClient.postToConnection({
+                                    ConnectionId: event.requestContext.connectionId,
+                                    Data: self._serializer.serializeObject(iReadUpdateOperation)
+                                });
+                            }
+
+                            //Sends the last if some left:
+                            if(lengthRemainder || operationData.length) {
+                                gatewayClient.postToConnection({
+                                    ConnectionId: event.requestContext.connectionId,
+                                    Data: self._serializer.serializeObject(readOperationCompleted)
+                                });
+                            }
+
+                            console.log("Large ReadOperation split in "+(countI+lengthRemainder)+ " sub operations");
+
                     }
     
                 },function(readOperationFailed) {

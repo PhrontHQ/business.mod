@@ -15,7 +15,8 @@ var PhrontService = require("phront-data/data/main.datareel/service/phront-servi
     phrontService = mainService.childServices[0],
     phrontClientService = clientMainService.childServices[0],
     types = phrontService.types,
-    sizeof = require("object-sizeof");
+    sizeof = require("object-sizeof"),
+    uuid = require("montage/core/uuid");
 
 
 //Hack phrontClientService and Augment operationCoordinator for tests, 
@@ -23,14 +24,37 @@ var PhrontService = require("phront-data/data/main.datareel/service/phront-servi
 
 phrontClientService._socketOpenPromise = Promise.resolve(true);
 operationCoordinator.send = function(serializedOperation) {
+    //return new Promise(function(resolve,reject) {
+    var mockContext,
+        mockCallback,
+        mockGateway =  {
+        postToConnection: function(params) {
+                /* params looks like:
+                    {
+                        ConnectionId: event.requestContext.connectionId,
+                        Data: self._serializer.serializeObject(readOperationCompleted)
+                    }
+                */
+               var serializedHandledOperation = params.Data;
+               phrontClientService.handleMessage({data:serializedHandledOperation});
+                
+            }
+        };
+
     this.handleEvent({
+        requestContext: {
+            connectionId: uuid.generate()
+        },
         "body":serializedOperation
-    })
-    .then(function(serializedHandledOperation) {
-        phrontClientService.handleMessage({data:serializedHandledOperation});
-    },function(error) {
-        console.error(error);
-    });
+    },mockContext,mockCallback,mockGateway);
+
+//});
+
+    // .then(function(serializedHandledOperation) {
+    //     phrontClientService.handleMessage({data:serializedHandledOperation});
+    // },function(error) {
+    //     console.error(error);
+    // });
 }
 phrontClientService._socket = operationCoordinator;
 
@@ -40,6 +64,29 @@ exports.promise = new Promise(function(resolve,reject) {
 
     var serializer = new MontageSerializer().initWithRequire(require),
         deserializer = new Deserializer();
+
+
+            //"can split a an operation in multiple ones if it's too large for a known payload limit"
+        
+            //Create a ReadOperation
+            var serviceDescriptor = phrontService.objectDescriptorWithModuleId("data/main.datareel/model/service"),
+
+            //This ends up calling module-object-descriptor.js:149 - getObjectDescriptorWithModuleId()
+            //which causes node to try to phront-data/node_modules/montage/core/meta/module-object-descriptor.mjson
+            //whih is bogus....
+            //console.log("Montage.getInfoForObject(objectDescriptor): ", Montage.getInfoForObject(objectDescriptor));
+
+            readOperation = new DataOperation(),
+            serviceQuery = DataQuery.withTypeAndCriteria(serviceDescriptor),
+            dataStream = new DataStream();
+
+            dataStream.query = serviceQuery;
+            readOperation.type = DataOperation.Type.Read;
+            readOperation.dataDescriptor = serviceDescriptor.module.id;
+
+            phrontClientService._dispatchOperation(readOperation,dataStream);
+
+
 
         //"can fetch an image from an id without OperationCoordinator"
         /*
@@ -121,7 +168,7 @@ exports.promise = new Promise(function(resolve,reject) {
 
         // it("can feth a collection and its products", function (done) {
 
-
+/*
 
                 var collectionQuery = DataQuery.withTypeAndCriteria(ClientCollection),
                     collectionDataStream =  new DataStream();
@@ -148,6 +195,6 @@ exports.promise = new Promise(function(resolve,reject) {
                 );
 
         // });
-   
+*/   
 
 });

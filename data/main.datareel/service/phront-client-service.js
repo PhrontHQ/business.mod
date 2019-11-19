@@ -137,6 +137,15 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
+    _dispatchOperation: {
+        value: function(operation, stream) {
+            this._streamByOperationId.set(operation.id, stream);
+            var serializedOperation = this._serializer.serializeObject(operation);
+            //console.log("----> send operation "+serializedOperation);
+            this._socket.send(serializedOperation);
+        }
+    },
+
     fetchData: {
         value: function (query, stream) {
             var self = this;
@@ -155,11 +164,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
               readOperation.dataDescriptor = objectDescriptor.module.id;  
               readOperation.criteria = query.criteria;
   
-              self._streamByOperationId.set(readOperation.id, stream);
-              serializedOperation = self._serializer.serializeObject(readOperation);
-              //console.log("----> send operation "+serializedOperation);
-              self._socket.send(serializedOperation);
-  
+                self._dispatchOperation(readOperation, stream);
             });
   
           return stream;
