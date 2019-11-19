@@ -92,7 +92,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                                     Data: self._serializer.serializeObject(readOperationCompleted)
                                 }).promise());
                             }
-                            console.log("Large ReadOperation split in "+(countI+lengthRemainder)+ " sub operations");
+                            console.log("Large ReadOperation split in "+(countI+lengthRemainder)+ " sub operations: operationDataKBSize:"+operationDataKBSize+", integerSizeQuotient:"+integerSizeQuotient+", sizeRemainder:"+sizeRemainder+", operationData.length:"+operationData.length+", integerLengthQuotient:"+integerLengthQuotient+", lengthRemainder:",lengthRemainder );
                             return Promise.all(promises);
 
                     }
