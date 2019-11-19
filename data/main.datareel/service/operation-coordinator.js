@@ -57,7 +57,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                         .promise();
                     }
                     else {
-                        console.error("!!!!!! readOperationCompleted is "+operationDataKBSize+"KB, need to split:");
+                        throw "!!!!!! readOperationCompleted is "+operationDataKBSize+"KB, need to split:";
                     }
     
                 },function(readOperationFailed) {
