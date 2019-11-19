@@ -1,11 +1,12 @@
-if(global && typeof global.XMLHttpRequest === undefined) {
-    global.XMLHttpRequest = require('xhr2');
-}
+// if(global && typeof global.XMLHttpRequest === undefined) {
+//     global.XMLHttpRequest = require('xhr2');
+// }
 var Montage = require("montage/core/core").Montage,
 MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
 Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
 DataOperation = require("montage/data/service/data-operation").DataOperation,
-phrontService = require("data/main.datareel/main.mjson").montageObject.childServices[0];
+phrontService = require("data/main.datareel/main.mjson").montageObject.childServices[0],
+sizeof = require('object-sizeof');
 
 
 exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinator.prototype */ {
@@ -23,8 +24,13 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
         }
     },
 
+    /*
+
+        var serializedHandledOperation = await operationCoordinator.handleEvent(event, context, cb, client);
+
+    */
     handleEvent: {
-        value: function(event, context) {
+        value: function(event, context, callback, gatewayClient) {
             
             var serializedOperation = event.body,
                 objectRequires,
@@ -36,7 +42,27 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
             this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
             deserializedOperation = this._deserializer.deserializeObject();
             if(deserializedOperation.type ===  DataOperation.Type.Read) {
-                resultOperatationPromise = phrontService.handleReadOperation(deserializedOperation);
+                return phrontService.handleReadOperation(deserializedOperation)
+                .then(function(readOperationCompleted) {
+                    //We need to assess the size of the data returned.
+                    //serialize
+                    var operationDataKBSize = sizeof(readOperationCompleted) / 1024;
+                    if(operationDataKBSize < 128) {
+                        return gatewayClient
+                        .postToConnection({
+                            ConnectionId: event.requestContext.connectionId,
+                            Data: self._serializer.serializeObject(readOperationCompleted)
+                        })
+                        .promise();
+                    }
+                    else {
+                        console.error("readOperationCompleted is "+operationDataKBSize+"KB, need to split:");
+                    }
+    
+                },function(readOperationFailed) {
+                    console.error("OperationCoordinator: resultOperatationPromise failed ",readOperationFailed);
+                    return self._serializer.serializeObject(readOperationFailed);
+                });
             }
             else if(deserializedOperation.type ===  DataOperation.Type.Update) {
                 resultOperatationPromise = phrontService.handleUpdateOperation(deserializedOperation);

@@ -18,6 +18,7 @@
   "mappings": {
     "montage": "../node_modules/montage",
     "montage-testing": "../node_modules/montage-testing",
+    "object-sizeof": "../node_modules/object-sizeof",
     "phront-data": "../"
   },
   "private": true

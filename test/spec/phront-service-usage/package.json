@@ -20,6 +20,7 @@
     "montage": "../../node_modules/montage",
     "collections": "../../node_modules/montage/node_modules/collections",
     "montage-testing": "../../node_modules/montage-testing",
+    "object-sizeof": "../../node_modules/object-sizeof",
     "phront-data": "../../"
   },
   "private": true

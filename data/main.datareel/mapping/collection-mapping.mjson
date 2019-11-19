@@ -22,7 +22,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "title","description","descriptionHtml","image"
+                "title","description","descriptionHtml","image", "products"
             ]
         }
     },

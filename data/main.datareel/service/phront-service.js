@@ -45,6 +45,30 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
 
 
 
+    class Timer {
+      // Automatically starts the timer
+      constructor(name = 'Benchmark') {
+          this.NS_PER_SEC = 1e9;
+          this.MS_PER_NS = 1e-6
+          this.name = name;
+          this.startTime = process.hrtime();
+      }
+  
+      // returns the time in ms since instantiation
+      // can be called multiple times
+      runtimeMs() {
+          const diff = process.hrtime(this.startTime);
+          return (diff[0] * this.NS_PER_SEC + diff[1]) * this.MS_PER_NS;
+      }
+  
+      // retuns a string: the time in ms since instantiation
+      runtimeMsStr() {
+          return `${this.name} took ${this.runtimeMs()} milliseconds`;
+      }
+  }
+  
+
+
     //Node.js specific
     if(https) {
       /**********************************************************************/
@@ -465,16 +489,21 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           this.mapReadOperationToRawStatement(readOperation,rawDataOperation);
 
           return new Promise(function(resolve,reject) {
-           //var timeID = self._handleReadOperationCount++;
-            //console.time("PhrontService handleReadOperation "+timeID);
+          //var timeID = self._handleReadOperationCount++,
+                start = Date.now();
+                // startTime = console.time(readOperation.id);
+            var timer = new Timer(readOperation.id);
 
             // if(rawDataOperation.sql.indexOf('"name" = ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1) {
             //   console.log(rawDataOperation.sql);
             // }
-            //console.log("executeStatement "+rawDataOperation.sql);
+            // console.log("executeStatement "+rawDataOperation.sql);
 
             self._executeStatement(rawDataOperation, function(err, data) {
-              //console.timeEnd("PhrontService handleReadOperation "+timeID);
+              //var endTime  = console.timeEnd(readOperation.id);
+              console.log(timer.runtimeMsStr() + " for sql: "+rawDataOperation.sql);
+
+              //console.log("Query took "+(Date.now()-start)+ " ms");
               //debug
             //   if(rawDataOperation.sql.indexOf('"name" ilike ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1 && data.records.length === 0) {
             //     console.log(rawDataOperation.sql);

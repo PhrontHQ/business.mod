@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "montage": "github:marchant/montage#montage-19",
+    "object-sizeof": "^1.5.2",
     "serverless": "~1.53.0",
     "sqlstring": "^2.3.1",
     "xhr2": "^0.2.0"

@@ -73,7 +73,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     handleMessage: {
         value: function (event) {
             var serializedOperation;
-            console.log("received socket message ",event);
+            //console.log("received socket message ",event);
                 serializedOperation = event.data;
                 //console.log("<---- receive operation "+serializedOperation);
 

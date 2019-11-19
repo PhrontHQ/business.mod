@@ -14,7 +14,8 @@ var PhrontService = require("phront-data/data/main.datareel/service/phront-servi
     operationCoordinator = new OperationCoordinator,
     phrontService = mainService.childServices[0],
     phrontClientService = clientMainService.childServices[0],
-    types = phrontService.types;
+    types = phrontService.types,
+    sizeof = require("object-sizeof");
 
 
 //Hack phrontClientService and Augment operationCoordinator for tests, 
@@ -134,6 +135,11 @@ exports.promise = new Promise(function(resolve,reject) {
                 ).then(
                     function (collections) {
                         console.log("collections: collections");
+
+                        var serializedCollections = serializer.serializeObject(collections);
+                        var dataKBSize = sizeof(serializedCollections) / 1024;
+                        console.log("serializedCollections is "+dataKBSize+"KB");
+    
                         resolve(collections);
                     },
                     function (error) {
