@@ -56,8 +56,8 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                         .postToConnection({
                             ConnectionId: event.requestContext.connectionId,
                             Data: self._serializer.serializeObject(readOperationCompleted)
-                        });
-                        // .promise();
+                        })
+                        .promise();
                     }
                     else {
                         var integerSizeQuotient = Math.floor(operationDataKBSize / 128),
