@@ -42,7 +42,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
         
             this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
             deserializedOperation = this._deserializer.deserializeObject();
-            console.log("handleEvent(...)",deserializedOperation);
+            //console.log("handleEvent(...)",deserializedOperation);
 
             if(deserializedOperation.type ===  DataOperation.Type.Read) {
                 return phrontService.handleReadOperation(deserializedOperation)
@@ -51,7 +51,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                     //serialize
                     var operationDataKBSize = sizeof(readOperationCompleted) / 1024;
                     if(operationDataKBSize < 128) {
-                        console.log("readOperationCompleted size is "+operationDataKBSize);
+                        //console.log("readOperationCompleted size is "+operationDataKBSize);
                         return gatewayClient
                         .postToConnection({
                             ConnectionId: event.requestContext.connectionId,
@@ -65,7 +65,8 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                             operationData = readOperationCompleted.data,
                             integerLengthQuotient = Math.floor(operationData.length / integerSizeQuotient),
                             lengthRemainder = operationData.length % integerSizeQuotient,
-                            i=0, countI = integerSizeQuotient, iChunk, iReadUpdateOperation;
+                            i=0, countI = integerSizeQuotient, iChunk, iReadUpdateOperation,
+                            promises = [];
 
                             iReadUpdateOperation = new DataOperation();
                             iReadUpdateOperation.type = DataOperation.Type.ReadUpdate;
@@ -78,21 +79,21 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                                     iReadUpdateOperation.type = DataOperation.Type.ReadCompleted;
                                 }
                                 iReadUpdateOperation.data = operationData.splice(0,integerLengthQuotient);
-                                gatewayClient.postToConnection({
+                                promises.push(gatewayClient.postToConnection({
                                     ConnectionId: event.requestContext.connectionId,
                                     Data: self._serializer.serializeObject(iReadUpdateOperation)
-                                });
+                                }).promise());
                             }
 
                             //Sends the last if some left:
                             if(lengthRemainder || operationData.length) {
-                                gatewayClient.postToConnection({
+                                promises.push(gatewayClient.postToConnection({
                                     ConnectionId: event.requestContext.connectionId,
                                     Data: self._serializer.serializeObject(readOperationCompleted)
-                                });
+                                }).promise());
                             }
-
                             console.log("Large ReadOperation split in "+(countI+lengthRemainder)+ " sub operations");
+                            return Promise.all(promises);
 
                     }
     
