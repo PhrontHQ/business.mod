@@ -489,10 +489,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           this.mapReadOperationToRawStatement(readOperation,rawDataOperation);
 
           return new Promise(function(resolve,reject) {
-          //var timeID = self._handleReadOperationCount++,
-                start = Date.now();
+            //var timeID = self._handleReadOperationCount++,
+                //start = Date.now();
                 // startTime = console.time(readOperation.id);
-            var timer = new Timer(readOperation.id);
+            //var timer = new Timer(readOperation.id);
 
             // if(rawDataOperation.sql.indexOf('"name" = ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1) {
             //   console.log(rawDataOperation.sql);
@@ -501,7 +501,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             self._executeStatement(rawDataOperation, function(err, data) {
               //var endTime  = console.timeEnd(readOperation.id);
-              console.log(timer.runtimeMsStr() + " for sql: "+rawDataOperation.sql);
+              //console.log(timer.runtimeMsStr() + " for sql: "+rawDataOperation.sql);
 
               //console.log("Query took "+(Date.now()-start)+ " ms");
               //debug
