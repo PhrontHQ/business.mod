@@ -53,7 +53,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                     //We need to assess the size of the data returned.
                     //serialize
                     var operationDataKBSize = sizeof(readOperationCompleted) / 1024;
-                    if(operationDataKBSize < this.MAX_PAYLOAD_SIZE) {
+                    if(operationDataKBSize < self.MAX_PAYLOAD_SIZE) {
                         //console.log("readOperationCompleted size is "+operationDataKBSize);
                         return gatewayClient
                         .postToConnection({
@@ -69,8 +69,8 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
 
 
                         */
-                        var integerSizeQuotient = Math.floor(operationDataKBSize / this.MAX_PAYLOAD_SIZE),
-                            sizeRemainder = operationDataKBSize % this.MAX_PAYLOAD_SIZE,
+                        var integerSizeQuotient = Math.floor(operationDataKBSize / self.MAX_PAYLOAD_SIZE),
+                            sizeRemainder = operationDataKBSize % self.MAX_PAYLOAD_SIZE,
                             sizeRemainderRatio = sizeRemainder/operationDataKBSize,
                             operationData = readOperationCompleted.data,
                             integerLengthQuotient = Math.floor(operationData.length / integerSizeQuotient),
