@@ -45,7 +45,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "title","description","descriptionHtml","images","link","productType","vendors","variants"
+                "title","description","images","link","productType","vendors","variants"
             ]
         }
     },
