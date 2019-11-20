@@ -156,9 +156,12 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
+    //This probably isn't right and should be fetchRawData, but switching creates a strange error.
     fetchData: {
         value: function (query, stream) {
             var self = this;
+            stream = stream || new DataStream();
+            stream.query = query;
 
             this._socketOpenPromise.then(function() {
                 var objectDescriptor = query.type,
@@ -173,6 +176,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
               readOperation.type = DataOperation.Type.Read;
               readOperation.dataDescriptor = objectDescriptor.module.id;  
               readOperation.criteria = query.criteria;
+              readOperation.objectExpressions = query.prefetchExpressions;
   
                 self._dispatchOperation(readOperation, stream);
             });
