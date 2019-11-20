@@ -146,6 +146,16 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
+    fetchObjectProperty: {
+        value: function (object, propertyName) {
+            var objectCriteria = new Criteria().initWithExpression("id == $", object.identifier.primaryKey),
+                propertyNameQuery = DataQuery.withTypeAndCriteria(this.objectDescriptorForObject(object),objectCriteria);
+                propertyNameQuery.prefetchExpressions = [propertyName];
+
+                return this.fetchData(propertyNameQuery);
+        }
+    },
+
     fetchData: {
         value: function (query, stream) {
             var self = this;

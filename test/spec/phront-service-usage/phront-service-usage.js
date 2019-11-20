@@ -74,25 +74,25 @@ exports.promise = new Promise(function(resolve,reject) {
 
 
             //"can split a an operation in multiple ones if it's too large for a known payload limit"
-        
-            //Create a ReadOperation
-            var serviceDescriptor = phrontService.objectDescriptorWithModuleId("data/main.datareel/model/service"),
+            /*
+                //Create a ReadOperation
+                var serviceDescriptor = phrontService.objectDescriptorWithModuleId("data/main.datareel/model/service"),
 
-            //This ends up calling module-object-descriptor.js:149 - getObjectDescriptorWithModuleId()
-            //which causes node to try to phront-data/node_modules/montage/core/meta/module-object-descriptor.mjson
-            //whih is bogus....
-            //console.log("Montage.getInfoForObject(objectDescriptor): ", Montage.getInfoForObject(objectDescriptor));
+                //This ends up calling module-object-descriptor.js:149 - getObjectDescriptorWithModuleId()
+                //which causes node to try to phront-data/node_modules/montage/core/meta/module-object-descriptor.mjson
+                //whih is bogus....
+                //console.log("Montage.getInfoForObject(objectDescriptor): ", Montage.getInfoForObject(objectDescriptor));
 
-            readOperation = new DataOperation(),
-            serviceQuery = DataQuery.withTypeAndCriteria(serviceDescriptor),
-            dataStream = new DataStream();
+                readOperation = new DataOperation(),
+                serviceQuery = DataQuery.withTypeAndCriteria(serviceDescriptor),
+                dataStream = new DataStream();
 
-            dataStream.query = serviceQuery;
-            readOperation.type = DataOperation.Type.Read;
-            readOperation.dataDescriptor = serviceDescriptor.module.id;
+                dataStream.query = serviceQuery;
+                readOperation.type = DataOperation.Type.Read;
+                readOperation.dataDescriptor = serviceDescriptor.module.id;
 
-            phrontClientService._dispatchOperation(readOperation,dataStream);
-
+                phrontClientService._dispatchOperation(readOperation,dataStream);
+            */
 
 
         //"can fetch an image from an id without OperationCoordinator"
@@ -203,5 +203,63 @@ exports.promise = new Promise(function(resolve,reject) {
 
         // });
 */   
+
+
+        // it("can feth a collection and its products", function (done) {
+
+            function getServiceDescriptionHtml(aService) {
+                //Cheat to test the implementation for now.
+                return phrontClientService.fetchObjectProperty.call(mainService,aService,"descriptionHtml")
+                // return clientMainService.getObjectProperties(aService,["descriptionHtml"])
+                .then(function(resolved) {
+                    console.log(aService.title+" descriptionHtml is:"+aService.descriptionHtml);
+                    return aService;
+                });
+
+            }
+
+
+            var collectionQuery = DataQuery.withTypeAndCriteria(ClientCollection),
+                collectionDataStream =  new DataStream();
+
+            collectionDataStream.query = collectionQuery;
+
+            mainService.fetchData(
+                collectionQuery,
+                null,
+                collectionDataStream
+            ).then(
+                function (collections) {
+                    console.log("collections: collections");
+
+                    // var serializedCollections = serializer.serializeObject(collections);
+                    // var dataKBSize = sizeof(serializedCollections) / 1024;
+                    // console.log("serializedCollections is "+dataKBSize+"KB");
+
+                    for(var i=0, countI = collections.length, iCollection, iProducts, promises = [];(i<countI);i++) {
+                        iCollection = collections[i];
+                        iProducts = iCollection.products;
+
+                        if(iProducts) {
+                            for(var j=0, countJ = iProducts.length, jProduct;(j<countJ);j++ ) {
+                                jProduct = iProducts[j];
+                                promises.push(getServiceDescriptionHtml(jProduct));
+                            }    
+                        }
+                    }
+
+                    Promise.all(promises)
+                    .then(function(resolved) {
+                        resolve(collections);
+                    })
+                },
+                function (error) {
+                    reject(error);
+                }
+            );
+
+    // });
+
+
 
 });

@@ -232,8 +232,11 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     fetchData: {
       value: function (query, stream) {
           var self = this,
-            objectDescriptor = query.type,
+            objectDescriptor = this.objectDescriptorForType(query.type),
             readOperation = new DataOperation();
+
+            stream = stream || new DataStream();
+            stream.query = query;
 
           //We need to turn this into a Read Operation. Difficulty is to turn the query's criteria into
           //one that doesn't rely on objects. What we need to do before handing an operation over to another context
@@ -243,6 +246,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           readOperation.type = DataOperation.Type.Read;
           readOperation.dataDescriptor = objectDescriptor.module.id;
           readOperation.criteria = query.criteria;
+          readOperation.objectExpressions = query.prefetchExpressions;
 
           //Where do we put the "select part" ? The list of properties, default + specific ones asked by developer and
           //eventually collected by the framework through triggers?
@@ -357,14 +361,15 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
     mapReadOperationToRawStatement: {
       value: function(readOperation,rawDataOperation) {
-          //Now we need to transform the operation into SQL:
+          //Now we need to transf orm the operation into SQL:
           var objectDescriptor = this.objectDescriptorWithModuleId(readOperation.dataDescriptor),
           mapping = this.mappingWithType(objectDescriptor),
+          objectExpressions = readOperation.objectExpressions,
           rawDataPrimaryKeys = mapping.rawDataPrimaryKeys,
           operationName = readOperation.name,
           //We start by the mandatory, but the read operation could have
           //further information about what to retur, including new constructs based on expressions.
-          rawReadExpressions = new Set(mapping.rawRequisitePropertyNames),//Set
+          rawReadExpressions,//Set
           tableName = this.tableForObjectDescriptor(objectDescriptor),
           criteria = readOperation.criteria,
           schemaName = rawDataOperation.schema,
@@ -400,6 +405,15 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           sql,
           self = this,
           HAS_DATA_API_UUID_ARRAY_BUG = this.HAS_DATA_API_UUID_ARRAY_BUG;
+
+
+          //WARNING If a set of objectExpressions is expressed on the operation for now it will excludes
+          //the requisites.
+          if(objectExpressions) {
+            rawReadExpressions = new Set(objectExpressions.map(expression => mapping.mapObjectPropertyNameToRawPropertyName(expression)));
+          }else {
+            rawReadExpressions = new Set(mapping.rawRequisitePropertyNames)
+          }
 
           //Adds the primaryKeys to the columns fetched
           rawDataPrimaryKeys.forEach(item => rawReadExpressions.add(item));
