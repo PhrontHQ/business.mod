@@ -3,6 +3,7 @@
         "prototype": "montage/data/service/data-service",
         "values": {
             "name": "DataService",
+            "isUniquing": true,
             "childServices": [
                 {"@": "phrontService"}
             ]
