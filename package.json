@@ -6,7 +6,7 @@
     "# project. npm only generates files with 2 space indents",
     "# (see https://github.com/npm/npm/pull/3180#issuecomment-16336516)."
   ],
-  "name": "phront-data",
+  "name": "phront",
   "version": "1.0.0",
   "private": true,
   "license": "BSD-3-Clause",
@@ -17,6 +17,11 @@
     "url": "PhrontHQ/phront-da"
   },
   "dependencies": {
+    "@aws-amplify/auth": "^1.5.0",
+    "googleapis": "^45.0.0",
+    "lodash": "^4.17.2",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.27",
     "montage": "github:marchant/montage#montage-19",
     "object-sizeof": "^1.5.2",
     "serverless": "~1.53.0",
