@@ -16,6 +16,15 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch Google Calendar API Sandbox",
+            "program": "${workspaceFolder}/data/google-calendar.datareel/service/api-sandbox/index.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch test-JSON-parse-reviver",
             "program": "${workspaceFolder}/sandbox/test-JSON-parse-reviver.js",
             "skipFiles": [
