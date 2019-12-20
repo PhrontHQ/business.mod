@@ -1,0 +1,33 @@
+.CalendarListItem {
+    padding: .2em 0 0.25em;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+
+    &.is-selected   { background-color: var(--color-selected); }
+    &.is-displayed  { display: flex; }
+    &.is-disabled   { opacity: 0.5; }
+    &:hover         { background: var(--transparent--lighten); }
+}
+
+.CalendarListItem span { display: inline-block; }
+
+.CalendarListItem.is-textual-schedule .CalendarListItem-time { font-size: smaller; }
+
+.CalendarListItem-time {
+    width: 4.5rem;
+    text-align: right;
+    margin-right: .5rem;
+    font-weight: 400;
+    color: var(--grey-1);
+
+    @nest .CalendarListItem.is-selected &           { color: var(--white); }
+    @nest .CalendarListItem.is-textual-schedule &   { font-size: smaller; }
+}
+
+.CalendarListItem-title {
+    color: var(--grey-2);
+
+    @nest .CalendarListItem.is-selected & { color: var(--white); }
+}
+

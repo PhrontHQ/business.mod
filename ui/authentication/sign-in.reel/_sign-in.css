@@ -1,0 +1,128 @@
+.SignIn {
+    opacity: 0;
+    visibility: hidden;
+    padding: 2em;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    top:    0;
+    left:   0;
+    right:  0;
+    bottom: 0;
+    z-index: 1000;
+    transition: visibility .5s cubic-bezier(.39,.32,.46,1.3),
+                opacity    .5s cubic-bezier(.39,.32,.46,1.3);
+    background: none;
+
+    @nest .montage-Overlay--visible & {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+
+.SignIn-content {
+    position: relative;
+    padding: 2em;
+    width: 20em;
+    background-size: 310px 195px;
+    background-color: var(--primary--7);
+    transform: scale(0);
+    border-radius: 4px;
+    transition: transform .5s cubic-bezier(.39,.32,.46,1.3);
+    overflow: hidden;
+
+    /* needed to fix background-image bleed on border radius */
+
+    &:before {
+        position: absolute;
+        content: '';
+        top:    0;
+        left:   0;
+        right:  0;
+        bottom: 0;
+        z-index: -1;
+    }
+
+    /* error state */
+    @nest .SignIn.had-error & {
+        animation: denied .5s ease-in-out;
+    }
+
+    /* visible state */
+    @nest .montage-Overlay--visible & { transform: scale(1); }
+
+}
+
+/* Logo */
+
+.SignIn-logo {
+    margin-bottom: 2em;
+    padding: 1rem;
+    width: 100%;
+}
+
+/* Sign In Main Message */
+
+.SignIn-infoText {
+    text-align: center;
+    margin-bottom: 2em;
+}
+
+.SignIn-browserMessage {
+    background: var(--red);
+    margin: 0 -2em;
+    margin-top: -2em;
+    padding: 1em 2em;
+    color: var(--white);
+    margin-bottom: 1em;
+    text-align: center;
+}
+
+/* Submit button */
+
+.SignIn-submit {
+
+    @nest .isAuthenticating & {
+        position: relative;
+        overflow: hidden;
+    }
+}
+
+/* field message */
+
+.field-message {
+    display: none;
+}
+
+/* error states*/
+
+.SignIn.hasError .field-message {
+    color: rgba(255,0,0,.8);
+    display: block;
+    margin-bottom: 1em;
+}
+
+.field.field-hasError input {
+    border: 1px solid rgba(255,0,0,.8);
+    background: rgba(255,0,0,.075);
+}
+
+/* Error Message */
+
+.SignIn-error-message {
+    display: none;
+    text-align: center;
+    transition: opacity .25s;
+    background: var(--red);
+    color: var(--white);
+    padding: 1em 2em;
+    margin: 0 -2rem;
+    margin-bottom: 2rem;
+
+    @nest .SignIn.hasError & {
+        display: block;
+    }
+}

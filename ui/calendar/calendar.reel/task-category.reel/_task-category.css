@@ -1,0 +1,54 @@
+.TaskCategory {
+    position: relative;
+    text-align: center;
+    user-select: none;
+    cursor: grab;
+    min-width: 3.5em;
+    text-shadow: 0 1px 1px rgba(0,0,0,.2);
+    border: 1px solid currentColor;
+    border-radius: 2px;
+    overflow: hidden;
+    background-color: currentColor;
+
+    &:hover {
+        transform: scale(1.1);
+        border-radius: 3px;
+    }
+}
+
+.TaskCategory:not(:first-child) { margin-left: .5em; }
+
+.TaskCategory-name {
+    display: block;
+    font-size: .7em;
+    padding: 0 .35rem;
+    text-align: center;
+    line-height: 1.25rem;
+    font-weight: bolder;
+    font-weight: 200;
+    color: var(--white);
+}
+
+.TaskCategory.is-displayed .TaskCategory-name                                       { color: var(--grey-3); }
+
+.TaskCategory.type-rsync_copy                                                       { color: var(--task-rsync-color);}
+.TaskCategory.type-rsync_copy.is-displayed .TaskCategory-name                       { background-color: var(--task-rsync-color); }
+
+.TaskCategory.type-volume_scrub                                                     { color: var(--task-scrub-color); }
+.TaskCategory.type-volume_scrub.is-displayed .TaskCategory-name                     { background-color: var(--task-scrub-color); }
+
+.TaskCategory.type-replication_sync                                                 { color: var(--task-replication-color); }
+.TaskCategory.type-replication_sync.is-displayed .TaskCategory-name                 { background-color: var(--task-replication-color); }
+
+.TaskCategory.type-disk_parallel_test                                               { color: var(--task-smart-color); }
+.TaskCategory.type-disk_parallel_test.is-displayed .TaskCategory-name               { background-color: var(--task-smart-color); }
+
+.TaskCategory.type-update_checkfetch                                                { color: var(--task-update-color); }
+.TaskCategory.type-update_checkfetch.is-displayed .TaskCategory-name                { background-color: var(--task-update-color); }
+
+.TaskCategory.type-volume_snapshot_dataset                                          { color: var(--task-snapshot-color); }
+.TaskCategory.type-volume_snapshot_dataset.is-displayed .TaskCategory-name          { background-color: var(--task-snapshot-color); }
+
+.TaskCategory.type-calendar_task_command                                            { color: var(--task-command-color); }
+.TaskCategory.type-calendar_task_command.is-displayed .TaskCategory-name            { background-color: var(--task-command-color); }
+

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"}
+            }
+        },
+
+        "icons": {
+            "prototype": "ui/controls/icons.reel",
+            "properties": {
+                "element": {"#": "icons"}
+            }
+        },
+
+        "fileReader": {
+            "prototype": "ui/controls/file-reader.reel",
+            "properties": {
+                "element": {"#": "fileReader"}
+            }
+        },
+
+        "fileReader2": {
+            "prototype": "ui/controls/file-reader.reel",
+            "properties": {
+                "element": {"#": "fileReader2"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="Main">
+        <div data-montage-id="icons"></div>
+        <div class="container">
+            <div data-montage-id="fileReader"></div>
+            <div data-montage-id="fileReader2"></div>
+        </div>
+    </div>
+</body>
+</html>

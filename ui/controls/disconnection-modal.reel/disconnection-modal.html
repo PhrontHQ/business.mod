@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="disconnection-modal.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"}
+            }
+        },
+        "modal": {
+            "prototype": "../modal.reel",
+            "properties": {
+                "element": {"#": "modal"},
+                "hideCloseButton": true
+            },
+            "bindings": {
+                "classList.has('montage-Overlay--visible')": {"<-": "@owner.connectionState == 'CLOSED'"}
+            }
+        },
+        "spinner": {
+            "prototype": "../spinner.reel",
+            "properties": {
+                "element": {"#": "spinner"},
+                "isShown": true
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="DisconnectionModal">
+        <div data-montage-id="modal" class="DisconnectionModal-modal">
+            <div class="DisconnectionModal-content">
+                <h1 class="DisconnectionModal-title">WebSocket Connection Interrupted!</h1>
+                <h3 class="DisconnectionModal-message">Attempting to reconnect...</h3>
+                <div data-montage-id="spinner" class="DisconnectionModal-spinner"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

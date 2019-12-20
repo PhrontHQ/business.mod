@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="calendar-list-day.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"}
+            },
+            "bindings": {
+                "displayedCategories": {"<-": "@owner.taskCategories.filter{checked}.map{value}"},
+                "displayedEvents": {"<-": "@owner.events.filter{@owner.displayedCategories.has(.task.task)}"},
+                "classList.has('has-no-event')": {"<-": "@owner.displayedEvents.length == 0"}
+            }
+        },
+        "date": {
+            "prototype": "ui/controls/text.reel",
+            "properties": {
+                "element": {"#": "date"}
+            },
+            "bindings": {
+                "value": {"<-": "@owner.fullDate"}
+            }
+        },
+        "items": {
+            "prototype": "montage/ui/repetition.reel",
+            "properties": {
+                "element": {"#": "items"}
+            },
+            "bindings": {
+                "content": {"<-": "@owner.displayedEvents"}
+            }
+        },
+        "item": {
+            "prototype": "../calendar-list-item.reel",
+            "properties": {
+                "element": {"#": "item"}
+            },
+            "bindings": {
+                "object": {"<-": "@items:iteration.object"},
+                "selectedTask": {"<->": "@owner.selectedTask"},
+                "taskCategory": {"<-": "@owner.taskCategories.filter{.value == @items:iteration.object.task.task}.one()"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="CalendarListDay">
+        <div data-montage-id="date" class="CalendarListDay-date"></div>
+        <div data-montage-id="items" class="CalendarListDay-items">
+            <div data-montage-id="item" class="CalendarListDay-item"></div>
+        </div>
+    </div>
+</body>
+</html>

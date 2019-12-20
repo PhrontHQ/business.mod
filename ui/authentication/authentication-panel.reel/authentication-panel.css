@@ -1,0 +1,5 @@
+.SignInModal.montage-Overlay--visible {
+    background-color: #0e1115;
+    opacity: 1;
+    visibility: visible
+}

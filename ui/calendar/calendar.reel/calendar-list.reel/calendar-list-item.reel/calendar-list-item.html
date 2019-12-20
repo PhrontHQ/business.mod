@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="calendar-list-item.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"},
+                "type": {"#": "type"}
+            },
+            "bindings": {
+                "classList.has('is-displayed')": {"<-": "@owner.taskCategory.checked"},
+                "classList.has('is-disabled')": {"<-": "!@owner.object.task.enabled"},
+                "classList.has('is-textual-schedule')": {"<-": "@owner.isTextualSchedule"},
+                "classList.has('is-selected')": {"<-": "@owner.object.task == @owner.selectedTask"}
+            }
+        },
+        "type": {
+            "prototype": "ui/inspectors/calendar.reel/task-type-indicator.reel",
+            "properties": {
+                "element": {"#": "type"}
+            },
+            "bindings": {
+                "object": {"<-": "@owner.object.task"}
+            }
+        },
+        "title": {
+            "prototype": "ui/controls/text.reel",
+            "properties": {
+                "element": {"#": "title"}
+            },
+            "bindings": {
+                "value": {"<-": "@owner.object.task.name"}
+            }
+        },
+        "time": {
+            "prototype": "ui/controls/text.reel",
+            "properties": {
+                "element": {"#": "time"}
+            },
+            "bindings": {
+                "value": {"<-": "@owner.schedule"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="CalendarListItem">
+        <span data-montage-id="time" class="CalendarListItem-time"></span>
+        <span data-montage-id="type" class="CalendarListItem-type"></span>
+        <span data-montage-id="title" class="CalendarListItem-title"></span>
+    </div>
+</body>
+</html>

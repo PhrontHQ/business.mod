@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="day-view.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"},
+                "hours": [
+                    "00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00",
+                    "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
+                    "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"
+                ]
+            }
+        },
+        "hours": {
+            "prototype": "montage/ui/repetition.reel",
+            "properties": {
+                "element": {"#": "hours"}
+            },
+            "bindings": {
+                "content": {"<-": "@owner.hours"}
+            }
+        },
+        "hour": {
+            "prototype": "ui/controls/text.reel",
+            "properties": {
+                "element": {"#": "hour"}
+            },
+            "bindings": {
+                "value": {"<-": "@hours:iteration.object"}
+            }
+        },
+        "dayHeader": {
+            "prototype": "../day-header.reel",
+            "properties": {
+                "element": {"#": "dayHeader"}
+            },
+            "bindings": {
+                "data": {"<-": "@owner.displayedDay"},
+                "taskCategories": {"<-": "@owner.taskCategories"},
+                "selectedTask": {"<->": "@owner.selectedTask"}
+            }
+        },
+        "dayColumn": {
+            "prototype": "../day-column.reel",
+            "properties": {
+                "element": {"#": "dayColumn"}
+            },
+            "bindings": {
+                "data": {"<-": "@owner.displayedDay"},
+                "taskCategories": {"<-": "@owner.taskCategories"},
+                "selectedTask": {"<->": "@owner.selectedTask"}
+            }
+        },
+        "GMT": {
+            "prototype": "ui/controls/text.reel",
+            "properties": {
+                "element": {"#": "GMT"}
+            },
+            "bindings": {
+                "value": {"<-": "'GMT' + @owner.gmtOffset"}
+            }
+        },
+        "scrollview": {
+            "prototype": "ui/controls/scroller.reel",
+            "properties": {
+                "element": {"#": "scrollview"},
+                "overflow": "scrollY"
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="DayView">
+
+        <header class="CalendarWidget-view-header">
+            <div class="CalendarWidget-view-column--axis">
+                <span data-montage-id="GMT" class="CalendarWidget-view-timezone small"></span>
+            </div>
+            <div class="CalendarWidget-view-days">
+                <div data-montage-id="dayHeader" class="CalendarWidget-view-day"></div>
+            </div>
+        </header>
+
+        <main class="CalendarWidget-view-main">
+            <div data-montage-id="scrollview" class="CalendarWidget-view-scrollview">
+                <div class="CalendarWidget-view-content">
+                    <div data-montage-id="hours" class="CalendarWidget-view-column--axis CalendarWidget-view-hours">
+                        <div data-montage-id="hour" class="CalendarWidget-view-hour"></div>
+                    </div>
+                    <div class="CalendarWidget-view-dayColumns">
+                        <div data-montage-id="dayColumn" class="CalendarWidget-view-dayColumn"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+</body>
+</html>

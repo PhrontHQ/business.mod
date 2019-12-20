@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="task-category.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"}
+            },
+            "listeners": [
+                {
+                    "type": "action",
+                    "listener": {"@": "owner"}
+                }
+            ]
+        },
+        "taskButton": {
+            "prototype": "montage/ui/button.reel",
+            "properties": {
+                "element": {"#": "name"}
+            },
+            "bindings": {
+                "label": {"<-": "@owner.object.name"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="TaskCategory">
+        <span data-montage-id="name" class="TaskCategory-name"></span>
+    </div>
+</body>
+</html>

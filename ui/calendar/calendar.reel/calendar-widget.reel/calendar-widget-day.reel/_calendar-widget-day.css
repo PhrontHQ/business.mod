@@ -1,0 +1,123 @@
+:root {
+    --day-bg-color: var(--primary);
+}
+
+.CalendarWidgetDay {
+    position: relative;
+    width: 14.2857%;
+    border-right: 1px solid var(--calendar-line--strong);
+    border-top:   1px solid var(--calendar-line--strong);
+    font-size: .8em;
+
+    &.show-more {
+        z-index: 2;
+    }
+}
+
+.CalendarWidgetDay-otherMonth {
+    background-color: var(--primary--6);
+    cursor: inherit;
+}
+
+.CalendarWidgetDay-date { text-align: right; }
+
+
+.CalendarWidgetDay-today {
+    background-color: var(--primary);
+    box-shadow: 0 0 8px 2px var(--transparent--darken);
+
+    /* border */
+    &:before {
+        content: '';
+        position: absolute;
+        top:    -1px;
+        left:   -1px;
+        right:  -1px;
+        bottom: -1px;
+        border: 1px solid var(--primary--3);
+    }
+}
+
+
+.CalendarWidgetDay-today .CalendarWidgetDay-date {
+    color: var(--white);
+}
+
+.CalendarWidgetDay-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--day-bg-color);
+    padding: .25em;
+
+    &:before {
+        display: none;
+        content: '';
+        position: absolute;
+        top:    0;
+        left:   0;
+        right:  0;
+        bottom: 0;
+        border: 1px dashed currentColor;
+
+        @nest .acceptDrop & {
+            border: 1px dashed var(--accent);
+            background-color:  color(var(--accent) a(10%));
+        }
+
+        @nest .willAcceptDrop & {
+            display: block;
+            animation: blink 1s infinite ease;
+        }
+
+        @nest .acceptDrop & {
+            display: block;
+            border: 1px solid var(--accent);
+        }
+    }
+
+    @nest .CalendarWidgetDay.show-more & {
+        bottom: auto;
+        box-shadow: 0 0 0 1px var(--transparent--lighten), 0 4px 10px 4px color(var(--black) a(90%));
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        background-color: var(--day-bg-color);
+    }
+
+}
+
+.CalendarWidgetDay-otherMonth .CalendarWidgetDay-content { display: none; }
+
+.CalendarWidgetDayContent-moreButton.Button {
+    display: none;
+    width: 100%;
+    line-height: 2em;
+    background: none;
+    border: 1px solid transparent;
+    box-shadow: none;
+    margin-top: .2rem;
+
+    &:hover {
+        border-color: var(--blue-lighten-2);
+        box-shadow: none;
+    }
+
+    &:focus {
+        border-color: var(--blue-lighten-2);
+        box-shadow: none;
+    }
+
+    @nest .CalendarWidgetDay.has-max-tasks & {
+        display: block;
+    }
+}
+
+/* Task */
+
+.CalendarWidgetDay-task {
+    display: none;
+    margin-bottom: .1rem;
+}
+

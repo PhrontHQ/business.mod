@@ -1,0 +1,7 @@
+.DayHeader.is-today {
+    background: var(--primary);
+}
+
+.DayHeader:not(:last-child) {
+    border-right: 1px solid var(--calendar-line--strong);
+}

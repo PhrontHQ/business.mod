@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="calendar-widget.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"},
+                "views": [
+                    {"label": "Day", "value": "day"},
+                    {"label": "Week", "value": "week"},
+                    {"label": "Month", "value": "month"}
+                ],
+                "widgets": {
+                    "day": {"@": "dayView"},
+                    "week": {"@": "weekView"},
+                    "month": {"@": "monthView"}
+                }
+            },
+            "bindings": {
+                "days": {"<-": "@owner.currentWidget.days"}
+            },
+            "listeners": [
+                {
+                    "type": "action",
+                    "listener": {"@": "owner"}
+                }
+            ]
+        },
+        "displayedPeriodLabel": {
+            "prototype": "ui/controls/text.reel",
+            "properties": {
+                "element": {"#": "displayedPeriodLabel"}
+            },
+            "bindings": {
+                "value": {"<-" : "@owner.displayedPeriodLabel"}
+            }
+        },
+        "previous": {
+            "prototype": "ui/controls/button.reel",
+            "properties": {
+                "element": {"#": "previous"}
+            }
+        },
+        "next": {
+            "prototype": "ui/controls/button.reel",
+            "properties": {
+                "element": {"#": "next"}
+            }
+        },
+        "today": {
+            "prototype": "ui/controls/button.reel",
+            "properties": {
+                "element": {"#": "today"},
+                "value": "Today"
+            }
+        },
+        "taskCategories": {
+            "prototype": "montage/ui/repetition.reel",
+            "properties": {
+                "element": {"#": "taskCategories"}
+            },
+            "bindings": {
+                "content": {"<-": "@owner.taskCategories"}
+            }
+        },
+        "taskCategory": {
+            "prototype": "../task-category.reel",
+            "properties": {
+                "element": {"#": "taskCategory"}
+            },
+            "bindings": {
+                "object": {"<-": "@taskCategories:iteration.object"},
+                "newObject": {"<->": "@owner.selectedTask"}
+            }
+        },
+        "viewTabs": {
+            "prototype": "ui/controls/tabs.reel",
+            "properties": {
+                "element": {"#": "viewTabs"}
+            },
+            "bindings": {
+                "options": {"<-": "@owner.views"},
+                "selection": {"<->": "@owner.currentView"}
+            }
+        },
+        "viewSubstitution": {
+            "prototype": "montage/ui/substitution.reel",
+            "properties": {
+                "element": {"#": "viewSubstitution"}
+            },
+            "bindings": {
+                "switchValue": {"<-": "@owner.currentView"}
+            }
+        },
+        "monthView": {
+            "prototype": "./month-view.reel",
+            "properties": {
+                "element": {"#": "monthView"}
+            },
+            "bindings": {
+                "displayedPeriodLabel": {"<->": "@owner.displayedPeriodLabel"},
+                "taskCategories": {"<-": "@owner.taskCategories.filter{checked}"},
+                "selectedTask": {"<->":"@owner.selectedTask"},
+                "selectedDay": {"<->":"@owner.selectedDay"},
+                "firstDayOfWeek": {"<-": "@owner.object._firstDayOfWeek"}
+            }
+        },
+        "weekView": {
+            "prototype": "./week-view.reel",
+            "properties": {
+                "element": {"#": "weekView"}
+            },
+            "bindings": {
+                "displayedPeriodLabel": {"<->": "@owner.displayedPeriodLabel"},
+                "events": {"<-": "@owner.tasks"},
+                "taskCategories": {"<-": "@owner.taskCategories.filter{checked}"},
+                "selectedTask": {"<->":"@owner.selectedTask"},
+                "selectedDay": {"<->":"@owner.selectedDay"},
+                "gmtOffset": {"<-": "@owner.object._gmtOffset"},
+                "firstDayOfWeek": {"<-": "@owner.object._firstDayOfWeek"}
+            }
+        },
+        "dayView": {
+            "prototype": "./day-view.reel",
+            "properties": {
+                "element": {"#": "dayView"}
+            },
+            "bindings": {
+                "displayedPeriodLabel": {"<->": "@owner.displayedPeriodLabel"},
+                "events": {"<-": "@owner.tasks"},
+                "taskCategories": {"<-": "@owner.taskCategories.filter{checked}"},
+                "selectedTask": {"<->":"@owner.selectedTask"},
+                "selectedDay": {"<->":"@owner.selectedDay"},
+                "gmtOffset": {"<-": "@owner.object._gmtOffset"}
+            }
+        },
+        "taskFilter": {
+            "prototype": "ui/controls/select-filter.reel",
+            "properties": {
+                "element": {"#": "taskFilter"}
+            },
+            "bindings": {
+                "options": {"<-": "@owner.taskCategories"}
+            }
+        },
+        "dragLabel": {
+            "prototype": "ui/controls/text.reel",
+            "properties": {
+                "element": {"#": "dragLabel"},
+                "value": "Drag to create"
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="CalendarWidget">
+        <header>
+            <div class="Calendar-navigation">
+                <button data-montage-id="today" class="CalendarWidget-todayButton"></button>
+                <div class="Calendar-navigation-buttons">
+                    <button data-montage-id="previous" class="Calendar-navigation-button CalendarWidget-previousMonthButton Button--icon">
+                        <svg><use xlink:href="#i-arrow"/></svg>
+                    </button>
+                    <button data-montage-id="next" class="Calendar-navigation-button CalendarWidget-nextMonthButton Button--icon">
+                        <svg><use xlink:href="#i-arrow"/></svg>
+                    </button>
+                </div>
+                <div class="CalendarWidget-date">
+                    <span data-montage-id="displayedPeriodLabel" class="CalendarWidget-month"></span>
+                </div>
+                <div data-montage-id="viewTabs" class="Calendar-viewTabs"></div>
+            </div>
+            <div class="flex-row flex-spaceBetween flex-align--center">
+                <div class="flex-row">
+                    <span data-montage-id="dragLabel"></span>
+                    <div data-montage-id="taskCategories" class="CalendarWidget-taskCategories g-margin-left--half">
+                        <div data-montage-id="taskCategory" class="CalendarWidget-taskCategory"></div>
+                    </div>
+                </div>
+                <div data-montage-id="taskFilter" class="g-margin-left--half"></div>
+            </div>
+
+        </header>
+        <main data-montage-id="viewSubstitution" class="Calendar-view-substitution">
+            <div data-arg="month" data-montage-id="monthView" class="Calendar-view-month"></div>
+            <div data-arg="week" data-montage-id="weekView" class="CalendarWidget-view"></div>
+            <div data-arg="day" data-montage-id="dayView" class="CalendarWidget-view"></div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+.DayColumn {
+    position: relative;
+    z-index: 1;
+
+    &:before {
+        display: none;
+        content: '';
+        position: absolute;
+        top:    0;
+        left:   0;
+        right:  0;
+        bottom: 0;
+        border: 1px dashed currentColor;
+    }
+
+    &.willAcceptDrop:before {
+        display: block;
+        animation: blink 1s infinite ease;
+    }
+
+    &.acceptDrop:before {
+        display: block;
+        border: 1px dashed var(--color-selected);
+        background-color: color(var(--color-selected) a(10%));
+    }
+
+    &.is-today {
+        box-shadow: 0 0 8px 2px var(--shadow-1);
+
+        @nest .DayView & {
+            box-shadow: none;
+        }
+    }
+}
+
+.DayColumn-events {
+    position: relative;
+    left: .25em;
+    width: calc(100% - .75em);
+}
+

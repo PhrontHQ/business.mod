@@ -1,0 +1,27 @@
+.CalendarList {
+    flex: 1;
+    @apply --flex-column;
+    position: relative;
+}
+
+.CalendarList-days {
+    padding-top: 1em;
+}
+
+.CalendarList-emptyState {
+    display: none;
+
+    @nest .is-empty & {
+        display: block;
+    }
+}
+
+.CalendarList-emptyState-content {
+    display: inline-block;
+    border: 1px solid var(--yellow-orange);
+    padding: .45em 1em .55em;
+    border-radius: 4px;
+    margin-top: 1em;
+    color: var(--white);
+}
+

@@ -1,0 +1,42 @@
+.ScrollviewFooterWrapper .InspectorFooter {
+    background: var(--primary--7);
+    border-top: 1px solid var(--transparent--lighten);
+}
+
+.InspectorFooter {
+    border-top: 1px solid var(--separator-color);
+    padding: 1rem;
+    display: flex;
+    flex-shrink: 0;
+    justify-content: space-between;
+}
+
+.InspectorFooter-right {
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+}
+
+.InspectorFooter-right button + button {
+    margin-left: .5em;
+}
+
+.InspectorFooter button {
+    display: none;
+    overflow: hidden;
+}
+
+.Inspector-optionalButtons button {
+    display: block;
+}
+
+/* States ---------------------------------- */
+
+.InspectorFooter.is-visible { display: flex; }
+
+.InspectorFooter-delete.is-visible,
+.InspectorFooter-revert.is-visible,
+.InspectorFooter-save.is-visible {
+    display: block;
+}
+

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="authentication-panel.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "authentication-panel"}
+            },
+            "bindings": {
+                "classList.has('drawer-is-open')": {"<-": "@owner.application.isDrawerOpen"}
+            }
+        },
+        "signInModal": {
+            "prototype": "ui/controls/modal.reel",
+            "properties": {
+                "element": {"#": "signInModal"},
+                "hideCloseButton": true
+            },
+            "bindings": {
+                "classList.has('montage-Overlay--visible')": {"<-": "!@signIn.isLoggedIn"}
+            }
+        },
+        "substitution": {
+            "prototype": "montage/ui/substitution.reel",
+            "properties": {
+                "element": {"#": "substitution"}
+            },
+            "bindings": {
+                "switchValue": {"<-": "@owner.substitutionPanel"}
+            }
+        },
+        "signIn": {
+            "prototype": "ui/authentication/sign-in.reel",
+            "values": {
+                "element": {"#": "signIn"},
+                "userName": {"<->": "@owner.userIdentity.userName"},
+                "password": {"<->": "@owner.userIdentity.password"}
+            },
+            "listeners": [
+                {
+                    "type": "action",
+                    "listener": {"@": "owner"}
+                }
+            ]
+        },
+        "signUp": {
+            "prototype": "ui/authentication/sign-up.reel",
+            "values": {
+                "element": {"#": "signUp"},
+                "userName": {"<->": "@owner.userIdentity.userName"},
+                "email": {"<->": "@owner.userIdentity.email"},
+                "password": {"<->": "@owner.userIdentity.password"}
+            },
+            "listeners": [
+                {
+                    "type": "action",
+                    "listener": {"@": "owner"}
+                }
+            ]
+        },
+        "enterVerificationCode": {
+            "prototype": "ui/authentication/enter-verification-code.reel",
+            "values": {
+                "element": {"#": "enterVerificationCode"},
+                "service": {"<-": "@owner.service"}
+            }
+        },
+        "createNewPassword": {
+            "prototype": "ui/authentication/create-new-password.reel",
+            "values": {
+                "element": {"#": "createNewPassword"},
+                "service": {"<-": "@owner.service"}
+            }
+        }
+   }
+    </script>
+
+</head>
+<body>
+    <div data-montage-id="authentication-panel" class="Main">
+        <div data-montage-id="signInModal" class="SignInModal">
+            <div data-montage-id="substitution">
+                <div data-arg="signIn" data-montage-id="signIn"></div>
+                <div data-arg="signUp" data-montage-id="signUp"></div>
+                <div data-arg="enterVerificationCode" data-montage-id="enterVerificationCode"></div>
+                <div data-arg="createNewPassword" data-montage-id="createNewPassword"></div>
+                </div>
+        </div>
+    </div>
+</body>
+</html>

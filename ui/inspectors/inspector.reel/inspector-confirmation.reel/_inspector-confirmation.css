@@ -1,0 +1,20 @@
+.InspectorConfirmation {
+    background-color: rgba(0, 0, 0, .9);
+    padding: 2em 1em;
+}
+
+.InspectorConfirmation-message {
+    margin-bottom: 2rem;
+    font-size: 1.25em;
+    color: var(--white);
+}
+
+.InspectorConfirmation-actions {
+    display: flex;
+    margin-left: -.5em;
+    justify-content: space-between;
+
+    & > * {
+        margin-left: .5em !important;
+    }
+}

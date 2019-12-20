@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="calendar.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"}
+            }
+        },
+        "calendarWidget": {
+            "prototype": "./calendar-widget.reel",
+            "properties": {
+                "element": {"#": "calendarWidget"}
+            },
+            "bindings": {
+                "object": {"<-": "@owner.object"},
+                "taskCategories": {"<-": "@owner.taskCategories"},
+                "selectedPeriod": {"<->": "@owner.selectedPeriod"},
+                "selectedTask": {"<->": "@owner.selectedObject"},
+                "selectedDay": {"<->": "@owner.selectedDay"}
+            }
+        },
+        "list": {
+            "prototype": "./calendar-list.reel",
+            "properties": {
+                "element": {"#": "list"}
+            },
+            "bindings": {
+                "taskCategories": {"<-": "@owner.taskCategories"},
+                "days": {"<-": "@calendarWidget.days"},
+                "selectedTask": {"<->": "@owner.selectedObject"},
+                "selectedDay": {"<->": "@owner.selectedDay"}
+            }
+        },
+        "GMT": {
+            "prototype": "ui/controls/text.reel",
+            "properties": {
+                "element": {"#": "GMT"}
+            },
+            "bindings": {
+                "value": {"<-": "'GMT' + @owner.object._gmtOffset"}
+            }
+        },
+        "inspector": {
+            "prototype": "ui/inspectors/inspector.reel",
+            "properties": {
+                "element": {"#": "inspector"},
+                "isFooterHidden": true
+            },
+            "bindings": {
+                "context": {"<-": "@owner.context"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="Calendar">
+        <div data-montage-id="inspector">
+            <div class="Calendar-wrapper">
+                <div data-montage-id="calendarWidget" class="Calendar-calendarWidget"></div>
+                <div class="Calendar-events">
+                    <div class="Calendar-events-header flex-row g-margin-top flex-align--baseline">
+                        <h2 class="g-margin-right--half">Agenda</h2>
+                        <span data-montage-id="GMT" class="small"></span>
+                    </div>
+                    <div data-montage-id="list" class="Calendar-eventsList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

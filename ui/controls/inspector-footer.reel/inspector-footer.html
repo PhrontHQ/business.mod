@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="inspector-footer.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"}
+            },
+            "bindings": {
+                "classList.has('is-hidden')": {"<-": "@owner.isHidden"}
+            }
+        },
+        "delete": {
+            "prototype": "ui/controls//button.reel",
+            "properties": {
+                "element": {"#": "delete"},
+                "value": "Delete"
+            },
+            "bindings": {
+                "classList.has('is-visible')": {"<-": "@owner.canDelete"}
+            }
+        },
+        "revert": {
+            "prototype": "ui/controls//button.reel",
+            "properties": {
+                "element": {"#": "revert"}
+            },
+            "bindings": {
+                "classList.has('is-visible')": {"<-": "@owner.canRevert"},
+                "value": {"<-": "!!@owner.footerCancelLabel ? @owner.footerCancelLabel : 'Revert'"}
+            }
+        },
+        "save": {
+            "prototype": "ui/controls//button.reel",
+            "properties": {
+                "element": {"#": "save"}
+            },
+            "bindings": {
+                "disabled": {"<-": "@owner.isSaveDisabled"},
+                "value": {"<-": "!!@owner.footerDoneLabel ? @owner.footerDoneLabel : 'Save'"},
+                "classList.has('is-visible')": {"<-": "@owner.canSave"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="InspectorFooter">
+        <div class="InspectorFooter-left">
+            <div data-montage-id="delete" class="InspectorFooter-delete Button--alert">
+            </div>
+        </div>
+        <div class="InspectorFooter-right">
+            <div data-param="*"></div>
+            <button data-montage-id="revert" class="InspectorFooter-revert Button--secondary"></button>
+            <button data-montage-id="save" class="InspectorFooter-save Button--primary"></button>
+        </div>
+    </div>
+</body>
+</html>
