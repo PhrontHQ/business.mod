@@ -11,7 +11,7 @@ OperationCoordinatorPromise = Montage.loadPackage(PATH.join(__dirname, "."), {
   mainPackageLocation: PATH.join(__filename, ".")
 })
 .then(function (mr) {
-  return mr.async('phront-data/spec/phront-service-usage/phront-service-usage');
+  return mr.async('phront/spec/phront-service-usage/phront-service-usage');
 })
 .then(function (module) {
   module.promise.then(function(resolved) {

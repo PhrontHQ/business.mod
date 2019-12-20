@@ -1,6 +1,6 @@
-var PhrontService = require("phront-data/data/main.datareel/service/phront-service").PhrontService,
-    OperationCoordinator = require("phront-data/data/main.datareel/service/operation-coordinator").OperationCoordinator,
-    mainService = require("phront-data/data/main.datareel/main.mjson").montageObject,
+var PhrontService = require("phront/data/main.datareel/service/phront-service").PhrontService,
+    OperationCoordinator = require("phront/data/main.datareel/service/operation-coordinator").OperationCoordinator,
+    mainService = require("phront/data/main.datareel/main.mjson").montageObject,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
     Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
@@ -10,7 +10,7 @@ var PhrontService = require("phront-data/data/main.datareel/service/phront-servi
     Montage = require("montage/core/core").Montage,
     //to test client side
     //clientMainService = require("../data/client-main.datareel/main.mjson").montageObject,
-    //ClientCollection = require("phront-data/data/main.datareel/model/collection").Collection,
+    //ClientCollection = require("phront/data/main.datareel/model/collection").Collection,
     //operationCoordinator = new OperationCoordinator,
     phrontService = mainService.childServices[0],
     //sphrontClientService = clientMainService.childServices[0],
@@ -79,7 +79,7 @@ describe("PhrontService -Read data from serialized operations", function() {
             var objectDescriptor = phrontService.objectDescriptorWithModuleId("data/main.datareel/model/image");
 
             //This ends up calling module-object-descriptor.js:149 - getObjectDescriptorWithModuleId()
-            //which causes node to try to phront-data/node_modules/montage/core/meta/module-object-descriptor.mjson
+            //which causes node to try to phront/node_modules/montage/core/meta/module-object-descriptor.mjson
             //whih is bogus....
             //console.log("Montage.getInfoForObject(objectDescriptor): ", Montage.getInfoForObject(objectDescriptor));
 

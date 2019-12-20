@@ -1,6 +1,6 @@
 {
     "phrontClientDataService": {
-        "object": "phront-data/data/main.datareel/phront-client-service.mjson"
+        "object": "phront/data/main.datareel/phront-client-service.mjson"
     },
 
     "root": {

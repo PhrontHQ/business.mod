@@ -12,14 +12,14 @@
   "author": "Pront. (https://phront.com/)",
   "repository": {
     "type": "git",
-    "url": "PhrontHQ/phront-data/tree/master/test"
+    "url": "PhrontHQ/phront/tree/master/test"
   },
   "scripts": {},
   "mappings": {
     "montage": "../node_modules/montage",
     "montage-testing": "../node_modules/montage-testing",
     "object-sizeof": "../node_modules/object-sizeof",
-    "phront-data": "../"
+    "phront": "../"
   },
   "private": true
 }
