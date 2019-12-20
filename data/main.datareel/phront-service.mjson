@@ -29,6 +29,9 @@
                 {"@": "address"},
                 {"@": "image"},
                 {"@": "person"}
+            ],
+            "userIdentityServices": [
+                {"@": "cognitoIdentityService"}
             ]
         }
     },  
@@ -119,6 +122,18 @@
 
     "personMapping": {
         "object": "data/main.datareel/mapping/person-mapping.mjson"
-    }
+    },
+
+    "AuthenticationPolicy": {
+        "object": "montage/data/service/user-authentication-policy"
+    },
+
+    "cognitoIdentityService": {
+        "object": "data/main.datareel/cognito-identity-service.mjson",
+        "values": {
+            "authorizationPolicy": {"=":"@AuthenticationPolicy.ON_DEMAND"}
+        }        
+    },
+
 
 }

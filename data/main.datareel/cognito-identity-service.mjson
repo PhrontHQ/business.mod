@@ -1,0 +1,21 @@
+{
+    "root": {
+        "prototype": "data/main.datareel/service/cognito-identity-service",
+        "values": {
+            "name": "CognitoIdentityService",
+            "userPoolId": "us-west-2_jBAg8wI35",
+            "mappings": [
+                {"@": "userIdentityMapping"}
+            ],
+            "types": [
+                {"@": "user-identity"}
+            ]
+        }
+    },
+    "user-identity": {
+        "object": "data/main.datareel/model/user-identity.mjson"
+    },
+    "userIdentityMapping": {
+        "object": "data/main.datareel/mapping/user-identity-mapping.mjson"
+    }
+}

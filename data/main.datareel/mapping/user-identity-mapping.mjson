@@ -1,0 +1,33 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "UserIdentityDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "userName": {"<->": "username"},
+                    "isAccountConfirmed": {"<->": "signInUserSession.idToken.payload.sub.defined()"},
+                    "password": {"<->": "password"},
+                    "firstName": {"<->": "firstName"},
+                    "lastName": {"<->": "lastName"},
+                    "email": {"<->": "email"},
+                    "phone": {"<->": "phone"},
+                    "tags": {"<->": "tags"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                    "accountConfirmationCode": {"<-":"confirmationCode"}
+                }
+            },
+            "requisitePropertyNames": [
+                "userName","isAccountConfirmed","email"
+            ]
+        }
+    },
+
+    "UserIdentityDescriptor": {
+        "object": "data/main.datareel/model/user-identity.mjson"
+    }   
+}

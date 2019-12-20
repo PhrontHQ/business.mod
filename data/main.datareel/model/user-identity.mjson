@@ -2,33 +2,63 @@
     "root": {
         "prototype": "montage/core/meta/module-object-descriptor",
         "values": {
-            "name": "Person",
+            "name": "UserIdentity",
             "propertyDescriptors": [
+                {"@": "userName"},
+                {"@": "password"},
+                {"@": "accountConfirmationCode"},
+                {"@": "isAccountConfirmed"},
                 {"@": "firstName"},
                 {"@": "lastName"},
                 {"@": "email"},
                 {"@": "phone"},
                 {"@": "images"},
                 {"@": "addresses"},
-                {"@": "tags"},
-                {"@": "userIdentities"}
+                {"@": "tags"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/person.mjson"
+                "%": "data/main.datareel/model/user-identity.mjson"
             },
-            "exportName": "Person",
+            "exportName": "UserIdentity",
             "module": {
-                "%": "data/main.datareel/model/person"
+                "%": "data/main.datareel/model/user-identity"
             },
-            "object":{"@": "person"},
-            "parent":{"@": "objectDescriptor"}
+            "object":{"@": "user-identity"}
         }
     },
-    "person": {
-        "object": "data/main.datareel/model/person"
+    "user-identity": {
+        "object": "data/main.datareel/model/user-identity"
     },
-    "objectDescriptor": {
-        "object": "data/main.datareel/model/object.mjson"
+    "userName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "userName",
+            "valueType": "string"
+        }
+    },
+    "password": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "password",
+            "valueType": "string"
+        }
+    },
+    "accountConfirmationCode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "accountConfirmationCode",
+            "serializable": false,
+            "valueType": "string"
+        }
+    },
+    "isAccountConfirmed": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "isAccountConfirmed",
+            "serializable": false,
+            "defaultValue": false,
+            "valueType": "boolean"
+        }
     },
     "firstName": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -88,18 +118,6 @@
             "valueType": "string",
             "cardinality": -1       
        }
-    },
-    "userIdentities": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "userIdentities",
-            "valueType": "object",
-            "cardinality": -1,
-            "valueDescriptor": {"@": "userIdentity_descriptor"}       
-       }
-    },
-    "userIdentity_descriptor": {
-        "object": "data/main.datareel/model/user-identity.mjson"
     }
 
 

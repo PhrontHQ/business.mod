@@ -14,6 +14,7 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     uuid = require("montage/core/uuid"),
+    WebSocket = require("montage/core/web-socket").WebSocket,
     PhrontClientService;
 
 
@@ -52,6 +53,30 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             this._deserializer = new Deserializer();
 
             return this;
+        }
+    },
+
+    // authorizationServices: {
+    //     value: ["data/main.datareel/service/cognito-authorization-service"]
+    // },
+
+    // authorizationManagerWillAuthorizeWithServices: {
+    //     value: function (authorizationManager, authorizationServices) {
+    //         console.log("authorizationManagerWillAuthorizeWithService:",authorizationManager,authorizationService);
+    //         // authorizationService.connectionDescriptor = this.authorizationDescriptor;
+    //     }
+    // },
+
+    _authorizationPolicy: {
+        value: undefined
+    },
+
+    authorizationPolicy: {
+        get: function() {
+            return this._authorizationPolicy
+        },
+        set: function(value) {
+            this._authorizationPolicy = value;
         }
     },
 

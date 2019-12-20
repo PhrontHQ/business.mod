@@ -30,6 +30,9 @@ exports.Person = Object.specialize(/** @lends Person.prototype */ {
     },
     tags: {
         value: undefined
+    },
+    userIdentities: {
+        value: undefined
     }
 
 });
