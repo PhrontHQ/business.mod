@@ -32,7 +32,7 @@ exports.Object = Target.specialize(/** @lends Object.prototype */ {
         get: function() {
             return DataService.mainService;
         }
-    }   
+    }
 
 
 });

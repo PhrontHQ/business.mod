@@ -11,7 +11,7 @@ const calendar = google.calendar("v3");
 
 (async function () {
 
-   /* Option 1 
+   /* Option 1
     const Auth = new google.auth.GoogleAuth({
         scopes: [
             'https://www.googleapis.com/auth/calendar',
@@ -22,7 +22,7 @@ const calendar = google.calendar("v3");
         keyFilename: '/Users/benoit/Sites/marchant/etiama/phront/data/google-calendar.datareel/service/service-account-authorization/storephront-a49b036d6822.json',
         clientOptions: { subject: 'storephront-service@storephront.iam.gserviceaccount.com' }
     });
-    
+
     const auth = await Auth.getClient();
     */
 
@@ -34,7 +34,7 @@ const calendar = google.calendar("v3");
     const keyFile = '/Users/benoit/Sites/marchant/etiama/phront/data/google-calendar.datareel/service/service-account-authorization/storephront-259805-98fb8c147018.json';   // Your should make it an environment variable
 
 
-    
+
 
     const client = await google.auth.getClient({
         keyFile,
@@ -42,7 +42,7 @@ const calendar = google.calendar("v3");
     });
 
     // Delegated Credential
-    client.subject = "storephront-service@storephront-259805.iam.gserviceaccount.com"; 
+    client.subject = "storephront-service@storephront-259805.iam.gserviceaccount.com";
 
     const res = await calendar.calendarList.list({
         auth: client
@@ -63,7 +63,7 @@ const calendar = google.calendar("v3");
       orderBy: 'email',
     }, (err, res) => {
       if (err) return console.error('The API returned an error:', err.message);
-  
+
       const users = res.data.users;
       if (users.length) {
         console.log('Users:');
@@ -75,7 +75,7 @@ const calendar = google.calendar("v3");
       }
     });
   }
-  
+
 
 
    const key = require('/Users/benoit/Sites/marchant/etiama/phront/data/google-calendar.datareel/service/service-account-authorization/storephront-259805-98fb8c147018.json');
@@ -140,7 +140,7 @@ const calendar = google.calendar("v3");
   }
 }
 */
-    var aNewCalendar = {  
+    var aNewCalendar = {
         "summary": "this is a test calendar for Dr No.",
         "description": "this is a test calendar for Dr No.",
         "location": "San Jose",
@@ -193,10 +193,10 @@ const calendar = google.calendar("v3");
 
 
 
-    var interval = 2; // how big single slot should be (in this case 2 hrs) 
-    
+    var interval = 2; // how big single slot should be (in this case 2 hrs)
+
     function slotsFromEvents(rootStart, rootEnd,events,callBack) {
-        var freeSlots = []; 
+        var freeSlots = [];
 
         events.forEach(function (event, index) { //calculate free from busy times
             if (index == 0 && startDate < event.start) {
@@ -208,17 +208,17 @@ const calendar = google.calendar("v3");
             else if (events[index - 1].end < event.start) {
                 freeSlots.push({startDate: events[index - 1].end, endDate: event.start});
             }
-    
+
             if (events.length == (index + 1) && event.end < endDate) {
                 freeSlots.push({startDate: event.end, endDate: endDate});
             }
         });
-    
-    
+
+
         if (events.length == 0) {
             freeSlots.push({startDate: startDate, endDate: endDate});
         }
-    
+
         var temp = {}, hourSlots = [];
         freeSlots.forEach(function(free, index) {
             var freeHours = new Date(free.endDate).getHours() - new Date(free.startDate).getHours(), freeStart = new Date(free.startDate), freeEnd = new Date(free.endDate);
@@ -236,7 +236,7 @@ const calendar = google.calendar("v3");
                 freeHours--;
             }
         })
-    
+
         callBack(freeSlots, hourSlots);
     }
 
@@ -257,7 +257,7 @@ const calendar = google.calendar("v3");
         }
 
     calendar.freebusy.query (check, {
-        fields: "calendars,groups,kind,timeMax,timeMin", 
+        fields: "calendars,groups,kind,timeMax,timeMin",
         alt:"json"
     }, function (err, response) {
         if (err) {

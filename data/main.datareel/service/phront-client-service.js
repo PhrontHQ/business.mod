@@ -28,7 +28,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     constructor: {
         value: function PhrontClientService() {
             var self = this;
-            
+
             this.super();
 
             if( typeof WebSocket !== "undefined") {
@@ -37,7 +37,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 this._socket.addEventListener("open", this);
                 this._socket.addEventListener("error", this);
                 this._socket.addEventListener("close", this);
-                this._socket.addEventListener("message", this);    
+                this._socket.addEventListener("message", this);
             }
 
 
@@ -121,17 +121,17 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     type = operation.type,
                     records = operation.data,
                     stream = this._streamByOperationId.get(referrer);
-    
+
                     if(records && records.length > 0) {
-      
+
                         //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
-                        this.addRawData(stream, records);   
-                        this.rawDataDone(stream);    
-                    }    
+                        this.addRawData(stream, records);
+                        this.rawDataDone(stream);
+                    }
                 }
-  
+
             }
-  
+
 
             // event.detail = parsed;
             // this.dispatchEvent(event, true, false);
@@ -191,23 +191,22 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 var objectDescriptor = query.type,
                 readOperation = new DataOperation(),
                 serializedOperation;
-    
+
               //We need to turn this into a Read Operation. Difficulty is to turn the query's criteria into
               //one that doesn't rely on objects. What we need to do before handing an operation over to another context
               //bieng a worker on the client side or a worker on the server side, is to remove references to live objects.
               //One way to do this is to replace every object in a criteria's parameters by it's data identifier.
               //Another is to serialize the criteria.
               readOperation.type = DataOperation.Type.Read;
-              readOperation.dataDescriptor = objectDescriptor.module.id;  
+              readOperation.dataDescriptor = objectDescriptor.module.id;
               readOperation.criteria = query.criteria;
               readOperation.objectExpressions = query.prefetchExpressions;
-  
+
                 self._dispatchOperation(readOperation, stream);
             });
-  
+
           return stream;
         }
     }
 
 });
-  

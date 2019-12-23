@@ -159,21 +159,21 @@ var SignIn = exports.SignIn = Component.specialize({
                 }, function (error) {
                     if(error) {
                         if(error instanceof DataOperation && error.type === DataOperation.Type.UserAuthenticationFailed) {
-                            self.hadError = true;    
+                            self.hadError = true;
                             self.errorMessage = error.userMessage;
                         }
-                        
+
                         else if(error instanceof DataOperation && error.data.hasOwnProperty("accountConfirmationCode")) {
-                            self.ownerComponent.needsAccountConfirmation = true; 
-                            self.hadError = true;    
+                            self.ownerComponent.needsAccountConfirmation = true;
+                            self.hadError = true;
 
                         }
                         else if(error instanceof DataOperation && error.data.hasOwnProperty("password")) {
-                            self.ownerComponent.needsChangePassword = true; 
+                            self.ownerComponent.needsChangePassword = true;
                         }
                         else {
                             self.errorMessage = error.message || error;
-                            self.hadError = true;    
+                            self.hadError = true;
                         }
                     } else {
                         self.errorMessage = null;
@@ -218,11 +218,11 @@ var SignIn = exports.SignIn = Component.specialize({
                 }, function (error) {
                     if(error) {
                         if(error instanceof DataOperation && error.data.hasOwnProperty("password")) {
-                            self.ownerComponent.needsChangePassword = true; 
+                            self.ownerComponent.needsChangePassword = true;
                         }
                         else {
                             self.errorMessage = error.message || error;
-                            self.hadError = true;    
+                            self.hadError = true;
                         }
                     } else {
                         self.errorMessage = null;

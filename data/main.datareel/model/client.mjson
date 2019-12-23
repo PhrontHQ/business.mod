@@ -43,7 +43,7 @@
         "values": {
             "name": "photoOfClientSpace",
             "cardinality": -1,
-            "valueDescriptor": {"@": "image_descriptor"}       
+            "valueDescriptor": {"@": "image_descriptor"}
         }
     },
     "clientOrders": {
@@ -51,7 +51,7 @@
         "values": {
             "name": "clientOrders",
             "cardinality": -1,
-            "valueDescriptor": {"@": "client-order_descriptor"}       
+            "valueDescriptor": {"@": "client-order_descriptor"}
         }
     },
     "billingAddress": {

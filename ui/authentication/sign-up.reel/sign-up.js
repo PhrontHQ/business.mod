@@ -177,11 +177,11 @@ var SignUp = exports.SignUp = Component.specialize({
                 }, function (error) {
                     if(error) {
                         if(error instanceof DataOperation && error.data.hasOwnProperty("password")) {
-                            self.ownerComponent.needsChangePassword = true; 
+                            self.ownerComponent.needsChangePassword = true;
                         }
                         else {
                             self.errorMessage = error.message || error;
-                            self.hadError = true;    
+                            self.hadError = true;
                         }
                     } else {
                         self.errorMessage = null;

@@ -68,5 +68,5 @@ exports.AuthenticationPanel = AuthenticationPanel.specialize(/** @lends Authenti
         }
     }
 */
-    
+
 });

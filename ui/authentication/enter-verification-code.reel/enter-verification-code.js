@@ -169,7 +169,7 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
 
                 }, function (error) {
                     if(error) {
-                        self.hadError = true;    
+                        self.hadError = true;
 
                         //Needs to handle a wrong verification code
                         if(error instanceof DataOperation && error.type === DataOperation.Type.ValidateFailed) {
@@ -177,7 +177,7 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
                         }
                         else {
                             self.errorMessage = error.message || error;
-                            self.hadError = true;    
+                            self.hadError = true;
                         }
                     } else {
                         self.errorMessage = null;

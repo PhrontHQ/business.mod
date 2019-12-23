@@ -89,7 +89,7 @@
             "name": "addresses",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "addresses_descriptor"}       
+            "valueDescriptor": {"@": "addresses_descriptor"}
        }
     },
     "addresses_descriptor": {
@@ -100,7 +100,7 @@
         "values": {
             "name": "tags",
             "valueType": "string",
-            "cardinality": -1       
+            "cardinality": -1
        }
     },
     "userIdentities": {
@@ -109,7 +109,7 @@
             "name": "userIdentities",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "userIdentity_descriptor"}       
+            "valueDescriptor": {"@": "userIdentity_descriptor"}
        }
     },
     "userIdentity_descriptor": {

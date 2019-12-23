@@ -43,7 +43,7 @@
         "values": {
             "name": "productItem",
             "cardinality": 1,
-            "valueDescriptor": {"@": "product_descriptor"}       
+            "valueDescriptor": {"@": "product_descriptor"}
         }
     },
     "price": {
@@ -66,7 +66,7 @@
         "values": {
             "name": "belongsToOrder",
             "cardinality": -1,
-            "valueDescriptor": {"@": "client-order_descriptor"}       
+            "valueDescriptor": {"@": "client-order_descriptor"}
         }
     },
     "product_descriptor": {

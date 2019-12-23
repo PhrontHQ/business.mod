@@ -24,6 +24,6 @@ exports.Service = Product.specialize(/** @lends Product.prototype */ {
     },
     requiredResources: {
         value: undefined
-    }       
+    }
 
 });

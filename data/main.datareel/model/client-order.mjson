@@ -40,7 +40,7 @@
         "values": {
             "name": "client",
             "cardinality": 1,
-            "valueDescriptor": {"@": "client_descriptor"}       
+            "valueDescriptor": {"@": "client_descriptor"}
         }
     },
     "orderLineItems": {
@@ -48,7 +48,7 @@
         "values": {
             "name": "orderLineItems",
             "cardinality": -1,
-            "valueDescriptor": {"@": "order-line-item_descriptor"}       
+            "valueDescriptor": {"@": "order-line-item_descriptor"}
         }
     },
     "fulfillBy": {
