@@ -1,15 +1,201 @@
-// var mainServce = require("data/cognito-identity-service-main.datareel/main.mjson").montageObject;
-//     UserIdentity = require("phront/data/main.datareel/model/user-identity").UserIdentity;
-// var Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer;
-require("phront/data/main.datareel/cognito-identity-service.mjson").montageObject;
+// TODO: Can't require anything from montage/data before CognitoIdentityService or we get a circular reference error
+var cognitoIdentityService = require("phront/data/main.datareel/cognito-identity-service.mjson").montageObject,
+    UserIdentity = require("phront/data/main.datareel/model/user-identity").UserIdentity,
+    DataService = require("montage/data/service/data-service").DataService,
+    DataOperation = require("montage/data/service/data-operation").DataOperation,
+    cognitoMock = require("mock/cognito"),
+    mainService;
+
+// TODO: This initialization is supposed to be done by a main.mjson, but it's broken in node
+mainService = new DataService();
+mainService.isUniquing = true;
+cognitoIdentityService.userPoolId = "test_test";
+cognitoIdentityService.clientId = "test";
+cognitoIdentityService.CognitoUser = cognitoMock.CognitoUser;
+cognitoIdentityService.CognitoUserPool = cognitoMock.CognitoUserPool;
+mainService.addChildServices([cognitoIdentityService]);
+
+function resetService() {
+    cognitoIdentityService._typeIdentifierMap.clear();
+}
 
 describe("CognitoIdentityService", function () {
-    it("sign in", function () {
-        // return require.async("data/cognito-identity-service-main.datareel/main.mjson");
-        // var deserializer = new Deserializer()
-        // var identity = mainService.createDataObject(UserIdentity);
-        // identity.userName = 'foo';
-        // identity.password = 'bar';
-        // return mainServce.saveDataObject(identity);
+    beforeAll(resetService);
+
+    describe("sign up", function () {
+        describe("validation", function () {
+            it("rejects with a ValidateFailed DataOperation if the password is rejected", function () {
+                var userIdentity = mainService.createDataObject(UserIdentity);
+                userIdentity.username = "newuser";
+                userIdentity.password = "short";
+                userIdentity.email = "newuser@mail.com";
+                return mainService.saveDataObject(userIdentity)
+                .then(function () {
+                    throw new Error("Did not return an error");
+                }, function (err) {
+                    expect(err instanceof DataOperation).toBe(true);
+                    expect(err.type).toBe(DataOperation.Type.ValidateFailed);
+                    expect(err.data.hasOwnProperty('password')).toBe(true);
+                });
+            });
+
+            it("rejects with a ValidateFailed DataOperation if the email is rejected", function () {
+                var userIdentity = mainService.createDataObject(UserIdentity);
+                userIdentity.username = "newuser";
+                userIdentity.password = "password";
+                userIdentity.email = "not_an_email_format";
+                return mainService.saveDataObject(userIdentity)
+                .then(function () {
+                    throw new Error("Did not return an error");
+                }, function (err) {
+                    expect(err instanceof DataOperation).toBe(true);
+                    expect(err.type).toBe(DataOperation.Type.ValidateFailed);
+                    expect(err.data.hasOwnProperty('email')).toBe(true);
+                });
+            });
+        });
+
+        describe("with an existing username", function () {
+            describe("with an incorrect password", function () {
+                it("rejects the UserIdentity save with a DataOperation that indicates a conflicting username", function () {
+                    var userIdentity = mainService.createDataObject(UserIdentity);
+                    userIdentity.username = "confirmed";
+                    userIdentity.password = "not_the_password";
+                    userIdentity.email = "confirmed@mail.com";
+                    return mainService.saveDataObject(userIdentity)
+                    .then(function () {
+                        throw new Error("Did not return an error");
+                    }, function (err) {
+                        expect(err instanceof DataOperation).toBe(true);
+                        // Debatable... should it be a CreateFailed?
+                        expect(err.type).toBe(DataOperation.Type.UserAuthenticationFailed);
+                    });
+                });
+            });
+
+            describe("with the corresponding password", function () {
+                it("signs the user in", function () {
+                    var userIdentity = mainService.createDataObject(UserIdentity);
+                    userIdentity.username = "confirmed";
+                    userIdentity.password = "password";
+                    userIdentity.email = "confirmed@mail.com";
+                    return mainService.saveDataObject(userIdentity)
+                    .then(function () {
+                        var cognitoUser = cognitoIdentityService.snapshotForDataIdentifier(userIdentity.identifier);
+                        expect(cognitoUser.signInUserSession).toBeTruthy();
+                    });
+                });
+            });
+        });
+    });
+
+    describe("sign in", function () {
+        var userIdentity,
+            pendingIdentityFetch;
+        beforeEach(function () {
+            // We're forced to hack around the Montage event manager not working outside the browser
+            return new Promise(function (resolve) {
+                cognitoIdentityService.userIdentityDescriptor.dispatchEvent = function (dataOperation) {
+                    userIdentity = dataOperation.data;
+                    resolve();
+                }
+                pendingIdentityFetch = mainService.fetchData(UserIdentity);
+            })
+        });
+
+        describe("with valid credentials to an active & confirmed account", function () {
+            it("resolves the UserIdentity save", function () {
+                userIdentity.username = "confirmed";
+                userIdentity.password = "password";
+                return mainService.saveDataObject(userIdentity);
+            });
+
+            it("resolves the pending UserIdentity fetch", function (done) {
+                pendingIdentityFetch.then(function (data) {
+                    expect(data[0]).toBe(userIdentity);
+                    done();
+                });
+                userIdentity.username = "confirmed";
+                userIdentity.password = "password";
+                return mainService.saveDataObject(userIdentity);
+            });
+
+            it("updates the user identity's primary key if needed", function () {
+                var originalPkey = userIdentity.identifier.primaryKey;
+                userIdentity.username = "confirmed";
+                userIdentity.password = "password";
+                return mainService.saveDataObject(userIdentity)
+                .then(function () {
+                    expect(userIdentity.identifier.primaryKey).toBeTruthy();
+                    expect(userIdentity.identifier.primaryKey).not.toBe(originalPkey);
+                });
+            });
+        });
+
+        describe("with invalid credentials", function () {
+            it("rejects the UserIdentity save with a DataOperation that indicates incorrect credentials", function () {
+                userIdentity.username = "confirmed";
+                userIdentity.password = "not_the_password";
+                return mainService.saveDataObject(userIdentity)
+                .then(function () {
+                    throw new Error("did not reject");
+                }, function (err) {
+                    expect(err instanceof DataOperation).toBe(true);
+                    expect(err.type).toBe(DataOperation.Type.UserAuthenticationFailed);
+                    expect(err.data.hasOwnProperty("username")).toBe(true);
+                    expect(err.data.hasOwnProperty("password")).toBe(true);
+                });
+            });
+        });
+
+        describe("with valid credentials to an unconfirmed account", function () {
+            it("rejects the UserIdentity save with a DataOperation indicating that a confirmation code is required", function () {
+                userIdentity.username = "unconfirmed";
+                userIdentity.password = "password";
+                return mainService.saveDataObject(userIdentity)
+                .then(function () {
+                    throw new Error("Did not reject");
+                }, function (err) {
+                    expect(err instanceof DataOperation).toBe(true);
+                    expect(err.data.hasOwnProperty('accountConfirmationCode')).toBeTruthy();
+                });
+            });
+
+            it("sends a new confirmation email", function () {
+                var emailCount = cognitoMock.emailedConfirmationCodes.length;
+                userIdentity.username = "unconfirmed";
+                userIdentity.password = "password";
+                return mainService.saveDataObject(userIdentity)
+                .catch(function () {})
+                .then(function () {
+                    expect(cognitoMock.emailedConfirmationCodes.length).toBe(emailCount + 1);
+                    expect(cognitoMock.emailedConfirmationCodes[cognitoMock.emailedConfirmationCodes.length - 1]).toBe("unconfirmed");
+                });
+            });
+
+            describe("with an incorrect confirmation code", function () {
+                it("rejects the UserIdentity save with a DataOperation indicating that the confirmation code was wrong", function () {
+                    userIdentity.username = "unconfirmed";
+                    userIdentity.password = "password";
+                    userIdentity.accountConfirmationCode = "abcdef";
+                    return mainService.saveDataObject(userIdentity)
+                    .then(function () {
+                        throw new Error("Did not reject");
+                    }, function (err) {
+                        expect(err instanceof DataOperation).toBe(true);
+                        expect(err.data.hasOwnProperty('accountConfirmationCode')).toBe(true);
+                    });
+                });
+            });
+
+            describe("with a correct confirmation code", function () {
+                it("resolves the UserIdentity save", function () {
+                    userIdentity.username = "unconfirmed";
+                    userIdentity.password = "password";
+                    userIdentity.accountConfirmationCode = "123456";
+                    return mainService.saveDataObject(userIdentity);
+                });
+            });
+        });
     });
 });

@@ -7,7 +7,7 @@
             "objectMapping": {
                 "rules": {
                     "username": {"<->": "username"},
-                    "isAccountConfirmed": {"<->": "signInUserSession.idToken.payload.sub.defined()"},
+                    "isAccountConfirmed": {"<-": "signInUserSession.idToken.payload.sub.defined()"},
                     "password": {"<->": "password"},
                     "firstName": {"<->": "firstName"},
                     "lastName": {"<->": "lastName"},
@@ -18,7 +18,7 @@
             },
             "rawDataMapping": {
                 "rules": {
-                    "accountConfirmationCode": {"<-":"confirmationCode"}
+                    "confirmationCode": {"<-": "accountConfirmationCode"}
                 }
             },
             "requisitePropertyNames": [

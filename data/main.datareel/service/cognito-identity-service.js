@@ -1,9 +1,9 @@
-var DataService = require("montage/data/service/data-service").DataService,
-    UserIdentityService = require("montage/data/service/user-identity-service").UserIdentityService,
+var UserIdentityService = require("montage/data/service/user-identity-service").UserIdentityService,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     DataOperationType = require("montage/data/service/data-operation").DataOperationType,
     AmazonCognitoIdentity = require("amazon-cognito-identity-js"),
     AuthenticationDetails = AmazonCognitoIdentity.AuthenticationDetails,
+    CognitoUserAttribute = AmazonCognitoIdentity.CognitoUserAttribute,
     CognitoUserPool = AmazonCognitoIdentity.CognitoUserPool,
     CognitoUser = AmazonCognitoIdentity.CognitoUser,
     UserIdentity = require("data/main.datareel/model/user-identity").UserIdentity,
@@ -76,6 +76,14 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
         value: undefined
     },
 
+    CognitoUser: {
+        value: CognitoUser
+    },
+
+    CognitoUserPool: {
+        value: CognitoUserPool
+    },
+
     _userPool: {
         value: undefined
     },
@@ -86,7 +94,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     UserPoolId: this.userPoolId,
                     ClientId: this.clientId
                 };
-                this._userPool = new CognitoUserPool(poolData);
+                this._userPool = new this.CognitoUserPool(poolData);
             }
             return this._userPool;
         }
@@ -147,12 +155,8 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
             var self = this,
                 userInputNeeded = false,
                 query =  stream.query,
-                criteria =  query.criteria,
                 cognitoUser = this.userPool.getCurrentUser(),
                 userIdentity;
-
-            //TEMP, fake that we don't have one:
-            //cognitoUser = null;
 
             if (cognitoUser != null) {
                 cognitoUser.getSession(function(err, session) {
@@ -167,7 +171,6 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         }
                     }
 
-                    //console.log('session validity: ' + session.isValid());
                     if(session.isValid()) {
                         // NOTE: getSession must be called to authenticate user before calling getUserAttributes
                         /*
@@ -213,7 +216,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     Username: "",
                     Pool: this.userPool
                 };
-                cognitoUser = new CognitoUser(userData);
+                cognitoUser = new this.CognitoUser(userData);
                 cognitoUser.id = uuid.generate();
                 userIdentity = self.objectForTypeRawData(self.userIdentityDescriptor, cognitoUser);
                 userInputNeeded = true;
@@ -238,15 +241,10 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                 this._fetchStreamByUser.set(cognitoUser,stream);
 
                 var userInputOperation = new DataOperation(),
-                // userIdentity = stream.data[0],
-                dataIdentifier = userIdentity ? this.dataIdentifierForObject(userIdentity) : null,
-
-                dataOperationType = DataOperationType;
+                    dataIdentifier = userIdentity ? this.dataIdentifierForObject(userIdentity) : null;
 
                 //Set the righ type.
                 userInputOperation.type = DataOperation.Type.UserAuthentication;
-                // console.log("DataOperation.Type.intValueForMember(userInputOperation.type) is ",DataOperation.Type.intValueForMember(userInputOperation.type));
-                // console.log("DataOperation.Type.memberWithIntValue(DataOperation.Type.intValueForMember(userInputOperation.type)) is ",DataOperation.Type.memberWithIntValue(DataOperation.Type.intValueForMember(userInputOperation.type)));
 
                 //Needs to make that a separate property so this can be the cover that returns ths
                 //local object as a convenience over doing it with a new dataDescriptorModuleId property
@@ -304,39 +302,78 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
         }
     },
 
+    saveRawData: {
+        value: function (record, object) {
+            var self = this,
+                cognitoUser = this.snapshotForDataIdentifier(object.identifier);
+
+            if (cognitoUser) {
+                cognitoUser.username = record.username;
+                //This will do for now, but it needs to be replaced by the handling of an updateOperation which
+                //would carry directly the fact that the accountConfirmationCode property
+                //is what changed. In the meantime, while we're still in the same thred, we could ask the mainService what's the changed properties for that object, but it's still not tracked properly for some properties that don't have triggers doing so. Needs to clarify that.
+                if(!object.isAccountConfirmed && typeof object.accountConfirmationCode !== "undefined") {
+                    return this._confirmUser(record, object, cognitoUser)
+                    .then(function() {
+                        /*
+                        UserIdentity is successfully confirmed, the resolved promise completes the
+                        saveData call originating from the panels, here EnterVerificationCode.
+
+                        From there it could tell it's AuthenticationPanel that the process is complete,
+                        which itself could tell the UserIdentityManager, which ultimately is the one hiding (and showing) the montage level authenticationManagerPanel.
+
+                        Right now, the UserIdentityManager listens to the main service for:
+                            - this._mainService.addEventListener(DataOperation.Type.UserAuthentication, this);
+                            - this._mainService.addEventListener(DataOperation.Type.UserAuthenticationCompleted, this);
+
+                        positioning the UserIdentityService as the direct source of truth.
+
+                        When the UserIdentityService ends up in a different thread/service/web worker, we'll need
+                        data operations as the communication between
+                        */
+                        self.dispatchUserAuthenticationCompleted(object);
+                    });
+                } else {
+                    return this._authenticateUser(record, object, cognitoUser, record.password)
+                    .then(function() {
+                        self.dispatchUserAuthenticationCompleted(object);
+                    });
+                }
+            } else {
+                return this._signUpUser(record, object);
+            }
+        }
+    },
+
     _authenticateUser: {
         value: function(record, object, cognitoUser, password) {
-            var self = this;
-            return new Promise(function(resolve, reject) {
-                var stream = self._fetchStreamByUser.get(cognitoUser),
-                    authenticationData = {
-                        Username: cognitoUser.username,
-                        Password: password
-                    },
-                    authenticationDetails = new AuthenticationDetails(authenticationData);
-
+            var self = this,
+                stream = self._fetchStreamByUser.get(cognitoUser),
+                authenticationDetails = new AuthenticationDetails({
+                    Username: cognitoUser.username,
+                    Password: password
+                });
+            return new Promise(function (resolve, reject) {
                 cognitoUser.authenticateUser(authenticationDetails, {
-                    onSuccess: function(userSession) {
+                    onSuccess: function (userSession) {
+                        var rawDataPrimaryKey = cognitoUser.signInUserSession.idToken.payload.sub;
                         self.userSession = userSession;
-                        var accessToken = userSession.getAccessToken().getJwtToken();
-
-                        var validatedId = cognitoUser.signInUserSession.idToken.payload.sub;
 
                         //If we had a temporary object, we need to update
                         //the primary key
-                        if(cognitoUser.id !== validatedId) {
-                            object.identifier.primaryKey = validatedId;
+                        if (object.identifier && object.identifier.primaryKey !== rawDataPrimaryKey) {
+                            object.identifier.primaryKey = rawDataPrimaryKey;
+                        } else if (!object.identifier) {
+                            object.identifier = self.dataIdentifierForTypeRawData(self.userIdentityDescriptor, cognitoUser);
+                            self.recordSnapshot(object.identifier, cognitoUser);
                         }
 
                         resolve(object);
-
                         if(stream) {
                             //Or shall we use addData??
-                            debugger;
                             self.addRawData(stream, [cognitoUser]);
                             self.rawDataDone(stream);
                         }
-
                         self.dispatchUserAuthenticationCompleted(object);
                     },
 
@@ -397,10 +434,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                                 cognitoUser.resendConfirmationCode(function(resendConfirmationCodeError, result) {
                                     if (resendConfirmationCodeError) {
                                         //If that fails, not sure what we can do next?
-                                        console.log(resendConfirmationCodeError.message || JSON.stringify(resendConfirmationCodeError));
                                         reject(resendConfirmationCodeError);
-                                        //reject(err.message || JSON.stringify(err));
-
                                         if(stream) {
                                             self.rawDataError(stream,resendConfirmationCodeError);
                                         }
@@ -504,50 +538,27 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
     },
 
     _signUpUser: {
-        value: function(record, object) {
-            var self = this;
-
-            return new Promise(function(resolve,reject) {
-                var stream = self._pendingStream,
-                    attributeList = [],
-                    dataEmail = {
+        value: function (record, object) {
+            var self = this,
+                stream = this._pendingStream,
+                cognitoUserAttributes = [
+                    new CognitoUserAttribute({
                         Name: 'email',
                         Value: record.email
-                    },
-                    // dataPhoneNumber = {
-                    //   Name: 'phone_number',
-                    //   Value: '+15555555555',
-                    // },
-                    attributeEmail = new AmazonCognitoIdentity.CognitoUserAttribute(dataEmail);
-                    //   attributePhoneNumber = new AmazonCognitoIdentity.CognitoUserAttribute(
-                    //   dataPhoneNumber
-                    // )
-
-
-                attributeList.push(attributeEmail);
-                // attributeList.push(attributePhoneNumber);
-
-                self.userPool.signUp(record.username, record.password, attributeList, null, function(err, result) {
+                    })
+                ];
+            return new Promise(function (resolve, reject) {
+                self.userPool.signUp(record.username, record.password, cognitoUserAttributes, null, function (err, result) {
+                    var cognitoUser, dataOperation;
                     if (err) {
-                        /*
-                        err:
-                        {code: "UsernameExistsException", name: "UsernameExistsException", message: "User already exists"}
-                        code: "UsernameExistsException"
-                        message: "User already exists"
-                        name: "UsernameExistsException"
-                        */
-                        if(err.code === "UsernameExistsException") {
-                            var userData = {
+                        if (err.code === "UsernameExistsException") {
+                            cognitoUser = self.snapshotForDataIdentifier(object.identifier);
+                            if (!cognitoUser) {
+                                cognitoUser = new self.CognitoUser({
                                     Username: record.username,
                                     Pool: self.userPool
-                                },
-                                cognitoUser = self.snapshotForDataIdentifier(object.identifier);
-
-                            if(!cognitoUser) {
-                                cognitoUser = new CognitoUser(userData);
+                                });
                                 cognitoUser.id = uuid.generate();
-                            } else if(cognitoUser.username !== record.username) {
-                                console.error("cognitoUser doesn't match attempted signup name");
                             }
 
                             //Since it exists, we try to authenticate with what we have
@@ -555,29 +566,34 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                             .then(function(authenticatedUserIdentity) {
                                 //It worked we're all good
                                 resolve(authenticatedUserIdentity);
-                            },function(error) {
+                            }, function (error) {
                                 //Authentication failed, since the username exists,
                                 //It's likely the passord is wrong.
                                 //We need to communicate that back up
                                 //and make sure we switch bacl to the signin panel
-                                console.error(error.message || JSON.stringify(error));
                                 reject(error);
                             });
+                        } else if (err.code === "InvalidParameterException") {
+                            dataOperation = new DataOperation();
+                            dataOperation.type = DataOperation.Type.ValidateFailed;
+                            dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                            dataOperation.userMessage = err.message;
+                            dataOperation.data = {};
+                            if (err.message.indexOf("username") !== -1) {
+                                dataOperation.data["username"] = undefined;
+                            }
+                            if (err.message.indexOf("password") !== -1) {
+                                dataOperation.data["password"] = undefined;
+                            }
+                            if (err.message.indexOf("email") !== -1) {
+                                dataOperation.data["email"] = undefined;
+                            }
+                            reject(dataOperation);
+                        } else {
+                            reject(err);
                         }
-                        /*
-                        {code: "InvalidParameterException", name: "InvalidParameterException", message: "Invalid email address format."}
-                        code: "InvalidParameterException"
-                        message: "Invalid email address format."
-                        name: "InvalidParameterException"
-                        */
-
-                        //TODO: look at how we might need to handle more directly some use cases.
-                        console.error(err.message || JSON.stringify(err));
-                        reject(err);
-                        return;
                     } else {
-                        var cognitoUser = result.user;
-                        console.log('user name is ' + cognitoUser.getUsername());
+                        cognitoUser = result.user;
 
                         /*
 
@@ -624,75 +640,24 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
 
     _confirmUser: {
         value: function(record, object, cognitoUser) {
-            return new Promise(function(resolve,reject) {
-                var self = this,
-                    accountConfirmationCode = object.accountConfirmationCode,
-                    confirmationCode = record.confirmationCode;
-
-                cognitoUser.confirmRegistration(accountConfirmationCode, true, function(err, result) {
+            var self = this,
+                accountConfirmationCode = object.accountConfirmationCode;
+            return new Promise(function (resolve, reject) {
+                cognitoUser.confirmRegistration(accountConfirmationCode, true, function (err) {
+                    var dataOperation;
                     if (err) {
-                        /*
-                            As a data operation, this should be either a DataOperationType.updatefailed
-                            -> with the detail of the property change that failed - accountConfirmationCode
-                            Or a new, more specific DataOperationType.useraccountconfirmationfailed, but is that really needed?
-                        */
-
-                        console.error(err.message || JSON.stringify(err));
-                        reject(err);
-                        return;
+                        dataOperation = new DataOperation();
+                        dataOperation.type = DataOperation.Type.UpdateFailed;
+                        dataOperation.userMessage = "Invalid Verification Code";
+                        dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                        dataOperation.criteria = new Criteria().initWithExpression("identifier == $", object.identifier);
+                        dataOperation.data = { accountConfirmationCode: undefined };
+                        reject(dataOperation);
                     } else {
-                        console.log("confirmRegistration succeded",result);
-                        resolve(result);
+                        resolve();
                     }
                 });
             });
-        }
-    },
-
-    saveRawData: {
-        value: function (record, object) {
-            var userName = record.username,
-                password = record.password,
-                identifier = object.identifier,
-                cognitoUser = this.snapshotForDataIdentifier(identifier),
-                stream = this._fetchStreamByUser.get(cognitoUser),
-                self = this;
-
-            if(cognitoUser) {
-                //This will do for now, but it needs to be replaced by the handling of an updateOperation which
-                //would carry directly the fact that the accountConfirmationCode property
-                //is what changed. In the meantime, while we're still in the same thred, we could ask the mainService what's the changed properties for that object, but it's still not tracked properly for some properties that don't have triggers doing so. Needs to clarify that.
-                if(!object.isAccountConfirmed && typeof object.accountConfirmationCode !== "undefined") {
-                    return this._confirmUser(record, object, cognitoUser)
-                    .then(function() {
-                        /*
-                        UserIdentity is successfully confirmed, the resolved promise completes the
-                        saveData call originating from the panels, here EnterVerificationCode.
-
-                        From there it could tell it's AuthenticationPanel that the process is complete,
-                        which itself could tell the UserIdentityManager, which ultimately is the one hiding (and showing) the montage level authenticationManagerPanel.
-
-                        Right now, the UserIdentityManager listens to the main service for:
-                            - this._mainService.addEventListener(DataOperation.Type.UserAuthentication, this);
-                            - this._mainService.addEventListener(DataOperation.Type.UserAuthenticationCompleted, this);
-
-                        positioning the UserIdentityService as the direct source of truth.
-
-                        When the UserIdentityService ends up in a different thread/service/web worker, we'll need
-                        data operations as the communication between
-                        */
-                        self.dispatchUserAuthenticationCompleted(object);
-                    });
-                } else {
-                    cognitoUser.username = userName;
-                    return this._authenticateUser(record, object, cognitoUser, password)
-                    .then(function() {
-                        self.dispatchUserAuthenticationCompleted(object);
-                    });
-                }
-            } else {
-                return this._signUpUser(record, object);
-            }
         }
     },
 
@@ -704,7 +669,6 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
             return new Promise(function(resolve,reject) {
                 cognitoUser.completeNewPasswordChallenge(password, self.sessionUserAttributes, function(err, result) {
                     if (err) {
-                        console.error(err.message || JSON.stringify(err));
                         reject(err);
                     }
                     //Needs to process result into some kind of operation

@@ -1,10 +1,9 @@
 console.log('montage-testing', 'Start');
 
 module.exports = require("montage-testing").run(require, [
-    
-    // "montage/core/serialization/deserializer/montage-deserializer",
-    "spec/phront-service"
-    
+    // TODO: Broken
+    // "spec/phront-service",
+    "spec/cognito-identity-service-spec"
 ]).then(function () {
     console.log('montage-testing', 'End');
 }, function (err) {
