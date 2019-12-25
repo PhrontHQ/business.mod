@@ -7,7 +7,7 @@ var Target = require("montage/core/target").Target;
 
 exports.UserIdentity = Target.specialize(/** @lends UserIdentity.prototype */ {
 
-    userName: {
+    username: {
         value: undefined
     },
     password: {

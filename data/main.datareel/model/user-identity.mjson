@@ -4,7 +4,7 @@
         "values": {
             "name": "UserIdentity",
             "propertyDescriptors": [
-                {"@": "userName"},
+                {"@": "username"},
                 {"@": "password"},
                 {"@": "accountConfirmationCode"},
                 {"@": "isAccountConfirmed"},
@@ -29,10 +29,10 @@
     "user-identity": {
         "object": "data/main.datareel/model/user-identity"
     },
-    "userName": {
+    "username": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "userName",
+            "name": "username",
             "valueType": "string"
         }
     },

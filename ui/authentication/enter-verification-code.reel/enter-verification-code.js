@@ -157,7 +157,7 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
                     // self.application.applicationModal.hide(self);
 
                     // Don't keep any track of the verificationCode in memory.
-                    self.verificationCode = self.userName = null;
+                    self.verificationCode = self.username = null;
 
                     //FIXME: kind of hacky
                     //self.application.dispatchEventNamed("userLogged");

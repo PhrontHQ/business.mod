@@ -11,7 +11,7 @@ var SignUp = exports.SignUp = Component.specialize({
         value: true
     },
 
-    userName: {
+    username: {
         value: void 0
     },
 
@@ -33,7 +33,7 @@ var SignUp = exports.SignUp = Component.specialize({
         value: void 0
     },
 
-    userNameTextField: {
+    usernameTextField: {
         value: void 0
     },
 
@@ -113,7 +113,7 @@ var SignUp = exports.SignUp = Component.specialize({
                 this.errorMessage = "Oops! Your token has expired. \n Please log back in.";
                 location.href = location.href.replace(/;disconnected/g, '');
             }
-            this.userNameTextField.focus();
+            this.usernameTextField.focus();
         }
     },
 
@@ -141,7 +141,7 @@ var SignUp = exports.SignUp = Component.specialize({
 
     handleSignUpAction: {
         value: function() {
-            if (!this._isAuthenticating && this.userName) {
+            if (!this._isAuthenticating && this.username) {
                 var self = this,
                     newIdentity  = this.application.mainService.createDataObject(UserIdentity);
 
@@ -150,7 +150,7 @@ var SignUp = exports.SignUp = Component.specialize({
                 var password = this.password || "";
 
                 //Would be great to not have to do that, but for now:
-                newIdentity.userName = this.userName;
+                newIdentity.username = this.username;
                 newIdentity.email = this.email;
                 newIdentity.password = this.password;
 
@@ -164,7 +164,7 @@ var SignUp = exports.SignUp = Component.specialize({
                     self.isLoggedIn = true;
 
                     // Don't keep any track of the password in memory.
-                    self.password = self.userName = null;
+                    self.password = self.username = null;
 
                     /*
                         We need to now show the email verification code component.
@@ -205,7 +205,7 @@ var SignUp = exports.SignUp = Component.specialize({
                 this.element.style.display = 'none';
             } else if (this._isFirstTransitionEnd) {
                 this._isFirstTransitionEnd = false;
-                this.userNameTextField.focus();
+                this.usernameTextField.focus();
             }
         }
     },
@@ -226,7 +226,7 @@ var SignUp = exports.SignUp = Component.specialize({
     _toggleUserInteraction: {
         value: function () {
             this.signUpButton.disabled = this._isAuthenticating;
-            this.passwordTextField.disabled = this.userNameTextField.disabled = this._isAuthenticating;
+            this.passwordTextField.disabled = this.usernameTextField.disabled = this._isAuthenticating;
         }
     }
 

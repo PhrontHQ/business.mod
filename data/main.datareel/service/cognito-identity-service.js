@@ -96,16 +96,16 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
         value: undefined
     },
     userNamed: {
-        value: function(userName) {
-            var user = this._usersByName.get(userName);
+        value: function(username) {
+            var user = this._usersByName.get(username);
             if(!user) {
                 var userData = {
-                    Username: userName,
+                    Username: username,
                     Pool: this.userPool
                 };
-                user = new CognitoUser(userData);
+                user = new this.CognitoUser(userData);
                 if(user) {
-                    this._usersByName.set(userName,user);
+                    this._usersByName.set(username,user);
                 }
             }
             return user;
@@ -264,7 +264,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
 
                 //Specifies the properties we need input for
                 userInputOperation.data = userIdentity;
-                userInputOperation.requisitePropertyNames = ["userName","password"];
+                userInputOperation.requisitePropertyNames = ["username","password"];
 
                 //TODO: Needs to wrap that in super class UserIdentityService in montage
                 var myModule = module,
@@ -356,7 +356,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                             updateOperation.userMessage = err.message;
 
                             updateOperation.data = {
-                                "userName": undefined,
+                                "username": undefined,
                                 "password": undefined,
                             };
 

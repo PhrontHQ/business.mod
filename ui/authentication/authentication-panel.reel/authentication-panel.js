@@ -15,7 +15,7 @@ exports.AuthenticationPanel = AuthenticationPanel.specialize(/** @lends Authenti
         },
         set: function(value) {
             this._userIdentity = value;
-            if(!value || (value && !value.userName)) {
+            if(!value || (value && !value.username)) {
                 this.substitutionPanel = "signUp";
             }
         }
@@ -59,7 +59,7 @@ exports.AuthenticationPanel = AuthenticationPanel.specialize(/** @lends Authenti
 
     handleSignInAction: {
         value: function() {
-            if (!this._isAuthenticating && this.userName) {
+            if (!this._isAuthenticating && this.username) {
                 var self = this;
                 this.isAuthenticating = true;
                 this.hadError = false;

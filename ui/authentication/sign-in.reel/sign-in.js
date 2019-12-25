@@ -10,7 +10,7 @@ var SignIn = exports.SignIn = Component.specialize({
         value: true
     },
 
-    userName: {
+    username: {
         value: void 0
     },
 
@@ -32,7 +32,7 @@ var SignIn = exports.SignIn = Component.specialize({
         value: void 0
     },
 
-    userNameTextField: {
+    usernameTextField: {
         value: void 0
     },
 
@@ -112,7 +112,7 @@ var SignIn = exports.SignIn = Component.specialize({
                 this.errorMessage = "Oops! Your token has expired. \n Please log back in.";
                 location.href = location.href.replace(/;disconnected/g, '');
             }
-            this.userNameTextField.focus();
+            this.usernameTextField.focus();
         }
     },
 
@@ -134,7 +134,7 @@ var SignIn = exports.SignIn = Component.specialize({
 
     handleSignInAction: {
         value: function() {
-            if (!this._isAuthenticating && this.userName) {
+            if (!this._isAuthenticating && this.username) {
                 var self = this;
                 this.isAuthenticating = true;
                 this.hadError = false;
@@ -148,7 +148,7 @@ var SignIn = exports.SignIn = Component.specialize({
                     // self.application.applicationModal.hide(self);
 
                     // Don't keep any track of the password in memory.
-                    self.password = self.userName = null;
+                    self.password = self.username = null;
 
                     //FIXME: kind of hacky
                     //self.application.dispatchEventNamed("userLogged");
@@ -246,7 +246,7 @@ var SignIn = exports.SignIn = Component.specialize({
                 this.element.style.display = 'none';
             } else if (this._isFirstTransitionEnd) {
                 this._isFirstTransitionEnd = false;
-                this.userNameTextField.focus();
+                this.usernameTextField.focus();
             }
         }
     },
@@ -267,7 +267,7 @@ var SignIn = exports.SignIn = Component.specialize({
     _toggleUserInteraction: {
         value: function () {
             this.signInButton.disabled = this._isAuthenticating;
-            this.passwordTextField.disabled = this.userNameTextField.disabled = this._isAuthenticating;
+            this.passwordTextField.disabled = this.usernameTextField.disabled = this._isAuthenticating;
         }
     }
 

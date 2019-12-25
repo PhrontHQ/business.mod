@@ -54,7 +54,7 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
         value: void 0
     },
 
-    userNameTextField: {
+    usernameTextField: {
         value: void 0
     },
 

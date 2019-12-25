@@ -6,7 +6,7 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
-                    "userName": {"<->": "username"},
+                    "username": {"<->": "username"},
                     "isAccountConfirmed": {"<->": "signInUserSession.idToken.payload.sub.defined()"},
                     "password": {"<->": "password"},
                     "firstName": {"<->": "firstName"},
@@ -22,7 +22,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "userName","isAccountConfirmed","email"
+                "username","isAccountConfirmed","email"
             ]
         }
     },
