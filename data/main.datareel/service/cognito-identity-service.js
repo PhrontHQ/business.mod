@@ -314,6 +314,9 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                 //is what changed. In the meantime, while we're still in the same thred, we could ask the mainService what's the changed properties for that object, but it's still not tracked properly for some properties that don't have triggers doing so. Needs to clarify that.
                 if(!object.isAccountConfirmed && typeof object.accountConfirmationCode !== "undefined") {
                     return this._confirmUser(record, object, cognitoUser)
+                    .then(function () {
+                        return self._authenticateUser(record, object, cognitoUser, record.password)
+                    })
                     .then(function() {
                         /*
                         UserIdentity is successfully confirmed, the resolved promise completes the
@@ -654,6 +657,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         dataOperation.data = { accountConfirmationCode: undefined };
                         reject(dataOperation);
                     } else {
+                        object.accountConfirmationCode = undefined;
                         resolve();
                     }
                 });

@@ -195,6 +195,26 @@ describe("CognitoIdentityService", function () {
                     userIdentity.accountConfirmationCode = "123456";
                     return mainService.saveDataObject(userIdentity);
                 });
+
+                it("signs the user in", function () {
+                    userIdentity.username = "unconfirmed";
+                    userIdentity.password = "password";
+                    userIdentity.accountConfirmationCode = "123456";
+                    return mainService.saveDataObject(userIdentity)
+                    .then(function () {
+                        expect(userIdentity.isAccountConfirmed).toBe(true);
+                    });
+                });
+
+                it("unsets the accountConfirmationCode", function () {
+                    userIdentity.username = "unconfirmed";
+                    userIdentity.password = "password";
+                    userIdentity.accountConfirmationCode = "123456";
+                    return mainService.saveDataObject(userIdentity)
+                    .then(function () {
+                        expect(userIdentity.accountConfirmationCode).toBeFalsy();
+                    });
+                })
             });
         });
     });
