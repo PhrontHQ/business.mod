@@ -17,10 +17,24 @@ mainService.addChildServices([cognitoIdentityService]);
 
 function resetService() {
     cognitoIdentityService._typeIdentifierMap.clear();
+    cognitoIdentityService._snapshot.clear();
+    cognitoMock.reset();
 }
 
 describe("CognitoIdentityService", function () {
-    beforeAll(resetService);
+    var userIdentity,
+        pendingIdentityFetch;
+    beforeEach(function () {
+        resetService();
+        // We're forced to hack around the Montage event manager not working outside the browser
+        return new Promise(function (resolve) {
+            cognitoIdentityService.userIdentityDescriptor.dispatchEvent = function (dataOperation) {
+                userIdentity = dataOperation.data;
+                resolve();
+            }
+            pendingIdentityFetch = mainService.fetchData(UserIdentity);
+        })
+    });
 
     describe("sign up", function () {
         describe("validation", function () {
@@ -87,22 +101,34 @@ describe("CognitoIdentityService", function () {
                 });
             });
         });
+
+        describe("with a nonexistent username", function () {
+            it("marks the user as unconfirmed", function () {
+                var userIdentity = mainService.createDataObject(UserIdentity);
+                userIdentity.username = "newuser";
+                userIdentity.password = "password";
+                userIdentity.email = "newuser@mail.com";
+                return mainService.saveDataObject(userIdentity)
+                .then(function () {
+                    expect(userIdentity.isAccountConfirmed).toBe(false);
+                });
+            });
+
+            it("resolves the pending UserIdentity fetch", function (done) {
+                var userIdentity = mainService.createDataObject(UserIdentity);
+                pendingIdentityFetch.then(function (data) {
+                    expect(data[0]).toBe(userIdentity);
+                    done();
+                });
+                userIdentity.username = "newuser";
+                userIdentity.password = "password";
+                userIdentity.email = "newuser@mail.com";
+                mainService.saveDataObject(userIdentity);
+            });
+        });
     });
 
     describe("sign in", function () {
-        var userIdentity,
-            pendingIdentityFetch;
-        beforeEach(function () {
-            // We're forced to hack around the Montage event manager not working outside the browser
-            return new Promise(function (resolve) {
-                cognitoIdentityService.userIdentityDescriptor.dispatchEvent = function (dataOperation) {
-                    userIdentity = dataOperation.data;
-                    resolve();
-                }
-                pendingIdentityFetch = mainService.fetchData(UserIdentity);
-            })
-        });
-
         describe("with valid credentials to an active & confirmed account", function () {
             it("resolves the UserIdentity save", function () {
                 userIdentity.username = "confirmed";

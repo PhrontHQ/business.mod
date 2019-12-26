@@ -358,17 +358,18 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                 });
             return new Promise(function (resolve, reject) {
                 cognitoUser.authenticateUser(authenticationDetails, {
-                    onSuccess: function (userSession) {
-                        var rawDataPrimaryKey = cognitoUser.signInUserSession.idToken.payload.sub;
-                        self.userSession = userSession;
-
+                    onSuccess: function () {
+                        var rawDataPrimaryKey = cognitoUser.signInUserSession.idToken.payload.sub,
+                            dataIdentifier = object.identifier;
                         //If we had a temporary object, we need to update
                         //the primary key
-                        if (object.identifier && object.identifier.primaryKey !== rawDataPrimaryKey) {
-                            object.identifier.primaryKey = rawDataPrimaryKey;
-                        } else if (!object.identifier) {
-                            object.identifier = self.dataIdentifierForTypeRawData(self.userIdentityDescriptor, cognitoUser);
-                            self.recordSnapshot(object.identifier, cognitoUser);
+                        if (dataIdentifier && dataIdentifier.primaryKey !== rawDataPrimaryKey) {
+                            dataIdentifier.primaryKey = rawDataPrimaryKey;
+                        } else if (!dataIdentifier) {
+                            dataIdentifier = self.dataIdentifierForTypeRawData(self.userIdentityDescriptor, cognitoUser);
+                            self.rootService.recordDataIdentifierForObject(dataIdentifier, object);
+                            self.rootService.recordObjectForDataIdentifier(object, dataIdentifier);
+                            self.recordSnapshot(dataIdentifier, cognitoUser);
                         }
 
                         resolve(object);
@@ -552,7 +553,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                 ];
             return new Promise(function (resolve, reject) {
                 self.userPool.signUp(record.username, record.password, cognitoUserAttributes, null, function (err, result) {
-                    var cognitoUser, dataOperation;
+                    var cognitoUser, dataOperation, dataIdentifier;
                     if (err) {
                         if (err.code === "UsernameExistsException") {
                             cognitoUser = self.snapshotForDataIdentifier(object.identifier);
@@ -566,9 +567,9 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
 
                             //Since it exists, we try to authenticate with what we have
                             self._authenticateUser(record, object, cognitoUser, record.password)
-                            .then(function(authenticatedUserIdentity) {
+                            .then(function () {
                                 //It worked we're all good
-                                resolve(authenticatedUserIdentity);
+                                resolve();
                             }, function (error) {
                                 //Authentication failed, since the username exists,
                                 //It's likely the passord is wrong.
@@ -597,34 +598,19 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         }
                     } else {
                         cognitoUser = result.user;
-
-                        /*
-
-                            TOO EARLY FOR THAT:
-
-                        //We need to see if we already have an identifier
-                        //and make sure that "object" is being found as the one
-                        //when we're about to re-place
-                        var validatedId = cognitoUser.signInUserSession.idToken.payload.sub;
-                        cognitoUser.id = validatedId;
-
-                        debugger;
-                        //If we had a temporary object, we need to update
-                        //the primary key
-                        object.identifier.primaryKey = validatedId;
-
-                        //To make sure that addRawData rendez-vous
-                        //with the user identity object already created
-                        //when we do addRawData
-                        self.registerDataIdentifierForTypePrimaryKey(object.identifier, self.userIdentityDescriptor, validatedId);
-
-                        */
-
+                        cognitoUser.id = uuid.generate();
+                        dataIdentifier = object.identifier;
+                        if (dataIdentifier) {
+                            dataIdentifier.primaryKey = cognitoUser.id;
+                        } else {
+                            dataIdentifier = self.dataIdentifierForTypeRawData(self.userIdentityDescriptor, cognitoUser);
+                            self.rootService.recordDataIdentifierForObject(dataIdentifier, object);
+                            self.rootService.recordObjectForDataIdentifier(object, dataIdentifier);
+                        }
+                        self.recordSnapshot(object.identifier, cognitoUser);
                         object.isAccountConfirmed = false;
-
                         //For the saveRawData...
                         resolve(object);
-
                         //For the fetch for a user identity
                         if(stream) {
                             if(stream.data.length === 1) {

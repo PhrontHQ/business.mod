@@ -1,6 +1,6 @@
 var uuid = require("montage/core/uuid");
 
-var userInfos = {
+var BASE_USER_INFOS = {
     "confirmed": {
         username: "confirmed",
         password: "password",
@@ -14,7 +14,19 @@ var userInfos = {
     }
 };
 
+var userInfos = {};
 var emailedConfirmationCodes = [];
+
+function reset() {
+    Object.keys(userInfos).forEach(function (username) {
+        delete userInfos[username];
+    });
+    Object.keys(BASE_USER_INFOS).forEach(function (username) {
+        userInfos[username] = Object.assign({}, BASE_USER_INFOS[username]);
+    });
+    emailedConfirmationCodes.length = 0;
+}
+reset();
 
 /**
  * @typedef {object} CognitoUserPoolSignUpResult
@@ -187,5 +199,6 @@ module.exports = {
     CognitoUser: CognitoUser,
     CognitoUserPool: CognitoUserPool,
     userInfos: userInfos,
-    emailedConfirmationCodes: emailedConfirmationCodes
+    emailedConfirmationCodes: emailedConfirmationCodes,
+    reset: reset
 };
