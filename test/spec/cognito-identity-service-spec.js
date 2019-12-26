@@ -95,8 +95,7 @@ describe("CognitoIdentityService", function () {
                     userIdentity.email = "confirmed@mail.com";
                     return mainService.saveDataObject(userIdentity)
                     .then(function () {
-                        var cognitoUser = cognitoIdentityService.snapshotForDataIdentifier(userIdentity.identifier);
-                        expect(cognitoUser.signInUserSession).toBeTruthy();
+                        expect(userIdentity.isAuthenticated).toBe(true);
                     });
                 });
             });
@@ -154,6 +153,15 @@ describe("CognitoIdentityService", function () {
                 .then(function () {
                     expect(userIdentity.identifier.primaryKey).toBeTruthy();
                     expect(userIdentity.identifier.primaryKey).not.toBe(originalPkey);
+                });
+            });
+
+            it("signs the user in", function () {
+                userIdentity.username = "confirmed";
+                userIdentity.password = "password";
+                return mainService.saveDataObject(userIdentity)
+                .then(function () {
+                    expect(userIdentity.isAuthenticated).toBe(true);
                 });
             });
         });
@@ -224,6 +232,16 @@ describe("CognitoIdentityService", function () {
                 });
 
                 it("signs the user in", function () {
+                    userIdentity.username = "unconfirmed";
+                    userIdentity.password = "password";
+                    userIdentity.accountConfirmationCode = "123456";
+                    return mainService.saveDataObject(userIdentity)
+                    .then(function () {
+                        expect(userIdentity.isAuthenticated).toBe(true);
+                    });
+                });
+
+                it("marks the user as confirmed", function () {
                     userIdentity.username = "unconfirmed";
                     userIdentity.password = "password";
                     userIdentity.accountConfirmationCode = "123456";

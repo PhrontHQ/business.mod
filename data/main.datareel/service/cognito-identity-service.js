@@ -306,7 +306,6 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
         value: function (record, object) {
             var self = this,
                 cognitoUser = this.snapshotForDataIdentifier(object.identifier);
-
             if (cognitoUser) {
                 cognitoUser.username = record.username;
                 //This will do for now, but it needs to be replaced by the handling of an updateOperation which
@@ -361,8 +360,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     onSuccess: function () {
                         var rawDataPrimaryKey = cognitoUser.signInUserSession.idToken.payload.sub,
                             dataIdentifier = object.identifier;
-                        //If we had a temporary object, we need to update
-                        //the primary key
+                        //If we had a temporary object, we need to update the primary key
                         if (dataIdentifier && dataIdentifier.primaryKey !== rawDataPrimaryKey) {
                             dataIdentifier.primaryKey = rawDataPrimaryKey;
                         } else if (!dataIdentifier) {
@@ -371,13 +369,14 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                             self.rootService.recordObjectForDataIdentifier(object, dataIdentifier);
                             self.recordSnapshot(dataIdentifier, cognitoUser);
                         }
-
-                        resolve(object);
-                        if(stream) {
+                        object.isAccountConfirmed = true;
+                        object.isAuthenticated = true;
+                        if (stream) {
                             //Or shall we use addData??
                             self.addRawData(stream, [cognitoUser]);
                             self.rawDataDone(stream);
                         }
+                        resolve(object);
                         self.dispatchUserAuthenticationCompleted(object);
                     },
 
@@ -403,13 +402,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
 
                             reject(updateOperation);
                         } else if(err.code === "UserNotConfirmedException") {
-                            /*
-                            err:
-                            {code: "UserNotConfirmedException", name: "UserNotConfirmedException", message: "User is not confirmed."}
-                            code: "UserNotConfirmedException"
-                            message: "User is not confirmed."
-                            name: "UserNotConfirmedException"
-                            */
+                           object.isAccountConfirmed = false;
 
                             if(object.accountConfirmationCode) {
                                 //The user is already entering a accountConfirmationCode
@@ -429,8 +422,8 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                                     what failed.
                                 */
                                 validateOperation.data = {
-                                        "accountConfirmationCode": undefined
-                                    };
+                                    "accountConfirmationCode": undefined
+                                };
 
                                 reject(validateOperation);
                             } else {

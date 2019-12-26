@@ -19,6 +19,9 @@ exports.UserIdentity = Target.specialize(/** @lends UserIdentity.prototype */ {
     isAccountConfirmed: {
         value: false
     },
+    isAuthenticated: {
+        value: false
+    },
     firstName: {
         value: undefined
     },

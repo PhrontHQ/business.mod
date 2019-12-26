@@ -8,6 +8,7 @@
                 {"@": "password"},
                 {"@": "accountConfirmationCode"},
                 {"@": "isAccountConfirmed"},
+                {"@": "isAuthenticated"},
                 {"@": "firstName"},
                 {"@": "lastName"},
                 {"@": "email"},
@@ -56,6 +57,15 @@
         "values": {
             "name": "isAccountConfirmed",
             "isSerializable": false,
+            "defaultValue": false,
+            "valueType": "boolean"
+        }
+    },
+    "isAuthenticated": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "isAuthenticated",
+            "serializable": false,
             "defaultValue": false,
             "valueType": "boolean"
         }
