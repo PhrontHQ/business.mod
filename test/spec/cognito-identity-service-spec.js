@@ -183,6 +183,7 @@ describe("CognitoIdentityService", function () {
                         throw new Error("Did not reject");
                     }, function (err) {
                         expect(err instanceof DataOperation).toBe(true);
+                        expect(err.type).toBe(DataOperation.Type.ValidateFailed);
                         expect(err.data.hasOwnProperty('accountConfirmationCode')).toBe(true);
                     });
                 });

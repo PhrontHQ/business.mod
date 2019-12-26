@@ -650,7 +650,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     var dataOperation;
                     if (err) {
                         dataOperation = new DataOperation();
-                        dataOperation.type = DataOperation.Type.UpdateFailed;
+                        dataOperation.type = DataOperation.Type.ValidateFailed;
                         dataOperation.userMessage = "Invalid Verification Code";
                         dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
                         dataOperation.criteria = new Criteria().initWithExpression("identifier == $", object.identifier);
