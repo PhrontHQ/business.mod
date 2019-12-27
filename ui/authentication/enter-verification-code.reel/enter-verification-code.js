@@ -77,7 +77,6 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
         set: function (isAuthenticating) {
             if (this._isAuthenticating !== isAuthenticating) {
                 this._isAuthenticating = isAuthenticating;
-                this._toggleUserInteraction();
             }
         },
         get: function () {
@@ -197,6 +196,28 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
         }
     },
 
+    handleResendVerificationCodeAction: {
+        value: function () {
+            var self = this;
+                userIdentity = this.ownerComponent.userIdentity;
+            if (this._isAuthenticating) {
+                return;
+            }
+            this.isAuthenticating = true;
+            this.hadError = false;
+            // simulates logging in to an unconfirmed account
+            userIdentity.accountConfirmationCode = undefined;
+            this.application.mainService.saveDataObject(userIdentity)
+            .catch(function () {
+                self.errorMessage = null;
+                self.hasError = false;
+            })
+            .finally(function () {
+                self.isAuthenticating = false;
+            });
+        }
+    },
+
     handleTransitionend: {
         value: function (e) {
             if(this.isLoggedIn && e.target == this.element && e.propertyName == 'opacity') {
@@ -218,13 +239,6 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
                     typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", this, false
                 );
             }
-        }
-    },
-
-    _toggleUserInteraction: {
-        value: function () {
-            this.confirmAccountButton.disabled = this._isAuthenticating;
-            this.codeVerificationField.disabled = this._isAuthenticating;
         }
     }
 
