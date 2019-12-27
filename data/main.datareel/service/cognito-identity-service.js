@@ -556,6 +556,9 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                                     Pool: self.userPool
                                 });
                                 cognitoUser.id = uuid.generate();
+                                if (stream) {
+                                    self._fetchStreamByUser.set(cognitoUser, stream);
+                                }
                             }
 
                             //Since it exists, we try to authenticate with what we have

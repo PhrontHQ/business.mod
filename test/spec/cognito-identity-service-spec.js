@@ -88,6 +88,18 @@ describe("CognitoIdentityService", function () {
             });
 
             describe("with the corresponding password", function () {
+                it("resolves the pending UserIdentity fetch", function (done) {
+                    var userIdentity = mainService.createDataObject(UserIdentity);
+                    pendingIdentityFetch.then(function (data) {
+                        expect(data[0]).toBe(userIdentity);
+                        done();
+                    });
+                    userIdentity.username = "confirmed";
+                    userIdentity.password = "password";
+                    userIdentity.email = "confirmed@mail.com";
+                    mainService.saveDataObject(userIdentity);
+                });
+
                 it("signs the user in", function () {
                     var userIdentity = mainService.createDataObject(UserIdentity);
                     userIdentity.username = "confirmed";
