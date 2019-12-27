@@ -275,4 +275,22 @@ describe("CognitoIdentityService", function () {
             });
         });
     });
+
+    describe("sign out", function () {
+        beforeEach(function () {
+            userIdentity.username = "confirmed";
+            userIdentity.password = "password";
+            return mainService.saveDataObject(userIdentity);
+        });
+
+        it("signs the cognito user out", function () {
+            userIdentity.isAuthenticated = false;
+            return mainService.saveDataObject(userIdentity)
+            .then(function () {
+                var cognitoUser = cognitoIdentityService.snapshotForObject(userIdentity);
+                expect(userIdentity.isAuthenticated).toBe(false);
+                expect(cognitoUser.signInUserSession).toBeFalsy();
+            });
+        });
+    });
 });

@@ -308,6 +308,10 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                 cognitoUser = this.snapshotForDataIdentifier(object.identifier);
             if (cognitoUser) {
                 cognitoUser.username = record.username;
+                if (cognitoUser.signInUserSession && !object.isAuthenticated) {
+                    cognitoUser.signOut();
+                    return Promise.resolve();
+                }
                 //This will do for now, but it needs to be replaced by the handling of an updateOperation which
                 //would carry directly the fact that the accountConfirmationCode property
                 //is what changed. In the meantime, while we're still in the same thred, we could ask the mainService what's the changed properties for that object, but it's still not tracked properly for some properties that don't have triggers doing so. Needs to clarify that.

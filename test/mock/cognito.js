@@ -114,6 +114,12 @@ Object.defineProperties(CognitoUser.prototype, {
                 "Destination": "a***@g***.com"
             });
         }
+    },
+
+    signOut: {
+        value: function () {
+            this.signInUserSession = null;
+        }
     }
 });
 
