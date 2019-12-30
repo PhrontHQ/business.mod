@@ -274,6 +274,49 @@ describe("CognitoIdentityService", function () {
                 })
             });
         });
+
+        describe("with valid credentials to an account that requires a new password", function () {
+            it("rejects the UserIdentity save with a DataOperation that indicates a new password is required", function () {
+                userIdentity.username = "requiresNewPassword";
+                userIdentity.password = "password";
+                return mainService.saveDataObject(userIdentity)
+                .then(function () {
+                    throw new Error("did not reject");
+                }, function (err) {
+                    expect(err instanceof DataOperation).toBe(true);
+                    expect(err.type).toBe(DataOperation.Type.Update);
+                    expect(err.data.hasOwnProperty("password")).toBe(true);
+                });
+            });
+
+            describe("with a valid new password", function () {
+                it("updates user's the password", function () {
+                    userIdentity.username = "requiresNewPassword";
+                    userIdentity.password = "password";
+                    return mainService.saveDataObject(userIdentity)
+                    .catch(function () {
+                        userIdentity.newPassword = "newpassword";
+                        return mainService.saveDataObject(userIdentity);
+                    })
+                    .then(function () {
+                        expect(cognitoMock.userInfos["requiresNewPassword"].password).toBe(userIdentity.newPassword);
+                    });
+                });
+
+                it("signs the user in", function () {
+                    userIdentity.username = "requiresNewPassword";
+                    userIdentity.password = "password";
+                    return mainService.saveDataObject(userIdentity)
+                    .catch(function () {
+                        userIdentity.newPassword = "newpassword";
+                        return mainService.saveDataObject(userIdentity);
+                    })
+                    .then(function () {
+                        expect(userIdentity.isAuthenticated).toBe(true);
+                    });
+                });
+            });
+        });
     });
 
     describe("sign out", function () {

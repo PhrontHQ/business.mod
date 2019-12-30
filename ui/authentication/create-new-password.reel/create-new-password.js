@@ -2,9 +2,6 @@ var Component = require("montage/ui/component").Component,
     currentEnvironment = require("montage/core/environment").currentEnvironment,
     KeyComposer = require("montage/composer/key-composer").KeyComposer;
 
-
-
-
 /*
 Minimum length: 8
 
@@ -14,9 +11,6 @@ Require uppercase letters
 Require lowercase letters
 
 */
-
-
-
 
 var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
 
@@ -146,42 +140,37 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
         }
     },
 
-
     handleChangePasswordAction: {
-        value: function(event) {
-            if (!this._isAuthenticating && this.password) {
-                var self = this;
-                this.isAuthenticating = true;
-                this.hadError = false;
-                var password = this.password || "";
-
-                this.service.changeUserPassword(this.oldPassword, this.password).then(function (authorization) {
-                    self.isLoggedIn = true;
-                    self.application.applicationModal.hide(self);
-
-                    // Don't keep any track of the password in memory.
-                    self.password = self.oldPassword = null;
-
-                    //FIXME: kind of hacky
-                    self.application.dispatchEventNamed("userLogged");
-
-                }, function (error) {
-                        if(error) {
-                            self.errorMessage = error.message || error;
-                            self.hadError = true;
-                        } else {
-                            self.errorMessage = null;
-                        }
-                }).finally(function () {
-                    if (self.errorMessage) {
-                        self.element.addEventListener(
-                            typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
-                        );
-                    }
-
-                    self.isAuthenticating = false;
-                });
+        value: function () {
+            var self = this,
+                userIdentity;
+            if (this._isAuthenticating || !this.password) {
+                return;
             }
+            this.isAuthenticating = true;
+            this.hadError = false;
+            userIdentity = this.ownerComponent.userIdentity;
+            userIdentity.password = this.oldPassword;
+            userIdentity.newPassword = this.password;
+            this.application.mainService.saveDataObject(userIdentity)
+            .then(function () {
+                // Don't keep any track of the password in memory.
+                self.password = self.oldPassword = null;
+            }, function (error) {
+                if (error) {
+                    self.errorMessage = error.message || error;
+                    self.hadError = true;
+                } else {
+                    self.errorMessage = null;
+                }
+            }).finally(function () {
+                if (self.errorMessage) {
+                    self.element.addEventListener(
+                        typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
+                    );
+                }
+                self.isAuthenticating = false;
+            });
         }
     },
 

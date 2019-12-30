@@ -4,13 +4,22 @@ var BASE_USER_INFOS = {
     "confirmed": {
         username: "confirmed",
         password: "password",
+        email: "confirmed@mail.com",
         sub: uuid.generate()
     },
     "unconfirmed": {
         username: "unconfirmed",
         password: "password",
+        email: "unconfirmed@mail.com",
         sub: uuid.generate(),
         unconfirmed: true
+    },
+    "requiresNewPassword": {
+        username: "requiresNewPassword",
+        password: "password",
+        email: "requiresnewpassword@mail.com",
+        sub: uuid.generate(),
+        requiresNewPassword: true
     }
 };
 
@@ -72,6 +81,12 @@ Object.defineProperties(CognitoUser.prototype, {
                 });
                 return;
             }
+            if (userInfo.requiresNewPassword) {
+                callback.newPasswordRequired({
+                    email: userInfo.email
+                }, []);
+                return;
+            }
             this.signInUserSession = {
                 idToken: {
                     jwtToken: "abc",
@@ -119,6 +134,18 @@ Object.defineProperties(CognitoUser.prototype, {
     signOut: {
         value: function () {
             this.signInUserSession = null;
+        }
+    },
+
+    completeNewPasswordChallenge: {
+        value: function (newPassword, requiredAttributeData, callback, clientMetadata) {
+            var authDetails = {
+                username: this.username,
+                password: newPassword
+            };
+            userInfos[this.username].password = newPassword;
+            userInfos[this.username].requiresNewPassword = false;
+            this.authenticateUser(authDetails, callback);
         }
     }
 });

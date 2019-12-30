@@ -308,42 +308,45 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                 cognitoUser = this.snapshotForDataIdentifier(object.identifier);
             if (cognitoUser) {
                 cognitoUser.username = record.username;
-                if (cognitoUser.signInUserSession && !object.isAuthenticated) {
-                    cognitoUser.signOut();
-                    return Promise.resolve();
-                }
-                //This will do for now, but it needs to be replaced by the handling of an updateOperation which
-                //would carry directly the fact that the accountConfirmationCode property
-                //is what changed. In the meantime, while we're still in the same thred, we could ask the mainService what's the changed properties for that object, but it's still not tracked properly for some properties that don't have triggers doing so. Needs to clarify that.
-                if(!object.isAccountConfirmed && typeof object.accountConfirmationCode !== "undefined") {
-                    return this._confirmUser(record, object, cognitoUser)
-                    .then(function () {
-                        return self._authenticateUser(record, object, cognitoUser, record.password)
-                    })
-                    .then(function() {
-                        /*
-                        UserIdentity is successfully confirmed, the resolved promise completes the
-                        saveData call originating from the panels, here EnterVerificationCode.
-
-                        From there it could tell it's AuthenticationPanel that the process is complete,
-                        which itself could tell the UserIdentityManager, which ultimately is the one hiding (and showing) the montage level authenticationManagerPanel.
-
-                        Right now, the UserIdentityManager listens to the main service for:
-                            - this._mainService.addEventListener(DataOperation.Type.UserAuthentication, this);
-                            - this._mainService.addEventListener(DataOperation.Type.UserAuthenticationCompleted, this);
-
-                        positioning the UserIdentityService as the direct source of truth.
-
-                        When the UserIdentityService ends up in a different thread/service/web worker, we'll need
-                        data operations as the communication between
-                        */
-                        self.dispatchUserAuthenticationCompleted(object);
-                    });
+                if (cognitoUser.signInUserSession) {
+                    if (!object.isAuthenticated) {
+                        cognitoUser.signOut();
+                        return Promise.resolve();
+                    }
                 } else {
-                    return this._authenticateUser(record, object, cognitoUser, record.password)
-                    .then(function() {
-                        self.dispatchUserAuthenticationCompleted(object);
-                    });
+                    //This will do for now, but it needs to be replaced by the handling of an updateOperation which
+                    //would carry directly the fact that the accountConfirmationCode property
+                    //is what changed. In the meantime, while we're still in the same thred, we could ask the mainService what's the changed properties for that object, but it's still not tracked properly for some properties that don't have triggers doing so. Needs to clarify that.
+                    if (!object.isAccountConfirmed && typeof object.accountConfirmationCode !== "undefined") {
+                        return this._confirmUser(record, object, cognitoUser)
+                        .then(function () {
+                            return self._authenticateUser(record, object, cognitoUser)
+                        })
+                        .then(function() {
+                            /*
+                            UserIdentity is successfully confirmed, the resolved promise completes the
+                            saveData call originating from the panels, here EnterVerificationCode.
+
+                            From there it could tell it's AuthenticationPanel that the process is complete,
+                            which itself could tell the UserIdentityManager, which ultimately is the one hiding (and showing) the montage level authenticationManagerPanel.
+
+                            Right now, the UserIdentityManager listens to the main service for:
+                                - this._mainService.addEventListener(DataOperation.Type.UserAuthentication, this);
+                                - this._mainService.addEventListener(DataOperation.Type.UserAuthenticationCompleted, this);
+
+                            positioning the UserIdentityService as the direct source of truth.
+
+                            When the UserIdentityService ends up in a different thread/service/web worker, we'll need
+                            data operations as the communication between
+                            */
+                            self.dispatchUserAuthenticationCompleted(object);
+                        });
+                    } else {
+                        return this._authenticateUser(record, object, cognitoUser)
+                        .then(function() {
+                            self.dispatchUserAuthenticationCompleted(object);
+                        });
+                    }
                 }
             } else {
                 return this._signUpUser(record, object);
@@ -352,15 +355,15 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
     },
 
     _authenticateUser: {
-        value: function(record, object, cognitoUser, password) {
+        value: function (record, object, cognitoUser) {
             var self = this,
-                stream = self._fetchStreamByUser.get(cognitoUser),
                 authenticationDetails = new AuthenticationDetails({
-                    Username: cognitoUser.username,
-                    Password: password
-                });
+                    Username: record.username,
+                    Password: record.password
+                }),
+                stream = this._fetchStreamByUser.get(cognitoUser);
             return new Promise(function (resolve, reject) {
-                cognitoUser.authenticateUser(authenticationDetails, {
+                var callback = {
                     onSuccess: function () {
                         var rawDataPrimaryKey = cognitoUser.signInUserSession.idToken.payload.sub,
                             dataIdentifier = object.identifier;
@@ -384,31 +387,21 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         self.dispatchUserAuthenticationCompleted(object);
                     },
 
-                    onFailure: function(err) {
-                        if(err.code === "NotAuthorizedException") {
-                            /*
-                            {
-                                "code":"NotAuthorizedException",
-                                "name":"NotAuthorizedException",
-                                "message":"Incorrect username or password."
-                            }
-                            */
+                    onFailure: function (err) {
+                        if (err.code === "NotAuthorizedException") {
                             var updateOperation = new DataOperation();
-
                             updateOperation.type = DataOperation.Type.UserAuthenticationFailed;
                             updateOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
                             updateOperation.userMessage = err.message;
-
                             updateOperation.data = {
                                 "username": undefined,
                                 "password": undefined,
                             };
-
                             reject(updateOperation);
-                        } else if(err.code === "UserNotConfirmedException") {
-                           object.isAccountConfirmed = false;
+                        } else if (err.code === "UserNotConfirmedException") {
+                            object.isAccountConfirmed = false;
 
-                            if(object.accountConfirmationCode) {
+                            if (object.accountConfirmationCode) {
                                 //The user is already entering a accountConfirmationCode
                                 //But it's not correct.
                                 var validateOperation = new DataOperation();
@@ -500,17 +493,12 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         cognitoUser.sendMFACode(mfaCode, this)
                     },
 
-                    newPasswordRequired: function(userAttributes, requiredAttributes) {
-                        // User was signed up by an admin and must provide new
-                        // password and required attributes, if any, to complete
-                        // authentication.
-
+                    newPasswordRequired: function (userAttributes, requiredAttributes) {
                         var updateOperation = new DataOperation();
-
                         updateOperation.type = DataOperation.Type.Update;
                         // updateOperation.dataDescriptor = objectDescriptor.module.id;
                         //Hack
-                        updateOperation.dataDescriptor = this.userIdentityDescriptor.module.id;;
+                        updateOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
                         //Should be the criteria matching the User
                         //whose password needs to change
                         //updateOperation.criteria = query.criteria;
@@ -519,7 +507,6 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                             userAttributes: userAttributes,
                             requiredAttributes: requiredAttributes
                         };
-
                         updateOperation.data = {
                             "password": undefined
                         };
@@ -529,11 +516,15 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
 
                         // store userAttributes on global variable
                         self.sessionUserAttributes = userAttributes;
-                        self.user = cognitoUser;
 
                         reject(updateOperation);
                     }
-                });
+                };
+                if (object.newPassword && self.sessionUserAttributes) {
+                    cognitoUser.completeNewPasswordChallenge(object.newPassword, self.sessionUserAttributes, callback);
+                } else {
+                    cognitoUser.authenticateUser(authenticationDetails, callback);
+                }
             });
         }
     },
@@ -566,7 +557,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                             }
 
                             //Since it exists, we try to authenticate with what we have
-                            self._authenticateUser(record, object, cognitoUser, record.password)
+                            self._authenticateUser(record, object, cognitoUser)
                             .then(function () {
                                 //It worked we're all good
                                 resolve();
@@ -647,36 +638,6 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         resolve();
                     }
                 });
-            });
-        }
-    },
-
-    changeUserPassword: {
-        value: function(oldPassword, password) {
-            var cognitoUser = this.user,
-                self = this;
-
-            return new Promise(function(resolve,reject) {
-                cognitoUser.completeNewPasswordChallenge(password, self.sessionUserAttributes, function(err, result) {
-                    if (err) {
-                        reject(err);
-                    }
-                    //Needs to process result into some kind of operation
-                    resolve(result);
-                        //Needs to process result into some kind of operation);
-                });
-
-                /*
-                cognitoUser.changePassword(oldPassword, password, function(err, result) {
-                    if (err) {
-                        console.error(err.message || JSON.stringify(err));
-                        reject(err);
-                    }
-                    //Needs to process result into some kind of operation
-                    resolve(result);
-                        //Needs to process result into some kind of operation);
-                });
-                */
             });
         }
     },
