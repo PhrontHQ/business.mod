@@ -141,61 +141,56 @@ var SignUp = exports.SignUp = Component.specialize({
 
     handleSignUpAction: {
         value: function() {
-            if (!this._isAuthenticating && this.username) {
-                var self = this,
-                    newIdentity  = this.application.mainService.createDataObject(UserIdentity);
-
-                this.isAuthenticating = true;
-                this.hadError = false;
-                var password = this.password || "";
-
-                //Would be great to not have to do that, but for now:
-                newIdentity.username = this.username;
-                newIdentity.email = this.email;
-                newIdentity.password = this.password;
-
-                this.application.mainService.saveDataObject(newIdentity)
-                .then(function (savedUserIdentity) {
-
-                    //set the userIdentity on the authentication panel
-                    //This might be best handled with bindings...
-                    self.ownerComponent.userIdentity = savedUserIdentity;
-
-                    self.isLoggedIn = true;
-
-                    // Don't keep any track of the password in memory.
-                    self.password = self.username = null;
-
-                    /*
-                        We need to now show the email verification code component.
-                        We can hard-code that for now, but need to check if that's hinted by Cognito that this is happenning, as it's a configurable behavior in Cognito.
-                    */
-
-                   self.ownerComponent.substitutionPanel = "enterVerificationCode";
-
-
-                }, function (error) {
-                    if(error) {
-                        if(error instanceof DataOperation && error.data.hasOwnProperty("password")) {
-                            self.ownerComponent.needsChangePassword = true;
-                        }
-                        else {
-                            self.errorMessage = error.message || error;
-                            self.hadError = true;
-                        }
-                    } else {
-                        self.errorMessage = null;
-                    }
-                }).finally(function (value) {
-                    if (self.errorMessage) {
-                        self.element.addEventListener(
-                            typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
-                        );
-                    }
-
-                    self.isAuthenticating = false;
-                });
+            var self = this,
+                newIdentity;
+            if (this._isAuthenticating || !this.username) {
+                return;
             }
+            this.isAuthenticating = true;
+            this.hadError = false;
+            newIdentity = this.application.mainService.createDataObject(UserIdentity);
+            newIdentity.username = this.username;
+            newIdentity.email = this.email;
+            newIdentity.password = this.password;
+            this.application.mainService.saveDataObject(newIdentity)
+            .then(function (savedUserIdentity) {
+                //set the userIdentity on the authentication panel
+                //This might be best handled with bindings...
+                self.ownerComponent.userIdentity = savedUserIdentity;
+
+                self.isLoggedIn = true;
+
+                // Don't keep any track of the password in memory.
+                self.password = self.username = self.email = null;
+
+                /*
+                    We need to now show the email verification code component.
+                    We can hard-code that for now, but need to check if that's hinted by Cognito that this is happenning, as it's a configurable behavior in Cognito.
+                */
+
+                self.ownerComponent.substitutionPanel = "enterVerificationCode";
+            }, function (error) {
+                if(error) {
+                    // TODO: Doesn't handle an unconfirmed account
+                    if(error instanceof DataOperation && error.data.hasOwnProperty("password")) {
+                        self.ownerComponent.needsChangePassword = true;
+                    }
+                    else {
+                        self.errorMessage = error.message || error;
+                        self.hadError = true;
+                    }
+                } else {
+                    self.errorMessage = null;
+                }
+            }).finally(function (value) {
+                if (self.errorMessage) {
+                    self.element.addEventListener(
+                        typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
+                    );
+                }
+
+                self.isAuthenticating = false;
+            });
         }
     },
 

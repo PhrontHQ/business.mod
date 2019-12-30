@@ -34,9 +34,7 @@
         "signIn": {
             "prototype": "ui/authentication/sign-in.reel",
             "values": {
-                "element": {"#": "signIn"},
-                "username": {"<->": "@owner.userIdentity.username"},
-                "password": {"<->": "@owner.userIdentity.password"}
+                "element": {"#": "signIn"}
             },
             "listeners": [
                 {
@@ -48,10 +46,7 @@
         "signUp": {
             "prototype": "ui/authentication/sign-up.reel",
             "values": {
-                "element": {"#": "signUp"},
-                "username": {"<->": "@owner.userIdentity.username"},
-                "email": {"<->": "@owner.userIdentity.email"},
-                "password": {"<->": "@owner.userIdentity.password"}
+                "element": {"#": "signUp"}
             },
             "listeners": [
                 {
@@ -63,15 +58,13 @@
         "enterVerificationCode": {
             "prototype": "ui/authentication/enter-verification-code.reel",
             "values": {
-                "element": {"#": "enterVerificationCode"},
-                "service": {"<-": "@owner.service"}
+                "element": {"#": "enterVerificationCode"}
             }
         },
         "createNewPassword": {
             "prototype": "ui/authentication/create-new-password.reel",
             "values": {
-                "element": {"#": "createNewPassword"},
-                "service": {"<-": "@owner.service"}
+                "element": {"#": "createNewPassword"}
             }
         }
    }

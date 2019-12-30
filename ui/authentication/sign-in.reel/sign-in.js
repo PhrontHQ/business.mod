@@ -134,109 +134,56 @@ var SignIn = exports.SignIn = Component.specialize({
 
     handleSignInAction: {
         value: function() {
-            if (!this._isAuthenticating && this.username) {
-                var self = this;
-                this.isAuthenticating = true;
-                this.hadError = false;
-                var password = this.password || "";
-
-                this.application.mainService.saveDataObject(this.ownerComponent.userIdentity)
-                .then(function (resolvedValue) {
-
-
-                    self.isLoggedIn = true;
-                    // self.application.applicationModal.hide(self);
-
-                    // Don't keep any track of the password in memory.
-                    self.password = self.username = null;
-
-                    //FIXME: kind of hacky
-                    //self.application.dispatchEventNamed("userLogged");
-
-
-
-
-                }, function (error) {
-                    if(error) {
-                        if(error instanceof DataOperation && error.type === DataOperation.Type.UserAuthenticationFailed) {
-                            self.hadError = true;
-                            self.errorMessage = error.userMessage;
-                        }
-
-                        else if(error instanceof DataOperation && error.data.hasOwnProperty("accountConfirmationCode")) {
-                            self.ownerComponent.needsAccountConfirmation = true;
-                            self.hadError = true;
-
-                        }
-                        else if(error instanceof DataOperation && error.data.hasOwnProperty("password")) {
-                            self.ownerComponent.needsChangePassword = true;
-                        }
-                        else {
-                            self.errorMessage = error.message || error;
-                            self.hadError = true;
-                        }
-                    } else {
-                        self.errorMessage = null;
-                    }
-                }).finally(function (value) {
-                    if (self.errorMessage) {
-                        self.element.addEventListener(
-                            typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
-                        );
-                    }
-
-                    self.isAuthenticating = false;
-                });
+            var self = this,
+                userIdentity = this.ownerComponent.userIdentity;
+            if (this._isAuthenticating || !this.username) {
+                return;
             }
-        }
-    },
+            this.isAuthenticating = true;
+            this.hadError = false;
+            userIdentity.username = this.username;
+            userIdentity.password = this.password;
+            this.application.mainService.saveDataObject(userIdentity)
+            .then(function () {
+                self.isLoggedIn = true;
+                // self.application.applicationModal.hide(self);
 
-    handleSubmitActionOld: {
-        value: function() {
-            if (!this._isAuthenticating && this.userName) {
-                var self = this;
-                this.isAuthenticating = true;
-                this.hadError = false;
-                var password = this.password || "";
+                // Don't keep any track of the credentials in memory.
+                self.password = self.username = null;
 
-                this.service.authenticateUser(this.userName, password).then(function (authorization) {
-
-                    self.ownerComponent.approveAuthorization(authorization,self);
-
-                    self.isLoggedIn = true;
-                    self.application.applicationModal.hide(self);
-
-                    // Don't keep any track of the password in memory.
-                    self.password = self.userName = null;
-
-                    //FIXME: kind of hacky
-                    self.application.dispatchEventNamed("userLogged");
-
-
-
-
-                }, function (error) {
-                    if(error) {
-                        if(error instanceof DataOperation && error.data.hasOwnProperty("password")) {
-                            self.ownerComponent.needsChangePassword = true;
-                        }
-                        else {
-                            self.errorMessage = error.message || error;
-                            self.hadError = true;
-                        }
-                    } else {
-                        self.errorMessage = null;
-                    }
-                }).finally(function (value) {
-                    if (self.errorMessage) {
-                        self.element.addEventListener(
-                            typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
-                        );
+                //FIXME: kind of hacky
+                //self.application.dispatchEventNamed("userLogged");
+            }, function (error) {
+                if(error) {
+                    if(error instanceof DataOperation && error.type === DataOperation.Type.UserAuthenticationFailed) {
+                        self.hadError = true;
+                        self.errorMessage = error.userMessage;
                     }
 
-                    self.isAuthenticating = false;
-                });
-            }
+                    else if(error instanceof DataOperation && error.data.hasOwnProperty("accountConfirmationCode")) {
+                        self.ownerComponent.needsAccountConfirmation = true;
+                        self.hadError = true;
+
+                    }
+                    else if(error instanceof DataOperation && error.data.hasOwnProperty("password")) {
+                        self.ownerComponent.needsChangePassword = true;
+                    }
+                    else {
+                        self.errorMessage = error.message || error;
+                        self.hadError = true;
+                    }
+                } else {
+                    self.errorMessage = null;
+                }
+            }).finally(function (value) {
+                if (self.errorMessage) {
+                    self.element.addEventListener(
+                        typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
+                    );
+                }
+
+                self.isAuthenticating = false;
+            });
         }
     },
 
