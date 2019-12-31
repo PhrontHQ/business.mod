@@ -147,6 +147,29 @@ Object.defineProperties(CognitoUser.prototype, {
             userInfos[this.username].requiresNewPassword = false;
             this.authenticateUser(authDetails, callback);
         }
+    },
+
+    changePassword: {
+        value: function (oldPassword, newPassword, callback, clientMetadata) {
+            var userInfo = userInfos[this.username];
+            if (!userInfo || userInfo.password !== oldPassword) {
+                callback({
+                    code: "NotAuthorizedException",
+                    name: "NotAuthorizedException",
+                    message: "Incorrect password."
+                });
+                return;
+            }
+            if (!newPassword || newPassword.length < 6) {
+                return callback({
+                    code: "InvalidPasswordException",
+                    name: "InvalidPasswordException",
+                    message: "Password does not conform to policy: Password not long enough"
+                });
+            }
+            userInfo.password = newPassword;
+            callback(null, "SUCCESS");
+        }
     }
 });
 

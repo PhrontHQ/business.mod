@@ -336,4 +336,46 @@ describe("CognitoIdentityService", function () {
             });
         });
     });
+
+    describe("change password", function () {
+        beforeEach(function () {
+            userIdentity.username = "confirmed";
+            userIdentity.password = "password";
+            return mainService.saveDataObject(userIdentity);
+        });
+
+        it("changes the password", function () {
+            userIdentity.newPassword = "newpassword";
+            return mainService.saveDataObject(userIdentity)
+            .then(function () {
+                expect(cognitoMock.userInfos["confirmed"].password).toBe(userIdentity.newPassword);
+            });
+        });
+
+        it("rejects the UserIdentity save with a DataOperation that indicates an authentication failure if the current password is rejected", function () {
+            userIdentity.password = "not_the_password";
+            userIdentity.newPassword = "newpassword";
+            return mainService.saveDataObject(userIdentity)
+            .then(function () {
+                throw new Error("did not reject");
+            }, function (err) {
+                expect(err instanceof DataOperation).toBe(true);
+                expect(err.type).toBe(DataOperation.Type.UserAuthenticationFailed);
+                expect(err.data.hasOwnProperty("username")).toBe(true);
+                expect(err.data.hasOwnProperty("password")).toBe(true);
+            });
+        })
+
+        it("rejects the UserIdentity save with a DataOperation that indicates an incorrect password if the new password is rejected", function () {
+            userIdentity.newPassword = "short";
+            return mainService.saveDataObject(userIdentity)
+            .then(function () {
+                throw new Error("did not reject");
+            }, function (err) {
+                expect(err instanceof DataOperation).toBe(true);
+                expect(err.type).toBe(DataOperation.Type.ValidateFailed);
+                expect(err.data.hasOwnProperty("password")).toBe(true);
+            });
+        });
+    });
 });

@@ -311,8 +311,10 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                 if (cognitoUser.signInUserSession) {
                     if (!object.isAuthenticated) {
                         cognitoUser.signOut();
-                        return Promise.resolve();
+                    } else if (object.password && object.newPassword) {
+                        return this._changePassword(record, object, cognitoUser);
                     }
+                    return Promise.resolve();
                 } else {
                     //This will do for now, but it needs to be replaced by the handling of an updateOperation which
                     //would carry directly the fact that the accountConfirmationCode property
@@ -635,6 +637,43 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         reject(dataOperation);
                     } else {
                         object.accountConfirmationCode = undefined;
+                        resolve();
+                    }
+                });
+            });
+        }
+    },
+
+    _changePassword: {
+        value: function (record, object, cognitoUser) {
+            var self = this;
+            return new Promise(function (resolve, reject) {
+                cognitoUser.changePassword(object.password, object.newPassword, function (err) {
+                    var dataOperation;
+                    if (err) {
+                        if (err.code === "InvalidPasswordException") {
+                            dataOperation = new DataOperation();
+                            dataOperation.type = DataOperation.Type.ValidateFailed;
+                            dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                            dataOperation.userMessage = err.message;
+                            dataOperation.data = {
+                                "password": undefined
+                            };
+                            reject(dataOperation);
+                        } else if (err.code === "NotAuthorizedException") {
+                            dataOperation = new DataOperation();
+                            dataOperation.type = DataOperation.Type.UserAuthenticationFailed;
+                            dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                            dataOperation.userMessage = err.message;
+                            dataOperation.data = {
+                                "username": undefined,
+                                "password": undefined
+                            };
+                            reject(dataOperation);
+                        } else {
+                            reject(err);
+                        }
+                    } else {
                         resolve();
                     }
                 });
