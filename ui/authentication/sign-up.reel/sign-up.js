@@ -170,17 +170,11 @@ var SignUp = exports.SignUp = Component.specialize({
 
                 self.ownerComponent.substitutionPanel = "enterVerificationCode";
             }, function (error) {
-                if(error) {
-                    // TODO: Doesn't handle an unconfirmed account
-                    if(error instanceof DataOperation && error.data.hasOwnProperty("password")) {
-                        self.ownerComponent.needsChangePassword = true;
-                    }
-                    else {
-                        self.errorMessage = error.message || error;
-                        self.hadError = true;
-                    }
+                self.hadError = true;
+                if (error instanceof DataOperation) {
+                    self.errorMessage = error.userMessage || error.message;
                 } else {
-                    self.errorMessage = null;
+                    self.errorMessage = error.message || error;
                 }
             }).finally(function (value) {
                 if (self.errorMessage) {
