@@ -1,5 +1,4 @@
 var Component = require("montage/ui/component").Component,
-    currentEnvironment = require("montage/core/environment").currentEnvironment,
     KeyComposer = require("montage/composer/key-composer").KeyComposer;
 
 /*
@@ -32,12 +31,6 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
 
     password: {
         value: void 0
-    },
-
-    isBrowserSupported: {
-        get: function () {
-            return currentEnvironment.browserName == 'chrome';
-        }
     },
 
     changePasswordButton: {
@@ -74,22 +67,9 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
         }
     },
 
-    _isAuthenticating: {
+    isAuthenticating: {
         value: false
     },
-
-    isAuthenticating: {
-        set: function (isAuthenticating) {
-            if (this._isAuthenticating !== isAuthenticating) {
-                this._isAuthenticating = isAuthenticating;
-                this._toggleUserInteraction();
-            }
-        },
-        get: function () {
-            return this._isAuthenticating;
-        }
-    },
-
 
     __keyComposer: {
         value: null
@@ -109,17 +89,10 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
     },
 
     enterDocument: {
-        value: function (isFirstTime) {
+        value: function () {
             this.addEventListener("action", this, false);
             this._keyComposer.addEventListener("keyPress", this, false);
             this.element.addEventListener("transitionend", this, false);
-
-            // checks for disconnected hash
-            if(location.href.indexOf(";disconnected") > -1) {
-                this.hasError = true;
-                this.errorMessage = "Oops! Your token has expired. \n Please log back in.";
-                location.href = location.href.replace(/;disconnected/g, '');
-            }
             this.passwordTextField.focus();
         }
     },
@@ -130,7 +103,6 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
             this._keyComposer.removeEventListener("keyPress", this, false);
         }
     },
-
 
     handleKeyPress: {
         value: function (event) {
@@ -176,7 +148,7 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
 
     handleTransitionend: {
         value: function (e) {
-            if(this.isLoggedIn && e.target == this.element && e.propertyName == 'opacity') {
+            if(this.ownerComponent.userIdentity.isAuthenticated && e.target == this.element && e.propertyName == 'opacity') {
                 this.element.style.display = 'none';
             } else if (this._isFirstTransitionEnd) {
                 this._isFirstTransitionEnd = false;
@@ -204,7 +176,6 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
             this.passwordTextField.disabled = this._isAuthenticating;
         }
     }
-
 });
 
 CreateNewPassword.prototype.handleWebkitAnimationEnd = CreateNewPassword.prototype.handleAnimationend;

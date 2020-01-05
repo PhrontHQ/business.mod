@@ -22,7 +22,7 @@ Require lowercase letters
 var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize({
 
     descriptionText: {
-        value: `A verification code was sent by email, please enter it bellow:`
+        value: "A verification code was sent by email, please enter it below:"
     },
 
     _isFirstTransitionEnd: {
@@ -31,12 +31,6 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
 
     verificationCode: {
         value: void 0
-    },
-
-    isBrowserSupported: {
-        get: function () {
-            return currentEnvironment.browserName == 'chrome';
-        }
     },
 
     confirmAccountButton: {
@@ -69,21 +63,9 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
         }
     },
 
-    _isAuthenticating: {
+    isAuthenticating: {
         value: false
     },
-
-    isAuthenticating: {
-        set: function (isAuthenticating) {
-            if (this._isAuthenticating !== isAuthenticating) {
-                this._isAuthenticating = isAuthenticating;
-            }
-        },
-        get: function () {
-            return this._isAuthenticating;
-        }
-    },
-
 
     __keyComposer: {
         value: null
@@ -103,17 +85,10 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
     },
 
     enterDocument: {
-        value: function (isFirstTime) {
+        value: function () {
             this.addEventListener("action", this, false);
             this._keyComposer.addEventListener("keyPress", this, false);
             this.element.addEventListener("transitionend", this, false);
-
-            // checks for disconnected hash
-            if(location.href.indexOf(";disconnected") > -1) {
-                this.hasError = true;
-                this.errorMessage = "Oops! Your token has expired. \n Please log back in.";
-                location.href = location.href.replace(/;disconnected/g, '');
-            }
             this.codeVerificationField.focus();
         }
     },
@@ -134,65 +109,36 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
         }
     },
 
-
     handleConfirmAccountAction: {
-        value: function(event) {
-            if (!this._isAuthenticating && this.verificationCode) {
-                var self = this;
-                    userIdentity = this.ownerComponent.userIdentity,
-                    this.isAuthenticating = true;
-                    this.hadError = false;
-                    var verificationCode = this.verificationCode || "";
-
-                if(userIdentity.accountConfirmationCode !== this.verificationCode) {
-                    userIdentity.accountConfirmationCode = this.verificationCode;
-                }
-
-                this.application.mainService.saveDataObject(userIdentity)
-                .then(function (savedObject) {
-
-
-                    self.isLoggedIn = true;
-                    // self.application.applicationModal.hide(self);
-
-                    // Don't keep any track of the verificationCode in memory.
-                    self.verificationCode = self.username = null;
-
-                    //FIXME: kind of hacky
-                    //self.application.dispatchEventNamed("userLogged");
-
-                    /*
-                        We need to now show the email verification code component.
-                        We can hard-code that for now, but need to check if that's hinted by Cognito that this is happenning, as it's a configurable behavior in Cognito.
-                    */
-
-                }, function (error) {
-                    if(error) {
-                        self.hadError = true;
-
-                        //Needs to handle a wrong verification code
-                        if(error instanceof DataOperation && error.type === DataOperation.Type.ValidateFailed) {
-                            self.errorMessage = error.userMessage;
-                        }
-                        else {
-                            self.errorMessage = error.message || error;
-                            self.hadError = true;
-                        }
-                    } else {
-                        self.errorMessage = null;
-                    }
-                }).finally(function (value) {
-                    if (self.errorMessage) {
-                        self.element.addEventListener(
-                            typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
-                        );
-                    }
-
-                    self.isAuthenticating = false;
-                });
-
-
+        value: function () {
+            var self = this;
+                userIdentity = this.ownerComponent.userIdentity;
+            if (this._isAuthenticating || !this.verificationCode) {
+                return;
             }
+            this.isAuthenticating = true;
+            this.hadError = false;
+            userIdentity.accountConfirmationCode = this.verificationCode;
+            this.application.mainService.saveDataObject(userIdentity)
+            .then(function () {
+                // Don't keep any track of the verificationCode in memory.
+                self.verificationCode = self.username = null;
+            }, function (error) {
+                self.hadError = true;
+                if (error instanceof DataOperation && error.type === DataOperation.Type.ValidateFailed) {
+                    self.errorMessage = error.userMessage;
+                } else {
+                    self.errorMessage = error.message || error;
+                    self.hadError = true;
+                }
+            }).finally(function () {
+                if (self.errorMessage) {
+                    self.element.addEventListener(
+                        typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
+                    );
+                }
+                self.isAuthenticating = false;
+            });
         }
     },
 
@@ -220,7 +166,7 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
 
     handleTransitionend: {
         value: function (e) {
-            if(this.isLoggedIn && e.target == this.element && e.propertyName == 'opacity') {
+            if (this.ownerComponent.userIdentity.isAuthenticated && e.target == this.element && e.propertyName == 'opacity') {
                 this.element.style.display = 'none';
             } else if (this._isFirstTransitionEnd) {
                 this._isFirstTransitionEnd = false;
@@ -241,7 +187,6 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
             }
         }
     }
-
 });
 
 EnterVerificationCode.prototype.handleWebkitAnimationEnd = EnterVerificationCode.prototype.handleAnimationend;

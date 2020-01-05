@@ -65,17 +65,6 @@
                 "isProcessing": {"<-": "@owner.isAuthenticating"},
                 "disabled": {"<-": "isProcessing || !@mfaCodeField.value"}
             }
-        },
-
-        "browserMessage": {
-            "prototype": "../../controls/text.reel",
-            "properties": {
-                "element": {"#": "browserMessage"},
-                "value": "We're sorry but this browser isn't supported."
-            },
-            "bindings": {
-                "classList.has('is-hidden')": {"<-": "true"}
-            }
         }
     }
     </script>
@@ -83,7 +72,6 @@
 <body>
     <div data-montage-id="owner" class="EnterMfaCode">
         <div class="EnterMfaCode-content">
-            <div data-montage-id="browserMessage" class="EnterMfaCode-browserMessage"></div>
             <img src="../../assets/images/Etiama-logo-white.svg" class="EnterMfaCode-logo" alt="phront Logo">
             <div data-montage-id="infoText" class="EnterMfaCode-infoText"></div>
             <div data-montage-id="descriptionText" class="EnterMfaCode-descriptionText"></div>

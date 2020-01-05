@@ -19,12 +19,6 @@ var SignUp = exports.SignUp = Component.specialize({
         value: void 0
     },
 
-    isBrowserSupported: {
-        get: function () {
-            return currentEnvironment.browserName == 'chrome';
-        }
-    },
-
     signUpButton: {
         value: void 0
     },
@@ -59,22 +53,9 @@ var SignUp = exports.SignUp = Component.specialize({
         }
     },
 
-    _isAuthenticating: {
+    isAuthenticating: {
         value: false
     },
-
-    isAuthenticating: {
-        set: function (isAuthenticating) {
-            if (this._isAuthenticating !== isAuthenticating) {
-                this._isAuthenticating = isAuthenticating;
-                this._toggleUserInteraction();
-            }
-        },
-        get: function () {
-            return this._isAuthenticating;
-        }
-    },
-
 
     __keyComposer: {
         value: null
@@ -94,25 +75,10 @@ var SignUp = exports.SignUp = Component.specialize({
     },
 
     enterDocument: {
-        value: function (isFirstTime) {
-
-            //Check if the service has a knonw user:
-            //TODO, we shouldn't be exposing a CognitoUser directly
-            console.debug("FIX ME -> CognitoUser -> Phront User");
-            // if(this.service.user) {
-            //     this.username = this.service.user.getName();
-            // }
-
+        value: function () {
             this.addEventListener("action", this, false);
             this._keyComposer.addEventListener("keyPress", this, false);
             this.element.addEventListener("transitionend", this, false);
-
-            // checks for disconnected hash
-            if(location.href.indexOf(";disconnected") > -1) {
-                this.hasError = true;
-                this.errorMessage = "Oops! Your token has expired. \n Please log back in.";
-                location.href = location.href.replace(/;disconnected/g, '');
-            }
             this.usernameTextField.focus();
         }
     },
@@ -123,7 +89,6 @@ var SignUp = exports.SignUp = Component.specialize({
             this._keyComposer.removeEventListener("keyPress", this, false);
         }
     },
-
 
     handleKeyPress: {
         value: function (event) {
@@ -153,21 +118,12 @@ var SignUp = exports.SignUp = Component.specialize({
             newIdentity.email = this.email;
             newIdentity.password = this.password;
             this.application.mainService.saveDataObject(newIdentity)
-            .then(function (savedUserIdentity) {
-                //set the userIdentity on the authentication panel
-                //This might be best handled with bindings...
-                self.ownerComponent.userIdentity = savedUserIdentity;
-
-                self.isLoggedIn = true;
-
+            .then(function () {
+                self.ownerComponent.userIdentity = newIdentity;
                 // Don't keep any track of the password in memory.
                 self.password = self.username = self.email = null;
-
-                /*
-                    We need to now show the email verification code component.
-                    We can hard-code that for now, but need to check if that's hinted by Cognito that this is happenning, as it's a configurable behavior in Cognito.
-                */
-
+                // We need to now show the email verification code component.
+                // We can hard-code that for now, but need to check if that's hinted by Cognito that this is happenning, as it's a configurable behavior in Cognito.
                 self.ownerComponent.substitutionPanel = "enterVerificationCode";
             }, function (error) {
                 self.hadError = true;
@@ -176,7 +132,7 @@ var SignUp = exports.SignUp = Component.specialize({
                 } else {
                     self.errorMessage = error.message || error;
                 }
-            }).finally(function (value) {
+            }).finally(function () {
                 if (self.errorMessage) {
                     self.element.addEventListener(
                         typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
@@ -218,7 +174,6 @@ var SignUp = exports.SignUp = Component.specialize({
             this.passwordTextField.disabled = this.usernameTextField.disabled = this._isAuthenticating;
         }
     }
-
 });
 
 SignUp.prototype.handleWebkitAnimationEnd = SignUp.prototype.handleAnimationend;

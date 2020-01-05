@@ -18,12 +18,6 @@ var SignIn = exports.SignIn = Component.specialize({
         value: void 0
     },
 
-    isBrowserSupported: {
-        get: function () {
-            return currentEnvironment.browserName == 'chrome';
-        }
-    },
-
     signInButton: {
         value: void 0
     },
@@ -58,22 +52,9 @@ var SignIn = exports.SignIn = Component.specialize({
         }
     },
 
-    _isAuthenticating: {
+    isAuthenticating: {
         value: false
     },
-
-    isAuthenticating: {
-        set: function (isAuthenticating) {
-            if (this._isAuthenticating !== isAuthenticating) {
-                this._isAuthenticating = isAuthenticating;
-                this._toggleUserInteraction();
-            }
-        },
-        get: function () {
-            return this._isAuthenticating;
-        }
-    },
-
 
     __keyComposer: {
         value: null
@@ -93,15 +74,7 @@ var SignIn = exports.SignIn = Component.specialize({
     },
 
     enterDocument: {
-        value: function (isFirstTime) {
-
-            //Check if the service has a knonw user:
-            //TODO, we shouldn't be exposing a CognitoUser directly
-            console.debug("FIX ME -> CognitoUser -> Phront User");
-            // if(this.service.user) {
-            //     this.username = this.service.user.getName();
-            // }
-
+        value: function () {
             this.addEventListener("action", this, false);
             this._keyComposer.addEventListener("keyPress", this, false);
             this.element.addEventListener("transitionend", this, false);
@@ -145,7 +118,6 @@ var SignIn = exports.SignIn = Component.specialize({
             userIdentity.password = this.password;
             this.application.mainService.saveDataObject(userIdentity)
             .then(function () {
-                self.isLoggedIn = true;
                 // Don't keep any track of the credentials in memory.
                 self.password = self.username = null;
             }, function (error) {
@@ -163,13 +135,12 @@ var SignIn = exports.SignIn = Component.specialize({
                     self.errorMessage = error.message || error;
                     self.hadError = true;
                 }
-            }).finally(function (value) {
+            }).finally(function () {
                 if (self.errorMessage) {
                     self.element.addEventListener(
                         typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
                     );
                 }
-
                 self.isAuthenticating = false;
             });
         }
@@ -177,7 +148,7 @@ var SignIn = exports.SignIn = Component.specialize({
 
     handleTransitionend: {
         value: function (e) {
-            if(this.isLoggedIn && e.target == this.element && e.propertyName == 'opacity') {
+            if (this.ownerComponent.userIdentity.isAuthenticated && e.target == this.element && e.propertyName == 'opacity') {
                 this.element.style.display = 'none';
             } else if (this._isFirstTransitionEnd) {
                 this._isFirstTransitionEnd = false;
@@ -197,15 +168,7 @@ var SignIn = exports.SignIn = Component.specialize({
                 );
             }
         }
-    },
-
-    _toggleUserInteraction: {
-        value: function () {
-            this.signInButton.disabled = this._isAuthenticating;
-            this.passwordTextField.disabled = this.usernameTextField.disabled = this._isAuthenticating;
-        }
     }
-
 });
 
 SignIn.prototype.handleWebkitAnimationEnd = SignIn.prototype.handleAnimationend;
