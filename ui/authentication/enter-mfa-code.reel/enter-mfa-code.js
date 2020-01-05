@@ -3,18 +3,17 @@ var Component = require("montage/ui/component").Component,
     KeyComposer = require("montage/composer/key-composer").KeyComposer,
     DataOperation = require("montage/data/service/data-operation").DataOperation;
 
+var EnterMfaCode = exports.EnterMfaCode = Component.specialize({
 
-var SignIn = exports.SignIn = Component.specialize({
+    descriptionText: {
+        value: "A code was sent to your device, please enter it below:"
+    },
 
     _isFirstTransitionEnd: {
         value: true
     },
 
-    username: {
-        value: void 0
-    },
-
-    password: {
+    mfaCode: {
         value: void 0
     },
 
@@ -25,14 +24,6 @@ var SignIn = exports.SignIn = Component.specialize({
     },
 
     signInButton: {
-        value: void 0
-    },
-
-    passwordTextField: {
-        value: void 0
-    },
-
-    usernameTextField: {
         value: void 0
     },
 
@@ -66,7 +57,6 @@ var SignIn = exports.SignIn = Component.specialize({
         set: function (isAuthenticating) {
             if (this._isAuthenticating !== isAuthenticating) {
                 this._isAuthenticating = isAuthenticating;
-                this._toggleUserInteraction();
             }
         },
         get: function () {
@@ -94,14 +84,6 @@ var SignIn = exports.SignIn = Component.specialize({
 
     enterDocument: {
         value: function (isFirstTime) {
-
-            //Check if the service has a knonw user:
-            //TODO, we shouldn't be exposing a CognitoUser directly
-            console.debug("FIX ME -> CognitoUser -> Phront User");
-            // if(this.service.user) {
-            //     this.username = this.service.user.getName();
-            // }
-
             this.addEventListener("action", this, false);
             this._keyComposer.addEventListener("keyPress", this, false);
             this.element.addEventListener("transitionend", this, false);
@@ -112,7 +94,7 @@ var SignIn = exports.SignIn = Component.specialize({
                 this.errorMessage = "Oops! Your token has expired. \n Please log back in.";
                 location.href = location.href.replace(/;disconnected/g, '');
             }
-            this.usernameTextField.focus();
+            this.mfaCodeField.focus();
         }
     },
 
@@ -123,45 +105,35 @@ var SignIn = exports.SignIn = Component.specialize({
         }
     },
 
-
     handleKeyPress: {
         value: function (event) {
             if (event.identifier === "enter") {
-                this.handleSignInAction();
+                this.handleSignInAction(event);
             }
         }
     },
 
     handleSignInAction: {
-        value: function() {
+        value: function () {
             var self = this,
                 userIdentity = this.ownerComponent.userIdentity;
-            if (this._isAuthenticating || !this.username) {
+            if (this._isAuthenticating || !this.mfaCode) {
                 return;
             }
             this.isAuthenticating = true;
             this.hadError = false;
-            userIdentity.username = this.username;
-            userIdentity.password = this.password;
+            userIdentity.mfaCode = this.mfaCode;
             this.application.mainService.saveDataObject(userIdentity)
             .then(function () {
                 self.isLoggedIn = true;
-                // Don't keep any track of the credentials in memory.
-                self.password = self.username = null;
+                // Don't keep any track of the verificationCode in memory.
+                self.mfaCode = null;
             }, function (error) {
-                if (error instanceof DataOperation && error.type === DataOperation.Type.UserAuthenticationFailed) {
-                    self.hadError = true;
+                self.hadError = true;
+                if (error instanceof DataOperation && error.type === DataOperation.Type.ValidateFailed) {
                     self.errorMessage = error.userMessage;
-                } else if (error instanceof DataOperation && error.data.hasOwnProperty("accountConfirmationCode")) {
-                    self.ownerComponent.needsAccountConfirmation = true;
-                    self.hadError = true;
-                } else if (error instanceof DataOperation && error.data.hasOwnProperty("password")) {
-                    self.ownerComponent.needsChangePassword = true;
-                } else if (error instanceof DataOperation && error.data.hasOwnProperty("mfaCode")) {
-                    self.ownerComponent.needsMfaCode = true;
                 } else {
                     self.errorMessage = error.message || error;
-                    self.hadError = true;
                 }
             }).finally(function (value) {
                 if (self.errorMessage) {
@@ -169,7 +141,6 @@ var SignIn = exports.SignIn = Component.specialize({
                         typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
                     );
                 }
-
                 self.isAuthenticating = false;
             });
         }
@@ -181,7 +152,7 @@ var SignIn = exports.SignIn = Component.specialize({
                 this.element.style.display = 'none';
             } else if (this._isFirstTransitionEnd) {
                 this._isFirstTransitionEnd = false;
-                this.usernameTextField.focus();
+                this.mfaCodeField.focus();
             }
         }
     },
@@ -189,23 +160,16 @@ var SignIn = exports.SignIn = Component.specialize({
     handleAnimationend: {
         value: function () {
             if (this.errorMessage) {
-                this.passwordTextField.value = null;
-                this.passwordTextField.element.focus();
+                this.mfaCodeField.value = null;
+                this.mfaCodeField.element.focus();
 
                 this.element.removeEventListener(
                     typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", this, false
                 );
             }
         }
-    },
-
-    _toggleUserInteraction: {
-        value: function () {
-            this.signInButton.disabled = this._isAuthenticating;
-            this.passwordTextField.disabled = this.usernameTextField.disabled = this._isAuthenticating;
-        }
     }
 
 });
 
-SignIn.prototype.handleWebkitAnimationEnd = SignIn.prototype.handleAnimationend;
+EnterMfaCode.prototype.handleWebkitAnimationEnd = EnterMfaCode.prototype.handleAnimationend;

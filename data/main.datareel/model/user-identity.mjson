@@ -9,13 +9,15 @@
                 {"@": "accountConfirmationCode"},
                 {"@": "isAccountConfirmed"},
                 {"@": "isAuthenticated"},
+                {"@": "isMfaEnabled"},
                 {"@": "firstName"},
                 {"@": "lastName"},
                 {"@": "email"},
                 {"@": "phone"},
                 {"@": "images"},
                 {"@": "addresses"},
-                {"@": "tags"}
+                {"@": "tags"},
+                {"@": "mfaCode"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/user-identity.mjson"
@@ -67,6 +69,13 @@
             "name": "isAuthenticated",
             "serializable": false,
             "defaultValue": false,
+            "valueType": "boolean"
+        }
+    },
+    "isMfaEnabled": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "firstName",
             "valueType": "boolean"
         }
     },
@@ -128,7 +137,12 @@
             "valueType": "string",
             "cardinality": -1
        }
+    },
+    "mfaCode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "mfaCode",
+            "valueType": "string"
+       }
     }
-
-
 }

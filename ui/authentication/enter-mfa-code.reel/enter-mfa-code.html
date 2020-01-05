@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="enter-mfa-code.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"},
+                "mfaCodeField": {"@": "mfaCodeField"},
+                "signInButton": {"@": "signIn"}
+            },
+            "bindings": {
+                "classList.has('hasError')": {"<-": "@owner.hasError"},
+                "classList.has('had-error')": {"<-": "@owner.hadError"},
+                "classList.has('isAuthenticating')": {"<-": "@owner.isAuthenticating"}
+            }
+        },
+
+        "infoText": {
+            "prototype": "../../controls/text.reel",
+            "properties": {
+                "element": {"#": "infoText"},
+                "value": "Multi-Factor Authentication"
+            }
+        },
+
+        "descriptionText": {
+            "prototype": "../../controls/text.reel",
+            "values": {
+                "element": {"#": "descriptionText"},
+                "value": {"=": "@owner.descriptionText"}
+            }
+        },
+
+        "mfaCodeField": {
+            "prototype": "../../controls/text-field.reel",
+            "properties": {
+                "element": {"#": "mfaCodeField"},
+                "placeholder": "code"
+            },
+            "bindings": {
+                "value": {"<->": "@owner.mfaCode"}
+            }
+        },
+
+        "errorMessage": {
+            "prototype": "../../controls/text.reel",
+            "properties": {
+                "element": {"#": "errorMessage"}
+            },
+            "bindings": {
+                "value": {"<-": "@owner.errorMessage"}
+            }
+        },
+
+        "signIn": {
+            "prototype": "../../controls/button.reel",
+            "properties": {
+                "element": {"#": "signIn"},
+                "value": "Sign In"
+            },
+            "bindings": {
+                "isProcessing": {"<-": "@owner.isAuthenticating"},
+                "disabled": {"<-": "isProcessing || !@mfaCodeField.value"}
+            }
+        },
+
+        "browserMessage": {
+            "prototype": "../../controls/text.reel",
+            "properties": {
+                "element": {"#": "browserMessage"},
+                "value": "We're sorry but this browser isn't supported."
+            },
+            "bindings": {
+                "classList.has('is-hidden')": {"<-": "true"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="EnterMfaCode">
+        <div class="EnterMfaCode-content">
+            <div data-montage-id="browserMessage" class="EnterMfaCode-browserMessage"></div>
+            <img src="../../assets/images/Etiama-logo-white.svg" class="EnterMfaCode-logo" alt="phront Logo">
+            <div data-montage-id="infoText" class="EnterMfaCode-infoText"></div>
+            <div data-montage-id="descriptionText" class="EnterMfaCode-descriptionText"></div>
+            <div data-montage-id="errorMessage" class="EnterMfaCode-error-message "></div>
+            <input type="text" data-montage-id="mfaCodeField" class="EnterMfaCode-code g-margin-bottom--double"></input>
+            <button data-montage-id="signIn" class="EnterMfaCode-submit Button--primary Button--block Button--large Button--loader"></button>
+        </div>
+    </div>
+</body>
+</html>

@@ -31,9 +31,9 @@ describe("CognitoIdentityService", function () {
             cognitoIdentityService.userIdentityDescriptor.dispatchEvent = function (dataOperation) {
                 userIdentity = dataOperation.data;
                 resolve();
-            }
+            };
             pendingIdentityFetch = mainService.fetchData(UserIdentity);
-        })
+        });
     });
 
     describe("sign up", function () {
@@ -290,29 +290,108 @@ describe("CognitoIdentityService", function () {
             });
 
             describe("with a valid new password", function () {
-                it("updates user's the password", function () {
+                beforeEach(function () {
                     userIdentity.username = "requiresNewPassword";
                     userIdentity.password = "password";
                     return mainService.saveDataObject(userIdentity)
-                    .catch(function () {
-                        userIdentity.newPassword = "newpassword";
-                        return mainService.saveDataObject(userIdentity);
-                    })
+                    .catch(function () {});
+                });
+
+                it("updates user's the password", function () {
+                    userIdentity.newPassword = "newpassword";
+                    return mainService.saveDataObject(userIdentity)
                     .then(function () {
-                        expect(cognitoMock.userInfos["requiresNewPassword"].password).toBe(userIdentity.newPassword);
+                        expect(cognitoMock.userInfos["requiresNewPassword"].password).toBe("newpassword");
                     });
                 });
 
                 it("signs the user in", function () {
-                    userIdentity.username = "requiresNewPassword";
-                    userIdentity.password = "password";
+                    userIdentity.newPassword = "newpassword";
                     return mainService.saveDataObject(userIdentity)
-                    .catch(function () {
-                        userIdentity.newPassword = "newpassword";
-                        return mainService.saveDataObject(userIdentity);
-                    })
                     .then(function () {
                         expect(userIdentity.isAuthenticated).toBe(true);
+                    });
+                });
+
+                it("resolves the pending UserIdentity fetch", function (done) {
+                    pendingIdentityFetch.then(function (data) {
+                        expect(data[0]).toBe(userIdentity);
+                        done();
+                    });
+                    userIdentity.newPassword = "newpassword";
+                    return mainService.saveDataObject(userIdentity);
+                });
+
+                it("unsets newPassword from the user identity", function () {
+                    userIdentity.newPassword = "newpassword";
+                    return mainService.saveDataObject(userIdentity)
+                    .then(function () {
+                        expect(userIdentity.newPassword).not.toBeDefined();
+                    });
+                });
+            });
+        });
+
+        describe("with valid credentials to an account with MFA", function () {
+            it("rejects the UserIdentity save with a DataOperation that indicates a mfaCode is required", function () {
+                userIdentity.username = "smsMfa";
+                userIdentity.password = "password";
+                return mainService.saveDataObject(userIdentity)
+                .then(function () {
+                    throw new Error("did not reject");
+                }, function (err) {
+                    expect(err instanceof DataOperation).toBe(true);
+                    expect(err.type).toBe(DataOperation.Type.Update);
+                    expect(err.data.hasOwnProperty("mfaCode")).toBe(true);
+                });
+            });
+
+            describe("with an incorrect MFA code", function () {
+                it("rejects the UserIdentity save with a DataOperation that indicates the mfaCode was wrong", function () {
+                    userIdentity.username = "smsMfa";
+                    userIdentity.password = "password";
+                    userIdentity.mfaCode = 123;
+                    return mainService.saveDataObject(userIdentity)
+                    .then(function () {
+                        throw new Error("Did not reject");
+                    }, function (err) {
+                        expect(err instanceof DataOperation).toBe(true);
+                        expect(err.type).toBe(DataOperation.Type.ValidateFailed);
+                        expect(err.data.hasOwnProperty('mfaCode')).toBe(true);
+                    });
+                });
+            });
+
+            describe("with a correct MFA code", function () {
+                beforeEach(function () {
+                    userIdentity.username = "smsMfa";
+                    userIdentity.password = "password";
+                    return mainService.saveDataObject(userIdentity)
+                    .catch(function () {});
+                });
+
+                it("signs the user in", function () {
+                    userIdentity.mfaCode = cognitoMock.userInfos.smsMfa.mfaCode;
+                    return mainService.saveDataObject(userIdentity)
+                    .then(function () {
+                        expect(userIdentity.isAuthenticated).toBe(true);
+                    });
+                });
+
+                it("resolves the pending UserIdentity fetch", function (done) {
+                    pendingIdentityFetch.then(function (data) {
+                        expect(data[0]).toBe(userIdentity);
+                        done();
+                    });
+                    userIdentity.mfaCode = cognitoMock.userInfos.smsMfa.mfaCode;
+                    return mainService.saveDataObject(userIdentity);
+                });
+
+                it("unsets mfaCode from the user identity", function () {
+                    userIdentity.mfaCode = cognitoMock.userInfos.smsMfa.mfaCode;
+                    return mainService.saveDataObject(userIdentity)
+                    .then(function () {
+                        expect(userIdentity.mfaCode).not.toBeDefined();
                     });
                 });
             });

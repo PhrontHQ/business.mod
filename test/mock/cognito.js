@@ -20,6 +20,13 @@ var BASE_USER_INFOS = {
         email: "requiresnewpassword@mail.com",
         sub: uuid.generate(),
         requiresNewPassword: true
+    },
+    "smsMfa": {
+        username: "smsMfa",
+        password: "password",
+        email: "smsmfa@mail.com",
+        sub: uuid.generate(),
+        smsMfa: true
     }
 };
 
@@ -81,12 +88,25 @@ Object.defineProperties(CognitoUser.prototype, {
                 });
                 return;
             }
+            if (userInfo.smsMfa) {
+                userInfo.mfaCode = Math.floor(Math.random() * 1000000);
+                callback.mfaRequired("SMS_MFA");
+                return;
+            }
             if (userInfo.requiresNewPassword) {
                 callback.newPasswordRequired({
                     email: userInfo.email
                 }, []);
                 return;
             }
+            this._makeSignInUserSession();
+            callback.onSuccess(this.signInUserSession);
+        }
+    },
+
+    _makeSignInUserSession: {
+        value: function () {
+            var userInfo = userInfos[this.username];
             this.signInUserSession = {
                 idToken: {
                     jwtToken: "abc",
@@ -101,7 +121,6 @@ Object.defineProperties(CognitoUser.prototype, {
                     jwtToken: "abc"
                 }
             };
-            callback.onSuccess(this.signInUserSession);
         }
     },
 
@@ -146,6 +165,22 @@ Object.defineProperties(CognitoUser.prototype, {
             userInfos[this.username].password = newPassword;
             userInfos[this.username].requiresNewPassword = false;
             this.authenticateUser(authDetails, callback);
+        }
+    },
+
+    sendMFACode: {
+        value: function (confirmationCode, callback, mfaType, clientMetadata) {
+            var userInfo = userInfos[this.username];
+            if (userInfo.mfaCode === confirmationCode) {
+                this._makeSignInUserSession();
+                callback.onSuccess(this.signInUserSession);
+            } else {
+                callback.onFailure({
+                    code: "CodeMismatchException",
+                    name: "CodeMismatchException",
+                    message: "Invalid code or auth state for the user."
+                });
+            }
         }
     },
 

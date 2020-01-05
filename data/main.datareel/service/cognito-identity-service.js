@@ -322,7 +322,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     if (!object.isAccountConfirmed && typeof object.accountConfirmationCode !== "undefined") {
                         return this._confirmUser(record, object, cognitoUser)
                         .then(function () {
-                            return self._authenticateUser(record, object, cognitoUser)
+                            return self._authenticateUser(record, object, cognitoUser);
                         })
                         .then(function() {
                             /*
@@ -380,6 +380,8 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         }
                         object.isAccountConfirmed = true;
                         object.isAuthenticated = true;
+                        object.newPassword = undefined;
+                        object.mfaCode = undefined;
                         if (stream) {
                             //Or shall we use addData??
                             self.addRawData(stream, [cognitoUser]);
@@ -479,6 +481,14 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                                     }
                                 });
                             }
+                        } else if (err.code === "CodeMismatchException") {
+                            dataOperation = new DataOperation();
+                            dataOperation.type = DataOperation.Type.ValidateFailed;
+                            dataOperation.userMessage = "Invalid MFA Code";
+                            dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                            dataOperation.criteria = new Criteria().initWithExpression("identifier == $", object.identifier);
+                            dataOperation.data = { mfaCode: undefined };
+                            reject(dataOperation);
                         } else {
                             reject(err);
                             //reject(err.message || JSON.stringify(err));
@@ -490,9 +500,17 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     },
 
                     mfaRequired: function(codeDeliveryDetails) {
-                        // MFA is required to complete user authentication.
-                        // Get the code from user and call
-                        cognitoUser.sendMFACode(mfaCode, this)
+                        var updateOperation = new DataOperation();
+                        updateOperation.type = DataOperation.Type.Update;
+                        updateOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                        updateOperation.context = {
+                            codeDeliveryDetails: codeDeliveryDetails
+                        };
+                        updateOperation.data = {
+                            "mfaCode": undefined
+                        };
+                        object.isMfaEnabled = true;
+                        reject(updateOperation);
                     },
 
                     newPasswordRequired: function (userAttributes, requiredAttributes) {
@@ -513,8 +531,9 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                             "password": undefined
                         };
 
-                        // the api doesn't accept this field back
+                        // the api doesn't accept these fields back
                         delete userAttributes.email_verified;
+                        delete userAttributes.phone_number_verified;
 
                         // store userAttributes on global variable
                         self.sessionUserAttributes = userAttributes;
@@ -524,6 +543,8 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                 };
                 if (object.newPassword && self.sessionUserAttributes) {
                     cognitoUser.completeNewPasswordChallenge(object.newPassword, self.sessionUserAttributes, callback);
+                } else if (object.mfaCode) {
+                    cognitoUser.sendMFACode(object.mfaCode, callback);
                 } else {
                     cognitoUser.authenticateUser(authenticationDetails, callback);
                 }

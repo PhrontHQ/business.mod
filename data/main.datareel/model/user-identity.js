@@ -22,6 +22,9 @@ exports.UserIdentity = Target.specialize(/** @lends UserIdentity.prototype */ {
     isAuthenticated: {
         value: false
     },
+    isMfaEnabled: {
+        value: false
+    },
     firstName: {
         value: undefined
     },
@@ -45,6 +48,8 @@ exports.UserIdentity = Target.specialize(/** @lends UserIdentity.prototype */ {
     },
     accessToken: {
         value: undefined
+    },
+    mfaCode: {
+        value: undefined
     }
-
 });
