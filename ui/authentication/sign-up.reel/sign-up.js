@@ -75,10 +75,12 @@ var SignUp = exports.SignUp = Component.specialize({
     },
 
     enterDocument: {
-        value: function () {
+        value: function (firstTime) {
+            if (firstTime) {
+                this.element.addEventListener("transitionend", this, false);
+            }
             this.addEventListener("action", this, false);
             this._keyComposer.addEventListener("keyPress", this, false);
-            this.element.addEventListener("transitionend", this, false);
             this.usernameTextField.focus();
         }
     },
@@ -87,6 +89,7 @@ var SignUp = exports.SignUp = Component.specialize({
         value: function () {
             this.removeEventListener("action", this, false);
             this._keyComposer.removeEventListener("keyPress", this, false);
+            this.password = this.username = this.email = null;
         }
     },
 
@@ -116,8 +119,6 @@ var SignUp = exports.SignUp = Component.specialize({
             this.application.mainService.saveDataObject(newIdentity)
             .then(function () {
                 self.userIdentity = newIdentity;
-                // Don't keep any track of the password in memory.
-                self.password = self.username = self.email = null;
                 // We need to now show the email verification code component.
                 // We can hard-code that for now, but need to check if that's hinted by Cognito that this is happenning, as it's a configurable behavior in Cognito.
                 self.ownerComponent.substitutionPanel = "enterVerificationCode";
@@ -160,13 +161,6 @@ var SignUp = exports.SignUp = Component.specialize({
                     typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", this, false
                 );
             }
-        }
-    },
-
-    _toggleUserInteraction: {
-        value: function () {
-            this.signUpButton.disabled = this._isAuthenticating;
-            this.passwordTextField.disabled = this.usernameTextField.disabled = this._isAuthenticating;
         }
     }
 });

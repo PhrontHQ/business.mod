@@ -1,8 +1,6 @@
 var Component = require("montage/ui/component").Component,
-    currentEnvironment = require("montage/core/environment").currentEnvironment,
     KeyComposer = require("montage/composer/key-composer").KeyComposer,
     DataOperation = require("montage/data/service/data-operation").DataOperation;
-
 
 var SignIn = exports.SignIn = Component.specialize({
 
@@ -74,11 +72,12 @@ var SignIn = exports.SignIn = Component.specialize({
     },
 
     enterDocument: {
-        value: function () {
+        value: function (firstTime) {
+            if (firstTime) {
+                this.element.addEventListener("transitionend", this, false);
+            }
             this.addEventListener("action", this, false);
             this._keyComposer.addEventListener("keyPress", this, false);
-            this.element.addEventListener("transitionend", this, false);
-
             // checks for disconnected hash
             if(location.href.indexOf(";disconnected") > -1) {
                 this.hasError = true;
@@ -93,9 +92,9 @@ var SignIn = exports.SignIn = Component.specialize({
         value: function () {
             this.removeEventListener("action", this, false);
             this._keyComposer.removeEventListener("keyPress", this, false);
+            self.username = self.password = null;
         }
     },
-
 
     handleKeyPress: {
         value: function (event) {
@@ -113,10 +112,7 @@ var SignIn = exports.SignIn = Component.specialize({
             this.userIdentity.username = this.username;
             this.userIdentity.password = this.password;
             this.application.mainService.saveDataObject(this.userIdentity)
-            .then(function () {
-                // Don't keep any track of the credentials in memory.
-                self.password = self.username = null;
-            }, function (error) {
+            .catch(function (error) {
                 if (error instanceof DataOperation && error.type === DataOperation.Type.UserAuthenticationFailed) {
                     self.hadError = true;
                     self.errorMessage = error.userMessage;

@@ -85,10 +85,12 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
     },
 
     enterDocument: {
-        value: function () {
+        value: function (firstTime) {
+            if (firstTime) {
+                this.element.addEventListener("transitionend", this, false);
+            }
             this.addEventListener("action", this, false);
             this._keyComposer.addEventListener("keyPress", this, false);
-            this.element.addEventListener("transitionend", this, false);
             this.codeVerificationField.focus();
         }
     },
@@ -97,6 +99,7 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
         value: function () {
             this.removeEventListener("action", this, false);
             this._keyComposer.removeEventListener("keyPress", this, false);
+            this.verificationCode = this.username = null;
         }
     },
 
@@ -116,10 +119,7 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
             this.hadError = false;
             this.userIdentity.accountConfirmationCode = this.verificationCode;
             this.application.mainService.saveDataObject(this.userIdentity)
-            .then(function () {
-                // Don't keep any track of the verificationCode in memory.
-                self.verificationCode = self.username = null;
-            }, function (error) {
+            .catch(function (error) {
                 self.hadError = true;
                 if (error instanceof DataOperation && error.type === DataOperation.Type.ValidateFailed) {
                     self.errorMessage = error.userMessage;
@@ -141,10 +141,6 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
     handleResendVerificationCodeAction: {
         value: function () {
             var self = this;
-                userIdentity = this.ownerComponent.userIdentity;
-            if (this._isAuthenticating) {
-                return;
-            }
             this.isAuthenticating = true;
             this.hadError = false;
             // simulates logging in to an unconfirmed account

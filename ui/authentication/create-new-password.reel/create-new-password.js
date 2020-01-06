@@ -89,10 +89,12 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
     },
 
     enterDocument: {
-        value: function () {
+        value: function (firstTime) {
+            if (firstTime) {
+                this.element.addEventListener("transitionend", this, false);
+            }
             this.addEventListener("action", this, false);
             this._keyComposer.addEventListener("keyPress", this, false);
-            this.element.addEventListener("transitionend", this, false);
             this.passwordTextField.focus();
         }
     },
@@ -101,6 +103,7 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
         value: function () {
             this.removeEventListener("action", this, false);
             this._keyComposer.removeEventListener("keyPress", this, false);
+            this.password = this.oldPassword = null;
         }
     },
 
@@ -120,10 +123,7 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
             this.userIdentity.password = this.oldPassword;
             this.userIdentity.newPassword = this.password;
             this.application.mainService.saveDataObject(this.userIdentity)
-            .then(function () {
-                // Don't keep any track of the password in memory.
-                self.password = self.oldPassword = null;
-            }, function (error) {
+            .catch(function (error) {
                 if (error) {
                     self.errorMessage = error.message || error;
                     self.hadError = true;
@@ -162,13 +162,6 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
                     typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", this, false
                 );
             }
-        }
-    },
-
-    _toggleUserInteraction: {
-        value: function () {
-            this.changePasswordButton.disabled = this._isAuthenticating;
-            this.passwordTextField.disabled = this._isAuthenticating;
         }
     }
 });

@@ -1,5 +1,4 @@
 var Component = require("montage/ui/component").Component,
-    currentEnvironment = require("montage/core/environment").currentEnvironment,
     KeyComposer = require("montage/composer/key-composer").KeyComposer,
     DataOperation = require("montage/data/service/data-operation").DataOperation;
 
@@ -77,6 +76,7 @@ var EnterMfaCode = exports.EnterMfaCode = Component.specialize({
         value: function () {
             this.removeEventListener("action", this, false);
             this._keyComposer.removeEventListener("keyPress", this, false);
+            this.mfaCode = null;
         }
     },
 
@@ -95,10 +95,7 @@ var EnterMfaCode = exports.EnterMfaCode = Component.specialize({
             this.hadError = false;
             this.userIdentity.mfaCode = this.mfaCode;
             this.application.mainService.saveDataObject(this.userIdentity)
-            .then(function () {
-                // Don't keep any track of the verificationCode in memory.
-                self.mfaCode = null;
-            }, function (error) {
+            .catch(function (error) {
                 self.hadError = true;
                 if (error instanceof DataOperation && error.type === DataOperation.Type.ValidateFailed) {
                     self.errorMessage = error.userMessage;
