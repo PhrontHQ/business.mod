@@ -42,7 +42,7 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "title",
-            "localizable": true,
+            "isLocalizable": true,
             "valueType": "string"
         }
     },
@@ -50,7 +50,7 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "description",
-            "localizable": true,
+            "isLocalizable": true,
             "valueType": "string"
         }
     },
@@ -58,7 +58,7 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "descriptionHtml",
-             "localizable": true,
+             "isLocalizable": true,
             "valueType": "string"
         }
     },
@@ -68,7 +68,7 @@
             "name": "image",
             "valueType": "string",
             "cardinality": 1,
-            "localizable": true,
+            "isLocalizable": true,
             "valueDescriptor": {"@": "Image_descriptor"}               
         }
     },

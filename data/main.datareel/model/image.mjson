@@ -31,7 +31,7 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "altText",
-            "localizable": true,
+            "isLocalizable": true,
             "valueType": "string"
         }
     },
