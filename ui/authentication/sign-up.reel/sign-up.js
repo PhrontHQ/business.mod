@@ -107,19 +107,15 @@ var SignUp = exports.SignUp = Component.specialize({
     handleSignUpAction: {
         value: function() {
             var self = this,
-                newIdentity;
-            if (this._isAuthenticating || !this.username) {
-                return;
-            }
+                newIdentity = this.application.mainService.createDataObject(UserIdentity);
             this.isAuthenticating = true;
             this.hadError = false;
-            newIdentity = this.application.mainService.createDataObject(UserIdentity);
             newIdentity.username = this.username;
             newIdentity.email = this.email;
             newIdentity.password = this.password;
             this.application.mainService.saveDataObject(newIdentity)
             .then(function () {
-                self.ownerComponent.userIdentity = newIdentity;
+                self.userIdentity = newIdentity;
                 // Don't keep any track of the password in memory.
                 self.password = self.username = self.email = null;
                 // We need to now show the email verification code component.
@@ -138,7 +134,6 @@ var SignUp = exports.SignUp = Component.specialize({
                         typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
                     );
                 }
-
                 self.isAuthenticating = false;
             });
         }

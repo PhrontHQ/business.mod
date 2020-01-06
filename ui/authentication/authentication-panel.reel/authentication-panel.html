@@ -5,77 +5,63 @@
     <script type="text/montage-serialization">
     {
         "owner": {
-            "properties": {
-                "element": {"#": "authentication-panel"}
-            },
-            "bindings": {
+            "values": {
+                "element": {"#": "authentication-panel"},
                 "classList.has('drawer-is-open')": {"<-": "@owner.application.isDrawerOpen"}
             }
         },
         "signInModal": {
             "prototype": "ui/controls/modal.reel",
-            "properties": {
+            "values": {
                 "element": {"#": "signInModal"},
-                "hideCloseButton": true
-            },
-            "bindings": {
+                "hideCloseButton": true,
                 "classList.has('montage-Overlay--visible')": {"<-": "!owner.userIdentity.isAuthenticated"}
             }
         },
         "substitution": {
             "prototype": "montage/ui/substitution.reel",
-            "properties": {
-                "element": {"#": "substitution"}
-            },
-            "bindings": {
+            "values": {
+                "element": {"#": "substitution"},
                 "switchValue": {"<-": "@owner.substitutionPanel"}
             }
         },
         "signIn": {
             "prototype": "ui/authentication/sign-in.reel",
             "values": {
-                "element": {"#": "signIn"}
-            },
-            "listeners": [
-                {
-                    "type": "action",
-                    "listener": {"@": "owner"}
-                }
-            ]
+                "element": {"#": "signIn"},
+                "userIdentity": {"<-": "@owner.userIdentity"}
+            }
         },
         "signUp": {
             "prototype": "ui/authentication/sign-up.reel",
             "values": {
-                "element": {"#": "signUp"}
-            },
-            "listeners": [
-                {
-                    "type": "action",
-                    "listener": {"@": "owner"}
-                }
-            ]
+                "element": {"#": "signUp"},
+                "userIdentity": {"<->": "@owner.userIdentity"}
+            }
         },
         "enterVerificationCode": {
             "prototype": "ui/authentication/enter-verification-code.reel",
             "values": {
-                "element": {"#": "enterVerificationCode"}
+                "element": {"#": "enterVerificationCode"},
+                "userIdentity": {"<-": "@owner.userIdentity"}
             }
         },
         "createNewPassword": {
             "prototype": "ui/authentication/create-new-password.reel",
             "values": {
-                "element": {"#": "createNewPassword"}
+                "element": {"#": "createNewPassword"},
+                "userIdentity": {"<-": "@owner.userIdentity"}
             }
         },
         "enterMfaCode": {
             "prototype": "ui/authentication/enter-mfa-code.reel",
             "values": {
-                "element": {"#": "enterMfaCode"}
+                "element": {"#": "enterMfaCode"},
+                "userIdentity": {"<-": "@owner.userIdentity"}
             }
         }
-   }
+    }
     </script>
-
 </head>
 <body>
     <div data-montage-id="authentication-panel" class="Main">

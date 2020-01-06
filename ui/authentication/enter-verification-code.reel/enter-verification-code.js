@@ -112,14 +112,10 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
     handleConfirmAccountAction: {
         value: function () {
             var self = this;
-                userIdentity = this.ownerComponent.userIdentity;
-            if (this._isAuthenticating || !this.verificationCode) {
-                return;
-            }
             this.isAuthenticating = true;
             this.hadError = false;
-            userIdentity.accountConfirmationCode = this.verificationCode;
-            this.application.mainService.saveDataObject(userIdentity)
+            this.userIdentity.accountConfirmationCode = this.verificationCode;
+            this.application.mainService.saveDataObject(this.userIdentity)
             .then(function () {
                 // Don't keep any track of the verificationCode in memory.
                 self.verificationCode = self.username = null;
@@ -152,8 +148,8 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
             this.isAuthenticating = true;
             this.hadError = false;
             // simulates logging in to an unconfirmed account
-            userIdentity.accountConfirmationCode = undefined;
-            this.application.mainService.saveDataObject(userIdentity)
+            this.userIdentity.accountConfirmationCode = undefined;
+            this.application.mainService.saveDataObject(this.userIdentity)
             .catch(function () {
                 self.errorMessage = null;
                 self.hasError = false;

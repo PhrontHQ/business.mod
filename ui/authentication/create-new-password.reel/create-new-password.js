@@ -114,17 +114,12 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
 
     handleChangePasswordAction: {
         value: function () {
-            var self = this,
-                userIdentity;
-            if (this._isAuthenticating || !this.password) {
-                return;
-            }
+            var self = this;
             this.isAuthenticating = true;
             this.hadError = false;
-            userIdentity = this.ownerComponent.userIdentity;
-            userIdentity.password = this.oldPassword;
-            userIdentity.newPassword = this.password;
-            this.application.mainService.saveDataObject(userIdentity)
+            this.userIdentity.password = this.oldPassword;
+            this.userIdentity.newPassword = this.password;
+            this.application.mainService.saveDataObject(this.userIdentity)
             .then(function () {
                 // Don't keep any track of the password in memory.
                 self.password = self.oldPassword = null;
@@ -148,7 +143,7 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
 
     handleTransitionend: {
         value: function (e) {
-            if(this.ownerComponent.userIdentity.isAuthenticated && e.target == this.element && e.propertyName == 'opacity') {
+            if(this.userIdentity.isAuthenticated && e.target == this.element && e.propertyName == 'opacity') {
                 this.element.style.display = 'none';
             } else if (this._isFirstTransitionEnd) {
                 this._isFirstTransitionEnd = false;

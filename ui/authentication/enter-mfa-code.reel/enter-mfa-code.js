@@ -90,15 +90,11 @@ var EnterMfaCode = exports.EnterMfaCode = Component.specialize({
 
     handleSignInAction: {
         value: function () {
-            var self = this,
-                userIdentity = this.ownerComponent.userIdentity;
-            if (this._isAuthenticating || !this.mfaCode) {
-                return;
-            }
+            var self = this;
             this.isAuthenticating = true;
             this.hadError = false;
-            userIdentity.mfaCode = this.mfaCode;
-            this.application.mainService.saveDataObject(userIdentity)
+            this.userIdentity.mfaCode = this.mfaCode;
+            this.application.mainService.saveDataObject(this.userIdentity)
             .then(function () {
                 // Don't keep any track of the verificationCode in memory.
                 self.mfaCode = null;

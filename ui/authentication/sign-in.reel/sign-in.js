@@ -107,16 +107,12 @@ var SignIn = exports.SignIn = Component.specialize({
 
     handleSignInAction: {
         value: function() {
-            var self = this,
-                userIdentity = this.ownerComponent.userIdentity;
-            if (this._isAuthenticating || !this.username) {
-                return;
-            }
+            var self = this;
             this.isAuthenticating = true;
             this.hadError = false;
-            userIdentity.username = this.username;
-            userIdentity.password = this.password;
-            this.application.mainService.saveDataObject(userIdentity)
+            this.userIdentity.username = this.username;
+            this.userIdentity.password = this.password;
+            this.application.mainService.saveDataObject(this.userIdentity)
             .then(function () {
                 // Don't keep any track of the credentials in memory.
                 self.password = self.username = null;
