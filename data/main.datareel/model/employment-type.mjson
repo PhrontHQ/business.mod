@@ -1,0 +1,34 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "EmploymentType",
+            "propertyDescriptors": [
+                {"@": "name"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/employment-type.mjson"
+            },
+            "exportName": "EmploymentType",
+            "module": {
+                "%": "data/main.datareel/model/employment-type"
+            },
+            "object":{"@": "employment-type"},
+            "parent":{"@": "object_descriptor"}
+        }
+    },
+    "employment-type": {
+        "object": "data/main.datareel/model/employment-relationship"
+    },
+    "object_descriptor": {
+        "object": "data/main.datareel/model/object.mjson"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "cardinality": 1       
+        }
+    }
+}

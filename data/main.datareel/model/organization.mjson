@@ -12,7 +12,8 @@
                 {"@": "parent"},
                 {"@": "suborganizations"},
                 {"@": "tags"},
-                {"@": "mainContact"}
+                {"@": "mainContact"},
+                {"@": "employeeRelationships"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/organization.mjson"
@@ -22,12 +23,23 @@
                 "%": "data/main.datareel/model/organization"
             },
             "object":{"@": "organization"},
-            "parent":{"@": "objectDescriptor"}
+            "parent":{"@": "PartyDescriptor"},
+            "userInterfaceDescriptorModules": {
+                "*": {
+                    "%": "./organisation-ui-descriptor.mjson"
+                }
+            }
+
         }
     },
     "organization": {
         "object": "data/main.datareel/model/organization"
+    },    
+
+    "PartyDescriptor": {
+        "object": "data/main.datareel/model/party.mjson"
     },
+
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -90,9 +102,6 @@
         "object": "data/main.datareel/model/address.mjson"
     },
 
-    "objectDescriptor": {
-        "object": "data/main.datareel/model/object.mjson"
-    },
 
     "tags": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -114,6 +123,20 @@
     },
     "personDescriptor": {
         "object": "data/main.datareel/model/person.mjson"
+    },
+
+    "employeeRelationships": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "employeeRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "employmentRelationshipDescriptor"}
+       }
+    },
+    "employmentRelationshipDescriptor": {
+        "object": "data/main.datareel/model/employment-relationship.mjson"
     }
+
 
 }

@@ -1,4 +1,4 @@
-var Object = require("./object").Object;
+var Party = require("./party").Party;
 
 /**
  * @class Organization
@@ -6,7 +6,7 @@ var Object = require("./object").Object;
  */
 
 
-exports.Organization = Object.specialize(/** @lends Organization.prototype */ {
+exports.Organization = Party.specialize(/** @lends Organization.prototype */ {
 
     name: {
         value: undefined
@@ -33,6 +33,9 @@ exports.Organization = Object.specialize(/** @lends Organization.prototype */ {
         value: undefined
     },
     mainContact: {
+        value: undefined
+    },
+    employeeRelationships: {
         value: undefined
     }
 

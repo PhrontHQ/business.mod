@@ -11,7 +11,9 @@
                 {"@": "images"},
                 {"@": "addresses"},
                 {"@": "tags"},
-                {"@": "userIdentities"}
+                {"@": "userIdentities"},
+                {"@": "employerRelationships"}
+
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/person.mjson"
@@ -21,14 +23,26 @@
                 "%": "data/main.datareel/model/person"
             },
             "object":{"@": "person"},
-            "parent":{"@": "objectDescriptor"}
+            "parent":{"@": "PartyDescriptor"},
+            "userInterfaceDescriptorModules": {
+                "*": {
+                    "%": "./person-ui-descriptor.mjson"
+                },
+                "montage/ui/list-item.reel": {
+                    "%": "./person-list-item-ui-descriptor.mjson"
+                },
+                "montage/ui/cascading-list.reel": {
+                    "%": "./person-cascading-list-ui-descriptor.mjson"
+                }
+            }
+
         }
     },
     "person": {
         "object": "data/main.datareel/model/person"
     },
-    "objectDescriptor": {
-        "object": "data/main.datareel/model/object.mjson"
+    "PartyDescriptor": {
+        "object": "data/main.datareel/model/party.mjson"
     },
     "firstName": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -100,6 +114,18 @@
     },
     "userIdentity_descriptor": {
         "object": "data/main.datareel/model/user-identity.mjson"
+    },
+    "employerRelationships": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "employerRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "employmentRelationshipDescriptor"}
+       }
+    },
+    "employmentRelationshipDescriptor": {
+        "object": "data/main.datareel/model/employment-relationship.mjson"
     }
 
 

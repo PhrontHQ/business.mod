@@ -1,0 +1,38 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Party",
+            "propertyDescriptors": [
+                {"@": "existenceTimeRange"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/party.mjson"
+            },
+            "exportName": "Party",
+            "module": {
+                "%": "data/main.datareel/model/party"
+            },
+            "object":{"@": "party"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "party": {
+        "object": "data/main.datareel/model/party"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/object.mjson"
+    },
+    "existenceTimeRange": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "existenceTimeRange",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "range_descriptor"}       
+        }
+    },
+    "range_descriptor": {
+        "object": "montage/core/range.mjson"
+    }
+}

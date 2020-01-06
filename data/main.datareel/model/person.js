@@ -1,11 +1,11 @@
-var Object = require("./object").Object;
+var Party = require("./party").Party;
 /**
  * @class Person
  * @extends Object
  */
 
 
-exports.Person = Object.specialize(/** @lends Person.prototype */ {
+exports.Person = Party.specialize(/** @lends Person.prototype */ {
 
     firstName: {
         value: undefined
@@ -32,6 +32,9 @@ exports.Person = Object.specialize(/** @lends Person.prototype */ {
         value: undefined
     },
     userIdentities: {
+        value: undefined
+    },
+    employerRelationships: {
         value: undefined
     }
 
