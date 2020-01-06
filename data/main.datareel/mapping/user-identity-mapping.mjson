@@ -7,8 +7,9 @@
             "objectMapping": {
                 "rules": {
                     "username": {"<->": "username"},
+                    "session": {"<-": "signInUserSession"},
                     "isAuthenticated": {"<-": "signInUserSession.defined()"},
-                    "password": {"<->": "password"},
+                    "isMfaEnabled": {"<->": "isSmsMfaEnabled"},
                     "firstName": {"<->": "firstName"},
                     "lastName": {"<->": "lastName"},
                     "email": {"<->": "email"},
@@ -18,7 +19,8 @@
             },
             "rawDataMapping": {
                 "rules": {
-                    "confirmationCode": {"<-": "accountConfirmationCode"}
+                    "confirmationCode": {"<-": "accountConfirmationCode"},
+                    "password": {"<-": "password"}
                 }
             },
             "requisitePropertyNames": [

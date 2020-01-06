@@ -424,6 +424,7 @@ describe("CognitoIdentityService", function () {
         });
 
         it("changes the password", function () {
+            userIdentity.password = "password";
             userIdentity.newPassword = "newpassword";
             return mainService.saveDataObject(userIdentity)
             .then(function () {
@@ -446,6 +447,7 @@ describe("CognitoIdentityService", function () {
         })
 
         it("rejects the UserIdentity save with a DataOperation that indicates an incorrect password if the new password is rejected", function () {
+            userIdentity.password = "password";
             userIdentity.newPassword = "short";
             return mainService.saveDataObject(userIdentity)
             .then(function () {

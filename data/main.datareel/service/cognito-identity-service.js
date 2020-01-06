@@ -152,129 +152,144 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
 
     fetchRawData: {
         value: function (stream) {
-            var self = this,
-                userInputNeeded = false,
-                query =  stream.query,
-                cognitoUser = this.userPool.getCurrentUser(),
-                userIdentity;
-
-            if (cognitoUser != null) {
-                cognitoUser.getSession(function(err, session) {
-                    if (err) {
-                        if(err.message === 'Cannot retrieve a new session. Please authenticate.') {
-                            userInputNeeded = true;
-                        }
-                        else {
-                            console.error(err.message || JSON.stringify(err));
-                            self.rawDataError(err);
-                            return;
-                        }
-                    }
-
-                    if(session.isValid()) {
-                        // NOTE: getSession must be called to authenticate user before calling getUserAttributes
-                        /*
-                        from: https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html
-                        from: https://forums.aws.amazon.com/thread.jspa?threadID=309444
-                        See also: https://serverless-stack.com/chapters/mapping-cognito-identity-id-and-user-pool-id.html
-                        */
-                        cognitoUser.id = cognitoUser.signInUserSession.idToken.payload.sub;
-                        cognitoUser.getUserAttributes(function(err, attributes) {
-                            if (err) {
-                                // Handle error
-                            } else {
-                                // Do something with attributes
-                                console.log("cognito user attributes",attributes);
-                            }
-                        });
-                        self.addRawData(stream, [cognitoUser]);
-                        self.rawDataDone(stream);
-                        self.dispatchUserAuthenticationCompleted(stream.data[0]);
-                        return;
-                    } else {
-                        //If the use is known seession is
-                        userInputNeeded = true;
-                    }
-
-
-                    //Needed to establish a direct use of AWS own services
-                    // AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-                    //     IdentityPoolId: '...', // your identity pool id here
-                    //     Logins: {
-                    //         // Change the key below according to the specific region your user pool is in.
-                    //         'cognito-idp.<region>.amazonaws.com/<YOUR_USER_POOL_ID>': session
-                    //             .getIdToken()
-                    //             .getJwtToken(),
-                    //     },
-                    // });
-
-                    // Instantiate aws sdk service objects now that the credentials have been updated.
-                    // example: var s3 = new AWS.S3();
-                });
-            } else {
-                var userData = {
-                    Username: "",
-                    Pool: this.userPool
-                };
-                cognitoUser = new this.CognitoUser(userData);
-                cognitoUser.id = uuid.generate();
+            var self = this;
+            this._getCachedCognitoUser()
+            .then(function (cognitoUser) {
+                var userIdentity, userInputOperation;
+                if (!cognitoUser) {
+                    cognitoUser = self._createAnonymousCognitoUser();
+                }
+                if (cognitoUser.signInUserSession) {
+                    self.addRawData(stream, [cognitoUser]);
+                    self.rawDataDone(stream);
+                    self.dispatchUserAuthenticationCompleted(cognitoUser);
+                    return;
+                }
+                /*
+                    Now we need to bring some UI to the user to be able to continue
+                    This is intended to run in a web/service worker at some point, or why not node
+                    so we need an event-driven way to signal that we need to show UI.
+                    Because this is a fetch, the promise is already handled at the DataStream level
+                    The authentication panel needs to provide us some data.
+                    The need to show a UI might be driven by the need to confirm a password,
+                    or some other reason, so it needs to provide enough info for the authentication
+                    panel to do it's job.
+                    Knowing the panel and the identity service may be in different thread, they may not be able to address each others. So we should probably use data operations to do the communication anyway
+                */
                 userIdentity = self.objectForTypeRawData(self.userIdentityDescriptor, cognitoUser);
-                userInputNeeded = true;
-            }
+                self._pendingStream = stream;
 
-            /*
-                Now we need to bring some UI to the user to be able to continue
-                This is intended to run in a web/service worker at some point, or why not node
-                so we need an event-driven way to signal that we need to show UI.
-                Because this is a fetch, the promise is already handled at the DataStream level
-                The authentication panel needs to provide us some data.
-                The need to show a UI might be driven by the need to confirm a password,
-                or some other reason, so it needs to provide enough info for the authentication
-                panel to do it's job.
-                Knowing the panel and the identity service may be in different thread, they may not be able to address each others. So we should probably use data operations to do the communication anyway
-            */
-            if(userInputNeeded) {
-                this._pendingStream = stream;
+                // Keep track of the stream to complete when we get all data
+                self._fetchStreamByUser.set(cognitoUser, stream);
 
-                //Keep track of the stream to complete when we get
-                //all data
-                this._fetchStreamByUser.set(cognitoUser,stream);
-
-                var userInputOperation = new DataOperation(),
-                    dataIdentifier = userIdentity ? this.dataIdentifierForObject(userIdentity) : null;
-
-                //Set the righ type.
+                userInputOperation = new DataOperation();
                 userInputOperation.type = DataOperation.Type.UserAuthentication;
 
-                //Needs to make that a separate property so this can be the cover that returns ths
-                //local object as a convenience over doing it with a new dataDescriptorModuleId property
-                userInputOperation.dataDescriptor = this.userIdentityDescriptor.module.id;
+                // Needs to make that a separate property so this can be the cover that returns ths
+                // local object as a convenience over doing it with a new dataDescriptorModuleId property
+                userInputOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
 
-                //This criteria should describe the object for which we need input on with the identifier = ....
-                //Required when for example requesting an update to a passord
-                //What does it mean when we have no idea who the user is?
-                //well, we should have an anonymous user created locally nonetheless,
-                //or one created with an anonymous user name sent to Cognito?
-                //But we can't change a user name once created?
-                if(dataIdentifier) {
-                    userInputOperation.criteria = Criteria.withExpression("identifier = $identifier", {"identifier":dataIdentifier});
-                }
+                // This criteria should describe the object for which we need input on with the identifier = ....
+                // Required when for example requesting an update to a passord
+                // What does it mean when we have no idea who the user is?
+                // well, we should have an anonymous user created locally nonetheless,
+                // or one created with an anonymous user name sent to Cognito?
+                // But we can't change a user name once created?
+                userInputOperation.criteria = Criteria.withExpression("identifier = $identifier", {
+                    identifier: self.dataIdentifierForObject(userIdentity)
+                });
 
                 //Specifies the properties we need input for
                 userInputOperation.data = userIdentity;
-                userInputOperation.requisitePropertyNames = ["username","password"];
+                userInputOperation.requisitePropertyNames = ["username", "password"];
+                userInputOperation.dataServiceModuleId = module.id;
+                userInputOperation.authorizationPanelRequireLocation = require.location;
+                userInputOperation.authorizationPanelModuleId = require.resolve(self.authorizationPanel);
+                self.userIdentityDescriptor.dispatchEvent(userInputOperation);
 
-                //TODO: Needs to wrap that in super class UserIdentityService in montage
-                var myModule = module,
-                    myRequire = require,
-                    panelModuleId = require.resolve(this.authorizationPanel);
+                // Now the fetch will hang, until a saveDataObject picks up this pending stream
+                // and adds the raw data of an authenticated user to it
+            })
+            .catch(function (err) {
+                self.rawDataError(stream, err);
+                self.rawDataDone(stream);
+            });
+        }
+    },
 
-                    userInputOperation.dataServiceModuleId = myModule.id;
-                    userInputOperation.authorizationPanelRequireLocation = myRequire.location;
-                    userInputOperation.authorizationPanelModuleId = panelModuleId;
+    _getCachedCognitoUser: {
+        value: function () {
+            var self = this,
+                cognitoUser = this.userPool.getCurrentUser();
+            return new Promise(function (resolve, reject) {
+                if (!cognitoUser) {
+                    return resolve(null);
+                } else if (cognitoUser.signInUserSession && cognitoUser.signInUserSession.isValid()) {
+                    return resolve(cognitoUser);
+                }
+                cognitoUser.getSession(function (err, session) {
+                    if (err) {
+                        if (err.message === 'Cannot retrieve a new session. Please authenticate.') {
+                            return resolve(cognitoUser);
+                        } else {
+                            console.error(err.message || JSON.stringify(err));
+                            return reject(err);
+                        }
+                    }
+                    // NOTE: getSession must be called to authenticate user before calling getUserAttributes
+                    /*
+                    from: https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html
+                    from: https://forums.aws.amazon.com/thread.jspa?threadID=309444
+                    See also: https://serverless-stack.com/chapters/mapping-cognito-identity-id-and-user-pool-id.html
+                    */
+                    cognitoUser.id = cognitoUser.signInUserSession.idToken.payload.sub;
+                    resolve(self._fetchUserDataForCognitoUser(cognitoUser));
+                });
+            });
+        }
+    },
 
-                this.userIdentityDescriptor.dispatchEvent(userInputOperation);
-            }
+    _fetchUserDataForCognitoUser: {
+        value: function (cognitoUser) {
+            return new Promise(function (resolve, reject) {
+                // user attributes (email, phone, etc.) and MFA options are
+                // not normally on a CognitoUser, but that makes it hard to use
+                // a CognitoUser as raw data
+                cognitoUser.getUserData(function (err, userData) {
+                    if (err) {
+                        return reject(err);
+                    }
+                    cognitoUser.isSmsMfaEnabled = false;
+                    if (userData.MFAOptions) {
+                        userData.MFAOptions.forEach(function (mfaOption) {
+                            if (mfaOption.AttributeName === "phone_number" && mfaOption.DeliveryMedium === "SMS") {
+                                cognitoUser.isSmsMfaEnabled = true;
+                            }
+                        });
+                    }
+                    userData.UserAttributes.forEach(function (userAttribute) {
+                        var name = userAttribute.Name,
+                            value = userAttribute.Value;
+                        if (name === "email") {
+                            cognitoUser.email = value;
+                        } else if (name === "phone_number") {
+                            cognitoUser.phone = value;
+                        }
+                    });
+                    resolve(cognitoUser);
+                });
+            });
+        }
+    },
+
+    _createAnonymousCognitoUser: {
+        value: function () {
+            var cognitoUser = new this.CognitoUser({
+                Username: "",
+                Pool: this.userPool
+            });
+            cognitoUser.id = uuid.generate();
+            return cognitoUser;
         }
     },
 
@@ -315,40 +330,16 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         return this._changePassword(record, object, cognitoUser);
                     }
                     return Promise.resolve();
-                } else {
+                } else if (object.accountConfirmationCode) {
                     //This will do for now, but it needs to be replaced by the handling of an updateOperation which
                     //would carry directly the fact that the accountConfirmationCode property
                     //is what changed. In the meantime, while we're still in the same thred, we could ask the mainService what's the changed properties for that object, but it's still not tracked properly for some properties that don't have triggers doing so. Needs to clarify that.
-                    if (!object.isAccountConfirmed && typeof object.accountConfirmationCode !== "undefined") {
-                        return this._confirmUser(record, object, cognitoUser)
-                        .then(function () {
-                            return self._authenticateUser(record, object, cognitoUser);
-                        })
-                        .then(function() {
-                            /*
-                            UserIdentity is successfully confirmed, the resolved promise completes the
-                            saveData call originating from the panels, here EnterVerificationCode.
-
-                            From there it could tell it's AuthenticationPanel that the process is complete,
-                            which itself could tell the UserIdentityManager, which ultimately is the one hiding (and showing) the montage level authenticationManagerPanel.
-
-                            Right now, the UserIdentityManager listens to the main service for:
-                                - this._mainService.addEventListener(DataOperation.Type.UserAuthentication, this);
-                                - this._mainService.addEventListener(DataOperation.Type.UserAuthenticationCompleted, this);
-
-                            positioning the UserIdentityService as the direct source of truth.
-
-                            When the UserIdentityService ends up in a different thread/service/web worker, we'll need
-                            data operations as the communication between
-                            */
-                            self.dispatchUserAuthenticationCompleted(object);
-                        });
-                    } else {
-                        return this._authenticateUser(record, object, cognitoUser)
-                        .then(function() {
-                            self.dispatchUserAuthenticationCompleted(object);
-                        });
-                    }
+                    return this._confirmUser(record, object, cognitoUser)
+                    .then(function () {
+                        return self._authenticateUser(record, object, cognitoUser);
+                    });
+                } else {
+                    return this._authenticateUser(record, object, cognitoUser);
                 }
             } else {
                 return this._signUpUser(record, object);
@@ -378,17 +369,21 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                             self.rootService.recordObjectForDataIdentifier(object, dataIdentifier);
                             self.recordSnapshot(dataIdentifier, cognitoUser);
                         }
+                        object.session = cognitoUser.signInUserSession;
                         object.isAccountConfirmed = true;
-                        object.isAuthenticated = true;
+                        object.password = undefined;
                         object.newPassword = undefined;
                         object.mfaCode = undefined;
-                        if (stream) {
-                            //Or shall we use addData??
-                            self.addRawData(stream, [cognitoUser]);
-                            self.rawDataDone(stream);
-                        }
-                        resolve(object);
-                        self.dispatchUserAuthenticationCompleted(object);
+                        self._fetchUserDataForCognitoUser(cognitoUser)
+                        .then(function (cognitoUser) {
+                            if (stream) {
+                                //Or shall we use addData??
+                                self.addRawData(stream, [cognitoUser]);
+                                self.rawDataDone(stream);
+                            }
+                            resolve(object);
+                            self.dispatchUserAuthenticationCompleted(object);
+                        }, reject);
                     },
 
                     onFailure: function (err) {
@@ -499,7 +494,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         }
                     },
 
-                    mfaRequired: function(codeDeliveryDetails) {
+                    mfaRequired: function (codeDeliveryDetails) {
                         var updateOperation = new DataOperation();
                         updateOperation.type = DataOperation.Type.Update;
                         updateOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
@@ -509,7 +504,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         updateOperation.data = {
                             "mfaCode": undefined
                         };
-                        object.isMfaEnabled = true;
+                        object.isMfaEnabled = cognitoUser.isSmsMfaEnabled = true;
                         reject(updateOperation);
                     },
 

@@ -6,6 +6,7 @@
             "propertyDescriptors": [
                 {"@": "username"},
                 {"@": "password"},
+                {"@": "session"},
                 {"@": "accountConfirmationCode"},
                 {"@": "isAccountConfirmed"},
                 {"@": "isAuthenticated"},
@@ -46,6 +47,13 @@
             "valueType": "string"
         }
     },
+    "session": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "session",
+            "valueType": "object"
+        }
+    },
     "accountConfirmationCode": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -76,7 +84,8 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "firstName",
-            "valueType": "boolean"
+            "valueType": "boolean",
+            "defaultValue": false
         }
     },
     "firstName": {

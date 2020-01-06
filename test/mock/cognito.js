@@ -184,6 +184,30 @@ Object.defineProperties(CognitoUser.prototype, {
         }
     },
 
+    getUserData: {
+        value: function (callback) {
+            var userInfo = userInfos[this.username],
+                userData;
+            if (!this.signInUserSession) {
+                return callback(new Error('not authenticated'));
+            }
+            userData = {
+                UserAttributes: [
+                    { Name: "sub", Value: userInfo.sub },
+                    { Name: "email", Value: userInfo.email },
+                    { Name: "email_confirmed", Value: true }
+                ]
+            };
+            if (userInfo.smsMfa) {
+                userData.MFAOptions = [{
+                    AttributeName: "phone_number",
+                    DeliveryMedium: "SMS"
+                }];
+            }
+            callback(null, userData);
+        }
+    },
+
     changePassword: {
         value: function (oldPassword, newPassword, callback, clientMetadata) {
             var userInfo = userInfos[this.username];
