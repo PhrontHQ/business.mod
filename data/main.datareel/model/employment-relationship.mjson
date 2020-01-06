@@ -10,7 +10,7 @@
                 {"@": "jobTitle"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/party-party-relationship.mjson"
+                "%": "data/main.datareel/model/employment-relationship.mjson"
             },
             "exportName": "EmploymentRelationship",
             "module": {

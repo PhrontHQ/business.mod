@@ -13,7 +13,9 @@
                 {"@": "suborganizations"},
                 {"@": "tags"},
                 {"@": "mainContact"},
-                {"@": "employeeRelationships"}
+                {"@": "employeeRelationships"},
+                {"@": "customerRelationships"},
+                {"@": "supplierRelationships"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/organization.mjson"
@@ -136,7 +138,26 @@
     },
     "employmentRelationshipDescriptor": {
         "object": "data/main.datareel/model/employment-relationship.mjson"
-    }
+    },
 
+    "customerRelationships": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "customerRelationships",
+            "valueType": "array",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "root"}
+       }
+    },
+
+    "supplierRelationships": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "customerRelationships",
+            "valueType": "array",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "root"}
+       }
+    }
 
 }
