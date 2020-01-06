@@ -27,7 +27,7 @@ exports.Product = Object.specialize(/** @lends Product.prototype */ {
     },
     images: {
         get: function () {
-            return this._images;
+            return this._images || (this._images = []);
         },
         set: function (value) {
             if (this._images !== value) {
@@ -91,6 +91,9 @@ exports.Product = Object.specialize(/** @lends Product.prototype */ {
         value: undefined
     },            
     grossSales: {
+        value: undefined
+    },
+    options: {
         value: undefined
     },
     orders: {

@@ -19,6 +19,7 @@
                 {"@": "totalInventory"},
                 {"@": "totalVariants"},
                 {"@": "updatedAt"},
+                {"@": "options"},
                 {"@": "orders"},
                 {"@": "tags"}
             ],
@@ -170,6 +171,14 @@
             "valueDescriptor": {"@": "address_descriptor"}       
         }
     },
+    "options": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "options",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "productOptionDescriptor"}       
+        }
+    },
     "orders": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -204,6 +213,9 @@
     },
     "address_descriptor": {
         "object": "data/main.datareel/model/address.mjson"
+    },
+    "productOptionDescriptor": {
+        "object": "data/main.datareel/model/product-option.mjson"
     }
 
 }

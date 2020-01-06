@@ -1,0 +1,112 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ProductOption",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "position"},
+                {"@": "values"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/product-option.mjson"
+            },
+            "exportName": "ProductOption",
+            "module": {
+                "%": "data/main.datareel/model/product-option"
+            },
+            "object":{"@": "ProductOption"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "ProductOption": {
+        "object": "data/main.datareel/model/product-option"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/object.mjson"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "position": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "position",
+            "cardinality": 1,
+            "valueType": "number"
+        }
+    },
+     "images": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "images",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "image_descriptor"}
+        }
+    },
+    "price": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": { 
+            "name": "price",
+            "valueType": "number"
+        }
+    },
+    "selectedOptions": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": { 
+            "name": "selectedOptions",
+            "valueType": "object",
+            "cardinality": -1
+        }
+    },
+    "sku": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": { 
+            "name": "sku",
+            "valueType": "string"
+        }
+    },
+    "availableForSale": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": { 
+            "name": "availableForSale",
+            "valueType": "boolean"
+        }
+    },
+    "weight": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": { 
+            "name": "weight",
+            "valueType": "number"
+        }
+    },
+     "weightUnit": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": { 
+            "name": "weightUnit",
+            "valueType": "string"
+        }
+    },
+    "presentmentPrices": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "presentmentPrices",
+            "cardinality": -1,
+            "valueType": "object"
+        }
+    },
+    "productDescriptor": {
+        "object": "data/main.datareel/model/product.mjson"
+    },
+    "ProductVariantPricePair_descriptor": {
+        "object": "data/main.datareel/model/product-variant-price-pair.mjson"
+    },
+    "image_descriptor": {
+        "object": "data/main.datareel/model/image.mjson"
+    }
+
+}

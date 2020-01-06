@@ -23,6 +23,10 @@
                         "converter": {"@": "variantsConverter"},
                         "debug":true
                     },
+                    "options": {
+                        "<->": "options",
+                        "converter": {"@": "optionsConverter"}
+                    },
                     "orders": {
                         "<->": "orderIds",
                         "converter": {"@": "ordersForeignKeyConverter"}
@@ -88,5 +92,10 @@
         "values": {
             "convertExpression": "$.has(id)"
         }
-    }   
+    },
+    "optionsConverter": {
+        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
+        }
+    }
 }
