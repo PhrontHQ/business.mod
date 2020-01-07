@@ -5,7 +5,6 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     DataStream = require("montage/data/service/data-stream").DataStream,
     Montage = require("montage").Montage,
     Promise = require("montage/core/promise").Promise,
-    uuid = require("montage/core/uuid"),
     DataOrdering = require("montage/data/model/data-ordering").DataOrdering,
     DESCENDING = DataOrdering.DESCENDING,
     evaluate = require("montage/frb/evaluate"),
