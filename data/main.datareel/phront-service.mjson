@@ -133,7 +133,7 @@
         "values": {
             "authorizationPolicy": {"=":"@AuthenticationPolicy.ON_DEMAND"}
         }        
-    },
+    }
 
 
 }
