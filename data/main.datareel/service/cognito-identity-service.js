@@ -1,5 +1,4 @@
-var DataService = require("montage/data/service/data-service").DataService,
-    UserIdentityService = require("montage/data/service/user-identity-service").UserIdentityService,
+var UserIdentityService = require("montage/data/service/user-identity-service").UserIdentityService,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     DataOperationType = require("montage/data/service/data-operation").DataOperationType,
     AmazonCognitoIdentity = require("amazon-cognito-identity-js"),
