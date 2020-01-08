@@ -229,6 +229,14 @@ Object.defineProperties(CognitoUser.prototype, {
             userInfo.password = newPassword;
             callback(null, "SUCCESS");
         }
+    },
+
+    setUserMfaPreference: {
+        value: function (smsMfaSettings, totpMfaSettings, callback) {
+            var userInfo = userInfos[this.username];
+            userInfo.smsMfa = smsMfaSettings && smsMfaSettings.Enabled;
+            callback();
+        }
     }
 });
 

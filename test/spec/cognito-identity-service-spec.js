@@ -459,4 +459,42 @@ describe("CognitoIdentityService", function () {
             });
         });
     });
+
+    describe("activate MFA", function () {
+        beforeEach(function () {
+            userIdentity.username = "confirmed";
+            userIdentity.password = "password";
+            return mainService.saveDataObject(userIdentity);
+        });
+
+        it("sets the user's MFA preference", function () {
+            userIdentity.isMfaEnabled = true;
+            return mainService.saveDataObject(userIdentity)
+            .then(function () {
+                expect(userIdentity.isMfaEnabled).toBe(true);
+                expect(cognitoMock.userInfos.confirmed.smsMfa).toBe(true);
+            });
+        });
+    });
+
+    describe("deactivate MFA", function () {
+        beforeEach(function () {
+            userIdentity.username = "confirmed";
+            userIdentity.password = "password";
+            return mainService.saveDataObject(userIdentity)
+            .then(function () {
+                userIdentity.isMfaEnabled = true;
+                return mainService.saveDataObject(userIdentity);
+            });
+        });
+
+        it("sets the user's MFA preference", function () {
+            userIdentity.isMfaEnabled = false;
+            return mainService.saveDataObject(userIdentity)
+            .then(function () {
+                expect(userIdentity.isMfaEnabled).toBe(false);
+                expect(cognitoMock.userInfos.confirmed.smsMfa).toBe(false);
+            });
+        });
+    });
 });

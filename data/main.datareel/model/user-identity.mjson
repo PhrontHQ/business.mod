@@ -83,7 +83,7 @@
     "isMfaEnabled": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "firstName",
+            "name": "isMfaEnabled",
             "valueType": "boolean",
             "defaultValue": false
         }

@@ -224,10 +224,8 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
             return new Promise(function (resolve, reject) {
                 if (!cognitoUser) {
                     return resolve(null);
-                } else if (cognitoUser.signInUserSession && cognitoUser.signInUserSession.isValid()) {
-                    return resolve(cognitoUser);
                 }
-                cognitoUser.getSession(function (err, session) {
+                cognitoUser.getSession(function (err) {
                     if (err) {
                         if (err.message === 'Cannot retrieve a new session. Please authenticate.') {
                             return resolve(cognitoUser);
@@ -259,14 +257,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     if (err) {
                         return reject(err);
                     }
-                    cognitoUser.isSmsMfaEnabled = false;
-                    if (userData.MFAOptions) {
-                        userData.MFAOptions.forEach(function (mfaOption) {
-                            if (mfaOption.AttributeName === "phone_number" && mfaOption.DeliveryMedium === "SMS") {
-                                cognitoUser.isSmsMfaEnabled = true;
-                            }
-                        });
-                    }
+                    cognitoUser.isSmsMfaEnabled = !!userData.UserMFASettingList && userData.UserMFASettingList.indexOf("SMS_MFA") !== -1;
                     userData.UserAttributes.forEach(function (userAttribute) {
                         var name = userAttribute.Name,
                             value = userAttribute.Value;
@@ -277,7 +268,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         }
                     });
                     resolve(cognitoUser);
-                });
+                }, { bypassCache: true });
             });
         }
     },
@@ -328,6 +319,12 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         cognitoUser.signOut();
                     } else if (object.password && object.newPassword) {
                         return this._changePassword(record, object, cognitoUser);
+                    } else if (object.isMfaEnabled !== cognitoUser.isSmsMfaEnabled) {
+                        if (object.isMfaEnabled) {
+                            this._enableMfa(record, object, cognitoUser);
+                        } else {
+                            this._disableMfa(record, object, cognitoUser);
+                        }
                     }
                     return Promise.resolve();
                 } else if (object.accountConfirmationCode) {
@@ -369,13 +366,15 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                             self.rootService.recordObjectForDataIdentifier(object, dataIdentifier);
                             self.recordSnapshot(dataIdentifier, cognitoUser);
                         }
-                        object.session = cognitoUser.signInUserSession;
-                        object.isAccountConfirmed = true;
-                        object.password = undefined;
-                        object.newPassword = undefined;
-                        object.mfaCode = undefined;
                         self._fetchUserDataForCognitoUser(cognitoUser)
-                        .then(function (cognitoUser) {
+                        .then(function () {
+                            object.isAccountConfirmed = true;
+                            object.password = undefined;
+                            object.newPassword = undefined;
+                            object.mfaCode = undefined;
+                            return self.resetDataObject(object);
+                        })
+                        .then(function () {
                             if (stream) {
                                 //Or shall we use addData??
                                 self.addRawData(stream, [cognitoUser]);
@@ -692,6 +691,42 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     } else {
                         resolve();
                     }
+                });
+            });
+        }
+    },
+
+    _enableMfa: {
+        value: function (record, object, cognitoUser) {
+            return new Promise(function (resolve, reject) {
+                var smsMfaSettings = {
+                    PreferredMfa: true,
+                    Enabled: true
+                };
+                cognitoUser.setUserMfaPreference(smsMfaSettings, null, function (err, result) {
+                    if (err) {
+                        return reject(err);
+                    }
+                    cognitoUser.isSmsMfaEnabled = true;
+                    resolve();
+                });
+            });
+        }
+    },
+
+    _disableMfa: {
+        value: function (record, object, cognitoUser) {
+            return new Promise(function (resolve, reject) {
+                var smsMfaSettings = {
+                    PreferredMfa: false,
+                    Enabled: false
+                };
+                cognitoUser.setUserMfaPreference(smsMfaSettings, null, function (err, result) {
+                    if (err) {
+                        return reject(err);
+                    }
+                    cognitoUser.isSmsMfaEnabled = false;
+                    resolve();
                 });
             });
         }
