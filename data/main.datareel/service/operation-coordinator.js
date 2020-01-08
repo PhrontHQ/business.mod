@@ -35,14 +35,14 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
     */
     handleEvent: {
         value: function(event, context, callback, gatewayClient) {
-            
+
             var serializedOperation = event.body,
                 objectRequires,
                 module,
                 isSync = true,
                 resultOperatationPromise,
                 self = this;
-        
+
             this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
             deserializedOperation = this._deserializer.deserializeObject();
             //console.log("handleEvent(...)",deserializedOperation);
@@ -111,7 +111,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                             return Promise.all(promises);
 
                     }
-    
+
                 },function(readOperationFailed) {
                     console.error("OperationCoordinator: resultOperatationPromise failed ",readOperationFailed);
                     return self._serializer.serializeObject(readOperationFailed);
@@ -136,7 +136,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                 console.error("OperationCoordinator: resultOperatationPromise failed ",operationFailed);
                 return self._serializer.serializeObject(operationFailed);
             });
-        
+
         }
     }
 });

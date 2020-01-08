@@ -6,7 +6,7 @@
             "propertyDescriptors": [
                 {"@": "title"},
                 {"@": "description"},
-                {"@": "descriptionHtml"},   
+                {"@": "descriptionHtml"},
                 {"@": "collections"},
                 {"@": "images"},
                 {"@": "variants"},
@@ -51,24 +51,24 @@
     },
     "description": {
         "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
+        "values": {
             "name": "description",
             "valueType": "string"
         }
     },
     "descriptionHtml": {
         "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
+        "values": {
             "name": "descriptionHtml",
             "valueType": "string"
         }
     },
     "collections": {
         "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
+        "values": {
             "name": "collections",
             "cardinality": -1,
-            "valueDescriptor": {"@": "collectionDescriptor"}       
+            "valueDescriptor": {"@": "collectionDescriptor"}
         }
     },
     "images": {
@@ -93,35 +93,35 @@
     },
    "link": {
         "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
+        "values": {
             "name": "link",
             "valueType": "string"
         }
     },
     "productType": {
         "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
+        "values": {
             "name": "productType",
             "valueType": "string"
         }
     },
     "unitCost": {
         "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
+        "values": {
             "name": "unitCost",
             "valueType": "number"
         }
     },
     "tags": {
         "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
+        "values": {
             "name": "tags",
             "valueType": "array"
         }
     },
      "notes": {
         "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
+        "values": {
             "name": "notes",
             "valueType": "string"
         }
@@ -131,7 +131,7 @@
         "values": {
             "name": "vendors",
             "cardinality": -1,
-            "valueDescriptor": {"@": "organization_descriptor"}       
+            "valueDescriptor": {"@": "organization_descriptor"}
         }
     },
     "storefront": {
@@ -139,7 +139,7 @@
         "values": {
             "name": "storefront",
             "cardinality": 1,
-            "valueDescriptor": {"@": "storefront_descriptor"}       
+            "valueDescriptor": {"@": "storefront_descriptor"}
         }
     },
     "totalInventory": {
@@ -168,7 +168,7 @@
         "values": {
             "name": "locations",
             "cardinality": -1,
-            "valueDescriptor": {"@": "address_descriptor"}       
+            "valueDescriptor": {"@": "address_descriptor"}
         }
     },
     "options": {
@@ -184,7 +184,7 @@
         "values": {
             "name": "orders",
             "cardinality": -1,
-            "valueDescriptor": {"@": "order_line_item"}       
+            "valueDescriptor": {"@": "order_line_item"}
         }
     },
     "tags": {
@@ -192,7 +192,7 @@
         "values": {
             "name": "tags",
             "cardinality": -1,
-            "valueType": "string"       
+            "valueType": "string"
         }
 
     },

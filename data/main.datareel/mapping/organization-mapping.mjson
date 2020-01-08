@@ -44,7 +44,7 @@
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "$.has(id)"
-        }    
+        }
     },
     "mainContactConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",

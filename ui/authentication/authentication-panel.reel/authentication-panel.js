@@ -15,7 +15,7 @@ exports.AuthenticationPanel = AuthenticationPanel.specialize(/** @lends Authenti
         },
         set: function(value) {
             this._userIdentity = value;
-            if(!value || (value && !value.userName)) {
+            if(!value || (value && !value.username)) {
                 this.substitutionPanel = "signUp";
             }
         }
@@ -51,22 +51,20 @@ exports.AuthenticationPanel = AuthenticationPanel.specialize(/** @lends Authenti
         }
     },
 
+    needsMfaCode: {
+        get: function () {
+            return this._needsMfaCode;
+        },
+        set: function (value) {
+            if (!this._needsMfaCode && value) {
+                this.substitutionPanel = "enterMfaCode";
+            }
+            this._needsMfaCode = value;
+        }
+    },
+
     substitutionPanel: {
         value: "signIn"
     }
-    /*
-    ,
 
-    handleSignInAction: {
-        value: function() {
-            if (!this._isAuthenticating && this.userName) {
-                var self = this;
-                this.isAuthenticating = true;
-                this.hadError = false;
-                var password = this.password || "";
-            }
-        }
-    }
-*/
-    
 });

@@ -1,8 +1,6 @@
 var Component = require("montage/ui/component").Component,
-    currentEnvironment = require("montage/core/environment").currentEnvironment,
     KeyComposer = require("montage/composer/key-composer").KeyComposer,
     DataOperation = require("montage/data/service/data-operation").DataOperation;
-
 
 var SignIn = exports.SignIn = Component.specialize({
 
@@ -10,18 +8,12 @@ var SignIn = exports.SignIn = Component.specialize({
         value: true
     },
 
-    userName: {
+    username: {
         value: void 0
     },
 
     password: {
         value: void 0
-    },
-
-    isBrowserSupported: {
-        get: function () {
-            return currentEnvironment.browserName == 'chrome';
-        }
     },
 
     signInButton: {
@@ -32,7 +24,7 @@ var SignIn = exports.SignIn = Component.specialize({
         value: void 0
     },
 
-    userNameTextField: {
+    usernameTextField: {
         value: void 0
     },
 
@@ -58,22 +50,9 @@ var SignIn = exports.SignIn = Component.specialize({
         }
     },
 
-    _isAuthenticating: {
+    isAuthenticating: {
         value: false
     },
-
-    isAuthenticating: {
-        set: function (isAuthenticating) {
-            if (this._isAuthenticating !== isAuthenticating) {
-                this._isAuthenticating = isAuthenticating;
-                this._toggleUserInteraction();
-            }
-        },
-        get: function () {
-            return this._isAuthenticating;
-        }
-    },
-
 
     __keyComposer: {
         value: null
@@ -93,26 +72,19 @@ var SignIn = exports.SignIn = Component.specialize({
     },
 
     enterDocument: {
-        value: function (isFirstTime) {
-
-            //Check if the service has a knonw user:
-            //TODO, we shouldn't be exposing a CognitoUser directly
-            console.debug("FIX ME -> CognitoUser -> Phront User");
-            // if(this.service.user) {
-            //     this.username = this.service.user.getName();
-            // }
-
+        value: function (firstTime) {
+            if (firstTime) {
+                this.element.addEventListener("transitionend", this, false);
+            }
             this.addEventListener("action", this, false);
             this._keyComposer.addEventListener("keyPress", this, false);
-            this.element.addEventListener("transitionend", this, false);
-
             // checks for disconnected hash
             if(location.href.indexOf(";disconnected") > -1) {
                 this.hasError = true;
                 this.errorMessage = "Oops! Your token has expired. \n Please log back in.";
                 location.href = location.href.replace(/;disconnected/g, '');
             }
-            this.userNameTextField.focus();
+            this.usernameTextField.focus();
         }
     },
 
@@ -120,9 +92,9 @@ var SignIn = exports.SignIn = Component.specialize({
         value: function () {
             this.removeEventListener("action", this, false);
             this._keyComposer.removeEventListener("keyPress", this, false);
+            self.username = self.password = null;
         }
     },
-
 
     handleKeyPress: {
         value: function (event) {
@@ -134,119 +106,45 @@ var SignIn = exports.SignIn = Component.specialize({
 
     handleSignInAction: {
         value: function() {
-            if (!this._isAuthenticating && this.userName) {
-                var self = this;
-                this.isAuthenticating = true;
-                this.hadError = false;
-                var password = this.password || "";
-
-                this.application.mainService.saveDataObject(this.ownerComponent.userIdentity)
-                .then(function (resolvedValue) {
-
-
-                    self.isLoggedIn = true;
-                    // self.application.applicationModal.hide(self);
-
-                    // Don't keep any track of the password in memory.
-                    self.password = self.userName = null;
-
-                    //FIXME: kind of hacky
-                    //self.application.dispatchEventNamed("userLogged");
-
-
-
-
-                }, function (error) {
-                    if(error) {
-                        if(error instanceof DataOperation && error.type === DataOperation.Type.UserAuthenticationFailed) {
-                            self.hadError = true;    
-                            self.errorMessage = error.userMessage;
-                        }
-                        
-                        else if(error instanceof DataOperation && error.data.hasOwnProperty("accountConfirmationCode")) {
-                            self.ownerComponent.needsAccountConfirmation = true; 
-                            self.hadError = true;    
-
-                        }
-                        else if(error instanceof DataOperation && error.data.hasOwnProperty("password")) {
-                            self.ownerComponent.needsChangePassword = true; 
-                        }
-                        else {
-                            self.errorMessage = error.message || error;
-                            self.hadError = true;    
-                        }
-                    } else {
-                        self.errorMessage = null;
-                    }
-                }).finally(function (value) {
-                    if (self.errorMessage) {
-                        self.element.addEventListener(
-                            typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
-                        );
-                    }
-
-                    self.isAuthenticating = false;
-                });
-            }
-        }
-    },
-
-    handleSubmitActionOld: {
-        value: function() {
-            if (!this._isAuthenticating && this.userName) {
-                var self = this;
-                this.isAuthenticating = true;
-                this.hadError = false;
-                var password = this.password || "";
-
-                this.service.authenticateUser(this.userName, password).then(function (authorization) {
-
-                    self.ownerComponent.approveAuthorization(authorization,self);
-
-                    self.isLoggedIn = true;
-                    self.application.applicationModal.hide(self);
-
-                    // Don't keep any track of the password in memory.
-                    self.password = self.userName = null;
-
-                    //FIXME: kind of hacky
-                    self.application.dispatchEventNamed("userLogged");
-
-
-
-
-                }, function (error) {
-                    if(error) {
-                        if(error instanceof DataOperation && error.data.hasOwnProperty("password")) {
-                            self.ownerComponent.needsChangePassword = true; 
-                        }
-                        else {
-                            self.errorMessage = error.message || error;
-                            self.hadError = true;    
-                        }
-                    } else {
-                        self.errorMessage = null;
-                    }
-                }).finally(function (value) {
-                    if (self.errorMessage) {
-                        self.element.addEventListener(
-                            typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
-                        );
-                    }
-
-                    self.isAuthenticating = false;
-                });
-            }
+            var self = this;
+            this.isAuthenticating = true;
+            this.hadError = false;
+            this.userIdentity.username = this.username;
+            this.userIdentity.password = this.password;
+            this.application.mainService.saveDataObject(this.userIdentity)
+            .catch(function (error) {
+                if (error instanceof DataOperation && error.type === DataOperation.Type.UserAuthenticationFailed) {
+                    self.hadError = true;
+                    self.errorMessage = error.userMessage;
+                } else if (error instanceof DataOperation && error.data.hasOwnProperty("accountConfirmationCode")) {
+                    self.ownerComponent.needsAccountConfirmation = true;
+                    self.hadError = true;
+                } else if (error instanceof DataOperation && error.data.hasOwnProperty("password")) {
+                    self.ownerComponent.needsChangePassword = true;
+                } else if (error instanceof DataOperation && error.data.hasOwnProperty("mfaCode")) {
+                    self.ownerComponent.needsMfaCode = true;
+                } else {
+                    self.errorMessage = error.message || error;
+                    self.hadError = true;
+                }
+            }).finally(function () {
+                if (self.errorMessage) {
+                    self.element.addEventListener(
+                        typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
+                    );
+                }
+                self.isAuthenticating = false;
+            });
         }
     },
 
     handleTransitionend: {
         value: function (e) {
-            if(this.isLoggedIn && e.target == this.element && e.propertyName == 'opacity') {
+            if (this.ownerComponent.userIdentity.isAuthenticated && e.target == this.element && e.propertyName == 'opacity') {
                 this.element.style.display = 'none';
             } else if (this._isFirstTransitionEnd) {
                 this._isFirstTransitionEnd = false;
-                this.userNameTextField.focus();
+                this.usernameTextField.focus();
             }
         }
     },
@@ -262,15 +160,7 @@ var SignIn = exports.SignIn = Component.specialize({
                 );
             }
         }
-    },
-
-    _toggleUserInteraction: {
-        value: function () {
-            this.signInButton.disabled = this._isAuthenticating;
-            this.passwordTextField.disabled = this.userNameTextField.disabled = this._isAuthenticating;
-        }
     }
-
 });
 
 SignIn.prototype.handleWebkitAnimationEnd = SignIn.prototype.handleAnimationend;

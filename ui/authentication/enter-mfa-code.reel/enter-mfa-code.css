@@ -1,4 +1,4 @@
-.CreateNewPassword {
+.EnterMfaCode {
     opacity: 0;
     visibility: hidden;
     padding: 2em;
@@ -20,12 +20,12 @@
     background: none
 }
 
-.montage-Overlay--visible .CreateNewPassword {
+.montage-Overlay--visible .EnterMfaCode {
     opacity: 1;
     visibility: visible
 }
 
-.CreateNewPassword-content {
+.EnterMfaCode-content {
     position: relative;
     padding: 2em;
     width: 20em;
@@ -37,7 +37,7 @@
     overflow: hidden
 }
 
-.CreateNewPassword-content:before {
+.EnterMfaCode-content:before {
     position: absolute;
     content: "";
     top: 0;
@@ -47,35 +47,35 @@
     z-index: -1
 }
 
-.CreateNewPassword.had-error .CreateNewPassword-content {
+.EnterMfaCode.had-error .EnterMfaCode-content {
     animation: denied .5s ease-in-out
 }
 
-.montage-Overlay--visible .CreateNewPassword-content {
+.montage-Overlay--visible .EnterMfaCode-content {
     transform: scale(1)
 }
 
-.CreateNewPassword-logo {
+.EnterMfaCode-logo {
     margin-bottom: 2em;
     padding: 16px;
     padding: 1rem;
     width: 100%
 }
 
-.CreateNewPassword-infoText, .CreateNewPassword-descriptionText {
+.EnterMfaCode-infoText, .EnterMfaCode-descriptionText {
     margin-bottom: 2em
 }
 
-.CreateNewPassword-infoText {
+.EnterMfaCode-infoText {
     text-align: center;
 }
 
-.CreateNewPassword-descriptionText {
+.EnterMfaCode-descriptionText {
     text-align: left;
 }
 
 
-.CreateNewPassword-browserMessage {
+.EnterMfaCode-browserMessage {
     background: #cf324f;
     margin: 0 -2em;
     margin-top: -2em;
@@ -85,16 +85,16 @@
     text-align: center
 }
 
-.isAuthenticating .CreateNewPassword-submit {
+.isAuthenticating .EnterMfaCode-submit {
     position: relative;
     overflow: hidden
 }
 
 .field-message {
-    display: none
+    display: none;
 }
 
-.CreateNewPassword.hasError .field-message {
+.EnterMfaCode.hasError .field-message {
     color: rgba(255, 0, 0, .8);
     display: block;
     margin-bottom: 1em
@@ -105,7 +105,7 @@
     background: rgba(255, 0, 0, .075)
 }
 
-.CreateNewPassword-error-message {
+.EnterMfaCode-error-message {
     display: none;
     text-align: center;
     transition: opacity .25s;
@@ -118,6 +118,6 @@
     margin-bottom: 2rem
 }
 
-.CreateNewPassword.hasError .CreateNewPassword-error-message {
-    display: block
+.EnterMfaCode.hasError .EnterMfaCode-error-message {
+    display: block;
 }

@@ -1,9 +1,5 @@
 var Component = require("montage/ui/component").Component,
-    currentEnvironment = require("montage/core/environment").currentEnvironment,
     KeyComposer = require("montage/composer/key-composer").KeyComposer;
-
-
-
 
 /*
 Minimum length: 8
@@ -14,9 +10,6 @@ Require uppercase letters
 Require lowercase letters
 
 */
-
-
-
 
 var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
 
@@ -40,12 +33,6 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
         value: void 0
     },
 
-    isBrowserSupported: {
-        get: function () {
-            return currentEnvironment.browserName == 'chrome';
-        }
-    },
-
     changePasswordButton: {
         value: void 0
     },
@@ -54,7 +41,7 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
         value: void 0
     },
 
-    userNameTextField: {
+    usernameTextField: {
         value: void 0
     },
 
@@ -80,22 +67,9 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
         }
     },
 
-    _isAuthenticating: {
+    isAuthenticating: {
         value: false
     },
-
-    isAuthenticating: {
-        set: function (isAuthenticating) {
-            if (this._isAuthenticating !== isAuthenticating) {
-                this._isAuthenticating = isAuthenticating;
-                this._toggleUserInteraction();
-            }
-        },
-        get: function () {
-            return this._isAuthenticating;
-        }
-    },
-
 
     __keyComposer: {
         value: null
@@ -115,17 +89,12 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
     },
 
     enterDocument: {
-        value: function (isFirstTime) {
+        value: function (firstTime) {
+            if (firstTime) {
+                this.element.addEventListener("transitionend", this, false);
+            }
             this.addEventListener("action", this, false);
             this._keyComposer.addEventListener("keyPress", this, false);
-            this.element.addEventListener("transitionend", this, false);
-
-            // checks for disconnected hash
-            if(location.href.indexOf(";disconnected") > -1) {
-                this.hasError = true;
-                this.errorMessage = "Oops! Your token has expired. \n Please log back in.";
-                location.href = location.href.replace(/;disconnected/g, '');
-            }
             this.passwordTextField.focus();
         }
     },
@@ -134,9 +103,9 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
         value: function () {
             this.removeEventListener("action", this, false);
             this._keyComposer.removeEventListener("keyPress", this, false);
+            this.password = this.oldPassword = null;
         }
     },
-
 
     handleKeyPress: {
         value: function (event) {
@@ -146,48 +115,35 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
         }
     },
 
-
     handleChangePasswordAction: {
-        value: function(event) {
-            if (!this._isAuthenticating && this.password) {
-                var self = this;
-                this.isAuthenticating = true;
-                this.hadError = false;
-                var password = this.password || "";
-
-                this.service.changeUserPassword(this.oldPassword, this.password).then(function (authorization) {
-                    self.isLoggedIn = true;
-                    self.application.applicationModal.hide(self);
-
-                    // Don't keep any track of the password in memory.
-                    self.password = self.oldPassword = null;
-
-                    //FIXME: kind of hacky
-                    self.application.dispatchEventNamed("userLogged");
-
-                }, function (error) {
-                        if(error) {
-                            self.errorMessage = error.message || error;
-                            self.hadError = true;
-                        } else {
-                            self.errorMessage = null;
-                        }
-                }).finally(function () {
-                    if (self.errorMessage) {
-                        self.element.addEventListener(
-                            typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
-                        );
-                    }
-
-                    self.isAuthenticating = false;
-                });
-            }
+        value: function () {
+            var self = this;
+            this.isAuthenticating = true;
+            this.hadError = false;
+            this.userIdentity.password = this.oldPassword;
+            this.userIdentity.newPassword = this.password;
+            this.application.mainService.saveDataObject(this.userIdentity)
+            .catch(function (error) {
+                if (error) {
+                    self.errorMessage = error.message || error;
+                    self.hadError = true;
+                } else {
+                    self.errorMessage = null;
+                }
+            }).finally(function () {
+                if (self.errorMessage) {
+                    self.element.addEventListener(
+                        typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
+                    );
+                }
+                self.isAuthenticating = false;
+            });
         }
     },
 
     handleTransitionend: {
         value: function (e) {
-            if(this.isLoggedIn && e.target == this.element && e.propertyName == 'opacity') {
+            if(this.userIdentity.isAuthenticated && e.target == this.element && e.propertyName == 'opacity') {
                 this.element.style.display = 'none';
             } else if (this._isFirstTransitionEnd) {
                 this._isFirstTransitionEnd = false;
@@ -207,15 +163,7 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
                 );
             }
         }
-    },
-
-    _toggleUserInteraction: {
-        value: function () {
-            this.changePasswordButton.disabled = this._isAuthenticating;
-            this.passwordTextField.disabled = this._isAuthenticating;
-        }
     }
-
 });
 
 CreateNewPassword.prototype.handleWebkitAnimationEnd = CreateNewPassword.prototype.handleAnimationend;

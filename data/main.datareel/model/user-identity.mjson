@@ -4,17 +4,21 @@
         "values": {
             "name": "UserIdentity",
             "propertyDescriptors": [
-                {"@": "userName"},
+                {"@": "username"},
                 {"@": "password"},
+                {"@": "session"},
                 {"@": "accountConfirmationCode"},
                 {"@": "isAccountConfirmed"},
+                {"@": "isAuthenticated"},
+                {"@": "isMfaEnabled"},
                 {"@": "firstName"},
                 {"@": "lastName"},
                 {"@": "email"},
                 {"@": "phone"},
                 {"@": "images"},
                 {"@": "addresses"},
-                {"@": "tags"}
+                {"@": "tags"},
+                {"@": "mfaCode"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/user-identity.mjson"
@@ -29,10 +33,10 @@
     "user-identity": {
         "object": "data/main.datareel/model/user-identity"
     },
-    "userName": {
+    "username": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "userName",
+            "name": "username",
             "valueType": "string"
         }
     },
@@ -41,6 +45,13 @@
         "values": {
             "name": "password",
             "valueType": "string"
+        }
+    },
+    "session": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "session",
+            "valueType": "object"
         }
     },
     "accountConfirmationCode": {
@@ -58,6 +69,23 @@
             "isSerializable": false,
             "defaultValue": false,
             "valueType": "boolean"
+        }
+    },
+    "isAuthenticated": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "isAuthenticated",
+            "serializable": false,
+            "defaultValue": false,
+            "valueType": "boolean"
+        }
+    },
+    "isMfaEnabled": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "isMfaEnabled",
+            "valueType": "boolean",
+            "defaultValue": false
         }
     },
     "firstName": {
@@ -105,7 +133,7 @@
             "name": "addresses",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "addresses_descriptor"}       
+            "valueDescriptor": {"@": "addresses_descriptor"}
        }
     },
     "addresses_descriptor": {
@@ -116,9 +144,14 @@
         "values": {
             "name": "tags",
             "valueType": "string",
-            "cardinality": -1       
+            "cardinality": -1
+       }
+    },
+    "mfaCode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "mfaCode",
+            "valueType": "string"
        }
     }
-
-
 }

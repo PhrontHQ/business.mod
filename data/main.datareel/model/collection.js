@@ -37,4 +37,4 @@ exports.Collection = Object.specialize(/** @lends Collection.prototype */ {
 
     }
 
-}); 
+});

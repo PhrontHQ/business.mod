@@ -1,33 +1,22 @@
 var Component = require("montage/ui/component").Component,
-    currentEnvironment = require("montage/core/environment").currentEnvironment,
     KeyComposer = require("montage/composer/key-composer").KeyComposer,
-    DataOperation = require("montage/data/service/data-operation").DataOperation,
-    UserIdentity = require("data/main.datareel/model/user-identity").UserIdentity;
+    DataOperation = require("montage/data/service/data-operation").DataOperation;
 
+var EnterMfaCode = exports.EnterMfaCode = Component.specialize({
 
-var SignUp = exports.SignUp = Component.specialize({
+    descriptionText: {
+        value: "A code was sent to your device, please enter it below:"
+    },
 
     _isFirstTransitionEnd: {
         value: true
     },
 
-    username: {
+    mfaCode: {
         value: void 0
     },
 
-    password: {
-        value: void 0
-    },
-
-    signUpButton: {
-        value: void 0
-    },
-
-    passwordTextField: {
-        value: void 0
-    },
-
-    usernameTextField: {
+    signInButton: {
         value: void 0
     },
 
@@ -75,13 +64,11 @@ var SignUp = exports.SignUp = Component.specialize({
     },
 
     enterDocument: {
-        value: function (firstTime) {
-            if (firstTime) {
-                this.element.addEventListener("transitionend", this, false);
-            }
+        value: function () {
             this.addEventListener("action", this, false);
             this._keyComposer.addEventListener("keyPress", this, false);
-            this.usernameTextField.focus();
+            this.element.addEventListener("transitionend", this, false);
+            this.mfaCodeField.focus();
         }
     },
 
@@ -89,43 +76,29 @@ var SignUp = exports.SignUp = Component.specialize({
         value: function () {
             this.removeEventListener("action", this, false);
             this._keyComposer.removeEventListener("keyPress", this, false);
-            this.password = this.username = this.email = null;
+            this.mfaCode = null;
         }
     },
 
     handleKeyPress: {
         value: function (event) {
             if (event.identifier === "enter") {
-                this.handleSignUpAction();
+                this.handleSignInAction(event);
             }
         }
     },
 
     handleSignInAction: {
-        value: function() {
-            this.ownerComponent.substitutionPanel = "signIn";
-        }
-    },
-
-    handleSignUpAction: {
-        value: function() {
-            var self = this,
-                newIdentity = this.application.mainService.createDataObject(UserIdentity);
+        value: function () {
+            var self = this;
             this.isAuthenticating = true;
             this.hadError = false;
-            newIdentity.username = this.username;
-            newIdentity.email = this.email;
-            newIdentity.password = this.password;
-            this.application.mainService.saveDataObject(newIdentity)
-            .then(function () {
-                self.userIdentity = newIdentity;
-                // We need to now show the email verification code component.
-                // We can hard-code that for now, but need to check if that's hinted by Cognito that this is happenning, as it's a configurable behavior in Cognito.
-                self.ownerComponent.substitutionPanel = "enterVerificationCode";
-            }, function (error) {
+            this.userIdentity.mfaCode = this.mfaCode;
+            this.application.mainService.saveDataObject(this.userIdentity)
+            .catch(function (error) {
                 self.hadError = true;
-                if (error instanceof DataOperation) {
-                    self.errorMessage = error.userMessage || error.message;
+                if (error instanceof DataOperation && error.type === DataOperation.Type.ValidateFailed) {
+                    self.errorMessage = error.userMessage;
                 } else {
                     self.errorMessage = error.message || error;
                 }
@@ -142,11 +115,11 @@ var SignUp = exports.SignUp = Component.specialize({
 
     handleTransitionend: {
         value: function (e) {
-            if(this.isLoggedIn && e.target == this.element && e.propertyName == 'opacity') {
+            if(this.ownerComponent.userIdentity.isAuthenticated && e.target == this.element && e.propertyName == 'opacity') {
                 this.element.style.display = 'none';
             } else if (this._isFirstTransitionEnd) {
                 this._isFirstTransitionEnd = false;
-                this.usernameTextField.focus();
+                this.mfaCodeField.focus();
             }
         }
     },
@@ -154,8 +127,8 @@ var SignUp = exports.SignUp = Component.specialize({
     handleAnimationend: {
         value: function () {
             if (this.errorMessage) {
-                this.passwordTextField.value = null;
-                this.passwordTextField.element.focus();
+                this.mfaCodeField.value = null;
+                this.mfaCodeField.element.focus();
 
                 this.element.removeEventListener(
                     typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", this, false
@@ -165,4 +138,4 @@ var SignUp = exports.SignUp = Component.specialize({
     }
 });
 
-SignUp.prototype.handleWebkitAnimationEnd = SignUp.prototype.handleAnimationend;
+EnterMfaCode.prototype.handleWebkitAnimationEnd = EnterMfaCode.prototype.handleAnimationend;

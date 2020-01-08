@@ -1,13 +1,12 @@
 var Target = require("montage/core/target").Target;
+
 /**
  * @class UserIdentity
  * @extends Object
  */
-
-
 exports.UserIdentity = Target.specialize(/** @lends UserIdentity.prototype */ {
 
-    userName: {
+    username: {
         value: undefined
     },
     password: {
@@ -17,6 +16,19 @@ exports.UserIdentity = Target.specialize(/** @lends UserIdentity.prototype */ {
         value: undefined
     },
     isAccountConfirmed: {
+        value: false
+    },
+    isAuthenticated: {
+        get: function () {
+            return !!this.session;
+        },
+        set: function (value) {
+            if (this.session && !value) {
+                this.session = null;
+            }
+        }
+    },
+    isMfaEnabled: {
         value: false
     },
     firstName: {
@@ -42,6 +54,8 @@ exports.UserIdentity = Target.specialize(/** @lends UserIdentity.prototype */ {
     },
     accessToken: {
         value: undefined
+    },
+    mfaCode: {
+        value: undefined
     }
-
 });

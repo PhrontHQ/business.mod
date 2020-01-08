@@ -25,7 +25,7 @@
         "values": {
             "name": "compareAtPrice",
             "cardinality": 1,
-            "valueDescriptor": {"@": "money_descriptor"}       
+            "valueDescriptor": {"@": "money_descriptor"}
         }
     },
     "price": {
@@ -33,7 +33,7 @@
         "values": {
             "name": "price",
             "cardinality": 1,
-            "valueDescriptor": {"@": "money_descriptor"}       
+            "valueDescriptor": {"@": "money_descriptor"}
         }
     },
     "money_descriptor": {

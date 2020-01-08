@@ -6,10 +6,10 @@
             "propertyDescriptors": [
                 {"@": "originId"},
                 {"@": "title"},
-                {"@": "description"},   
-                {"@": "descriptionHtml"},   
-                {"@": "image"},   
-                {"@": "ruleSet"},   
+                {"@": "description"},
+                {"@": "descriptionHtml"},
+                {"@": "image"},
+                {"@": "ruleSet"},
                 {"@": "products"}
             ],
             "objectDescriptorModule": {
@@ -69,7 +69,7 @@
             "valueType": "string",
             "cardinality": 1,
             "isLocalizable": true,
-            "valueDescriptor": {"@": "Image_descriptor"}               
+            "valueDescriptor": {"@": "Image_descriptor"}
         }
     },
     "Image_descriptor": {
@@ -81,7 +81,7 @@
             "name": "ruleSet",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "CollectionRuleSet_descriptor"}               
+            "valueDescriptor": {"@": "CollectionRuleSet_descriptor"}
         }
     },
     "CollectionRuleSet_descriptor": {
@@ -101,7 +101,7 @@
             "name": "products",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "product_descriptor"}               
+            "valueDescriptor": {"@": "product_descriptor"}
         }
     },
 

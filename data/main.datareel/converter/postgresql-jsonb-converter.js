@@ -11,7 +11,7 @@ var Converter = require("montage/core/converter/converter").Converter,
 /**
  * @class BytesConverter
  * @classdesc  Converts a JSON structure to a PostgreSQL structure.
- * 
+ *
  * @extends Converter
  */
 exports.PostgresqlJsonbConverter = Converter.specialize( /** @lends PostgresqlJsonbConverter# */ {
