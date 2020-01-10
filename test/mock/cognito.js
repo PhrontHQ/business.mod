@@ -222,6 +222,23 @@ Object.defineProperties(CognitoUser.prototype, {
         }
     },
 
+    updateAttributes: {
+        value: function (attributeList, callback) {
+            var userInfo = userInfos[this.username];
+            attributeList.forEach(function (attribute) {
+                var userAttribute = userInfo.attributes.filter(function (userAttribute) {
+                    return userAttribute.Name === attribute.Name;
+                })[0];
+                if (userAttribute) {
+                    userAttribute.Value = attribute.Value;
+                } else {
+                    userInfo.attributes.push(attribute);
+                }
+            });
+            callback(null);
+        }
+    },
+
     changePassword: {
         value: function (oldPassword, newPassword, callback, clientMetadata) {
             var userInfo = userInfos[this.username];

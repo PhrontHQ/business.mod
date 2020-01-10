@@ -264,7 +264,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         if (name === "email") {
                             cognitoUser.email = value;
                         } else if (name === "phone_number") {
-                            cognitoUser.phone = value;
+                            cognitoUser.phone_number = value;
                         }
                     });
                     resolve(cognitoUser);
@@ -321,10 +321,12 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         return this._changePassword(record, object, cognitoUser);
                     } else if (object.isMfaEnabled !== cognitoUser.isSmsMfaEnabled) {
                         if (object.isMfaEnabled) {
-                            this._enableMfa(record, object, cognitoUser);
+                            return this._enableMfa(record, object, cognitoUser);
                         } else {
-                            this._disableMfa(record, object, cognitoUser);
+                            return this._disableMfa(record, object, cognitoUser);
                         }
+                    } else if (record.phone_number !== cognitoUser.phone_number) {
+                        this._updateAttribute(record, object, cognitoUser, 'phone_number');
                     }
                     return Promise.resolve();
                 } else if (object.needsNewConfirmationCode) {
@@ -728,6 +730,25 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     }
                     cognitoUser.isSmsMfaEnabled = false;
                     resolve();
+                });
+            });
+        }
+    },
+
+    _updateAttribute: {
+        value: function (record, object, cognitoUser, attributeName) {
+            var attributeList = [new CognitoUserAttribute({
+                Name: attributeName,
+                Value: record[attributeName]
+            })];
+            return new Promise(function (resolve, reject) {
+                cognitoUser.updateAttributes(attributeList, function (err) {
+                    if (err) {
+                        // TODO: DataOperatoin
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
                 });
             });
         }
