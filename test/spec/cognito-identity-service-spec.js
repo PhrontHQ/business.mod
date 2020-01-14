@@ -143,6 +143,19 @@ describe("CognitoIdentityService", function () {
         });
     });
 
+    describe("confirm account without a password", function () {
+        it("confirms the account without authenticating", function () {
+            userIdentity.username = "unconfirmed";
+            userIdentity.accountConfirmationCode = "123456";
+            return mainService.saveDataObject(userIdentity)
+            .then(function () {
+                expect(userIdentity.isAccountConfirmed).toBe(true);
+                expect(userIdentity.isAuthenticated).toBe(false);
+                expect(cognitoMock.userInfos.unconfirmed.unconfirmed).toBe(false);
+            });
+        });
+    });
+
     describe("resend confirmation code", function () {
         it("rejects the user identity save with a DataOperation indicating how the message was delivered", function () {
             userIdentity.username = "unconfirmed";

@@ -335,7 +335,9 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     //is what changed. In the meantime, while we're still in the same thred, we could ask the mainService what's the changed properties for that object, but it's still not tracked properly for some properties that don't have triggers doing so. Needs to clarify that.
                     return this._confirmUser(record, object, cognitoUser)
                     .then(function () {
-                        return self._authenticateUser(record, object, cognitoUser);
+                        if (record.password) {
+                            return self._authenticateUser(record, object, cognitoUser);
+                        }
                     });
                 } else {
                     return this._authenticateUser(record, object, cognitoUser);
@@ -614,6 +616,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         reject(dataOperation);
                     } else {
                         object.accountConfirmationCode = undefined;
+                        object.isAccountConfirmed = true;
                         resolve();
                     }
                 });
