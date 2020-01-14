@@ -3,22 +3,6 @@ var Component = require("montage/ui/component").Component,
     KeyComposer = require("montage/composer/key-composer").KeyComposer,
     DataOperation = require("montage/data/service/data-operation").DataOperation;
 
-
-
-
-/*
-Minimum length: 8
-
-Require numbers
-Require special character
-Require uppercase letters
-Require lowercase letters
-
-*/
-
-
-
-
 var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize({
 
     descriptionText: {
@@ -88,6 +72,10 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
         value: function (firstTime) {
             if (firstTime) {
                 this.element.addEventListener("transitionend", this, false);
+                if (this.userIdentity.username && this.userIdentity.accountConfirmationCode) {
+                    this.verificationCode = this.userIdentity.accountConfirmationCode;
+                    this.confirmAccount();
+                }
             }
             this.addEventListener("action", this, false);
             this._keyComposer.addEventListener("keyPress", this, false);
@@ -114,27 +102,8 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
 
     handleConfirmAccountAction: {
         value: function () {
-            var self = this;
-            this.isAuthenticating = true;
-            this.hadError = false;
             this.userIdentity.accountConfirmationCode = this.verificationCode;
-            this.application.mainService.saveDataObject(this.userIdentity)
-            .catch(function (error) {
-                self.hadError = true;
-                if (error instanceof DataOperation && error.type === DataOperation.Type.ValidateFailed) {
-                    self.errorMessage = error.userMessage;
-                } else {
-                    self.errorMessage = error.message || error;
-                    self.hadError = true;
-                }
-            }).finally(function () {
-                if (self.errorMessage) {
-                    self.element.addEventListener(
-                        typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
-                    );
-                }
-                self.isAuthenticating = false;
-            });
+            this.confirmAccount();
         }
     },
 
@@ -176,6 +145,43 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
                     typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", this, false
                 );
             }
+        }
+    },
+
+    confirmAccount: {
+        value: function () {
+            var self = this;
+            this.isAuthenticating = true;
+            this.hadError = false;
+            this.application.mainService.saveDataObject(this.userIdentity)
+            .then(function () {
+                if (!self.userIdentity.isAuthenticated) {
+                    // this happens if we confirmed the account but don't have
+                    // the necessary credentials to actually authenticate,
+                    // e.g. using an activation link
+                    // with a smart substitution value we could probably
+                    // do this automatically, the user identity's
+                    // isAccountConfirmed being set to true without
+                    // isAuthenticated set to true should bring us back to
+                    // sign in
+                    self.ownerComponent.substitutionPanel = "signIn";
+                }
+            }, function (error) {
+                self.hadError = true;
+                if (error instanceof DataOperation && error.type === DataOperation.Type.ValidateFailed) {
+                    self.errorMessage = error.userMessage;
+                } else {
+                    self.errorMessage = error.message || error;
+                    self.hadError = true;
+                }
+            }).finally(function () {
+                if (self.errorMessage) {
+                    self.element.addEventListener(
+                        typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
+                    );
+                }
+                self.isAuthenticating = false;
+            });
         }
     }
 });

@@ -79,12 +79,17 @@ var SignIn = exports.SignIn = Component.specialize({
             this.addEventListener("action", this, false);
             this._keyComposer.addEventListener("keyPress", this, false);
             // checks for disconnected hash
-            if(location.href.indexOf(";disconnected") > -1) {
+            if (location.href.indexOf(";disconnected") > -1) {
                 this.hasError = true;
                 this.errorMessage = "Oops! Your token has expired. \n Please log back in.";
                 location.href = location.href.replace(/;disconnected/g, '');
             }
+            if (this.userIdentity && this.userIdentity.isAccountConfirmed) {
+                this.informationMessage = "Your account has been confirmed. Please sign in to continue.";
+            }
             this.usernameTextField.focus();
+            this.defineBinding("username", {"<->": "userIdentity.username"});
+            this.defineBinding("password", {"<->": "userIdentity.password"});
         }
     },
 
@@ -92,6 +97,10 @@ var SignIn = exports.SignIn = Component.specialize({
         value: function () {
             this.removeEventListener("action", this, false);
             this._keyComposer.removeEventListener("keyPress", this, false);
+            // cancel bindings first to clear the username/password from this
+            // component's memory without mutating the user identity
+            this.cancelBinding("username");
+            this.cancelBinding("password");
             self.username = self.password = null;
         }
     },
@@ -109,8 +118,7 @@ var SignIn = exports.SignIn = Component.specialize({
             var self = this;
             this.isAuthenticating = true;
             this.hadError = false;
-            this.userIdentity.username = this.username;
-            this.userIdentity.password = this.password;
+            this.informationMessage = null;
             this.application.mainService.saveDataObject(this.userIdentity)
             .catch(function (error) {
                 if (error instanceof DataOperation && error.type === DataOperation.Type.UserAuthenticationFailed) {

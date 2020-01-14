@@ -113,3 +113,20 @@
 .SignIn.hasError .SignIn-error-message {
     display: block
 }
+
+.SignIn-information-message {
+    display: none;
+    text-align: center;
+    transition: opacity .25s;
+    background: #0c5688;
+    color: #fff;
+    padding: 1em 2em;
+    margin: 0 -32px;
+    margin: 0 -2rem;
+    margin-bottom: 32px;
+    margin-bottom: 2rem
+}
+
+.SignIn.hasInformation .SignIn-information-message {
+    display: block;
+}

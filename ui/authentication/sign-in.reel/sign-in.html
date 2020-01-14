@@ -15,7 +15,8 @@
             "bindings": {
                 "classList.has('hasError')": {"<-": "@owner.hasError"},
                 "classList.has('had-error')": {"<-": "@owner.hadError"},
-                "classList.has('isAuthenticating')": {"<-": "@owner.isAuthenticating"}
+                "classList.has('isAuthenticating')": {"<-": "@owner.isAuthenticating"},
+                "classList.has('hasInformation')": {"<-": "@owner.informationMessage.length > 0"}
             }
         },
 
@@ -59,6 +60,16 @@
             }
         },
 
+        "informationMessage": {
+            "prototype": "../../controls/text.reel",
+            "properties": {
+                "element": {"#": "informationMessage"}
+            },
+            "bindings": {
+                "value": {"<-": "@owner.informationMessage"}
+            }
+        },
+
         "signIn": {
             "prototype": "../../controls/button.reel",
             "properties": {
@@ -78,7 +89,8 @@
         <div class="SignIn-content">
             <img src="../../assets/images/Etiama-logo-white.svg" class="SignIn-logo" alt="phront Logo">
             <div data-montage-id="infoText" class="SignIn-infoText"></div>
-            <div data-montage-id="errorMessage" class="SignIn-error-message "></div>
+            <div data-montage-id="errorMessage" class="SignIn-error-message"></div>
+            <div data-montage-id="informationMessage" class="SignIn-information-message"></div>
             <input type="text" data-montage-id="username" class="SignIn-username g-margin-bottom--half" autocapitalize="none" autocorrect="none"></input>
             <input type="password" data-montage-id="password" class="SignIn-username g-margin-bottom--double"></input>
             <button data-montage-id="submit" class="SignIn-submit Button--primary Button--block Button--large Button--loader"></button>
