@@ -114,27 +114,58 @@ describe("CognitoIdentityService", function () {
         });
 
         describe("with a nonexistent username", function () {
-            it("marks the user as unconfirmed", function () {
+            it("rejects the UserIdentity save with a DataOperation indicating that a confirmation code was sent", function () {
                 var userIdentity = mainService.createDataObject(UserIdentity);
                 userIdentity.username = "newuser";
                 userIdentity.password = "password";
                 userIdentity.email = "newuser@mail.com";
                 return mainService.saveDataObject(userIdentity)
                 .then(function () {
-                    expect(userIdentity.isAccountConfirmed).toBe(false);
+                    throw new Error("did not reject");
+                }, function (err) {
+                    expect(err instanceof DataOperation).toBe(true);
+                    expect(err.type).toBe(DataOperation.Type.Update);
+                    expect(err.data.hasOwnProperty("accountConfirmationCode")).toBe(true);
+                    expect(err.context.DeliveryMedium).toBe("EMAIL");
                 });
             });
 
-            it("resolves the pending UserIdentity fetch", function (done) {
+            it("marks the user as unconfirmed", function () {
                 var userIdentity = mainService.createDataObject(UserIdentity);
-                pendingIdentityFetch.then(function (data) {
-                    expect(data[0]).toBe(userIdentity);
-                    done();
-                });
                 userIdentity.username = "newuser";
                 userIdentity.password = "password";
                 userIdentity.email = "newuser@mail.com";
-                mainService.saveDataObject(userIdentity);
+                return mainService.saveDataObject(userIdentity)
+                .catch(function () {
+                    expect(userIdentity.isAccountConfirmed).toBe(false);
+                });
+            });
+        });
+    });
+
+    describe("resend confirmation code", function () {
+        it("rejects the user identity save with a DataOperation indicating how the message was delivered", function () {
+            userIdentity.username = "unconfirmed";
+            userIdentity.needsNewConfirmationCode = true;
+            return mainService.saveDataObject(userIdentity)
+            .then(function () {
+                throw new Error("did not reject");
+            }, function (err) {
+                expect(err instanceof DataOperation).toBe(true);
+                expect(err.type).toBe(DataOperation.Type.Update);
+                expect(err.data.hasOwnProperty("accountConfirmationCode")).toBe(true);
+                expect(err.context.DeliveryMedium).toBe("EMAIL");
+            });
+        });
+
+        it("resends the code", function () {
+            var emailCount = cognitoMock.emailedConfirmationCodes.length;
+            userIdentity.username = "unconfirmed";
+            userIdentity.needsNewConfirmationCode = true;
+            return mainService.saveDataObject(userIdentity)
+            .catch(function () {
+                expect(cognitoMock.emailedConfirmationCodes.length).toBe(emailCount + 1);
+                expect(cognitoMock.emailedConfirmationCodes[cognitoMock.emailedConfirmationCodes.length - 1]).toBe("unconfirmed");
             });
         });
     });

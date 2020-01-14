@@ -143,8 +143,7 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
             var self = this;
             this.isAuthenticating = true;
             this.hadError = false;
-            // simulates logging in to an unconfirmed account
-            this.userIdentity.accountConfirmationCode = undefined;
+            this.userIdentity.needsNewConfirmationCode = true;
             this.application.mainService.saveDataObject(this.userIdentity)
             .catch(function () {
                 self.errorMessage = null;

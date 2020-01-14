@@ -145,7 +145,7 @@ Object.defineProperties(CognitoUser.prototype, {
             callback(null, {
                 "AttributeName": "email",
                 "DeliveryMedium": "EMAIL",
-                "Destination": "a***@g***.com"
+                "Destination": "n***@m***.com"
             });
         }
     },
@@ -242,7 +242,6 @@ Object.defineProperties(CognitoUser.prototype, {
 
 function CognitoUserPool(data) {
     data = data || {};
-    this._requireEmailVerification = data.requireEmailVerification;
 }
 
 Object.defineProperties(CognitoUserPool.prototype, {
@@ -294,12 +293,12 @@ Object.defineProperties(CognitoUserPool.prototype, {
             userInfos[username] = userInfo;
             callback(null, {
                 user: user,
-                userConfirmed: !this.requireEmailVerification,
+                userConfirmed: false,
                 userSub: userInfo.sub,
                 codeDeliveryDetails: {
                     AttributeName: "email",
                     DeliveryMedium: "EMAIL",
-                    Destination: "a**@g**.com"
+                    Destination: "n***@m***.com"
                 }
             });
         }

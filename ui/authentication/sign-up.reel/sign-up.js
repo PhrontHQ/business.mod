@@ -118,16 +118,20 @@ var SignUp = exports.SignUp = Component.specialize({
             newIdentity.password = this.password;
             this.application.mainService.saveDataObject(newIdentity)
             .then(function () {
+                // we'll get here if confirmation is not required, in which case
+                // we have a signed in user identity
                 self.userIdentity = newIdentity;
-                // We need to now show the email verification code component.
-                // We can hard-code that for now, but need to check if that's hinted by Cognito that this is happenning, as it's a configurable behavior in Cognito.
-                self.ownerComponent.substitutionPanel = "enterVerificationCode";
             }, function (error) {
-                self.hadError = true;
-                if (error instanceof DataOperation) {
-                    self.errorMessage = error.userMessage || error.message;
+                if (error instanceof DataOperation && error.data.hasOwnProperty("accountConfirmationCode")) {
+                    // this is the other "success" path... awkward that it's a
+                    // reject, but we need data operations to get context on how
+                    // the code was sent. Unless we modeled the confirmation
+                    // message differently, as a separate data model...
+                    self.userIdentity = newIdentity;
+                    self.ownerComponent.substitutionPanel = "enterVerificationCode";
                 } else {
-                    self.errorMessage = error.message || error;
+                    self.hadError = true;
+                    self.errorMessage = error.userMessage || error.message || error;
                 }
             }).finally(function () {
                 if (self.errorMessage) {

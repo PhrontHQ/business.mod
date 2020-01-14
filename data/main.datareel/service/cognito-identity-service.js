@@ -327,6 +327,8 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         }
                     }
                     return Promise.resolve();
+                } else if (object.needsNewConfirmationCode) {
+                    return this._resendConfirmationCode(record, object, cognitoUser);
                 } else if (object.accountConfirmationCode) {
                     //This will do for now, but it needs to be replaced by the handling of an updateOperation which
                     //would carry directly the fact that the accountConfirmationCode property
@@ -398,7 +400,6 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                             reject(updateOperation);
                         } else if (err.code === "UserNotConfirmedException") {
                             object.isAccountConfirmed = false;
-
                             if (object.accountConfirmationCode) {
                                 //The user is already entering a accountConfirmationCode
                                 //But it's not correct.
@@ -423,56 +424,17 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                                 reject(validateOperation);
                             } else {
                                 //We re-send it regardless to make it easy:
-                                cognitoUser.resendConfirmationCode(function(resendConfirmationCodeError, result) {
-                                    if (resendConfirmationCodeError) {
-                                        //If that fails, not sure what we can do next?
-                                        reject(resendConfirmationCodeError);
-                                        if(stream) {
-                                            self.rawDataError(stream,resendConfirmationCodeError);
+                                self._resendConfirmationCode(record, object, cognitoUser)
+                                .catch(function (err) {
+                                    if (!(err instanceof DataOperation)) {
+                                        if (stream) {
+                                            self.rawDataError(stream, err);
                                         }
-                                    } else {
-                                        /*
-                                            console.log('result: ' + result);
-                                            {
-                                            "CodeDeliveryDetails": {
-                                                "AttributeName":"email",
-                                                "DeliveryMedium":"EMAIL",
-                                                "Destination":"m***@g***.com"}
-                                            }
-                                            The message communicated to the user should use this
-                                            to craft the right message indicating the medium used
-                                            to send the confirmation code (email, SMS..) and the obfuscated details of the address/id used for that medium.
-                                        */
-                                        /*
-                                            This needs to be handled in a way that it triggers the authentication
-                                            panel to show the code verification sub-panel.
-
-                                            Here we're using an update to sollicitate an input for the confirmation code, should it be a validateFailed operation instead?
-                                            */
-                                        var updateOperation = new DataOperation();
-                                        updateOperation.type = DataOperation.Type.Update;
-                                        // updateOperation.dataDescriptor = objectDescriptor.module.id;
-                                        //Hack
-                                        updateOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
-
-                                        /*
-                                            Should be the criteria matching the UserIdentity
-                                            whose password needs to change
-                                        */
-                                        //updateOperation.criteria = query.criteria;
-
-                                        /*
-                                            gives some information. It might be easier to use
-                                            if the operation was more specific and hand more clearly defined properties?
-                                        */
-                                        updateOperation.context = result;
-
-                                        updateOperation.data = {
-                                            "accountConfirmationCode": undefined
-                                        };
-
-                                        reject(updateOperation);
                                     }
+                                    // We expect a DataOperation rejection from
+                                    // _resendConfirmationCode, it should never
+                                    // resolve
+                                    reject(err);
                                 });
                             }
                         } else if (err.code === "CodeMismatchException") {
@@ -558,7 +520,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                 ];
             return new Promise(function (resolve, reject) {
                 self.userPool.signUp(record.username, record.password, cognitoUserAttributes, null, function (err, result) {
-                    var cognitoUser, dataOperation, dataIdentifier;
+                    var cognitoUser, dataOperation, dataIdentifier, confirmation, codeDeliveryDetails;
                     if (err) {
                         if (err.code === "UsernameExistsException") {
                             cognitoUser = self.snapshotForDataIdentifier(object.identifier);
@@ -606,7 +568,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         }
                     } else {
                         cognitoUser = result.user;
-                        cognitoUser.id = uuid.generate();
+                        cognitoUser.id = result.userSub;
                         dataIdentifier = object.identifier;
                         if (dataIdentifier) {
                             dataIdentifier.primaryKey = cognitoUser.id;
@@ -616,18 +578,18 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                             self.rootService.recordObjectForDataIdentifier(object, dataIdentifier);
                         }
                         self.recordSnapshot(object.identifier, cognitoUser);
-                        object.isAccountConfirmed = false;
-                        //For the saveRawData...
-                        resolve(object);
-                        //For the fetch for a user identity
-                        if(stream) {
-                            if(stream.data.length === 1) {
-                                //we've already created a user identity...
-                                //we need to remove it... fingers crossed
-                                stream.data.splice(0,1); //it is done....
-                            }
-                            self.addRawData(stream, [cognitoUser]);
-                            self.rawDataDone(stream);
+                        object.isAccountConfirmed = result.userConfirmed;
+                        if (object.isAccountConfirmed) {
+                            return this._authenticateUser(record, object, cognitoUser);
+                        } else {
+                            dataOperation = new DataOperation();
+                            dataOperation.type = DataOperation.Type.Update;
+                            dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                            dataOperation.data = {
+                                accountConfirmationCode: undefined
+                            };
+                            dataOperation.context = result.codeDeliveryDetails;
+                            reject(dataOperation);
                         }
                     }
                 });
@@ -653,6 +615,42 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     } else {
                         object.accountConfirmationCode = undefined;
                         resolve();
+                    }
+                });
+            });
+        }
+    },
+
+    _resendConfirmationCode: {
+        value: function (record, object, cognitoUser) {
+            var self = this;
+            return new Promise(function (resolve, reject) {
+                cognitoUser.resendConfirmationCode(function (err, result) {
+                    var dataOperation;
+                    if (err) {
+                        reject(err);
+                    } else {
+                        dataOperation = new DataOperation();
+                        dataOperation.type = DataOperation.Type.Update;
+                        dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                        dataOperation.data = {
+                            "accountConfirmationCode": undefined
+                        };
+                        /*
+                            console.log('result: ' + result);
+                            {
+                            "CodeDeliveryDetails": {
+                                "AttributeName":"email",
+                                "DeliveryMedium":"EMAIL",
+                                "Destination":"m***@g***.com"}
+                            }
+                            The message communicated to the user should use this
+                            to craft the right message indicating the medium used
+                            to send the confirmation code (email, SMS..) and the obfuscated details of the address/id used for that medium.
+                        */
+                        dataOperation.context = result;
+                        object.needsNewConfirmationCode = false;
+                        reject(dataOperation);
                     }
                 });
             });
