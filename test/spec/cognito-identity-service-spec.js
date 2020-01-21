@@ -560,6 +560,17 @@ describe("CognitoIdentityService", function () {
                     })[0].Value).toBe("+10987654321");
                 });
             });
+
+            it("rejects with a DataOperation if the phone number is invalid", function () {
+                userIdentity.phone = "1234567890";
+                return mainService.saveDataObject(userIdentity)
+                .then(function () {
+                    throw new Error('did not reject');
+                }, function (err) {
+                    expect(err instanceof DataOperation).toBe(true);
+                    expect(err.type).toBe(DataOperation.Type.ValidateFailed);
+                });
+            });
         });
     });
 });

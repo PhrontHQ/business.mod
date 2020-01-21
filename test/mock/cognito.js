@@ -222,19 +222,35 @@ Object.defineProperties(CognitoUser.prototype, {
         }
     },
 
+    PHONE_NUMBER_REGEX: {
+        value: /^\+\d{11}$/
+    },
+
     updateAttributes: {
         value: function (attributeList, callback) {
-            var userInfo = userInfos[this.username];
-            attributeList.forEach(function (attribute) {
-                var userAttribute = userInfo.attributes.filter(function (userAttribute) {
-                    return userAttribute.Name === attribute.Name;
-                })[0];
-                if (userAttribute) {
-                    userAttribute.Value = attribute.Value;
+            var userInfo = userInfos[this.username],
+                attributeMap,
+                attribute, i;
+            attributeMap = userInfo.attributes.reduce(function (map, attribute) {
+                map[attribute.Name] = attribute;
+                return map;
+            });
+            for (i = 0; (attribute = attributeList[i]); ++i) {
+                if (attribute.Name === "phone_number" && !this.PHONE_NUMBER_REGEX.test(attribute.Value)) {
+                    callback({
+                        code: "InvalidParameterException",
+                        name: "InvalidParameterException",
+                        message: "Invalid phone number format."
+                    });
+                    return;
+                }
+                if (attribute.Name in attributeMap) {
+                    attributeMap[attribute.Name].Value = attribute.Value;
                 } else {
+                    attributeMap[attribute.Name] = attribute;
                     userInfo.attributes.push(attribute);
                 }
-            });
+            }
             callback(null);
         }
     },
