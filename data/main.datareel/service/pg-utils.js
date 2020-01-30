@@ -75,6 +75,11 @@ var prepareValue = function (val, type, seen) {
     return buf.slice(val.byteOffset, val.byteOffset + val.byteLength) // Node.js v4 does not support those Buffer.from params
   }
   if (val instanceof Date) {
+    //Hijacking for what we need now as we use timestamp with timezone. Need to be improved to allow other options
+    //including original ones.
+    return `'${val.toISOString()}'::timestamptz`;
+
+    //disabled for now
     if (parseInputDatesAsUTC) {
       return dateToStringUTC(val)
     } else {

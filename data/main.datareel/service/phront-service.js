@@ -576,10 +576,13 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             operation = new DataOperation(),
             dataIdentifier = this.dataIdentifierForObject(object),
             objectDescriptor = this.objectDescriptorForObject(object),
+            snapshot = this.snapshotForDataIdentifier(object.identifier),
             dataObjectChanges,
             changesIterator,
+            aProperty,
             operationData = {},
             mappingPromises,
+            mapping,
             i, countI;
 
         operation.dataDescriptor = objectDescriptor.module.id;
@@ -590,6 +593,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         //We have a known dataIdentifier for this object, it's an Update Operation:
         if(dataIdentifier) {
             operation.type = DataOperation.Type.Update;
+            mapping = this.mappingWithType(objectDescriptor);
+
             //TEMPORARY, we need to send what changed only
             operation.criteria = Criteria.withExpression("identifier = $identifier", {"identifier":dataIdentifier});
             operation.data = operationData;
@@ -613,7 +618,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             changesIterator = dataObjectChanges.keys();
             while(aProperty = changesIterator.next().value) {
-                aValue = dataObjectChanges.get(aProperty);
+                aValueChanges = dataObjectChanges.get(aProperty);
                 aPropertyDescriptor = objectDescriptor.propertyDescriptorForName(aProperty);
 
                 // if(aPropertyDescriptor.valueDescriptor) {
@@ -621,23 +626,26 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 // }
 
                 //A collection with "addedValues" / "removedValues" keys
-                if(aValue.hasOwnProperty("addedValues") ||  aValue.hasOwnProperty("removedValues")) {
+                if(aValueChanges.hasOwnProperty("addedValues") ||  aValueChanges.hasOwnProperty("removedValues")) {
                     if(!(aPropertyDescriptor.cardinality>1)) {
                         throw new Error("added/removed values for property without a to-many cardinality");
                     }
                     //Until we get more sophisticated / use an expression mapping, we're
                     //going to turn objects into their identifer
-                    addedValues = aValue.addedValues;
+                    addedValues = aValueChanges.addedValues;
                     for(i=0, countI=addedValues.length;i<countI;i++) {
                         addedValues[i] = this.dataIdentifierForObject(addedValues[i]);
                     }
-                    removedValues = aValue.removedValues;
+                    removedValues = aValueChanges.removedValues;
                     for(i=0, countI=removedValues.length;i<countI;i++) {
                         removedValues[i] = this.dataIdentifierForObject(removedValues[i]);
                     }
                     //Here we mutated the structure from changesForDataObject. I should be cleared
                     //when saved, but what if save fails and changes happen in-between?
-                    operation[aProperty] = aValue;
+
+                    //1/10/2020: was operation which was putting
+                    //aProperty -> aValueChanges in the wrong place
+                    operationData[mapping.mapObjectPropertyNameToRawPropertyName(aProperty)] = aValueChanges;
                 }
                 else {
                     //Here, we don't really use the store value of a regular property's change
@@ -1267,7 +1275,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
               }
               return mappingPromise.then(function () {
 
-                record.id = uuid.generate();
+                //If the client hasn't provided one, we do:
+                if(!record.id) {
+                    record.id = uuid.generate();
+                }
 
                 var tableName = self.tableForObjectDescriptor(objectDescriptor),
                     schemaName = rawDataOperation.schema,
@@ -1326,6 +1337,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 return new Promise(function(resolve,reject) {
                   self._executeStatement(rawDataOperation, function(err, data) {
                     var operation = new DataOperation();
+                    operation.referrerId = createOperation.id;
+
                     operation.dataDescriptor = createOperation.dataDescriptor;
                     if (err) {
                       // an error occurred
@@ -1354,6 +1367,11 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
       value: function(updateOperation) {
         var data = updateOperation.data;
 
+        //As target should be the ObjectDescriptor in both cases, whether the 
+        //operation is an instance or ObjectDescriptor operation
+        //I might be better to rely on the presence of a criteria or not:
+        //No criteria means it's really an operation on the ObjectDescriptor itself
+        //and not on an instance
         if(data instanceof ObjectDescriptor) {
           return this.handleUpdateObjectDescriptorOperation(updateOperation);
         } else {
@@ -1398,14 +1416,36 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             sqlColumns = recordKeys.join(","),
             i, countI, iKey, iKeyEscaped, iValue, iMappedValue, iAssignment, iPrimaryKey, iPrimaryKeyValue,
             iKeyValue,
+            dataSnapshot = updateOperation.snapshot,
+            dataSnapshotKeys = dataSnapshot ? Object.keys(dataSnapshot) : null,
             condition,
             sql,
             self = this;
 
 
             //We need to transform the criteria into a SQL equivalent. Hard-coded for a single object for now
-            if(Object.keys(criteria.parameters).length === 1 && criteria.parameters.hasOwnProperty("identifier")) {
-                condition = `id = '${criteria.parameters.identifier.primaryKey}'::uuid`;
+            if(Object.keys(criteria.parameters).length === 1) {
+                if(criteria.parameters.hasOwnProperty("identifier")) {
+                    condition = `id = '${criteria.parameters.identifier.primaryKey}'::uuid`;
+                }
+                else if(criteria.parameters.hasOwnProperty("id")) {
+                    condition = `id = '${criteria.parameters.id}'::uuid`;
+                }
+            } 
+
+            if(dataSnapshotKeys) {
+                for(i=0, countI=dataSnapshotKeys.length;i<countI;i++) {
+                    if(condition && condition.length) {
+                        condition += " AND ";
+                    }
+                    else {
+                        condition = "";
+                    }
+    
+                    iKey = dataSnapshotKeys[i];
+                    iValue = dataSnapshot[iKey];
+                    condition += `${escapeIdentifier(iKey)} = ${this.mapPropertyValueToRawTypeExpression(iKey,iValue)}`;
+                }
             }
 
             /*
@@ -1467,6 +1507,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             return new Promise(function(resolve,reject) {
               self._executeStatement(rawDataOperation, function(err, data) {
                 var operation = new DataOperation();
+                operation.referrerId = updateOperation.id;
                 operation.dataDescriptor = objectDescriptor.module.id;
                 if (err) {
                   // an error occurred
