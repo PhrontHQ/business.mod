@@ -1,0 +1,48 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+<metadata>
+Created by FontForge 20190801 at Wed Jan  8 15:14:23 2020
+ By Benoit Marchant
+
+</metadata>
+<defs>
+<font id="phront-icon" horiz-adv-x="1024" >
+  <font-face 
+    font-family="phront-icon"
+    font-weight="400"
+    font-stretch="normal"
+    units-per-em="1024"
+    panose-1="0 0 0 0 0 0 0 0 0 0"
+    ascent="960"
+    descent="-64"
+    x-height="589"
+    bbox="0 -64 1024 973"
+    underline-thickness="0"
+    underline-position="0"
+    unicode-range="U+0001-FFFD"
+  />
+<missing-glyph 
+ />
+    <glyph glyph-name=".notdef" unicode="&#xfffd;" 
+ />
+    <glyph glyph-name="glyph1" horiz-adv-x="0" 
+d="M0 0v0v0v0z" />
+    <glyph glyph-name="glyph1" horiz-adv-x="0" 
+d="M0 0v0v0v0z" />
+    <glyph glyph-name="uni0001" horiz-adv-x="0" 
+d="M0 0v0v0v0z" />
+    <glyph glyph-name="space" unicode=" " horiz-adv-x="512" 
+d="M0 0v0v0v0z" />
+    <glyph glyph-name="c" unicode="c" 
+d="M437 113l467 607l-101 78l-427 -554l92 10l-256 213l-82 -98l307 -256v0z" />
+    <glyph glyph-name="g" unicode="g" 
+d="M1024 352v192l-147 25q-4 13 -9.5 26t-11.5 26l86 121l-136 136l-121 -86q-12 6 -25.5 11.5t-27.5 10.5l-24 146h-192l-24 -146q-14 -5 -27.5 -10.5t-25.5 -11.5l-121 86l-136 -136l86 -121q-6 -13 -11.5 -26t-9.5 -26l-147 -25v-192l147 -25l10 -26t12 -26l-87 -121
+l136 -136l122 87q12 -6 25 -11.5t26 -10.5l25 -147h192l25 147q13 5 26 10.5t25 11.5l122 -87l136 136l-87 121q7 13 12 26l10 26l147 25v0zM512 320q-53 0 -90.5 37.5t-37.5 90.5t37.5 90.5t90.5 37.5t90.5 -37.5t37.5 -90.5t-37.5 -90.5t-90.5 -37.5z" />
+    <glyph glyph-name="i" unicode="i" 
+d="M637 973q51 0 76.5 -30t25.5 -70q0 -51 -39.5 -90t-97.5 -39q-48 0 -75 27t-26 75q0 40 34 83.5t102 43.5v0zM425 -51q-40 0 -62 35t6 145l63 261q8 31 8.5 44.5t-8.5 13.5q-13 0 -55 -18t-73 -39l-28 45q50 42 101.5 75t98 56t85.5 35t64 12q40 0 48 -45t-12 -121
+l-71 -274q-10 -36 -7 -50.5t12 -14.5q12 0 47.5 15.5t74.5 46.5l31 -42q-49 -49 -97.5 -83t-92 -55.5t-78 -31.5t-55.5 -10z" />
+    <glyph glyph-name="v" unicode="v" 
+d="M256 589h512l-256 -256z" />
+  </font>
+</defs></svg>
