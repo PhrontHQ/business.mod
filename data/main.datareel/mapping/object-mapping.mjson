@@ -7,7 +7,9 @@
             "objectMapping": {
                 "rules": {
                     "originId": {"<->": "originId"},
-                    "creationDate": {"<->": "creationDate"}
+                    "creationDate": {"<->": "creationDate"},
+                    "modificationDate": {"<->": "modificationDate"},
+                    "publicationDate": {"<->": "publicationDate"}
                 }
             },
             "rawDataMapping": {
@@ -15,7 +17,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "originId","creationDate"
+                "creationDate"
             ]
         }
     },
