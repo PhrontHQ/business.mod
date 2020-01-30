@@ -6,9 +6,31 @@
     "configurations": [
         {
             "type": "node",
+            "request": "attach",
+            "name": "Attach to DataWorker",
+            "port": 1235,
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "type": "node",
             "request": "launch",
             "name": "Launch phront-service-usage",
             "program": "${workspaceFolder}/test/spec/phront-service-usage/index.js",
+            "cwd": "${workspaceFolder}/test/spec/phront-service-usage/",
+            "autoAttachChildProcesses": true,
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch test-google-calendar-service",
+            "program": "${workspaceFolder}/data/google-calendar.datareel/service/test-google-calendar-service/index.js",
+            "cwd": "${workspaceFolder}/data/google-calendar.datareel/service/test-google-calendar-service",
+            "autoAttachChildProcesses": true,
             "skipFiles": [
                 "<node_internals>/**"
             ]

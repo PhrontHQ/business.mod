@@ -15,13 +15,15 @@
     "type": "git",
     "url": "PhrontHQ/phront/tree/master/test"
   },
-  "scripts": {},
+ "scripts": {},
   "mappings": {
-    "montage": "../../node_modules/montage",
-    "collections": "../../node_modules/montage/node_modules/collections",
-    "montage-testing": "../../node_modules/montage-testing",
-    "object-sizeof": "../../node_modules/object-sizeof",
-    "phront": "../../"
-  },
+    "montage": "../../../node_modules/montage",
+    "collections": "../../../node_modules/montage/node_modules/collections",
+    "montage-testing": "../../../node_modules/montage-testing",
+    "object-sizeof": "../../../node_modules/object-sizeof",
+    "phront": "../../../",
+    "tiny-worker": "../../../node_modules/tiny-worker",
+    "esm": "../../../node_modules/esm"
+},
   "private": true
 }

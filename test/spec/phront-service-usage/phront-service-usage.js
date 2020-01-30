@@ -1,6 +1,11 @@
-var PhrontService = require("phront/data/main.datareel/service/phront-service").PhrontService,
-    OperationCoordinator = require("phront/data/main.datareel/service/operation-coordinator").OperationCoordinator,
-    mainService = require("phront/data/main.datareel/main.mjson").montageObject,
+var Worker = require("tiny-worker"),
+    dataWorker = new Worker(__dirname+"data-worker.js",[],{ stdio: 'pipe', execArgv: [] }),
+
+    /*
+        !!! There's a pbm because 2 RawDataService, clientMainService(client) and mainService (server) are in the same memory space. The first one takes the tiggers on the prototype, so loading clientMainService first.
+    */
+    clientMainService = require("phront/test/data/client-main.datareel/main.mjson").montageObject,
+
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
     Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
@@ -9,63 +14,39 @@ var PhrontService = require("phront/data/main.datareel/service/phront-service").
     DataQuery = require("montage/data/model/data-query").DataQuery,
     Montage = require("montage/core/core").Montage,
     //to test client side
-    clientMainService = require("../../data/client-main.datareel/main.mjson").montageObject,
     ClientCollection = require("phront/data/main.datareel/model/collection").Collection,
-    operationCoordinator = new OperationCoordinator,
-    phrontService = mainService.childServices[0],
+    ClientImage = require("phront/data/main.datareel/model/image").Image,
+    ClientService = require("phront/data/main.datareel/model/service").Service,
+
     phrontClientService = clientMainService.childServices[0],
-    types = phrontService.types,
     sizeof = require("object-sizeof"),
     uuid = require("montage/core/uuid");
 
 
-//Hack phrontClientService and Augment operationCoordinator for tests, 
-//making it assume the role of the WebSocket for phrontClientService
 
+var pseudoSocket = {
+    send: function(serializedOperation) {
+        dataWorker.postMessage(serializedOperation);
+    }
+
+};
+
+phrontClientService._socket = pseudoSocket;
+
+dataWorker.onmessage = function (ev) {
+    phrontClientService.handleMessage(ev);
+//dataWorker.terminate();
+};
+dataWorker.onerror = function (error) {
+    console.error(error);
+//dataWorker.terminate();
+};
+
+
+//dataWorker.postMessage("{ping:'ping'}");
+
+//Assuming the worker is immediatly available
 phrontClientService._socketOpenPromise = Promise.resolve(true);
-operationCoordinator.send = function(serializedOperation) {
-    //return new Promise(function(resolve,reject) {
-    var mockContext,
-        mockCallback,
-        mockGateway =  {
-        postToConnection: function(params) {
-                this._promise = new Promise(function(resolve,reject) { 
-                    /* params looks like:
-                        {
-                            ConnectionId: event.requestContext.connectionId,
-                            Data: self._serializer.serializeObject(readOperationCompleted)
-                        }
-                    */
-                var serializedHandledOperation = params.Data;
-                phrontClientService.handleMessage({data:serializedHandledOperation});
-                resolve(true);
-
-                });
-                return this;
-            },
-            promise: function() {
-                return this._promise;
-            }
-        };
-
-    this.handleEvent({
-        requestContext: {
-            connectionId: uuid.generate()
-        },
-        "body":serializedOperation
-    },mockContext,mockCallback,mockGateway);
-
-//});
-
-    // .then(function(serializedHandledOperation) {
-    //     phrontClientService.handleMessage({data:serializedHandledOperation});
-    // },function(error) {
-    //     console.error(error);
-    // });
-}
-phrontClientService._socket = operationCoordinator;
-
-
 
 exports.promise = new Promise(function(resolve,reject) {
 
@@ -206,10 +187,11 @@ exports.promise = new Promise(function(resolve,reject) {
 
 
         // it("can feth a collection and its products", function (done) {
-
+        /*
             function getServiceDescriptionHtml(aService) {
                 //Cheat to test the implementation for now.
-                return phrontClientService.fetchObjectProperty.call(mainService,aService,"descriptionHtml")
+                //return phrontClientService.fetchObjectProperty.call(mainService,aService,"descriptionHtml")
+                return phrontClientService.fetchObjectProperty(aService,"descriptionHtml")
                 // return clientMainService.getObjectProperties(aService,["descriptionHtml"])
                 .then(function(resolved) {
                     console.log(aService.title+" descriptionHtml is:"+aService.descriptionHtml);
@@ -257,9 +239,66 @@ exports.promise = new Promise(function(resolve,reject) {
                     reject(error);
                 }
             );
-
+    */
     // });
 
+    // it("can create, update and delete a collection", function (done) {
+        
+        var aCollection =  clientMainService.createDataObject(ClientCollection);
 
+        aCollection.originId = null;
+        aCollection.title = "Test Collection Title";
+        aCollection.description = "Test Collection description";
+        aCollection.descriptionHtml = "Test Collection descriptionHtml";
+        aCollection.products = null;
+        aCollection.image = null;
+
+        return clientMainService.saveDataObject(aCollection)
+        .then(function(createCompletedOperation) {
+            return createCompletedOperation.data;
+        },function(error) {
+            console.error(error);
+        })
+        .then(function(saveOperationResolved) {
+            // change a simple property
+            aCollection.title = "---> Test Collection Title Changed";
+            return clientMainService.saveDataObject(aCollection);
+        },function(error) {
+            console.error(error);
+        })
+        .then(function(saveOperationResolved) {
+            // change a simple property and a to-one*/
+
+            var imageDescriptor = clientMainService.objectDescriptorForType(ClientImage);
+
+            var clientImage = clientMainService.createDataObject(imageDescriptor);
+            clientImage.originId = null;
+            clientImage.altText = "altText";
+            clientImage.originalSrc = "http://originalSrc.com/image.png";
+            clientImage.transformedSrc = null;
+            aCollection.image = clientImage;
+            aCollection.title = "Test Collection Title Changed again";
+
+            //Totally new to test
+            //return mainService.saveChanges();
+            return clientMainService.saveDataObject(aCollection.image);
+            return Promise.all([
+                clientMainService.saveDataObject(aCollection.image),
+                clientMainService.saveDataObject(aCollection)]);
+        },function(saveError) {
+            console.error(saveError);
+        })
+        .then(function(saveCompletedOperation) {
+            // var collection = saveCompletedOperation.data;
+
+            return Promise.all([
+                clientMainService.deleteDataObject(aCollection.image),
+                clientMainService.deleteDataObject(aCollection)]);
+
+        },function(saveFailedOperation) {
+            console.error(saveFailedOperation);
+        });
+
+    // });
 
 });
