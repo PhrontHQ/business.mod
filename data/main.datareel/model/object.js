@@ -1,10 +1,22 @@
 var Target = require("montage/core/target").Target,
-    DataService = require("montage/data/service/data-service").DataService;
+DataService = require("montage/data/service/data-service").DataService,
+DataEvent = require("montage/data/model/data-event").DataEvent;
 
 /**
  * @class Object
  * @extends Montage
  */
+
+
+ /* 
+    Need to be able to set creationDate when an instance is created by
+    the DataService. Not when the instance is created by the constructor.
+
+    A proposal is to have a "datacreate" or "create" event whose target is
+    the new instance. That is listened to by some code that does it.
+
+    We could then later build a UI to do the same visually.
+*/
 
 
 exports.Object = Target.specialize(/** @lends Object.prototype */ {
@@ -21,18 +33,49 @@ exports.Object = Target.specialize(/** @lends Object.prototype */ {
     creationDate: {
         value: undefined
     },
+    modificationDate: {
+        value: undefined
+    },
+    publicationDate: {
+        value: undefined
+    }  
+
+},{
+
+    /*
+        This class methods are polymorphic, which poses a problem. 
+        Object needs to receive create events from Object instances and all instances inheriting from Object.
+
+        So it needs to listen to dataService and filter, which is a bit wasteful
+        or we could propagate the event with nextTarget to go through the propertyDescriptor hierarchy and then Object can listen only on it's Object Descriptor.
+
+        BUT as these methds are inherited when declared in specializes, the handle methods are a problem.
+
+    */
 
     /**
-     * Overrides nextTarget to have the data service be the next to receive events
-     * @property {boolean} serializable
-     * @property {Component} value
+     * prepareToHandleDataEvents helps register lazily prepare DO's custom logic.
+     * Each type listens to events issued by it's corresponding ObjectDescriptor
+     * @param {DataEvent} event the first event triggering the prepareToHandleDataEvents
      */
-    nextTarget: {
-        serializable: false,
-        get: function() {
-            return DataService.mainService;
+
+    prepareToHandleDataEvents: {
+        value: function (event) {
+            event.dataService.objectDescriptorForType(this).addEventListener(DataEvent.create,this,false);
         }
-    }   
+    },
+    handleCreate: {
+        value: function (event) {
+            // if(event.dataObject instanceof this) {
+                event.dataObject.creationDate = event.dataObject.modificationDate = new Date();
+            // }
+        }
+    },
+    handleUpdate: {
+        value: function (event) {
+            event.dataObject.modificationDate = new Date();
+        }
+    }
 
 
 });

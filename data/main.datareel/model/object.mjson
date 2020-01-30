@@ -33,15 +33,17 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "creationDate",
-            "valueType": "date"
+            "valueType": "date",
+            "mandatory": true
         }
     },
     "modificationDate": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "modificationDate",
-            "valueType": "date"
-        }
+            "valueType": "date",
+             "mandatory": true
+       }
     },
    "publicationDate": {
         "prototype": "montage/core/meta/property-descriptor",
