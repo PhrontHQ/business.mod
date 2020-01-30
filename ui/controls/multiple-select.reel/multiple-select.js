@@ -1,7 +1,8 @@
 /**
  * @module ui/multiple-select.reel
  */
-var AbstractDropZoneComponent = require("core/drag-drop/abstract-dropzone-component").AbstractDropZoneComponent,
+// var AbstractDropZoneComponent = require("core/drag-drop/abstract-dropzone-component").AbstractDropZoneComponent,
+var Component = require("montage/ui/component").Component,
     MultipleSelectValue = require("./multiple-select-value.reel").MultipleSelectValue,
     KeyComposer = require("montage/composer/key-composer").KeyComposer;
 
@@ -9,7 +10,10 @@ var AbstractDropZoneComponent = require("core/drag-drop/abstract-dropzone-compon
  * @class MultipleSelect
  * @extends Component
  */
-exports.MultipleSelect = AbstractDropZoneComponent.specialize(/** @lends MultipleSelect# */ {
+exports.MultipleSelect = Component.specialize(/** @lends MultipleSelect# */ {
+    droppable: {
+        value: true
+    },
 
     enabled: {
         value:  true
@@ -87,7 +91,8 @@ exports.MultipleSelect = AbstractDropZoneComponent.specialize(/** @lends Multipl
 
     enterDocument: {
         value: function (firstTime) {
-            AbstractDropZoneComponent.prototype.enterDocument.call(this, firstTime);
+            // AbstractDropZoneComponent.prototype.enterDocument.call(this, firstTime);
+            this.application.addEventListener("dragstart", this, false);
 
             if (!this.values) {
                 this.values = [];
@@ -99,6 +104,11 @@ exports.MultipleSelect = AbstractDropZoneComponent.specialize(/** @lends Multipl
             if (isFinite(this.valuesHeight)) {
                 this.valuesContainer.style.height = this.valuesHeight + 'rem';
             }
+        }
+    },
+    exitDocument: {
+        value: function () {
+            this.application.removeEventListener("dragstart", this, false);
         }
     },
 
@@ -114,15 +124,33 @@ exports.MultipleSelect = AbstractDropZoneComponent.specialize(/** @lends Multipl
         }
     },
 
+    handleDragstart: {
+        value: function (event) {
+            var shouldAddToCandidate = false,
+                draggableComponent = event.target;
+
+            if (this._shouldAcceptComponent(draggableComponent)) {
+                shouldAddToCandidate = true;
+            }
+
+            if (shouldAddToCandidate) {
+                event.dataTransfer.dropTargetCandidates.add(this);
+                this._addEventListeners();
+            }
+        }
+    },
+
     _shouldAcceptComponent: {
         value: function (draggableComponent) {
             return this.element.contains(draggableComponent.element);
         }
     },
 
-    handleComponentDragOver: {
-        value: function (draggableComponent, dragEvent) {
-            var pointerPositionX = dragEvent.startPositionX + dragEvent.translateX,
+    //handleComponentDragOver: {
+    handleDragover: {
+            value: function (dragEvent) {
+            var draggableComponent = dragEvent.target, 
+                pointerPositionX = dragEvent.startPositionX + dragEvent.translateX,
                 pointerPositionY = dragEvent.startPositionY + dragEvent.translateY,
                 multipleSelectValue = this._findMultipleSelectValueComponentFromPoint(pointerPositionX, pointerPositionY);
 
@@ -138,12 +166,16 @@ exports.MultipleSelect = AbstractDropZoneComponent.specialize(/** @lends Multipl
         }
     },
 
-    didComponentDrop: {
-        value: function (draggableComponent) {
-            var draggedObject;
+    // didComponentDrop: {
+    //     value: function (draggableComponent) {
+    handleDrop: {
+        value: function (event) {
+            var draggableComponent = event.target,
+                draggedObject = event.dataTransfer.draggedObject,
+                legacyDraggedObject;
 
             if (this._previousOverMultipleSelectValue) {
-                draggedObject = this.valuesController.content[draggableComponent.index];
+                legacyDraggedObject = this.valuesController.content[draggableComponent.index];
                 this.valuesController.splice(this._previousOverMultipleSelectValue.index, 0, draggedObject);
                 this.valuesController.splice(draggableComponent.index, 1);
             } else {
@@ -152,9 +184,25 @@ exports.MultipleSelect = AbstractDropZoneComponent.specialize(/** @lends Multipl
         }
     },
 
-    didComponentDragEnd: {
+    // didComponentDragEnd: {
+    handleDragended: {
         value: function () {
             this._clearPreviousOverMultipleSelectValueIfNeeded();
+            this._removeEventListeners();
+        }
+    },
+
+    _addEventListeners: {
+        value: function () {
+            this.addEventListener("dragended", this);
+            this.addEventListener("drop", this);
+        }
+    },
+
+    _removeEventListeners: {
+        value: function () {
+            this.removeEventListener("dragended", this);
+            this.removeEventListener("drop", this);
         }
     },
 

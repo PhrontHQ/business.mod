@@ -47,7 +47,7 @@
         &:after {
             opacity: 0;
             content: "\63";
-            font-family: "icon-font";
+            font-family: "phront";
             font-size: 1.3em;
             color: var(--blue-lighten-2);
             position: absolute;

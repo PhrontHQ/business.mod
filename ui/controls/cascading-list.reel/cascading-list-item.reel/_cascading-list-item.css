@@ -1,0 +1,66 @@
+.CascadingListItem {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: relative;
+    border-right: 1px solid var(--separator-color);
+    background-color: var(--primary--7);
+    min-width: 16rem;
+}
+
+.CascadingListItem-header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    justify-content: space-between;
+    height:  calc(3rem - 1px);
+    padding: 0 1rem;
+    background-color: var(--primary);
+    border-bottom: 1px solid var(--separator-color);
+
+    & button {
+        color: var(--white);
+    }
+}
+
+.CascadingListItem-controls {
+    /* offset for naked button */
+    margin-right: -.7em;
+
+    & > button {
+        display: none;
+    }
+}
+
+.CascadingListItem-controls-help {
+    @nest .help-is-shown & {
+        color: var(--blue-lighten-2);
+    }
+}
+
+.CascadingListItem-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 1em;
+    font-weight: 400;
+    letter-spacing: .35px;
+}
+
+.CascadingListItem-content {
+    position: relative;
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    min-height: 0;
+
+    & > * {
+        position: relative;
+        flex: 1;
+        display: flex;
+        min-height: 0;
+        flex-direction: column;
+    }
+}

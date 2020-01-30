@@ -21,13 +21,13 @@
             }
         },
         "day": {
-            "prototype": "ui/controls/text.reel",
+            "prototype": "montage/ui/text.reel",
             "properties": {
                 "element": {"#": "day"},
-                "value": "{day, DD}"
+                "converter": {"@":"dateToDayConverter"}
             },
             "bindings": {
-                "args": {"<-": "!!@owner.value && {day: @owner.value}"}
+                "value": {"<-": "@owner.value"}
             }
         }
     }

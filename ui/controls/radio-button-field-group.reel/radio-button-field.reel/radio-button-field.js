@@ -8,12 +8,16 @@ var Component = require("montage/ui/component").Component,
 exports.RadioButtonField = Component.specialize({
     constructor: {
         value: function RadioButtonField () {
+            return this;
+        }
+    },
+    prepareForActivationEvents: {
+        value: function() {
             this._pressComposer = new PressComposer();
             this.addComposerForElement(this._pressComposer, this.labelElement);
             this._pressComposer.addEventListener("press", this, false);
         }
     },
-
     _pressComposer: {
         value: null
     },

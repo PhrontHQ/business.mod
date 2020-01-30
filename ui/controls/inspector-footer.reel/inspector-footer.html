@@ -20,7 +20,8 @@
                 "value": "Delete"
             },
             "bindings": {
-                "classList.has('is-visible')": {"<-": "@owner.canDelete"}
+                "classList.has('is-visible')": {"<-": "@owner.canDelete"},
+                "detail.get('data')": {"<-": "@owner.object"}
             }
         },
         "revert": {
@@ -30,7 +31,8 @@
             },
             "bindings": {
                 "classList.has('is-visible')": {"<-": "@owner.canRevert"},
-                "value": {"<-": "!!@owner.footerCancelLabel ? @owner.footerCancelLabel : 'Revert'"}
+                "value": {"<-": "!!@owner.footerCancelLabel ? @owner.footerCancelLabel : 'Revert'"},
+                "detail.get('data')": {"<-": "@owner.object"}
             }
         },
         "save": {
@@ -41,7 +43,8 @@
             "bindings": {
                 "disabled": {"<-": "@owner.isSaveDisabled"},
                 "value": {"<-": "!!@owner.footerDoneLabel ? @owner.footerDoneLabel : 'Save'"},
-                "classList.has('is-visible')": {"<-": "@owner.canSave"}
+                "classList.has('is-visible')": {"<-": "@owner.canSave"},
+                "detail.get('data')": {"<-": "@owner.object"}
             }
         }
     }

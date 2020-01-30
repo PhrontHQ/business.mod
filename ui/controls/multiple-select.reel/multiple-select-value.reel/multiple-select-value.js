@@ -31,12 +31,12 @@ exports.MultipleSelectValue = Component.specialize(/** @lends MultipleSelectValu
     },
 
     placeHolderStrategy: {
-        value: AbstractDraggableComponent.PLACE_HOLDER_STRATEGY.remove
+        value: "remove"
     },
 
     prepareForActivationEvents: {
         value: function() {
-            AbstractDraggableComponent.prototype.prepareForActivationEvents.call(this);
+            //AbstractDraggableComponent.prototype.prepareForActivationEvents.call(this);
 
             this.valueField.delegate = {
                 shouldAcceptValue: function() {

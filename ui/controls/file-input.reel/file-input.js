@@ -1,6 +1,8 @@
 var Component = require("montage/ui/component").Component,
-    UUID = require("montage/core/uuid"),
-    numeral = require('numeral');
+UUID = require("montage/core/uuid"),
+BytesConverter = require("montage/core/converter/bytes-converter").BytesConverter,
+bytesConverter = new BytesConverter;
+//numeral = require('numeral');
 
 exports.FileInput = Component.specialize({
 
@@ -96,9 +98,13 @@ exports.FileInput = Component.specialize({
                 if (shouldAcceptFile && this.maxFileSize !== void 0 && this.maxFileSize !== null && size > this.maxFileSize) {
                     shouldAcceptFile = false;
                     this.errorValue = "File too big ({actual} > {max})";
+                    // this.errorArgs = {
+                    //     actual: numeral(size).format('0[.00]b'),
+                    //     max: numeral(this.maxFileSize).format('0[.00]b')
+                    // };
                     this.errorArgs = {
-                        actual: numeral(size).format('0[.00]b'),
-                        max: numeral(this.maxFileSize).format('0[.00]b')
+                        actual: bytesConverter.convert(size),
+                        max: bytesConverter.convert(size)
                     };
                 }
 

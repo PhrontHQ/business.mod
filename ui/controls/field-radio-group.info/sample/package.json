@@ -1,14 +1,15 @@
 {
-    "name": "button-sample",
+    "name": "field-radio-group-sample",
     "version": "0.1.0",
     "dependencies": {
-        "blue-shark": "*",
+        "phront": "*",
         "montage": "*"
     },
-        "mappings": {
-        "montage": "../../../node_modules/montage",
-        "blue-shark": "../../../"
+    "mappings": {
+        "montage": "../../../../node_modules/montage",
+        "phront": "../../../../"
     }
+    
 }
 
 
