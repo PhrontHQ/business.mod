@@ -74,20 +74,55 @@ exports.CalendarListDay = Component.specialize(/** @lends CalendarListDay# */ {
                 var self = this;
                 console.error("Needs Mock tasks");
                 self.events = [{
-                    name: "F"
+                    name: "F",
+                    task: {
+                        task: "Task-F",
+                        name: "Task-F-name"
+                    },
+                    hour:"1",
+                    minute:"00",
+                    second:"00"
                 },
                 {
-                    name: "G"
-                },
+                    name: "G",
+                    task: {
+                        task: "Task-G",
+                        name: "Task-G-name"
+                    },
+                    hour:"2",
+                    minute:"00",
+                    second:"00"
+               },
                 {
-                    name: "H"
-                },
+                    name: "H",
+                    task: {
+                        task: "Task-H",
+                        name: "Task-H-name"
+                    },
+                    hour:"3",
+                    minute:"00",
+                    second:"00"
+            },
                 {
-                    name: "I"
-                },
+                    name: "I",
+                    task: {
+                        task: "Task-I",
+                        name: "Task-I-name"
+                    },
+                    hour:"4",
+                    minute:"00",
+                    second:"00"
+          },
                 {
-                    name: "J"
-                }]
+                    name: "J",
+                    task: {
+                        task: "Task-J",
+                        name: "Task-J-name"
+                    },
+                    hour:"5",
+                    minute:"00",
+                    second:"00"
+              }];
                 // this.application.sectionService.getTasksScheduleOnDay(this._object).then(function(tasks) {
                 //     self.events = tasks;
                 // });

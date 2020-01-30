@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="rsync-args.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"}
+            }
+        },
+        "mode": {
+            "prototype": "blue-shark/ui/field-select.reel",
+            "properties": {
+                "element": {"#": "mode"},
+                "label": "Rsync mode"
+            },
+            "bindings": {
+                "options": {"<-": "@owner.rsyncModes"},
+                "selectedValue": {"<->": "@owner.object.0.rsync_mode"}
+            }
+        },
+        "direction": {
+            "prototype": "blue-shark/ui/field-select.reel",
+            "properties": {
+                "element": {"#": "direction"},
+                "label": "Direction"
+            },
+            "bindings": {
+                "options": {"<-": "@owner.rsyncDirections"},
+                "selectedValue": {"<->": "@owner.object.0.rsync_direction"}
+            }
+        },
+        "user": {
+            "prototype": "ui/controls/search-users.reel",
+            "properties": {
+                "element": {"#": "user"},
+                "label": "User",
+                "valuePath": "username"
+            },
+            "bindings": {
+                "value": {"<->": "@owner.object.0.user"}
+            }
+        },
+        "path": {
+            "prototype": "blue-shark/ui/field-text-input.reel",
+            "properties": {
+                "element": {"#": "path"},
+                "label": "Path (source)"
+            },
+            "bindings": {
+                "value": {"<->": "@owner.object.0.path"}
+            }
+        },
+        "remoteUser": {
+            "prototype": "blue-shark/ui/field-text-input.reel",
+            "properties": {
+                "element": {"#": "remoteUser"},
+                "label": "Remote user"
+            },
+            "bindings": {
+                "value": {"<->": "@owner.object.0.remote_user"}
+            }
+        },
+        "remoteHost": {
+            "prototype": "blue-shark/ui/field-text-input.reel",
+            "properties": {
+                "element": {"#": "remoteHost"},
+                "label": "Remote host"
+            },
+            "bindings": {
+                "value": {"<->": "@owner.object.0.remote_host"}
+            }
+        },
+        "remotePath": {
+            "prototype": "blue-shark/ui/field-text-input.reel",
+            "properties": {
+                "element": {"#": "remotePath"},
+                "label": "Remote path (destination)"
+            },
+            "bindings": {
+                "value": {"<->": "@owner.object.0.remote_path"},
+                "classList.has('hide')": {"<-": "@owner.object.0.rsync_mode != 'SSH'"}
+            }
+        },
+        "portValidator": {
+            "prototype": "core/converter/validator/integer-range-validator",
+            "properties": {
+                "floor": 1,
+                "ceiling": 65535,
+                "errorMessage": "Value must be an integer between 1 and 65535"
+            }
+        },
+        "portConverter": {
+            "prototype": "core/converter/string-to-integer-converter",
+            "properties": {
+                "validator": {"@": "portValidator"}
+            }
+        },
+        "remoteSubstitution": {
+            "prototype": "montage/ui/substitution.reel",
+            "properties": {
+                "element": {"#": "remoteSubstitution"}
+            },
+            "bindings": {
+                "switchValue": {"<-": "@owner.object.0.rsync_mode"}
+            }
+        },
+        "remotePort": {
+            "prototype": "blue-shark/ui/field-text-input.reel",
+            "properties": {
+                "element": {"#": "remotePort"},
+                "label": "Remote ssh port",
+                "converter": {"@": "portConverter"}
+            },
+            "bindings": {
+                "value": {"<->": "@owner.object.0.remote_ssh_port"}
+            }
+        },
+        "remoteModule": {
+            "prototype": "blue-shark/ui/field-text-input.reel",
+            "properties": {
+                "element": {"#": "remoteModule"},
+                "label": "Remote module"
+            },
+            "bindings": {
+                "value": {"<->": "@owner.object.0.remote_module"}
+            }
+        },
+        "rsyncPropertiesTitle": {
+            "prototype": "ui/controls/inspector-section-title.reel",
+            "properties": {
+                "element": {"#": "rsyncPropertiesTitle"},
+                "value": "Rsync Properties"
+            }
+        },
+        "archive": {
+            "prototype": "blue-shark/ui/field-checkbox.reel",
+            "properties": {
+                "element": {"#": "archive"},
+                "label": "Archive"
+            },
+            "bindings": {
+                "checked": {"<->": "@owner.object.0.rsync_properties.archive"}
+            }
+        },
+        "recursive": {
+            "prototype": "blue-shark/ui/field-checkbox.reel",
+            "properties": {
+                "element": {"#": "recursive"},
+                "label": "Recursive"
+            },
+            "bindings": {
+                "checked": {"<->": "@owner.object.0.rsync_properties.recursive"}
+            }
+        },
+        "compress": {
+            "prototype": "blue-shark/ui/field-checkbox.reel",
+            "properties": {
+                "element": {"#": "compress"},
+                "label": "Compress"
+            },
+            "bindings": {
+                "checked": {"<->": "@owner.object.0.rsync_properties.compress"}
+            }
+        },
+        "times": {
+            "prototype": "blue-shark/ui/field-checkbox.reel",
+            "properties": {
+                "element": {"#": "times"},
+                "label": "Times"
+            },
+            "bindings": {
+                "checked": {"<->": "@owner.object.0.rsync_properties.times"}
+            }
+        },
+        "delete": {
+            "prototype": "blue-shark/ui/field-checkbox.reel",
+            "properties": {
+                "element": {"#": "delete"},
+                "label": "Delete"
+            },
+            "bindings": {
+                "checked": {"<->": "@owner.object.0.rsync_properties.delete"}
+            }
+        },
+        "preservePermissions": {
+            "prototype": "blue-shark/ui/field-checkbox.reel",
+            "properties": {
+                "element": {"#": "preservePermissions"},
+                "label": "Preserve permissions"
+            },
+            "bindings": {
+                "checked": {"<->": "@owner.object.0.rsync_properties.preserve_permissions"}
+            }
+        },
+        "preserveAttributes": {
+            "prototype": "blue-shark/ui/field-checkbox.reel",
+            "properties": {
+                "element": {"#": "preserveAttributes"},
+                "label": "Preserve attributes"
+            },
+            "bindings": {
+                "checked": {"<->": "@owner.object.0.rsync_properties.preserve_attributes"}
+            }
+        },
+        "delayUpdates": {
+            "prototype": "blue-shark/ui/field-checkbox.reel",
+            "properties": {
+                "element": {"#": "delayUpdates"},
+                "label": "Delay Updates"
+            },
+            "bindings": {
+                "checked": {"<->": "@owner.object.0.rsync_properties.delay_updates"}
+            }
+        },
+        "extra": {
+            "prototype": "blue-shark/ui/field-text-input.reel",
+            "properties": {
+                "element": {"#": "extra"},
+                "label": "Extra arguments"
+            },
+            "bindings": {
+                "value": {"<->": "@owner._extra"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="RsyncArgs">
+        <div data-montage-id="mode"></div>
+        <div data-montage-id="direction"></div>
+        <div data-montage-id="user"></div>
+        <div data-montage-id="path"></div>
+        <div data-montage-id="remoteUser"></div>
+        <div data-montage-id="remoteHost"></div>
+        <div data-montage-id="remotePath"></div>
+        <div data-montage-id="remoteSubstitution">
+            <div data-montage-id="remotePort" data-arg="SSH"></div>
+            <div data-montage-id="remoteModule" data-arg="MODULE"></div>
+        </div>
+        <div class="RsyncProperties">
+            <div data-montage-id="rsyncPropertiesTitle"></div>
+            <div data-montage-id="archive"></div>
+            <div data-montage-id="recursive"></div>
+            <div data-montage-id="compress"></div>
+            <div data-montage-id="times"></div>
+            <div data-montage-id="delete"></div>
+            <div data-montage-id="preservePermissions"></div>
+            <div data-montage-id="preserveAttributes"></div>
+            <div data-montage-id="delayUpdates"></div>
+            <div data-montage-id="extra"></div>
+        </div>
+    </div>
+</body>
+</html>

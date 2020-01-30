@@ -1,0 +1,47 @@
+.TaskTypeIndicator {
+    display: inline-block;
+    width: .8em;
+    height: .8em;
+    border-radius: 50%;
+    background-color: currentColor;
+    margin-right: .5em
+}
+
+.CalendarWidgetTask .TaskTypeIndicator {
+    margin-right: .25em
+}
+
+.TaskTypeIndicator.type-rsync_copy,
+.type-rsync_copy .TaskTypeIndicator {
+    color: #bf360c
+}
+
+.TaskTypeIndicator.type-calendar_task_command,
+.type-calendar_task_command .TaskTypeIndicator {
+    color: #33691e
+}
+
+.TaskTypeIndicator.type-volume_scrub,
+.type-volume_scrub .TaskTypeIndicator {
+    color: #880e4f
+}
+
+.TaskTypeIndicator.type-replication_sync,
+.type-replication_sync .TaskTypeIndicator {
+    color: #7b1fa2
+}
+
+.TaskTypeIndicator.type-disk_parallel_test,
+.type-disk_parallel_test .TaskTypeIndicator {
+    color: #311b92
+}
+
+.TaskTypeIndicator.type-update_checkfetch,
+.type-update_checkfetch .TaskTypeIndicator {
+    color: #00695c
+}
+
+.TaskTypeIndicator.type-volume_snapshot_dataset,
+.type-volume_snapshot_dataset .TaskTypeIndicator {
+    color: #f57f17
+}

@@ -28,7 +28,7 @@ exports.Calendar = AbstractInspector.specialize({
     _handleSelectionChange: {
         value: function(value) {
             if (value) {
-                if (value. _isNew) {
+                if (value._isNew) {
                     this.object._newTask = _.cloneDeep(value);
                     //this._routingService.navigate('/calendar/calendar-task/create/' + value.task);
                 } else {

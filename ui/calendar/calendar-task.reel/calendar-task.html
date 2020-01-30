@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="calendar-task.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"},
+                "validationController": {"@": "validationController"},
+                "inspector": {"@": "inspector"},
+                "selectedWeekDays": ["sunday"],
+                "selectedScheduleOption": "month",
+                "selectedDaysOfMonth": [1],
+                "taskToInspector": {
+                    "volume.snapshot_dataset": "snapshot",
+                    "volume.scrub": "scrub",
+                    "disk.parallel_test": "smart",
+                    "calendar_task.command": "cron",
+                    "replication.sync": "replication",
+                    "rsync.copy": "rsync"
+                }
+            },
+            "bindings": {
+                "argsInspector": {"<-": "@argsPlaceHolder.component"}
+            }
+        },
+        "optionsConverter": {
+            "prototype": "core/converter/select-option-converter",
+            "properties": {
+                "labelPropertyName": "name",
+                "valuePropertyName": "value"
+            }
+        },
+        "validationController": {
+            "prototype": "core/controller/validation-controller",
+            "properties": {
+                "fields": {}
+            }
+        },
+        "inspector": {
+            "prototype": "ui/inspectors/inspector.reel",
+            "properties": {
+                "element": {"#": "inspector"},
+                "validationController": {"@": "validationController"},
+                "canDelete": true,
+                "canRevert": true,
+                "canSave": true,
+                "controller": {"@": "owner"}
+            },
+            "bindings": {
+                "context": {"<-": "@owner.context"},
+                "isLoading": {"<-": "!@owner.object"},
+                "extraDeleteFlags": {"<-": "@owner.extraDeleteFlags"},
+                "extraDeleteMessage": {"<-": "@owner.extraDeleteMessage"}
+            }
+        },
+        "name": {
+            "prototype": "blue-shark/ui/field-text-input.reel",
+            "properties": {
+                "element": {"#": "name"},
+                "label": "Name",
+                "placeholder": "enter event name"
+            },
+            "bindings": {
+                "value": {"<->": "@owner.object.name"}
+            }
+        },
+        "argsPlaceHolder": {
+            "prototype": "ui/controls/placeholder.reel",
+            "properties": {
+                "element": {"#": "argsPlaceholder"}
+            },
+            "bindings": {
+                "moduleId": {"<-": "'ui/inspectors/calendar-task.reel/' + @owner.taskToInspector[@owner.object.task] + '-args.reel'"},
+                "object": {"<->": "@owner.object.args"},
+                "component.isNew": {"<-": "@owner.object._isNew"}
+            }
+        },
+        "enabled": {
+            "prototype": "blue-shark/ui/field-checkbox.reel",
+            "properties": {
+                "element": {"#": "enabled"},
+                "label": "Enabled"
+            },
+            "bindings": {
+                "checked": {"<->": "!!@owner.object.enabled"}
+            }
+        },
+
+        "runNow": {
+            "prototype": "blue-shark/ui/button.reel",
+            "properties": {
+                "element": {"#": "runNow"},
+                "value": "Run Now"
+            },
+            "bindings": {
+                "disabled": {"<-": "!@owner.object.task"}
+            }
+        },
+        "scheduleResultsHeader": {
+            "prototype": "ui/controls/inspector-section-title.reel",
+            "properties": {
+                "element": {"#": "scheduleResultsHeader"},
+                "value": "Task Schedule"
+            }
+        },
+        "scheduleString": {
+            "prototype": "blue-shark/ui/text.reel",
+            "properties": {
+                "element": {"#": "scheduleString"}
+            },
+            "bindings": {
+                "value": {"<-": "@owner.scheduleString"}
+            }
+        },
+        "scheduleHeader": {
+            "prototype": "ui/controls/inspector-section-title.reel",
+            "properties": {
+                "element": {"#": "scheduleHeader"},
+                "value": "Schedule Options"
+            }
+        },
+        "scheduleOptions": {
+            "prototype": "blue-shark/ui/radio-button-field-group.reel",
+            "properties": {
+                "element": {"#": "scheduleOptions"}
+            },
+            "bindings": {
+                "options": {"<-": "@owner.scheduleOptions"},
+                "selectedValue": {"<->": "@owner.object._simpleSchedule.type"}
+            }
+        },
+        "scheduleOptionsSubstitution": {
+            "prototype": "montage/ui/substitution.reel",
+            "properties": {
+                "element": {"#": "scheduleOptionsSubstitution"}
+            },
+            "bindings": {
+                "switchValue": {"<-": "@scheduleOptions.selectedValue"}
+            }
+        },
+        "weekOptionDay": {
+            "prototype": "blue-shark/ui/multiple-select-grid.reel",
+            "properties": {
+                "element": {"#": "weekOptionDay"}
+            },
+            "bindings": {
+                "selectedValues": {"<->": "@owner.object._simpleSchedule.daysOfWeek"},
+                "options": {"<-": "@owner.daysOfWeek"}
+            }
+        },
+        "monthOptionDays": {
+            "prototype": "blue-shark/ui/multiple-select-grid.reel",
+            "properties": {
+                "element": {"#": "monthOptionDays"}
+            },
+            "bindings": {
+                "selectedValues": {"<->": "@owner.object._simpleSchedule.daysOfMonth"},
+                "options": {"<-": "@owner.daysOfMonth"}
+            }
+        },
+        "customOptionButton": {
+            "prototype": "ui/controls/inspector-option.reel",
+            "properties": {
+                "element": {"#": "customOptionButton"}
+            },
+            "bindings": {
+                "context": {"<-": "@owner.context"},
+                "object": {"<-": "@owner.object._customSchedule"}
+            }
+        },
+        "optionTimeCondition": {
+            "prototype": "montage/ui/condition.reel",
+            "properties": {
+                "element": {"#": "optionTimeCondition"}
+            },
+            "bindings": {
+                "condition": {"<-": "@scheduleOptions.selectedValue != 'CUSTOM'"}
+            }
+        },
+        "optionTime": {
+            "prototype": "blue-shark/ui/time.reel",
+            "properties": {
+                "element": {"#": "optionTime"},
+                "intervalInSeconds": 1800,
+                "pattern": "HH:mm"
+            },
+            "bindings": {
+                "value": {"<->": "@owner.object._simpleSchedule.time"}
+            }
+        },
+        "dailyOccurringLabel": {
+            "prototype": "blue-shark/ui/text.reel",
+            "properties": {
+                "element": {"#": "dailyOccurringLabel"},
+                "value": "Occurring at:"
+            }
+        },
+        "weeklyOccurringLabel": {
+            "prototype": "blue-shark/ui/text.reel",
+            "properties": {
+                "element": {"#": "weeklyOccurringLabel"},
+                "value": "Occurring at:"
+            }
+        },
+        "monthlyOccurringLabel": {
+            "prototype": "blue-shark/ui/text.reel",
+            "properties": {
+                "element": {"#": "monthlyOccurringLabel"},
+                "value": "Occurring at:"
+            }
+        },
+        "weeklyDaysLabel": {
+            "prototype": "blue-shark/ui/text.reel",
+            "properties": {
+                "element": {"#": "weeklyDaysLabel"},
+                "value": "On days:"
+            }
+        },
+        "monthlyDaysLabel": {
+            "prototype": "blue-shark/ui/text.reel",
+            "properties": {
+                "element": {"#": "monthlyDaysLabel"},
+                "value": "On days:"
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="CalendarTask">
+        <div data-montage-id="inspector">
+            <div data-montage-id="name"></div>
+            <div data-montage-id="description"></div>
+            <div data-montage-id="enabled"></div>
+            <div data-montage-id="argsPlaceholder"></div>
+            <button data-montage-id="runNow" class="Button--block"></button>
+            <div data-montage-id="scheduleResultsHeader"></div>
+            <div data-montage-id="scheduleString"></div>
+            <div data-montage-id="scheduleHeader"></div>
+            <div data-montage-id="scheduleOptions" class="RadioButtonFieldGroup--block g-margin-bottom"></div>
+            <div data-montage-id="scheduleOptionsSubstitution">
+                <div data-arg="DAILY">
+                    <p data-montage-id="dailyOccurringLabel" class="g-margin-right--half bold"></p>
+                </div>
+                <div data-arg="WEEKLY">
+                    <p data-montage-id="weeklyDaysLabel" class="g-margin-right--half bold"></p>
+                    <div data-montage-id="weekOptionDay" class="g-margin-bottom CalendarTask-weekOptionDay"></div>
+                    <p data-montage-id="weeklyOccurringLabel" class="g-margin-right--half bold"></p>
+                </div>
+                <div data-arg="MONTHLY">
+                    <p data-montage-id="monthlyDaysLabel" class="g-margin-right--half bold"></p>
+                    <div data-montage-id="monthOptionDays" class="g-margin-bottom CalendarTask-monthOptionDays"></div>
+                    <p data-montage-id="monthlyOccurringLabel" class="g-margin-right--half bold"></p>
+                </div>
+                <div data-arg="CUSTOM">
+                    <div data-montage-id="customOptionButton"></div>
+                </div>
+            </div>
+            <div data-montage-id="optionTimeCondition" class="g-margin-bottom">
+                <div data-montage-id="optionTime"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

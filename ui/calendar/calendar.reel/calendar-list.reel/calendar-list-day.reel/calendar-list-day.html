@@ -3,6 +3,10 @@
 <head>
     <title></title>
     <link rel="stylesheet" type="text/css" href="calendar-list-day.css">
+    <!--
+                        "displayedEvents": {"<-": "@owner.events.filter{@owner.displayedCategories.has(.task.task)}"},
+
+    -->
     <script type="text/montage-serialization">
     {
         "owner": {
@@ -11,7 +15,7 @@
             },
             "bindings": {
                 "displayedCategories": {"<-": "@owner.taskCategories.filter{checked}.map{value}"},
-                "displayedEvents": {"<-": "@owner.events.filter{@owner.displayedCategories.has(.task.task)}"},
+                "displayedEvents": {"<-": "@owner.events"},
                 "classList.has('has-no-event')": {"<-": "@owner.displayedEvents.length == 0"}
             }
         },

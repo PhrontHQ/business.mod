@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="replication-args.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"},
+                "datasetTreeController": {"@": "datasetTreeController"},
+                "sourceDataset": {"@": "source_dataset"}
+            }
+        },
+        "datasetTreeController": {
+            "prototype": "core/controller/tree/dataset-tree-controller",
+            "bindings": {
+                "service": {"<-": "@owner.application.dataService"}
+            }
+        },
+        "source_dataset": {
+            "prototype": "ui/controls/field-treeview.reel",
+            "properties": {
+                "element": {"#": "source_dataset"},
+                "isMandatory": true,
+                "controller": {"@": "datasetTreeController"},
+                "label": "Source dataset",
+                "allowPathInput": true
+            },
+            "bindings": {
+                "selectedPath": {"<->": "@owner.replicationObject.datasets.0.master"}
+            }
+        },
+        "peerOptionsConverter": {
+            "prototype": "core/converter/select-option-converter",
+            "properties": {
+                "valuePropertyName": "id",
+                "labelPropertyName": "name"
+            }
+        },
+        "peer": {
+            "prototype": "blue-shark/ui/field-select.reel",
+            "properties": {
+                "element": {"#": "peer"},
+                "isMandatory": true,
+                "label": "Peer",
+                "converter": {"@": "peerOptionsConverter"}
+            },
+            "bindings": {
+                "options": {"<-": "@owner.peers"},
+                "selectedValue": {"<->": "@owner.replicationObject.slave"}
+            }
+        },
+        "target_dataset": {
+            "prototype": "blue-shark/ui/field-text-input.reel",
+            "properties": {
+                "element": {"#": "target_dataset"},
+                "isMandatory": true,
+                "label": "Target dataset"
+            },
+            "bindings": {
+                "value": {"<->": "@owner.replicationObject.datasets.0.slave"}
+            }
+        },
+        "compress": {
+            "prototype": "blue-shark/ui/field-select.reel",
+            "properties": {
+                "element": {"#": "compress"},
+                "label": "Compression",
+                "options": [
+                    { "label": "---",    "value": null },
+                    { "label": "FAST", "value": "FAST" },
+                    { "label": "DEFAULT", "value": "DEFAULT" },
+                    { "label": "BEST", "value": "BEST" }
+                ]
+            },
+            "bindings": {
+                "selectedValue": {"<->": "@owner._transportOptions.compress"}
+            }
+        },
+        "encrypt": {
+            "prototype": "blue-shark/ui/field-select.reel",
+            "properties": {
+                "element": {"#": "encrypt"},
+                "label": "Encryption",
+                "options": [
+                    { "label": "---",    "value": null },
+                    { "label": "AES128", "value": "AES128" },
+                    { "label": "AES192", "value": "AES192" },
+                    { "label": "AES256", "value": "AES256" }
+                ]
+            },
+            "bindings": {
+                "selectedValue": {"<->": "@owner._transportOptions.encrypt"}
+            }
+        },
+        "throttle": {
+            "prototype": "blue-shark/ui/field-number-unit.reel",
+            "properties": {
+                "element": {"#": "throttle"},
+                "label": "Throttling"
+            },
+            "bindings": {
+                "units": {"<-": "@owner.transferSpeedUnits"},
+                "value": {"<->": "@owner._transportOptions.throttle"}
+            }
+        },
+        "recursive": {
+            "prototype": "blue-shark/ui/field-checkbox.reel",
+            "properties": {
+                "element": {"#": "recursive"},
+                "label": "Recursive"
+            },
+            "bindings": {
+                "checked": {"<->": "!!@owner.replicationObject.recursive"}
+            }
+        },
+        "followDelete": {
+            "prototype": "blue-shark/ui/field-checkbox.reel",
+            "properties": {
+                "element": {"#": "followDelete"},
+                "label": "Follow delete"
+            },
+            "bindings": {
+                "checked": {"<->": "!!@owner.replicationObject.followdelete"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="ReplicationArgs">
+        <div data-montage-id="peer"></div>
+        <div data-montage-id="source_dataset"></div>
+        <div data-montage-id="target_dataset"></div>
+        <div data-montage-id="compress"></div>
+        <div data-montage-id="encrypt"></div>
+        <div data-montage-id="throttle"></div>
+        <div data-montage-id="recursive"></div>
+        <div data-montage-id="followDelete"></div>
+    </div>
+</body>
+</html>

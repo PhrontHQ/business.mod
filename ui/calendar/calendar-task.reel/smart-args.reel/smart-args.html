@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="smart-args.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"}
+            }
+        },
+        "optionConverter": {
+            "prototype": "core/converter/select-option-converter",
+            "properties": {
+                "valuePropertyName": "id",
+                "labelPropertyName": "path"
+            }
+        },
+        "disks": {
+            "prototype": "blue-shark/ui/field-select-multiple.reel",
+            "properties": {
+                "element": {"#": "disks"},
+                "label": "Disks",
+                "converter": {"@": "optionConverter"}
+            },
+            "bindings": {
+                "options": {"<-": "@owner.disks.map{{ label: path, value: id }}"},
+                "selectedValues": {"<->": "@owner.object.0"}
+            }
+        },
+        "type": {
+            "prototype": "blue-shark/ui/field-select.reel",
+            "properties": {
+                "element": {"#": "type"},
+                "label": "Test type"
+            },
+            "bindings": {
+                "options": {"<-": "[{label: '-'}].concat(@owner.testTypes)"},
+                "selectedValue": {"<->": "@owner.object.1"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="SmartArgs">
+        <div data-montage-id="disks"></div>
+        <div data-montage-id="type"></div>
+    </div>
+</body>
+</html>

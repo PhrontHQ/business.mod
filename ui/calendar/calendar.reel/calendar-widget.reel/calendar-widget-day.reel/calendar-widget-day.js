@@ -1,6 +1,12 @@
-var AbstractDropZoneComponent = require("core/drag-drop/abstract-dropzone-component").AbstractDropZoneComponent;
+// var AbstractDropZoneComponent = require("core/drag-drop/abstract-dropzone-component").AbstractDropZoneComponent;
+var Component = require("montage/ui/component").Component;
 
-exports.CalendarWidgetDay = AbstractDropZoneComponent.specialize({
+
+exports.CalendarWidgetDay = Component.specialize({
+    droppable: {
+        value: true
+    },
+
     _tasks: {
         value: null
     },
@@ -143,9 +149,13 @@ exports.CalendarWidgetDay = AbstractDropZoneComponent.specialize({
         }
     },
 
-    handleComponentDrop: {
-        value: function(taskCategoryComponent) {
-            var self = this;
+    // handleComponentDrop: {
+    //     value: function(taskCategoryComponent) {
+    handleDrop: {
+        value: function (event) {
+                 
+            var self = this.
+                taskCategoryComponent = event.target;
             console.log("Should create new task matching drop");
 
             // this._calendarService.getNewTask(this.data.rawDate, taskCategoryComponent.object.value).then(function(task) {

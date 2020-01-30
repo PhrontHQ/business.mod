@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="snapshot-args.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"},
+                "datasetTreeController": {"@": "datasetTreeController"}
+            }
+        },
+        "datasetTreeController": {
+            "prototype": "core/controller/tree/dataset-tree-controller"
+        },
+        "datasetSelector": {
+            "prototype": "ui/controls/field-treeview.reel",
+            "properties": {
+                "element": {"#": "datasetSelector"},
+                "controller": {"@": "datasetTreeController"},
+                "label": "Dataset",
+                "removePrefix": "/mnt"
+            },
+            "bindings": {
+                "selectedPath": {"<->": "@owner.dataset"}
+            }
+        },
+        "recursive": {
+            "prototype": "blue-shark/ui/field-checkbox.reel",
+            "properties": {
+                "element": {"#": "recursive"},
+                "label": "Recursive"
+            },
+            "bindings": {
+                "checked": {"<->": "!!@owner.recursive"}
+            }
+        },
+        "lifetime": {
+            "prototype": "blue-shark/ui/field-duration.reel",
+            "properties": {
+                "element": {"#": "lifetime"},
+                "label": "Lifetime"
+            },
+            "bindings": {
+                "value": {"<->": "@owner.lifetime"}
+            }
+        },
+        "prefix": {
+            "prototype": "blue-shark/ui/field-text-input.reel",
+            "properties": {
+                "element": {"#": "prefix"},
+                "label": "Prefix"
+            },
+            "bindings": {
+                "value": {"<->": "@owner.prefix"}
+            }
+        },
+        "replicable": {
+            "prototype": "blue-shark/ui/field-checkbox.reel",
+            "properties": {
+                "element": {"#": "replicable"},
+                "label": "Allow Replication"
+            },
+            "bindings": {
+                "checked": {"<->": "!!@owner.replicable"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="SnapshotArgs">
+        <div data-montage-id="datasetSelector" data-arg="select"></div>
+        <div data-montage-id="recursive"></div>
+        <div data-montage-id="lifetime"></div>
+        <div data-montage-id="prefix"></div>
+        <div data-montage-id="replicable"></div>
+    </div>
+</body>
+</html>
