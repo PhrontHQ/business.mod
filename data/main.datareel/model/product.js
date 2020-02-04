@@ -40,22 +40,22 @@ exports.Product = Object.specialize(/** @lends Product.prototype */ {
     },
     productType: {
         value: undefined
-    },            
+    },
     unitCost: {
         value: undefined
     },
     settings: {
         value: undefined
-    },            
+    },
     sizeWxLxH: {
         value: undefined
-    },            
+    },
     notes: {
         value: undefined
-    },            
+    },
     schematics: {
         value: undefined
-    },            
+    },
     _vendor: {
         value: null
     },
@@ -72,7 +72,7 @@ exports.Product = Object.specialize(/** @lends Product.prototype */ {
     },
     locations: {
         value: undefined
-    },            
+    },
     inStock: {
         get: function () {
             return this._inStock;
@@ -86,10 +86,10 @@ exports.Product = Object.specialize(/** @lends Product.prototype */ {
 
     _inStock: {
         value: undefined
-    },            
+    },
     totalUnitsSold: {
         value: undefined
-    },            
+    },
     grossSales: {
         value: undefined
     },

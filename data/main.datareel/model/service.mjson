@@ -59,7 +59,7 @@
         "values": {
             "name": "requiredResources",
             "cardinality": -1,
-            "valueDescriptor": {"@": "objectDescriptor"}       
+            "valueDescriptor": {"@": "objectDescriptor"}
         }
     },
 

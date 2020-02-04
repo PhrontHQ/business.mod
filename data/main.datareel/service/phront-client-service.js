@@ -39,7 +39,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 this._socket.addEventListener("open", this);
                 this._socket.addEventListener("error", this);
                 this._socket.addEventListener("close", this);
-                this._socket.addEventListener("message", this);    
+                this._socket.addEventListener("message", this);
             }
 
 
@@ -125,7 +125,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 if(operation) {
                     var type = operation.type,
                         operationListenerMethod = this._operationListenerNameForType(type);
-                        
+
                     if(typeof this[operationListenerMethod] !== "function") {
                         console.error("Implementation for "+operationListenerMethod+" is missing");
                     }
@@ -140,9 +140,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     */
                     this._pendingOperationById.delete(operation.referrerId);
                 }
-  
+
             }
-  
+
 
             // event.detail = parsed;
             // this.dispatchEvent(event, true, false);
@@ -151,7 +151,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
     _operationListenerNamesByType: {
         value: new Map()
-    },   
+    },
     _operationListenerNameForType: {
         value: function(type) {
             return this._operationListenerNamesByType.get(type) || this._operationListenerNamesByType.set(type,"handle"+type.toCapitalized()).get(type);
@@ -167,9 +167,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             if(records && records.length > 0) {
 
                 //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
-                this.addRawData(stream, records);   
-                this.rawDataDone(stream);    
-            }    
+                this.addRawData(stream, records);
+                this.rawDataDone(stream);
+            }
 
         }
     },
@@ -185,8 +185,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             var referrerOperation = this._pendingOperationById.get(operation.referrerId);
 
             /*
-                After creation we need to do this:                   self.rootService.registerUniqueObjectWithDataIdentifier(object, dataIdentifier);       
-                
+                After creation we need to do this:                   self.rootService.registerUniqueObjectWithDataIdentifier(object, dataIdentifier);
+
                 The referrerOperation could get hold of object, but it doesn't right now.
                 We could also create a uuid client side and not have to do that and deal wih it all in here which might be cleaner.
 
@@ -201,8 +201,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             var referrerOperation = this._pendingOperationById.get(operation.referrerId);
 
             /*
-                After creation we need to do this:                   self.rootService.registerUniqueObjectWithDataIdentifier(object, dataIdentifier);       
-                
+                After creation we need to do this:                   self.rootService.registerUniqueObjectWithDataIdentifier(object, dataIdentifier);
+
                 The referrerOperation could get hold of object, but it doesn't right now.
                 We could also create a uuid client side and not have to do that and deal wih it all in here which might be cleaner.
 
@@ -318,20 +318,20 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 var objectDescriptor = query.type,
                 readOperation = new DataOperation(),
                 serializedOperation;
-    
+
               //We need to turn this into a Read Operation. Difficulty is to turn the query's criteria into
               //one that doesn't rely on objects. What we need to do before handing an operation over to another context
               //bieng a worker on the client side or a worker on the server side, is to remove references to live objects.
               //One way to do this is to replace every object in a criteria's parameters by it's data identifier.
               //Another is to serialize the criteria.
               readOperation.type = DataOperation.Type.Read;
-              readOperation.dataDescriptor = objectDescriptor.module.id;  
+              readOperation.dataDescriptor = objectDescriptor.module.id;
               readOperation.criteria = query.criteria;
               readOperation.objectExpressions = query.prefetchExpressions;
-  
+
                 self._dispatchReadOperation(readOperation, stream);
             });
-  
+
           return stream;
         }
     },
@@ -400,7 +400,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 else {
                     dataSnapshot[aRawProperty] = snapshot[aRawProperty];
                 }
-            } 
+            }
 
         }
     },
@@ -411,7 +411,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
-    
+
     handleCreatetransactioncompleted: {
         value: function (operation) {
             this.handleOperationCompleted(operation);
@@ -505,7 +505,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         value: function () {
             var self = this,
 
-            //Ideally, this should be saved in IndexedDB so if something happen 
+            //Ideally, this should be saved in IndexedDB so if something happen
             //we can at least try to recover.
                 createdDataObjects = new Set(this.createdDataObjects),//Set
                 changedDataObjects = new Set(this.changedDataObjects),//Set
@@ -526,8 +526,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     //when saveChanges is called.
 
                     /*
-                        We make shallow copy of the sets and dataObjectChanges at the time we start, 
-                        as there are multiple async steps and the client can create new changes/objects 
+                        We make shallow copy of the sets and dataObjectChanges at the time we start,
+                        as there are multiple async steps and the client can create new changes/objects
                         as soon as the main loop gets back in the user's hands.
                     */
 
@@ -596,10 +596,10 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         if(changedDataObjectInvalidity.size > 0) {
                             //Do we really need the DataService itself to dispatch another event with all invalid data together at once?
                             //self.mainService.dispatchDataEventTypeForObject(DataEvent.invalid, self, detail);
-                        
+
                             var validatefailedOperation = new DataOperation;
                             validatefailedOperation.type = DataOperation.Type.ValidateFailed;
-                            //At this point, it's the dataService 
+                            //At this point, it's the dataService
                             validatefailedOperation.target = self.mainService;
                             validatefailedOperation.data = changedDataObjectInvalidity;
                             //Exit, can't move on
@@ -626,8 +626,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             });
                             self._thenableByOperationId.set(createTransaction.id,_createTransactionPromise);
 
-                            self._dispatchOperation(createTransaction); 
-                                            
+                            self._dispatchOperation(createTransaction);
+
                             return _createTransactionPromise;
                         }, function(error) {
                             console.error;
@@ -643,12 +643,12 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         }
 
                         rawTransactionId = createTransactionResult.data.transactionId;
-                    
+
                         /*
                             Now that we have cleaned sets, an open transaction, we build all individual operations. Rigth now we have lost the timestamps related to individual changes. If it turns out we need it (EOF/CoreData have it along with a delegate method to intervene) then the recording of changes in DataService will need to be overahauled to track timestamps. When we add undoManagementt to DataService, that subsystem will have every single change in a list as they happen and could also be leveraged?
                         */
                         batchedOperationPromises = [];
-                        
+
                         //we start by createdObjects:
                         // for(i=0, countI = createdDataObjects.length;(i<countI);i++) {
                         //     iObject = createdDataObjects[i];
@@ -673,9 +673,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         while(iObject = iterator.next().value) {
                             batchedOperationPromises.push(self._saveDataOperationForObject(iObject, deleteOperationType, dataObjectChanges, dataOperationsByObject));
                         }
-                        
+
                         return Promise.all(batchedOperationPromises);
-                        
+
                     })
                     .then(function(batchedOperations) {
                         //Now proceed to build the batch operation
@@ -695,8 +695,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         });
                         self._thenableByOperationId.set(batchOperation.id,batchOperationPromise);
 
-                        self._dispatchOperation(batchOperation); 
-                                        
+                        self._dispatchOperation(batchOperation);
+
                         return batchOperationPromise;
                     })
                     .then(function(batchedOperationResult) {
@@ -713,19 +713,19 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             performTransactionOperation.data = {
                                 transactionId: transactionId
                             };
-    
+
                             performTransactionOperationPromise = new Promise(function(resolve, reject) {
                                 performTransactionOperation._promiseResolve = resolve;
                                 performTransactionOperation._promiseReject = reject;
                             });
                             self._thenableByOperationId.set(performTransactionOperation.id,performTransactionOperationPromise);
-    
-                            self._dispatchOperation(performTransactionOperation); 
-                                            
+
+                            self._dispatchOperation(performTransactionOperation);
+
                             return performTransactionOperationPromise;
                         } else if(batchedOperationResult.type === DataOperation.Type.BatchFailed) {
                             //We need to rollback:
-                            
+
                             rollbackTransactionOperation = new DataOperation();
                             rollbackTransactionOperation.type = DataOperation.Type.RollbackTransaction;
                             rollbackTransactionOperation.dataDescriptor = transactionObjecDescriptorModuleIds,
@@ -741,18 +741,18 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                                 rollbackTransactionOperation._promiseReject = reject;
                             });
                             self._thenableByOperationId.set(rollbackTransactionOperation.id,rollbackTransactionOperationPromise);
-    
-                            self._dispatchOperation(rollbackTransactionOperation); 
-                                            
+
+                            self._dispatchOperation(rollbackTransactionOperation);
+
                             return rollbackTransactionOperationPromise;
-                            
+
                         } else {
                             console.error("- saveChanges: Unknown batchedOperationResult:",batchedOperationResult);
                             reject(new Error("- saveChanges: Unknown batchedOperationResult:"+JSON.stringify(batchedOperationResult)));
                         }
                     })
                     .then(function(transactionOperationResult) {
-                        if(transactionOperationResult.type === DataOperation.Type.PerformTransactionCompleted) { 
+                        if(transactionOperationResult.type === DataOperation.Type.PerformTransactionCompleted) {
                             //We need to do what we did im saveDataObjects, for each created, updated and deleted obect.
                             self.didCreateDataObjects(createdDataObjects, dataOperationsByObject);
                             self.didUpdateDataObjects(changedDataObjects, dataOperationsByObject);
@@ -782,11 +782,11 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     reject(error);
                 }
             });
-            
+
             // .then(function(createTransactionResult) {
 
             //     if(createTransactionResult.type === DataOperation.Type.CreateTransactionFailed) {
-                    
+
             //     } else {
 
             //     }
@@ -808,8 +808,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
-    
-    
+
+
     didCreateDataObjects: {
         value: function(createdDataObjects, dataOperationsByObject) {
 /*
@@ -832,7 +832,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 this.rootService.registerUniqueObjectWithDataIdentifier(iObject, iDataIdentifier);
 
                 this.dispatchDataEventTypeForObject(DataEvent.save, iObject, saveEventDetail);
-    
+
             }
         }
     },
@@ -874,7 +874,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             /*
                 We need to cleanup:
                 - dispatch "delete" event now that it's done.
-                - remove snapshot about that object, remove dataIdentifier, 
+                - remove snapshot about that object, remove dataIdentifier,
             */
 
             while(iObject = iterator.next().value) {
@@ -903,7 +903,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
      * @argument {Object} object - The object whose data should be saved.
      * @argument {DataOperation.Type} operationType - The object whose data should be saved.
      * @returns {external:Promise} - A promise fulfilled when the operationo is ready.
-     * 
+     *
      */
 
     _saveDataOperationForObject: {
@@ -914,17 +914,17 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 //First thing we should be doing here is run validation
                 //on the object, which should be done one level up
                 //by the mainService. Do there and test
-    
+
                 /*
                     Here we want to use:
                     this.rootService.changesForDataObject();
-    
+
                     to only map back, and send, only:
                     1. what was changed by the user, and
                     2. that is different from the snapshot?
-    
+
                 */
-    
+
                 var self = this,
                     operation = new DataOperation(),
                     dataIdentifier = this.dataIdentifierForObject(object),
@@ -937,24 +937,24 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     dataObjectChanges = dataObjectChangesMap.get(object),
                     propertyIterator,
                     aProperty, aRawProperty,
-                    isNewObject = operationType 
+                    isNewObject = operationType
                         ? operationType === DataOperation.Type.Create
                         : self.rootService.createdDataObjects.has(object),
-                    localOperationType = operationType 
+                    localOperationType = operationType
                                         ? operationType
-                                        : isNewObject 
-                                            ? DataOperation.Type.Create 
+                                        : isNewObject
+                                            ? DataOperation.Type.Create
                                             : DataOperation.Type.Update,
                     isDeletedObject = localOperationType === DataOperation.Type.Delete,
                     operationData = {},
                     mappingPromise,
                     mappingPromises,
                     i, iValue, countI;
-    
+
                 operation.target = operation.dataDescriptor = objectDescriptor.module.id;
-    
+
                 operation.type = localOperationType;
-    
+
                 if(dataIdentifier) {
                     if(!isNewObject) {
                         operation.criteria = this.rawCriteriaForObject(object, objectDescriptor);
@@ -963,30 +963,30 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         operationData.id = dataIdentifier.primaryKey;
                     }
                 }
-    
+
                 //Nothing to do, change the operation type and bail out
                 if(!isNewObject && !dataObjectChanges && !isDeletedObject) {
                     operation.type = DataOperation.Type.NoOp;
                     return Promise.resolve(operation);
                 }
-    
+
                 operation.data = operationData;
-    
+
                 // if(isNewObject) {
                 //     mappingPromise =  this._mapObjectToRawData(object, operationData);
                 // } else {
-    
+
                     /*
                         The last fetched values of the properties that changed, so the backend can use it to make optimistic-locking update
                         with a where that conditions that the current value is still
                         the one that was last fecthed by the client making the update.
 
-                        For deletedObjects, if there were changes, we don't care about them, it's not that relevant, we're going to use all known properties fetched client side to eventually catch a conflict if someone made a change in-between. 
+                        For deletedObjects, if there were changes, we don't care about them, it's not that relevant, we're going to use all known properties fetched client side to eventually catch a conflict if someone made a change in-between.
                     */
                     if(!isNewObject) {
                         operation.snapshot = dataSnapshot;
                     }
-    
+
                     propertyIterator = isDeletedObject
                         ? Object.keys(object).values()
                         : dataObjectChanges.keys();
@@ -1003,25 +1003,25 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         if(isDeletedObject && (!aPropertyDescriptor || !aPropertyChanges)) {
                             continue;
                         }
-    
+
                         result = this._processObjectChangesForProperty(object, aProperty, aPropertyDescriptor, aRawProperty, aPropertyChanges, operationData, snapshot, dataSnapshot);
-    
+
                         if(result && this._isAsync(result)) {
                             (mappingPromises || (mappingPromises = [])).push(result);
                         }
                     }
-    
+
                     if(mappingPromises && mappingPromises.length) {
                         mappingPromise = Promise.all(mappingPromises);
                     }
                 //}
-    
-    
-                return (mappingPromise 
+
+
+                return (mappingPromise
                     ? mappingPromise
                     : Promise.resolve(true))
                     .then(function(success) {
-    
+
                         if(!isDeletedObject && Object.keys(operationData).length === 0) {
                             //if there are no changes known, it's a no-op: if it's an existing object,
                             //nothing to do and if it's a new empty object... should it go through??
@@ -1031,7 +1031,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         else {
                             /*
                                 Now that we got them, clear it so we don't conflict with further changes if we have some async mapping stuff in-between.
-            
+
                                 If somehow things fail, we have the pending operation at hand to re-try
                             */
                            if(!isDeletedObject) {
@@ -1045,8 +1045,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         if(dataOperationsByObject) {
                             dataOperationsByObject.set(object,operation);
                         }
-                        return operation;               
-                    }); 
+                        return operation;
+                    });
             }
             catch(error) {
                 return Promise.reject(error);
@@ -1061,7 +1061,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
      * @argument {Object} object - The object whose data should be saved.
      * @returns {external:Promise} - A promise fulfilled when all of the data in
      * the changed object has been saved.
-     * 
+     *
      */
     saveDataObject: {
         value: function (object) {
@@ -1106,22 +1106,22 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         //if there are no changes known, it's a no-op: if it's an existing object,
                         //nothing to do and if it's a new empty object... should it go through??
                         //Or it's either a CreateCancelled or an UpdateCancelled
-                        return Promise.resolve(operation);            
+                        return Promise.resolve(operation);
                     }
                     else {
                         return self._socketOpenPromise.then(function () {
-        
+
                             operationPromise = new Promise(function(resolve, reject) {
                                 operation._promiseResolve = resolve;
                                 operation._promiseReject = reject;
                             });
                             self._thenableByOperationId.set(operation.id,operationPromise);
-            
+
                             /*
                                 would it be useful to pass the snapshot raw data as well?
                                 // -> great question, yes, because it will help the SQL generation to add a where clause for the previous value, so that if it changed since, then the update will fail, and we can communicate that back to the user.
-                                
-                                to eventually push updates if any it will be better done by a push when something changes, and for that, we'd need to have in the backend a storage/record: 
+
+                                to eventually push updates if any it will be better done by a push when something changes, and for that, we'd need to have in the backend a storage/record:
                                     identifier -> list of clients who have it.
 
                                 When a client stops to run, unless it supports push notifications and service worker, we could tell the backend
@@ -1131,8 +1131,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             */
 
 
-                            self._dispatchOperation(operation); 
-                            
+                            self._dispatchOperation(operation);
+
                             return operationPromise;
                             // this is sync
                             // cool, but how do we know that the write operation has been carried out?
@@ -1150,19 +1150,19 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                                 dataIdentifier = self.dataIdentifierForObject(object),
                                 objectDescriptor = self.objectDescriptorForObject(object),
                                 rawData, snapshot = {};
-        
-        
+
+
                             if(operation.type === DataOperation.Type.CreateCompleted) {
                                 rawData = operation.data,
                                 objectDescriptor = self.objectDescriptorWithModuleId(operation.dataDescriptor),
                                 dataIdentifier = self.dataIdentifierForTypeRawData(objectDescriptor,rawData);
-            
+
                                 //First set what we sent
                                 Object.assign(snapshot,referrerOperation.data);
                                 //then set what we received
                                 Object.assign(snapshot,rawData);
                                 self.recordSnapshot(dataIdentifier, snapshot);
-                                self.rootService.registerUniqueObjectWithDataIdentifier(object, dataIdentifier);        
+                                self.rootService.registerUniqueObjectWithDataIdentifier(object, dataIdentifier);
                             }
                             else if(operation.type === DataOperation.Type.UpdateCompleted) {
                                 // referrerOperation = self._pendingOperationById.get(operation.referrerId);
@@ -1277,36 +1277,36 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     //         }
 
 
-    //         return (mappingPromise 
+    //         return (mappingPromise
     //             ? mappingPromise
     //             : Promise.resolve(true))
     //             .then(function(success) {
 
     //                 if(Object.keys(operationData).length > 0) {
     //                     return self._socketOpenPromise.then(function () {
-    
+
     //                         operationPromise = new Promise(function(resolve, reject) {
     //                             operation._promiseResolve = resolve;
     //                             operation._promiseReject = reject;
     //                         });
     //                         self._thenableByOperationId.set(operation.id,operationPromise);
-            
+
     //                         /*
     //                              would it be useful to pass the snapshot raw data as well?
     //                             // -> great question, yes, because it will help the SQL generation to add a where clause for the previous value, so that if it changed since, then the update will fail, and we can communicate that back to the user.
-                                
-    //                             to eventually push updates if any it will be better done by a push when something changes, and for that, we'd need to have in the backend a storage/record: 
+
+    //                             to eventually push updates if any it will be better done by a push when something changes, and for that, we'd need to have in the backend a storage/record:
     //                                 identifier -> list of clients who have it.
-    
+
     //                             When a client stops to run, unless it supports push notifications and service worker, we could tell the backend
     //                             so it can remove it from the list of clients.
-    
+
     //                             Similarly, if a client supports ServiceWorker, the clientId should one from the service worker, which is shared by all tabs and might run in the background. On browsers that don't, all the stack will run in main thread and 2 tabs should behave as 2 different clients.
     //                         */
-    
-    
-    //                         self._dispatchOperation(operation); 
-                            
+
+
+    //                         self._dispatchOperation(operation);
+
     //                         return operationPromise;
     //                         // this is sync
     //                         // cool, but how do we know that the write operation has been carried out?
@@ -1323,8 +1323,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     //                     //nothing to do and if it's a new empty object... should it go through??
     //                     //Or it's either a CreateCancelled or an UpdateCancelled
     //                     operation.type = DataOperation.Type.NoOp;
-    //                     return Promise.resolve(operation);            
-    //                 }    
+    //                     return Promise.resolve(operation);
+    //                 }
 
     //             })
     //             .then(function(operation) {
@@ -1335,9 +1335,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     //                     var rawData = operation.data,
     //                     objectDescriptor = self.objectDescriptorWithModuleId(operation.dataDescriptor),
     //                     dataIdentifier = self.dataIdentifierForTypeRawData(objectDescriptor,rawData);
-    
+
     //                     self.recordSnapshot(dataIdentifier, operationData);
-    //                     self.rootService.registerUniqueObjectWithDataIdentifier(object, dataIdentifier);        
+    //                     self.rootService.registerUniqueObjectWithDataIdentifier(object, dataIdentifier);
     //                 }
     //                 else if(operation.type === DataOperation.Type.UpdateCompleted) {
     //                     // referrerOperation = self._pendingOperationById.get(operation.referrerId);
@@ -1382,7 +1382,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         value: function(rawData, object) {
             var snapshot = object.dataIdentifier && this.snapshotForDataIdentifier(object.dataIdentifier);
 
-            return snapshot 
+            return snapshot
                 ? this._rawDataUpdatesFromObjectSnapshot(rawData,snapshot)
                 : {changes: rawData, snapshot: null};
         }
@@ -1427,8 +1427,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     //                     /*
     //                          would it be useful to pass the snapshot raw data as well?
     //                         // -> great question, yes, because it will help the SQL generation to add a where clause for the previous value, so that if it changed since, then the update will fail, and we can communicate that back to the user.
-                            
-    //                         to eventually push updates if any it will be better done by a push when something changes, and for that, we'd need to have in the backend a storage/record: 
+
+    //                         to eventually push updates if any it will be better done by a push when something changes, and for that, we'd need to have in the backend a storage/record:
     //                             identifier -> list of clients who have it.
 
     //                         When a client stops to run, unless it supports push notifications and service worker, we could tell the backend
@@ -1489,7 +1489,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     },
 
     /**
-     * Overrides DataService's that flags the object as deleted 
+     * Overrides DataService's that flags the object as deleted
      * so we don't do more. saveChanges is where we now take concrete measures.
      *
      * @method

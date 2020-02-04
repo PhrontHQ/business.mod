@@ -34,7 +34,7 @@
                 {"@": "cognitoIdentityService"}
             ]
         }
-    },  
+    },
 
     "object": {
         "object": "data/main.datareel/model/object.mjson"
@@ -132,8 +132,6 @@
         "object": "data/main.datareel/cognito-identity-service.mjson",
         "values": {
             "authorizationPolicy": {"=":"@AuthenticationPolicy.ON_DEMAND"}
-        }        
+        }
     }
-
-
 }

@@ -11,18 +11,12 @@ var SignUp = exports.SignUp = Component.specialize({
         value: true
     },
 
-    userName: {
+    username: {
         value: void 0
     },
 
     password: {
         value: void 0
-    },
-
-    isBrowserSupported: {
-        get: function () {
-            return currentEnvironment.browserName == 'chrome';
-        }
     },
 
     signUpButton: {
@@ -33,7 +27,7 @@ var SignUp = exports.SignUp = Component.specialize({
         value: void 0
     },
 
-    userNameTextField: {
+    usernameTextField: {
         value: void 0
     },
 
@@ -59,22 +53,9 @@ var SignUp = exports.SignUp = Component.specialize({
         }
     },
 
-    _isAuthenticating: {
+    isAuthenticating: {
         value: false
     },
-
-    isAuthenticating: {
-        set: function (isAuthenticating) {
-            if (this._isAuthenticating !== isAuthenticating) {
-                this._isAuthenticating = isAuthenticating;
-                this._toggleUserInteraction();
-            }
-        },
-        get: function () {
-            return this._isAuthenticating;
-        }
-    },
-
 
     __keyComposer: {
         value: null
@@ -94,26 +75,13 @@ var SignUp = exports.SignUp = Component.specialize({
     },
 
     enterDocument: {
-        value: function (isFirstTime) {
-
-            //Check if the service has a knonw user:
-            //TODO, we shouldn't be exposing a CognitoUser directly
-            console.debug("FIX ME -> CognitoUser -> Phront User");
-            // if(this.service.user) {
-            //     this.username = this.service.user.getName();
-            // }
-
+        value: function (firstTime) {
+            if (firstTime) {
+                this.element.addEventListener("transitionend", this, false);
+            }
             this.addEventListener("action", this, false);
             this._keyComposer.addEventListener("keyPress", this, false);
-            this.element.addEventListener("transitionend", this, false);
-
-            // checks for disconnected hash
-            if(location.href.indexOf(";disconnected") > -1) {
-                this.hasError = true;
-                this.errorMessage = "Oops! Your token has expired. \n Please log back in.";
-                location.href = location.href.replace(/;disconnected/g, '');
-            }
-            this.userNameTextField.focus();
+            this.usernameTextField.focus();
         }
     },
 
@@ -121,9 +89,9 @@ var SignUp = exports.SignUp = Component.specialize({
         value: function () {
             this.removeEventListener("action", this, false);
             this._keyComposer.removeEventListener("keyPress", this, false);
+            this.password = this.username = this.email = null;
         }
     },
-
 
     handleKeyPress: {
         value: function (event) {
@@ -141,61 +109,38 @@ var SignUp = exports.SignUp = Component.specialize({
 
     handleSignUpAction: {
         value: function() {
-            if (!this._isAuthenticating && this.userName) {
-                var self = this,
-                    newIdentity  = this.application.mainService.createDataObject(UserIdentity);
-
-                this.isAuthenticating = true;
-                this.hadError = false;
-                var password = this.password || "";
-
-                //Would be great to not have to do that, but for now:
-                newIdentity.userName = this.userName;
-                newIdentity.email = this.email;
-                newIdentity.password = this.password;
-
-                this.application.mainService.saveDataObject(newIdentity)
-                .then(function (savedUserIdentity) {
-
-                    //set the userIdentity on the authentication panel
-                    //This might be best handled with bindings...
-                    self.ownerComponent.userIdentity = savedUserIdentity;
-
-                    self.isLoggedIn = true;
-
-                    // Don't keep any track of the password in memory.
-                    self.password = self.userName = null;
-
-                    /*
-                        We need to now show the email verification code component.
-                        We can hard-code that for now, but need to check if that's hinted by Cognito that this is happenning, as it's a configurable behavior in Cognito.
-                    */
-
-                   self.ownerComponent.substitutionPanel = "enterVerificationCode";
-
-
-                }, function (error) {
-                    if(error) {
-                        if(error instanceof DataOperation && error.data.hasOwnProperty("password")) {
-                            self.ownerComponent.needsChangePassword = true; 
-                        }
-                        else {
-                            self.errorMessage = error.message || error;
-                            self.hadError = true;    
-                        }
-                    } else {
-                        self.errorMessage = null;
-                    }
-                }).finally(function (value) {
-                    if (self.errorMessage) {
-                        self.element.addEventListener(
-                            typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
-                        );
-                    }
-
-                    self.isAuthenticating = false;
-                });
-            }
+            var self = this,
+                newIdentity = this.application.mainService.createDataObject(UserIdentity);
+            this.isAuthenticating = true;
+            this.hadError = false;
+            newIdentity.username = this.username;
+            newIdentity.email = this.email;
+            newIdentity.password = this.password;
+            this.application.mainService.saveDataObject(newIdentity)
+            .then(function () {
+                // we'll get here if confirmation is not required, in which case
+                // we have a signed in user identity
+                self.userIdentity = newIdentity;
+            }, function (error) {
+                if (error instanceof DataOperation && error.data.hasOwnProperty("accountConfirmationCode")) {
+                    // this is the other "success" path... awkward that it's a
+                    // reject, but we need data operations to get context on how
+                    // the code was sent. Unless we modeled the confirmation
+                    // message differently, as a separate data model...
+                    self.userIdentity = newIdentity;
+                    self.ownerComponent.substitutionPanel = "enterVerificationCode";
+                } else {
+                    self.hadError = true;
+                    self.errorMessage = error.userMessage || error.message || error;
+                }
+            }).finally(function () {
+                if (self.errorMessage) {
+                    self.element.addEventListener(
+                        typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", self, false
+                    );
+                }
+                self.isAuthenticating = false;
+            });
         }
     },
 
@@ -205,7 +150,7 @@ var SignUp = exports.SignUp = Component.specialize({
                 this.element.style.display = 'none';
             } else if (this._isFirstTransitionEnd) {
                 this._isFirstTransitionEnd = false;
-                this.userNameTextField.focus();
+                this.usernameTextField.focus();
             }
         }
     },
@@ -221,15 +166,7 @@ var SignUp = exports.SignUp = Component.specialize({
                 );
             }
         }
-    },
-
-    _toggleUserInteraction: {
-        value: function () {
-            this.signUpButton.disabled = this._isAuthenticating;
-            this.passwordTextField.disabled = this.userNameTextField.disabled = this._isAuthenticating;
-        }
     }
-
 });
 
 SignUp.prototype.handleWebkitAnimationEnd = SignUp.prototype.handleAnimationend;

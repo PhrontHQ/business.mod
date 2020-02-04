@@ -1,4 +1,4 @@
-.SignIn {
+.EnterMfaCode {
     opacity: 0;
     visibility: hidden;
     padding: 2em;
@@ -20,12 +20,12 @@
     background: none
 }
 
-.montage-Overlay--visible .SignIn {
+.montage-Overlay--visible .EnterMfaCode {
     opacity: 1;
     visibility: visible
 }
 
-.SignIn-content {
+.EnterMfaCode-content {
     position: relative;
     padding: 2em;
     width: 20em;
@@ -37,7 +37,7 @@
     overflow: hidden
 }
 
-.SignIn-content:before {
+.EnterMfaCode-content:before {
     position: absolute;
     content: "";
     top: 0;
@@ -47,27 +47,35 @@
     z-index: -1
 }
 
-.SignIn.had-error .SignIn-content {
+.EnterMfaCode.had-error .EnterMfaCode-content {
     animation: denied .5s ease-in-out
 }
 
-.montage-Overlay--visible .SignIn-content {
+.montage-Overlay--visible .EnterMfaCode-content {
     transform: scale(1)
 }
 
-.SignIn-logo {
+.EnterMfaCode-logo {
     margin-bottom: 2em;
     padding: 16px;
     padding: 1rem;
     width: 100%
 }
 
-.SignIn-infoText {
-    text-align: center;
+.EnterMfaCode-infoText, .EnterMfaCode-descriptionText {
     margin-bottom: 2em
 }
 
-.SignIn-browserMessage {
+.EnterMfaCode-infoText {
+    text-align: center;
+}
+
+.EnterMfaCode-descriptionText {
+    text-align: left;
+}
+
+
+.EnterMfaCode-browserMessage {
     background: #cf324f;
     margin: 0 -2em;
     margin-top: -2em;
@@ -77,16 +85,16 @@
     text-align: center
 }
 
-.isAuthenticating .SignIn-submit {
+.isAuthenticating .EnterMfaCode-submit {
     position: relative;
     overflow: hidden
 }
 
 .field-message {
-    display: none
+    display: none;
 }
 
-.SignIn.hasError .field-message {
+.EnterMfaCode.hasError .field-message {
     color: rgba(255, 0, 0, .8);
     display: block;
     margin-bottom: 1em
@@ -97,7 +105,7 @@
     background: rgba(255, 0, 0, .075)
 }
 
-.SignIn-error-message {
+.EnterMfaCode-error-message {
     display: none;
     text-align: center;
     transition: opacity .25s;
@@ -110,23 +118,6 @@
     margin-bottom: 2rem
 }
 
-.SignIn.hasError .SignIn-error-message {
-    display: block
-}
-
-.SignIn-information-message {
-    display: none;
-    text-align: center;
-    transition: opacity .25s;
-    background: #0c5688;
-    color: #fff;
-    padding: 1em 2em;
-    margin: 0 -32px;
-    margin: 0 -2rem;
-    margin-bottom: 32px;
-    margin-bottom: 2rem
-}
-
-.SignIn.hasInformation .SignIn-information-message {
+.EnterMfaCode.hasError .EnterMfaCode-error-message {
     display: block;
 }

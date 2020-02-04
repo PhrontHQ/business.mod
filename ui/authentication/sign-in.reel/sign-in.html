@@ -8,14 +8,15 @@
         "owner": {
             "properties": {
                 "element": {"#": "owner"},
-                "userNameTextField": {"@": "userName"},
+                "usernameTextField": {"@": "username"},
                 "passwordTextField": {"@": "password"},
                 "signInButton": {"@": "signIn"}
             },
             "bindings": {
                 "classList.has('hasError')": {"<-": "@owner.hasError"},
                 "classList.has('had-error')": {"<-": "@owner.hadError"},
-                "classList.has('isAuthenticating')": {"<-": "@owner.isAuthenticating"}
+                "classList.has('isAuthenticating')": {"<-": "@owner.isAuthenticating"},
+                "classList.has('hasInformation')": {"<-": "@owner.informationMessage.length > 0"}
             }
         },
 
@@ -27,14 +28,14 @@
             }
         },
 
-        "userName": {
+        "username": {
             "prototype": "../../controls/text-field.reel",
             "properties": {
-                "element": {"#": "userName"},
+                "element": {"#": "username"},
                 "placeholder": "username"
             },
             "bindings": {
-                "value": {"<->": "@owner.userName"}
+                "value": {"<->": "@owner.username"}
             }
         },
 
@@ -59,6 +60,16 @@
             }
         },
 
+        "informationMessage": {
+            "prototype": "../../controls/text.reel",
+            "properties": {
+                "element": {"#": "informationMessage"}
+            },
+            "bindings": {
+                "value": {"<-": "@owner.informationMessage"}
+            }
+        },
+
         "signIn": {
             "prototype": "../../controls/button.reel",
             "properties": {
@@ -67,33 +78,21 @@
             },
             "bindings": {
                 "isProcessing": {"<-": "@owner.isAuthenticating"},
-                "disabled": {"<-": "isProcessing || !@userName.value"}
-            }
-        },
-
-        "browserMessage": {
-            "prototype": "../../controls/text.reel",
-            "properties": {
-                "element": {"#": "browserMessage"},
-                "value": "We're sorry but this browser isn't supported."
-            },
-            "bindings": {
-                "classList.has('is-hidden')": {"<-": "true"}
+                "disabled": {"<-": "isProcessing || !@username.value"}
             }
         }
-
     }
     </script>
 </head>
 <body>
     <div data-montage-id="owner" class="SignIn">
         <div class="SignIn-content">
-            <div data-montage-id="browserMessage" class="SignIn-browserMessage"></div>
             <img src="../../assets/images/Etiama-logo-white.svg" class="SignIn-logo" alt="phront Logo">
             <div data-montage-id="infoText" class="SignIn-infoText"></div>
-            <div data-montage-id="errorMessage" class="SignIn-error-message "></div>
-            <input type="text" data-montage-id="userName" class="SignIn-userName g-margin-bottom--half" autocapitalize="none" autocorrect="none"></input>
-            <input type="password" data-montage-id="password" class="SignIn-userName g-margin-bottom--double"></input>
+            <div data-montage-id="errorMessage" class="SignIn-error-message"></div>
+            <div data-montage-id="informationMessage" class="SignIn-information-message"></div>
+            <input type="text" data-montage-id="username" class="SignIn-username g-margin-bottom--half" autocapitalize="none" autocorrect="none"></input>
+            <input type="password" data-montage-id="password" class="SignIn-username g-margin-bottom--double"></input>
             <button data-montage-id="submit" class="SignIn-submit Button--primary Button--block Button--large Button--loader"></button>
         </div>
     </div>

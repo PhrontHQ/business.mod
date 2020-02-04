@@ -1,47 +1,22 @@
 var Component = require("montage/ui/component").Component,
-    KeyComposer = require("montage/composer/key-composer").KeyComposer;
+    KeyComposer = require("montage/composer/key-composer").KeyComposer,
+    DataOperation = require("montage/data/service/data-operation").DataOperation;
 
-/*
-Minimum length: 8
-
-Require numbers
-Require special character
-Require uppercase letters
-Require lowercase letters
-
-*/
-
-var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
+var EnterMfaCode = exports.EnterMfaCode = Component.specialize({
 
     descriptionText: {
-        value: `To protect your account, make sure your password:<br><br>
-        - is at least 8 character long<br>
-        - contains a number<br>
-        - contains an uppercase letter<br>
-        - contains a lowercase letter<br>`
+        value: "A code was sent to your device, please enter it below:"
     },
 
     _isFirstTransitionEnd: {
         value: true
     },
 
-    oldPassword: {
+    mfaCode: {
         value: void 0
     },
 
-    password: {
-        value: void 0
-    },
-
-    changePasswordButton: {
-        value: void 0
-    },
-
-    passwordTextField: {
-        value: void 0
-    },
-
-    usernameTextField: {
+    signInButton: {
         value: void 0
     },
 
@@ -89,13 +64,11 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
     },
 
     enterDocument: {
-        value: function (firstTime) {
-            if (firstTime) {
-                this.element.addEventListener("transitionend", this, false);
-            }
+        value: function () {
             this.addEventListener("action", this, false);
             this._keyComposer.addEventListener("keyPress", this, false);
-            this.passwordTextField.focus();
+            this.element.addEventListener("transitionend", this, false);
+            this.mfaCodeField.focus();
         }
     },
 
@@ -103,32 +76,31 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
         value: function () {
             this.removeEventListener("action", this, false);
             this._keyComposer.removeEventListener("keyPress", this, false);
-            this.password = this.oldPassword = null;
+            this.mfaCode = null;
         }
     },
 
     handleKeyPress: {
         value: function (event) {
             if (event.identifier === "enter") {
-                this.handleChangePasswordAction(event);
+                this.handleSignInAction(event);
             }
         }
     },
 
-    handleChangePasswordAction: {
+    handleSignInAction: {
         value: function () {
             var self = this;
             this.isAuthenticating = true;
             this.hadError = false;
-            this.userIdentity.password = this.oldPassword;
-            this.userIdentity.newPassword = this.password;
+            this.userIdentity.mfaCode = this.mfaCode;
             this.application.mainService.saveDataObject(this.userIdentity)
             .catch(function (error) {
-                if (error) {
-                    self.errorMessage = error.message || error;
-                    self.hadError = true;
+                self.hadError = true;
+                if (error instanceof DataOperation && error.type === DataOperation.Type.ValidateFailed) {
+                    self.errorMessage = error.userMessage;
                 } else {
-                    self.errorMessage = null;
+                    self.errorMessage = error.message || error;
                 }
             }).finally(function () {
                 if (self.errorMessage) {
@@ -143,11 +115,11 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
 
     handleTransitionend: {
         value: function (e) {
-            if(this.userIdentity.isAuthenticated && e.target == this.element && e.propertyName == 'opacity') {
+            if(this.ownerComponent.userIdentity.isAuthenticated && e.target == this.element && e.propertyName == 'opacity') {
                 this.element.style.display = 'none';
             } else if (this._isFirstTransitionEnd) {
                 this._isFirstTransitionEnd = false;
-                this.passwordTextField.focus();
+                this.mfaCodeField.focus();
             }
         }
     },
@@ -155,8 +127,8 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
     handleAnimationend: {
         value: function () {
             if (this.errorMessage) {
-                this.passwordTextField.value = null;
-                this.passwordTextField.element.focus();
+                this.mfaCodeField.value = null;
+                this.mfaCodeField.element.focus();
 
                 this.element.removeEventListener(
                     typeof WebKitAnimationEvent !== "undefined" ? "webkitAnimationEnd" : "animationend", this, false
@@ -166,4 +138,4 @@ var CreateNewPassword = exports.CreateNewPassword = Component.specialize({
     }
 });
 
-CreateNewPassword.prototype.handleWebkitAnimationEnd = CreateNewPassword.prototype.handleAnimationend;
+EnterMfaCode.prototype.handleWebkitAnimationEnd = EnterMfaCode.prototype.handleAnimationend;

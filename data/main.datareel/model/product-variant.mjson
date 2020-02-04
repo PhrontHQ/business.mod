@@ -45,7 +45,7 @@
             "name": "product",
             "cardinality": 1,
             "inversePropertyName": "variants",
-            "valueDescriptor": {"@": "productDescriptor"}       
+            "valueDescriptor": {"@": "productDescriptor"}
         }
     },
      "images": {
@@ -58,14 +58,14 @@
     },
     "price": {
         "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
+        "values": {
             "name": "price",
             "valueType": "number"
         }
     },
     "selectedOptions": {
         "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
+        "values": {
             "name": "selectedOptions",
             "valueType": "object",
             "cardinality": -1
@@ -73,28 +73,28 @@
     },
     "sku": {
         "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
+        "values": {
             "name": "sku",
             "valueType": "string"
         }
     },
     "availableForSale": {
         "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
+        "values": {
             "name": "availableForSale",
             "valueType": "boolean"
         }
     },
     "weight": {
         "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
+        "values": {
             "name": "weight",
             "valueType": "number"
         }
     },
      "weightUnit": {
         "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
+        "values": {
             "name": "weightUnit",
             "valueType": "string"
         }

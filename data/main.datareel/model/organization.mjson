@@ -76,7 +76,7 @@
             "name": "addresses",
             "valueType": "array",
             "cardinality": -1,
-            "valueDescriptor": {"@": "addresses_descriptor"}       
+            "valueDescriptor": {"@": "addresses_descriptor"}
        }
     },
 

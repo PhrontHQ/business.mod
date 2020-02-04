@@ -23,21 +23,21 @@ exports.ProductVariant = Object.specialize(/** @lends Product.prototype */ {
     },
     selectedOptions: {
         value: undefined
-    },            
+    },
     availableForSale: {
         value: undefined
     },
     sku: {
         value: undefined
-    },            
+    },
     weight: {
         value: undefined
-    },            
+    },
     weightUnit: {
         value: undefined
-    },            
+    },
     presentmentPrices: {
         value: undefined
-    }  
+    }
 
 });

@@ -23,6 +23,6 @@ exports.VendorContact = Montage.specialize(/** @lends VendorContact.prototype */
     },
     email: {
         value: undefined
-    }           
+    }
 
 });

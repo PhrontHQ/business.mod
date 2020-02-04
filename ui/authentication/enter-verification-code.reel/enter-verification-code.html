@@ -75,29 +75,15 @@
             },
             "bindings": {
                 "isProcessing": {"<-": "@owner.isAuthenticating"},
-                "disabled": {"<-": "isProcessing || !@codeVerificationField.value"}
-            }
-        },
-
-        "browserMessage": {
-            "prototype": "../../controls/text.reel",
-            "properties": {
-                "element": {"#": "browserMessage"},
-                "value": "We're sorry but this browser isn't supported."
-            },
-            "bindings": {
-                "classList.has('is-hidden')": {"<-": "true"}
+                "disabled": {"<-": "isProcessing"}
             }
         }
-
-
     }
     </script>
 </head>
 <body>
     <div data-montage-id="owner" class="EnterVerificationCode">
         <div class="EnterVerificationCode-content">
-            <div data-montage-id="browserMessage" class="EnterVerificationCode-browserMessage"></div>
             <img src="../../assets/images/Etiama-logo-white.svg" class="EnterVerificationCode-logo" alt="phront Logo">
             <div data-montage-id="infoText" class="EnterVerificationCode-infoText"></div>
             <div data-montage-id="descriptionText" class="EnterVerificationCode-descriptionText"></div>

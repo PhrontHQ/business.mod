@@ -34,7 +34,7 @@
             "name": "rules",
             "valueType": "object",
             "cardinality": 1,
-            "valueDescriptor": {"@": "CollectionRule_descriptor"}               
+            "valueDescriptor": {"@": "CollectionRule_descriptor"}
         }
     },
     "CollectionRule_descriptor": {

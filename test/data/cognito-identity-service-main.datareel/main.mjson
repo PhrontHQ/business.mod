@@ -1,16 +1,12 @@
 {
+
     "root": {
         "prototype": "montage/data/service/data-service",
         "values": {
-            "name": "DataService",
+            "name": "CognitoIdentityServiceMain",
             "isUniquing": true,
             "childServices": [
-                {"@": "phrontService"}
             ]
         }
-    },
-
-    "phrontService": {
-        "object": "data/main.datareel/phront-service.mjson"
     }
 }

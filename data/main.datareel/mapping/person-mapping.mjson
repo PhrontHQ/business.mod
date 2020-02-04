@@ -33,5 +33,5 @@
         "values": {
             "convertExpression": "$.has(id)"
         }
-    }   
+    }
 }
