@@ -113,18 +113,38 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
             //console.log("handleEvent(...)",deserializedOperation);
 
             if(deserializedOperation.type ===  DataOperation.Type.Read) {
+
                 resultOperationPromise = phrontService.handleReadOperation(deserializedOperation);
-            }
-            else if(deserializedOperation.type ===  DataOperation.Type.Update) {
+
+            } else if(deserializedOperation.type ===  DataOperation.Type.Update) {
+
                 resultOperationPromise = phrontService.handleUpdateOperation(deserializedOperation);
-            }
-            else if(deserializedOperation.type ===  DataOperation.Type.Create) {
+
+            } else if(deserializedOperation.type ===  DataOperation.Type.Create) {
+
                 resultOperationPromise = phrontService.handleCreateOperation(deserializedOperation);
-            }
-            else if(deserializedOperation.type ===  DataOperation.Type.Delete) {
+
+            } else if(deserializedOperation.type ===  DataOperation.Type.Delete) {
+
                 resultOperationPromise = phrontService.handleDeleteOperation(deserializedOperation);
-            }
-            else {
+
+            } else if(deserializedOperation.type ===  DataOperation.Type.CreateTransaction) {
+
+                resultOperationPromise = phrontService.handleCreateTransactionOperation(deserializedOperation);
+
+            } else if(deserializedOperation.type ===  DataOperation.Type.Batch) {
+
+                resultOperationPromise = phrontService.handleBatchOperation(deserializedOperation);
+
+            } else if(deserializedOperation.type ===  DataOperation.Type.PerformTransaction) {
+
+                resultOperationPromise = phrontService.handlePerformTransactionOperation(deserializedOperation);
+
+            } else if(deserializedOperation.type ===  DataOperation.Type.RollbackTransaction) {
+
+                resultOperationPromise = phrontService.handleRollbackTransactionOperation(deserializedOperation);
+
+            } else {
                 console.error("OperationCoordinator: not programmed to handle type of operation ",deserializedOperation);
                 resultOperationPromise = Promise.reject(null);
             }

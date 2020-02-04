@@ -1,14 +1,14 @@
 var RawDataService = require("montage/data/service/raw-data-service").RawDataService,
     Criteria = require("montage/core/criteria").Criteria,
     ObjectDescriptor = require("montage/core/meta/object-descriptor").ObjectDescriptor,
-    DataQuery = require("montage/data/model/data-query").DataQuery,
+    // DataQuery = require("montage/data/model/data-query").DataQuery,
     DataStream = require("montage/data/service/data-stream").DataStream,
-    Montage = require("montage").Montage,
+    //Montage = require("montage").Montage,
     Promise = require("montage/core/promise").Promise,
     uuid = require("montage/core/uuid"),
     DataOrdering = require("montage/data/model/data-ordering").DataOrdering,
-    DESCENDING = DataOrdering.DESCENDING,
-    evaluate = require("montage/frb/evaluate"),
+    //DESCENDING = DataOrdering.DESCENDING,
+    //evaluate = require("montage/frb/evaluate"),
     Set = require("montage/collections/set"),
 
     //Not needed at all as not used
@@ -19,8 +19,6 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
 
     
     DataOperation = require("montage/data/service/data-operation").DataOperation,
-    uuid = require("montage/core/uuid"),
-
 
     // Require the aws-sdk. This is a dev dependency, so if being used
     // outside of a Lambda execution environment, it must be manually installed.
@@ -576,7 +574,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             operation = new DataOperation(),
             dataIdentifier = this.dataIdentifierForObject(object),
             objectDescriptor = this.objectDescriptorForObject(object),
-            snapshot = this.snapshotForDataIdentifier(object.identifier),
+            snapshot = this.snapshotForDataIdentifier(object.dataIdentifier),
             dataObjectChanges,
             changesIterator,
             aProperty,
@@ -1245,6 +1243,72 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     */
 
   /**
+   * Handles the mapping of a create operation to SQL.
+   *
+   * @method
+   * @argument  {DataOperation} dataOperation - The dataOperation to map to sql
+   * @argument  {DataOperation} record - The object where mapping is done
+`  * @returns   {Steing} - The SQL to perform that operation
+   * @private
+   */
+
+    _mapCreateOperationToSQL: {
+        value: function(createOperation, rawDataOperation, recordArgument) {
+            var data = createOperation.data,
+                objectDescriptor = this.objectDescriptorWithModuleId(createOperation.dataDescriptor),
+                self = this,
+                mappingPromise,
+                record = recordArgument || {},
+                sql;
+
+            mappingPromise =  this._mapObjectToRawData(data, record);
+            if (!mappingPromise) {
+                mappingPromise = this.nullPromise;
+            }
+            return mappingPromise.then(function () {
+
+                //If the client hasn't provided one, we do:
+                if(!record.id) {
+                    record.id = uuid.generate();
+                }
+
+                var tableName = self.tableForObjectDescriptor(objectDescriptor),
+                    schemaName = rawDataOperation.schema,
+                    recordKeys = Object.keys(record),
+                    escapedRecordKeys = recordKeys.map(key => escapeIdentifier(key)),
+                    recordKeysValues = Array(recordKeys.length),
+                    sqlColumns = recordKeys.join(","),
+                    i, countI, iValue, iMappedValue,
+                    sql;
+
+
+                for(i=0, countI=recordKeys.length;i<countI;i++) {
+                    iValue = record[recordKeys[i]];
+                    iMappedValue = self.mapPropertyValueToRawTypeExpression(recordKeys[i],iValue);
+                    // if(iValue == null || iValue == "") {
+                    //   iValue = 'NULL';
+                    // } 
+                    // else if(typeof iValue === "string") {
+                    //   iValue = escapeString(iValue);
+                    //   iValue = `${iValue}`;
+                    //   // iValue = escapeString(iValue);
+                    //   // iValue = `'${iValue}'`;
+                    // }
+                    // else {
+                    //   iValue = prepareValue(iValue);
+                    // }
+                    recordKeysValues[i] = iMappedValue;
+                }
+
+                sql = `INSERT INTO ${schemaName}."${tableName}" (${escapedRecordKeys.join(",")})
+                            VALUES (${recordKeysValues.join(",")})`;
+  
+                return sql;
+            });
+        }
+    },
+
+  /**
    * Handles the mapping and execution of a Create DataOperation.
    *
    * @method
@@ -1266,50 +1330,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
 
               var self = this,
-                  mappingPromise,
                   record = {};
-
-              mappingPromise =  this._mapObjectToRawData(data, record);
-              if (!mappingPromise) {
-                  mappingPromise = this.nullPromise;
-              }
-              return mappingPromise.then(function () {
-
-                //If the client hasn't provided one, we do:
-                if(!record.id) {
-                    record.id = uuid.generate();
-                }
-
-                var tableName = self.tableForObjectDescriptor(objectDescriptor),
-                    schemaName = rawDataOperation.schema,
-                    recordKeys = Object.keys(record),
-                    escapedRecordKeys = recordKeys.map(key => escapeIdentifier(key)),
-                    recordKeysValues = Array(recordKeys.length),
-                    sqlColumns = recordKeys.join(","),
-                    i, countI, iValue, iMappedValue,
-                    sql;
-
-
-                for(i=0, countI=recordKeys.length;i<countI;i++) {
-                  iValue = record[recordKeys[i]];
-                  iMappedValue = self.mapPropertyValueToRawTypeExpression(recordKeys[i],iValue);
-                  // if(iValue == null || iValue == "") {
-                  //   iValue = 'NULL';
-                  // } 
-                  // else if(typeof iValue === "string") {
-                  //   iValue = escapeString(iValue);
-                  //   iValue = `${iValue}`;
-                  //   // iValue = escapeString(iValue);
-                  //   // iValue = `'${iValue}'`;
-                  // }
-                  // else {
-                  //   iValue = prepareValue(iValue);
-                  // }
-                  recordKeysValues[i] = iMappedValue;
-                }
-
-                sql = `INSERT INTO ${schemaName}."${tableName}" (${escapedRecordKeys.join(",")})
-                            VALUES (${recordKeysValues.join(",")})`;
 
                 /*
                   Pointers to INSERT 
@@ -1332,101 +1353,99 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     https://www.postgresql.org/docs/9.4/dml-returning.html
                     INSERT INTO users (firstname, lastname) VALUES ('Joe', 'Cool') RETURNING id;
                 */
-                rawDataOperation.sql = sql;
+                rawDataOperation.sql = this._mapCreateOperationToSQL(createOperation, rawDataOperation, record);
                 //console.log(sql);
                 return new Promise(function(resolve,reject) {
-                  self._executeStatement(rawDataOperation, function(err, data) {
-                    var operation = new DataOperation();
-                    operation.referrerId = createOperation.id;
+                    self._executeStatement(rawDataOperation, function(err, data) {
+                        var operation = new DataOperation();
+                        operation.referrerId = createOperation.id;
 
-                    operation.dataDescriptor = createOperation.dataDescriptor;
-                    if (err) {
-                      // an error occurred
-                      console.log(err, err.stack, rawDataOperation); 
-                      operation.type = DataOperation.Type.CreateFailed;
-                      //Should the data be the error?
-                      operation.data = err;
-                      reject(operation);
-                    }
-                    else {
-                      // successful response
-                      operation.type = DataOperation.Type.CreateCompleted;
-                      //We provide the inserted record as the operation's payload
-                      operation.data = record;
+                        operation.dataDescriptor = createOperation.dataDescriptor;
+                        if (err) {
+                            // an error occurred
+                            console.log(err, err.stack, rawDataOperation); 
+                            operation.type = DataOperation.Type.CreateFailed;
+                            //Should the data be the error?
+                            operation.data = err;
+                            reject(operation);
+                        }
+                        else {
+                            // successful response
+                            operation.type = DataOperation.Type.CreateCompleted;
+                            //We provide the inserted record as the operation's payload
+                            operation.data = record;
 
-                      resolve(operation);
-                    }  
-                  });
-
+                            resolve(operation);
+                        }  
+                    });
                 });              
-            });
+            }
         }
-      }
     },
-    handleUpdateOperation: {
-      value: function(updateOperation) {
-        var data = updateOperation.data;
 
-        //As target should be the ObjectDescriptor in both cases, whether the 
-        //operation is an instance or ObjectDescriptor operation
-        //I might be better to rely on the presence of a criteria or not:
-        //No criteria means it's really an operation on the ObjectDescriptor itself
-        //and not on an instance
-        if(data instanceof ObjectDescriptor) {
-          return this.handleUpdateObjectDescriptorOperation(updateOperation);
-        } else {
-            var rawDataOperation = {},
+    /*
+        Postgresql Array:
+        https://www.postgresql.org/docs/9.2/functions-array.html#ARRAY-FUNCTIONS-TABLE
+        https://heap.io/blog/engineering/dont-iterate-over-a-postgres-array-with-a-loop
+        https://stackoverflow.com/questions/3994556/eliminate-duplicate-array-values-in-postgres
+
+        @>	contains	ARRAY[1,4,3] @> ARRAY[3,1]
+
+    */
+
+    /*
+
+        UPDATE table
+            SET column1 = value1,
+                column2 = value2 ,...
+            WHERE
+            condition;
+
+    */
+
+
+
+
+  /**
+   * Handles the mapping of an update operation to SQL.
+   *
+   * @method
+   * @argument  {DataOperation} dataOperation - The dataOperation to map to sql
+   * @argument  {DataOperation} record - The object where mapping is done
+`  * @returns   {Steing} - The SQL to perform that operation
+   * @private
+   */
+
+    _mapUpdateOperationToSQL: {
+        value: function(updateOperation, rawDataOperation, record) {
+            var data = updateOperation.data,
+                self = this,
+                mappingPromise,
+                sql,
+                objectDescriptor = this.objectDescriptorWithModuleId(updateOperation.dataDescriptor),
                 criteria = updateOperation.criteria,
                 dataChanges = data,
                 changesIterator,
-                objectDescriptor = this.objectDescriptorWithModuleId(updateOperation.dataDescriptor),
                 aProperty, aValue, addedValues, removedValues, aPropertyDescriptor,
-                record = {};
-
-            //This adds the right access key, db name. etc... to the RawOperation.
-            this.mapObjectDescriptorToRawOperation(objectDescriptor,rawDataOperation);
-
-
-            /*
-                Postgresql Array:
-                https://www.postgresql.org/docs/9.2/functions-array.html#ARRAY-FUNCTIONS-TABLE
-                https://heap.io/blog/engineering/dont-iterate-over-a-postgres-array-with-a-loop
-                https://stackoverflow.com/questions/3994556/eliminate-duplicate-array-values-in-postgres
-
-                @>	contains	ARRAY[1,4,3] @> ARRAY[3,1]
-
-            */
-
-            /*
-
-            UPDATE table
-                SET column1 = value1,
-                    column2 = value2 ,...
-                WHERE
-                condition;
-
-            */
-
-
-            //Now we need to transform the operation into SQL:
-            var tableName = this.tableForObjectDescriptor(objectDescriptor),
-            schemaName = rawDataOperation.schema,
-            recordKeys = Object.keys(dataChanges),
-            setRecordKeys = Array(recordKeys.length),
-            sqlColumns = recordKeys.join(","),
-            i, countI, iKey, iKeyEscaped, iValue, iMappedValue, iAssignment, iPrimaryKey, iPrimaryKeyValue,
-            iKeyValue,
-            dataSnapshot = updateOperation.snapshot,
-            dataSnapshotKeys = dataSnapshot ? Object.keys(dataSnapshot) : null,
-            condition,
-            sql,
-            self = this;
+                //Now we need to transform the operation into SQL:
+                tableName = this.tableForObjectDescriptor(objectDescriptor),
+                schemaName = rawDataOperation.schema,
+                recordKeys = Object.keys(dataChanges),
+                setRecordKeys = Array(recordKeys.length),
+                sqlColumns = recordKeys.join(","),
+                i, countI, iKey, iKeyEscaped, iValue, iMappedValue, iAssignment, iPrimaryKey, iPrimaryKeyValue,
+                iKeyValue,
+                dataSnapshot = updateOperation.snapshot,
+                dataSnapshotKeys = dataSnapshot ? Object.keys(dataSnapshot) : null,
+                condition,
+                sql,
+                self = this;
 
 
             //We need to transform the criteria into a SQL equivalent. Hard-coded for a single object for now
             if(Object.keys(criteria.parameters).length === 1) {
                 if(criteria.parameters.hasOwnProperty("identifier")) {
-                    condition = `id = '${criteria.parameters.identifier.primaryKey}'::uuid`;
+                    condition = `id = '${criteria.parameters.dataIdentifier.primaryKey}'::uuid`;
                 }
                 else if(criteria.parameters.hasOwnProperty("id")) {
                     condition = `id = '${criteria.parameters.id}'::uuid`;
@@ -1501,36 +1520,383 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             sql = `UPDATE  ${schemaName}."${tableName}" SET ${setRecordKeys.join(",")} 
             WHERE (${condition})`;
+            return Promise.resolve(sql);
+        }
+    },
 
-            rawDataOperation.sql = sql;
+
+    handleUpdateOperation: {
+      value: function(updateOperation) {
+        var data = updateOperation.data;
+
+        //As target should be the ObjectDescriptor in both cases, whether the 
+        //operation is an instance or ObjectDescriptor operation
+        //I might be better to rely on the presence of a criteria or not:
+        //No criteria means it's really an operation on the ObjectDescriptor itself
+        //and not on an instance
+        if(data instanceof ObjectDescriptor) {
+            return this.handleUpdateObjectDescriptorOperation(updateOperation);
+        } else {
+            var rawDataOperation = {},
+                criteria = updateOperation.criteria,
+                dataChanges = data,
+                changesIterator,
+                objectDescriptor = this.objectDescriptorWithModuleId(updateOperation.dataDescriptor),
+                aProperty, aValue, addedValues, removedValues, aPropertyDescriptor,
+                record = {};
+
+            //This adds the right access key, db name. etc... to the RawOperation.
+            this.mapObjectDescriptorToRawOperation(objectDescriptor,rawDataOperation);
+
+
+
+            rawDataOperation.sql = this._mapUpdateOperationToSQL(updateOperation, rawDataOperation, record);
             //console.log(sql);
             return new Promise(function(resolve,reject) {
-              self._executeStatement(rawDataOperation, function(err, data) {
-                var operation = new DataOperation();
-                operation.referrerId = updateOperation.id;
-                operation.dataDescriptor = objectDescriptor.module.id;
-                if (err) {
-                  // an error occurred
-                  console.log(err, err.stack, rawDataOperation); 
-                  operation.type = DataOperation.Type.UpdateFailed;
-                  //Should the data be the error?
-                  operation.data = err;
-                  reject(operation);
-                }
-                else {
-                  // successful response
-                  operation.type = DataOperation.Type.UpdateCompleted;
-                  //We provide the inserted record as the operation's payload
-                  operation.data = record;
+                self._executeStatement(rawDataOperation, function(err, data) {
+                    var operation = new DataOperation();
+                    operation.referrerId = updateOperation.id;
+                    operation.dataDescriptor = objectDescriptor.module.id;
+                    if (err) {
+                        // an error occurred
+                        console.log(err, err.stack, rawDataOperation); 
+                        operation.type = DataOperation.Type.UpdateFailed;
+                        //Should the data be the error?
+                        operation.data = err;
+                        reject(operation);
+                    }
+                    else {
+                        // successful response
+                        operation.type = DataOperation.Type.UpdateCompleted;
+                        //We provide the inserted record as the operation's payload
+                        operation.data = record;
 
-                  resolve(operation);
-                }  
-              });
-
+                        resolve(operation);
+                    }  
+                });
             });             
-        
         }
       }
+    },
+
+  /**
+   * Handles the mapping of a delete operation to SQL.
+   *
+   * @method
+   * @argument  {DataOperation} dataOperation - The dataOperation to map to sql
+   * @argument  {DataOperation} record - The object where mapping is done
+`  * @returns   {Steing} - The SQL to perform that operation
+   * @private
+   */
+
+  _mapDeleteOperationToSQL: {
+    value: function(deleteOperation, rawDataOperation, record) {
+        var data = deleteOperation.data,
+            self = this,
+            mappingPromise,
+            sql,
+            criteria = deleteOperation.criteria,
+            dataChanges = data,
+            objectDescriptor = this.objectDescriptorWithModuleId(deleteOperation.dataDescriptor),
+            aProperty, aValue, addedValues, removedValues, aPropertyDescriptor,
+            //Now we need to transform the operation into SQL:
+            tableName = this.tableForObjectDescriptor(objectDescriptor),
+            schemaName = rawDataOperation.schema,
+            i, countI, iKey, iKeyEscaped, iValue, iMappedValue, iAssignment, iPrimaryKey, iPrimaryKeyValue,
+            iKeyValue,
+            dataSnapshot = deleteOperation.snapshot,
+            dataSnapshotKeys = dataSnapshot ? Object.keys(dataSnapshot) : null,
+            condition,
+            sql,
+            self = this;
+
+
+        //We need to transform the criteria into a SQL equivalent. Hard-coded for a single object for now
+        if(Object.keys(criteria.parameters).length === 1) {
+            if(criteria.parameters.hasOwnProperty("identifier")) {
+                condition = `id = '${criteria.parameters.dataIdentifier.primaryKey}'::uuid`;
+            }
+            else if(criteria.parameters.hasOwnProperty("id")) {
+                condition = `id = '${criteria.parameters.id}'::uuid`;
+            }
+        } 
+
+        if(dataSnapshotKeys) {
+            for(i=0, countI=dataSnapshotKeys.length;i<countI;i++) {
+                if(condition && condition.length) {
+                    condition += " AND ";
+                }
+                else {
+                    condition = "";
+                }
+
+                iKey = dataSnapshotKeys[i];
+                iValue = dataSnapshot[iKey];
+                condition += `${escapeIdentifier(iKey)} = ${this.mapPropertyValueToRawTypeExpression(iKey,iValue)}`;
+            }
+        }
+
+        sql = `DELETE FROM ${schemaName}."${tableName}"  
+        WHERE (${condition})`;
+        return Promise.resolve(sql);
+    }
+},
+
+    handleDeleteOperation: {
+        value: function(deleteOperation) {
+            var data = deleteOperation.data,
+                rawDataOperation = {},
+                criteria = deleteOperation.criteria,
+                dataChanges = data,
+                objectDescriptor = this.objectDescriptorWithModuleId(deleteOperation.dataDescriptor),
+                aProperty, aValue, addedValues, removedValues, aPropertyDescriptor,
+                record = {};
+
+            //This adds the right access key, db name. etc... to the RawOperation.
+            this.mapObjectDescriptorToRawOperation(objectDescriptor,rawDataOperation);
+
+            rawDataOperation.sql = this._mapDeleteOperationToSQL(deleteOperation, rawDataOperation, record);
+            //console.log(sql);
+            return new Promise(function(resolve,reject) {
+                self._executeStatement(rawDataOperation, function(err, data) {
+                    var operation = new DataOperation();
+                    operation.referrerId = deleteOperation.id;
+                    operation.dataDescriptor = objectDescriptor.module.id;
+                    if (err) {
+                        // an error occurred
+                        console.log(err, err.stack, rawDataOperation); 
+                        operation.type = DataOperation.Type.DeleteFailed;
+                        //Should the data be the error?
+                        operation.data = err;
+                        reject(operation);
+                    }
+                    else {
+                        // successful response
+                        operation.type = DataOperation.Type.DeleteCompleted;
+                        //We provide the inserted record as the operation's payload
+                        operation.data = record;
+
+                        resolve(operation);
+                    }  
+                });
+            });             
+        }
+    },
+
+    handleCreateTransactionOperation: {
+        value: function(createTransactionOperation) {
+            var self = this,
+                rawDataOperation = {},
+                firstObjectDescriptor,
+                //For a transaction, .dataDescriptor holds an array vs a single one.
+                transactionObjectDescriptors = createTransactionOperation.dataDescriptor;
+
+            if(!transactionObjectDescriptors || !transactionObjectDescriptors.length) {
+                throw new Error("Phront Service handleCreateTransactionOperation doesn't have ObjectDescriptor info");
+            }
+
+            firstObjectDescriptor = this.objectDescriptorWithModuleId(transactionObjectDescriptors[0]);
+
+
+            //This adds the right access key, db name. etc... to the RawOperation.
+            //Right now we assume that all ObjectDescriptors in the transaction goes to the same DB
+            //If not, it needs to be handled before reaching us with an in-memory transaction, 
+            //or leveraging some other kind of storage for long-running cases.
+            this.mapObjectDescriptorToRawOperation(firstObjectDescriptor,rawDataOperation);
+
+            return new Promise(function(resolve,reject) {          
+                self._rdsDataService.beginTransaction(rawDataOperation, function(err, data) {
+                    var operation = new DataOperation();
+                    operation.referrerId = createTransactionOperation.id;
+                    operation.dataDescriptor = transactionObjectDescriptors;
+                    if (err) {
+                        // an error occurred
+                        console.log(err, err.stack, rawDataOperation); 
+                        operation.type = DataOperation.Type.CreateTransactionFailed;
+                        //Should the data be the error?
+                        operation.data = data;
+                        reject(operation);
+                    }
+                    else {
+                        // successful response
+                        operation.type = DataOperation.Type.CreateTransactionCompleted;
+                        //What should be the operation's payload ? The Raw Transaction Id?
+                        operation.data = data;
+    
+                        resolve(operation);
+                    }  
+                    });
+  
+              });             
+          }
+    },
+
+    _isAsync: {
+        value: function (object) {
+            return object && object.then && typeof object.then === "function";
+        }
+    },
+
+    handleBatchOperation: {
+        value: function(batchOperation) {
+            var self = this,
+            batchedOperations = batchOperation.data.batchedOperations,
+            iOperation, iSQL,
+            batchSQL = "",
+            createOperationType = DataOperation.Type.Create,
+            updateOperationType = DataOperation.Type.Update,
+            deleteOperationType = DataOperation.Type.Delete,
+            transactionId = batchOperation.data.transactionId,
+            rawDataOperation = {},
+            firstObjectDescriptor,
+            i, countI, sqlMapPromises = [],
+            //For a transaction, .dataDescriptor holds an array vs a single one.
+            transactionObjectDescriptors = batchOperation.dataDescriptor;
+
+            if(!transactionObjectDescriptors || !transactionObjectDescriptors.length) {
+                throw new Error("Phront Service handleCreateTransactionOperation doesn't have ObjectDescriptor info");
+            }
+
+            firstObjectDescriptor = this.objectDescriptorWithModuleId(transactionObjectDescriptors[0]);
+
+
+            //This adds the right access key, db name. etc... to the RawOperation.
+            //Right now we assume that all ObjectDescriptors in the transaction goes to the same DB
+            //If not, it needs to be handled before reaching us with an in-memory transaction, 
+            //or leveraging some other kind of storage for long-running cases.
+            if(transactionId) {
+                rawDataOperation.transactionId = transactionId;
+            }
+
+            this.mapObjectDescriptorToRawOperation(firstObjectDescriptor,rawDataOperation);
+
+            //Now loop on operations and create the matching sql:
+            for(i=0, countI = batchedOperations && batchedOperations.length;(i<countI);i++) {
+                iOperation = batchedOperations[i];   
+                if(iOperation.type === updateOperationType) {
+                    sqlMapPromises.push(this._mapUpdateOperationToSQL(iOperation,rawDataOperation));
+                } else if(iOperation.type === createOperationType) {
+                    sqlMapPromises.push(this._mapCreateOperationToSQL(iOperation,rawDataOperation));
+                } else if(iOperation.type === deleteOperationType) {
+                    sqlMapPromises.push(this._mapDeleteOperationToSQL(iOperation,rawDataOperation));
+                } else {
+                    console.error("-handleBatchOperation: Operation With Unknown Type: ",iOperation);
+                }
+            }
+
+            return Promise.all(sqlMapPromises)
+            .then(function(operationSQL) {
+                batchSQL = operationSQL.join("\n");
+                rawDataOperation.sql = batchSQL;
+
+                return new Promise(function(resolve,reject) {          
+                    self._rdsDataService.batchExecuteStatement(rawDataOperation, function(err, data) {
+                        var operation = new DataOperation();
+                        operation.referrerId = batchOperation.id;
+                        operation.dataDescriptor = transactionObjectDescriptors;
+                        if(transactionId) {
+                            data.transactionId = transactionId;
+                        }        
+                        if (err) {
+                            // an error occurred
+                            console.log(err, err.stack, rawDataOperation); 
+                            operation.type = DataOperation.Type.BatchFailed;
+                            //Should the data be the error?
+                            operation.data = data;
+                            reject(operation);
+                        }
+                        else {
+                            // successful response
+                            operation.type = DataOperation.Type.BatchCompleted;
+                            //What should be the operation's payload ? The Raw Transaction Id?
+                            operation.data = data;
+        
+                            resolve(operation);
+                        }  
+                    });
+                });     
+        
+            }, function(sqlMapError) {
+                return Promise.reject(sqlMapError);
+            });
+        }
+    },
+
+    _handleTransactionEndOperation: {
+        value: function(transactionEndOperation) {
+            var self = this,
+                rawDataOperation = {},
+                firstObjectDescriptor,
+                transactionId = transactionEndOperation.data.transactionId,
+                //For a transaction, .dataDescriptor holds an array vs a single one.
+                transactionObjectDescriptors = transactionEndOperation.dataDescriptor;
+
+            if(!transactionObjectDescriptors || !transactionObjectDescriptors.length) {
+                throw new Error("Phront Service handletransactionEndOperation doesn't have ObjectDescriptor info");
+            }
+
+            firstObjectDescriptor = this.objectDescriptorWithModuleId(transactionObjectDescriptors[0]);
+
+
+            //This adds the right access key, db name. etc... to the RawOperation.
+            //Right now we assume that all ObjectDescriptors in the transaction goes to the same DB
+            //If not, it needs to be handled before reaching us with an in-memory transaction, 
+            //or leveraging some other kind of storage for long-running cases.
+            if(transactionId) {
+                rawDataOperation.transactionId = transactionId;
+            }
+    
+            this.mapObjectDescriptorToRawOperation(firstObjectDescriptor,rawDataOperation);
+
+            //_rdsDataService.commitTransaction & _rdsDataService.rollbackTransaction make sure the param
+            //don't have a database nor schema field, so we delete it.
+            //TODO, try to find a way to instruct this.mapObjectDescriptorToRawOperation snot to put them in if we don't want them
+            delete rawDataOperation.database;
+            delete rawDataOperation.schema;
+
+            return new Promise(function(resolve,reject) {   
+                var method =  transactionEndOperation.type === DataOperation.Type.PerformTransaction
+                ?  "commitTransaction"
+                : "rollbackTransaction";
+                self._rdsDataService[method](rawDataOperation, function(err, data) {
+                    var operation = new DataOperation();
+                    operation.referrerId = transactionEndOperation.id;
+                    operation.dataDescriptor = transactionObjectDescriptors;
+                    if(transactionId) {
+                        data.transactionId = transactionId;
+                    }        
+                    if (err) {
+                        // an error occurred
+                        console.log(err, err.stack, rawDataOperation); 
+                        operation.type = DataOperation.Type.PerformTransactionFailed;
+                        //Should the data be the error?
+                        operation.data = data;
+                        reject(operation);
+                    }
+                    else {
+                        // successful response
+                        operation.type = DataOperation.Type.PerformTransactionCompleted;
+                        //What should be the operation's payload ? The Raw Transaction Id?
+                        operation.data = data;
+    
+                        resolve(operation);
+                    }  
+                });
+  
+            });             
+        }
+    },
+
+    handlePerformTransactionOperation: {
+        value: function(performTransactionOperation) {
+            return this._handleTransactionEndOperation(performTransactionOperation);
+        }
+    },
+
+    handleRollbackTransactionOperation: {
+        value: function(rollbackTransactionOperation) {
+            return this._handleTransactionEndOperation(rollbackTransactionOperation);
+        }
     },
 
     // Export promisified versions of the RDSDataService methods
@@ -1545,6 +1911,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         });      
       }
     },
+
     beginTransaction: {
       value: function(params) {
         this._rdsDataService.beginTransaction(params, function(err, data) {
@@ -1556,32 +1923,34 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         });      
       }
     },
+    
     commitTransaction: {
-      value: function(params) {
-        this._rdsDataService.commitTransaction(params, function(err, data) {
-          if (err) {
-              console.log(err, err.stack); // an error occurred
-          }
-          else {
-          }    console.log(data);           // successful response
-        });      
-      }
-  },
+        value: function(params) {
+            this._rdsDataService.commitTransaction(params, function(err, data) {
+                if (err) {
+                    console.log(err, err.stack); // an error occurred
+                }
+                else {
+                }    console.log(data);           // successful response
+            });      
+        }
+    },
     _executeStatement: {
         value: function(params, callback) {
           this._rdsDataService.executeStatement(params, callback);      
         }
     },
     rollbackTransaction: {
-      value: function(params) {
-        this._rdsDataService.rollbackTransaction(params, function(err, data) {
-          if (err) {
-              console.log(err, err.stack); // an error occurred
-          }
-          else {
-          }    console.log(data);           // successful response
-        });      
-      }    
+        value: function(params) {
+            this._rdsDataService.rollbackTransaction(params, function(err, data) {
+                if (err) {
+                    console.log(err, err.stack); // an error occurred
+                }
+                else {
+                    console.log(data);           // successful response
+                }    
+            });      
+        }    
     }
 
 });
