@@ -253,7 +253,8 @@ exports.promise = new Promise(function(resolve,reject) {
         aCollection.products = null;
         aCollection.image = null;
 
-        return clientMainService.saveDataObject(aCollection)
+        return clientMainService.saveChanges()
+        //return clientMainService.saveDataObject(aCollection)
         .then(function(createCompletedOperation) {
             return createCompletedOperation.data;
         },function(error) {
@@ -262,7 +263,8 @@ exports.promise = new Promise(function(resolve,reject) {
         .then(function(saveOperationResolved) {
             // change a simple property
             aCollection.title = "---> Test Collection Title Changed";
-            return clientMainService.saveDataObject(aCollection);
+            return clientMainService.saveChanges();
+            //return clientMainService.saveDataObject(aCollection);
         },function(error) {
             console.error(error);
         })
@@ -280,23 +282,32 @@ exports.promise = new Promise(function(resolve,reject) {
             aCollection.title = "Test Collection Title Changed again";
 
             //Totally new to test
-            //return mainService.saveChanges();
-            return clientMainService.saveDataObject(aCollection.image);
-            return Promise.all([
-                clientMainService.saveDataObject(aCollection.image),
-                clientMainService.saveDataObject(aCollection)]);
+            return clientMainService.saveChanges();
+            //return clientMainService.saveDataObject(aCollection.image);
+            //return Promise.all([
+            //    clientMainService.saveDataObject(aCollection.image),
+            //    clientMainService.saveDataObject(aCollection)]);
         },function(saveError) {
             console.error(saveError);
         })
         .then(function(saveCompletedOperation) {
             // var collection = saveCompletedOperation.data;
+            clientMainService.deleteDataObject(aCollection.image);
+            clientMainService.deleteDataObject(aCollection);
+            return clientMainService.saveChanges();
 
-            return Promise.all([
-                clientMainService.deleteDataObject(aCollection.image),
-                clientMainService.deleteDataObject(aCollection)]);
+            // return Promise.all([
+            //     clientMainService.deleteDataObject(aCollection.image),
+            //     clientMainService.deleteDataObject(aCollection)]);
 
         },function(saveFailedOperation) {
             console.error(saveFailedOperation);
+        })
+        .then(function(saveOperationResult) {
+            console.log("done!!");
+
+        },function(saveError) {
+            console.error(saveError);
         });
 
     // });
