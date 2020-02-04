@@ -40,73 +40,13 @@
             "valueType": "number"
         }
     },
-     "images": {
+     "values": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "images",
+            "name": "values",
             "cardinality": -1,
-            "valueDescriptor": {"@": "image_descriptor"}
-        }
-    },
-    "price": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
-            "name": "price",
-            "valueType": "number"
-        }
-    },
-    "selectedOptions": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
-            "name": "selectedOptions",
-            "valueType": "object",
-            "cardinality": -1
-        }
-    },
-    "sku": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
-            "name": "sku",
             "valueType": "string"
         }
-    },
-    "availableForSale": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
-            "name": "availableForSale",
-            "valueType": "boolean"
-        }
-    },
-    "weight": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
-            "name": "weight",
-            "valueType": "number"
-        }
-    },
-     "weightUnit": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": { 
-            "name": "weightUnit",
-            "valueType": "string"
-        }
-    },
-    "presentmentPrices": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "presentmentPrices",
-            "cardinality": -1,
-            "valueType": "object"
-        }
-    },
-    "productDescriptor": {
-        "object": "data/main.datareel/model/product.mjson"
-    },
-    "ProductVariantPricePair_descriptor": {
-        "object": "data/main.datareel/model/product-variant-price-pair.mjson"
-    },
-    "image_descriptor": {
-        "object": "data/main.datareel/model/image.mjson"
     }
 
 }

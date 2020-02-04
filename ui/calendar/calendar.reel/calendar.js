@@ -16,6 +16,8 @@ exports.Calendar = AbstractInspector.specialize({
         //     { name: 'Rsync', value: 'rsync.copy', checked: true }
         // ];
 
+        //TODO: this needs to be fetched dynamically as Services
+
             this.taskCategories = [
                 { name: "Surveillance Médicale Ordinaire - 20mn", value: "volume.scrub", checked: true },
                 { name: "Visite de Reprise - 40mn", value: "volume.snapshot_dataset", checked: true },

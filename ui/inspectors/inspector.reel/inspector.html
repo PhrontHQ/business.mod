@@ -10,7 +10,7 @@
                 "scrollView": {"#": "scrollView"}
             },
             "bindings": {
-                "object": {"<-": "@owner.context.object"},
+                "object": {"<-": "@owner.context.data"},
                 "classList.has('is-loading')": {"<-": "@owner.isLoading || @owner.controller.isLoading"},
                 "classList.has('is-locked')": {"<-": "!!@owner.object.__isLocked"},
                 "classList.has('delete-confirmation-is-visible')": {"<-": "@owner.isDeleteConfirmationVisible"},
@@ -59,6 +59,7 @@
                 "element": {"#": "footer"}
             },
             "bindings": {
+                "object": {"<-": "@owner.context.data"},
                 "canDelete": {"<-": "!!@owner.canDelete && @owner.object.id.defined()"},
                 "canRevert": {"<-": "!!@owner.canRevert"},
                 "canSave": {"<-": "!!@owner.canSave"},

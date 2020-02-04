@@ -17,7 +17,18 @@
                 "%": "data/main.datareel/model/service"
             },
             "object":{"@": "service"},
-            "parent":{"@": "productObjectDescriptor"}
+            "parent":{"@": "productObjectDescriptor"},
+            "userInterfaceDescriptorModules": {
+                "*": {
+                    "%": "./service-ui-descriptor.mjson"
+                },
+                "montage/ui/list-item.reel": {
+                    "%": "./service-list-item-ui-descriptor.mjson"
+                },
+                "montage/ui/cascading-list.reel": {
+                    "%": "./service-cascading-list-ui-descriptor.mjson"
+                }
+            }
 
         }
     },
