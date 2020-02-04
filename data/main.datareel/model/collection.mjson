@@ -4,7 +4,6 @@
         "values": {
             "name": "Collection",
             "propertyDescriptors": [
-                {"@": "originId"},
                 {"@": "title"},
                 {"@": "description"},   
                 {"@": "descriptionHtml"},   
@@ -30,13 +29,6 @@
     },
     "collectionPrototype": {
         "object": "data/main.datareel/model/collection"
-    },
-    "originId": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "originId",
-            "valueType": "string"
-        }
     },
     "title": {
         "prototype": "montage/core/meta/property-descriptor",
