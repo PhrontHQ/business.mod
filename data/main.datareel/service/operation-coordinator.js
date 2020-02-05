@@ -99,6 +99,9 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
 
 
                 */
+
+               console.log("dispatchOperationToConnectionClientId: referrerId "+operation.referrerId);
+
                 var integerSizeQuotient = Math.floor(operationDataKBSize / this.MAX_PAYLOAD_SIZE),
                     sizeRemainder = operationDataKBSize % this.MAX_PAYLOAD_SIZE,
                     sizeRemainderRatio = sizeRemainder/operationDataKBSize,
