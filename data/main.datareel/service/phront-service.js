@@ -254,7 +254,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
           // return new Promise(function(resolve,reject) {
 
-            self.handleReadOperation(readOperation)
+            self.handleRead(readOperation)
             .then(function(readUpdatedOperation) {
               var records = readUpdatedOperation.data;
 
@@ -507,11 +507,11 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
       }
     },
 
-    _handleReadOperationCount: {
+    _handleReadCount: {
       value:0
     },
 
-    handleReadOperation: {
+    handleRead: {
       value: function(readOperation) {
         var data = readOperation.data,
             rawReadExpressionMap;
@@ -534,7 +534,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           this.mapReadOperationToRawStatement(readOperation,rawDataOperation);
 
           return new Promise(function(resolve,reject) {
-            //var timeID = self._handleReadOperationCount++,
+            //var timeID = self._handleReadCount++,
                 //start = Date.now();
                 // startTime = console.time(readOperation.id);
             //var timer = new Timer(readOperation.id);
@@ -561,11 +561,14 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 operation.referrerId = readOperation.id;
                 operation.dataDescriptor = readOperation.dataDescriptor;
 
+                //Carry on the details needed by the coordinator to dispatch back to client
+                // operation.connection = readOperation.connection;
+                operation.clientId = readOperation.clientId;
                 //console.log("executed Statement err:",err, "data:",data);
 
               if (err) {
                 // an error occurred
-                console.log("!!! handleReadOperation FAILED:",err, err.stack, rawDataOperation.sql);
+                console.log("!!! handleRead FAILED:",err, err.stack, rawDataOperation.sql);
                 operation.type = DataOperation.Type.ReadFailed;
                 //Should the data be the error?
                 operation.data = err;
@@ -579,8 +582,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                 //Not needed anymore as we request data as json
                 //operation._rawReadExpressionIndexMap = rawReadExpressionMap;
-
-                resolve(operation);
+                objectDescriptor.dispatchEvent(operation);
+                //resolve(operation);
               }
             });
 
@@ -705,7 +708,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 //All mapping done and stored in operation.
                 return new Promise(function(resolve,reject) {
 
-                    self.handleUpdateOperation(operation)
+                    self.handleUpdate(operation)
                     .then(function(rawUpdateCompletedOperation) {
                         var updateCompletedOperation = new DataOperation();
                         updateCompletedOperation.type = DataOperation.Type.UpdateCompleted;
@@ -733,7 +736,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             //THIS NEEDS TO RETURN SOMETHING SUCCEED/FAIL
             //AND Regiter the new dataIdentifierForObject(object) so that from now-on. this.dataIdentifierForObject(object) returns it
-            self.handleCreateOperation(operation)
+            self.handleCreate(operation)
             .then(function(createCompletedRawOperation) {
               //Record dataIdentifier for object
               var createCompletedOperation = new DataOperation(),
@@ -815,7 +818,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           //Update Operation
 
           //Call
-          phrontService.handleUpdateOperation(iOperation);
+          phrontService.handleUpdate(iOperation);
 
         } else {
           //Temporarary: Create a Raw Data operation that we should receive later.
@@ -824,7 +827,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           // operation.data = object
 
           //
-          phrontService.handleCreateOperation(iOperation);
+          phrontService.handleCreate(iOperation);
 
         }
         return this.nullPromise;
@@ -1348,7 +1351,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
    * @argument {DataOperation} dataOperation - The dataOperation to execute
 `  * @returns {Promise} - The Promise for the execution of the operation
    */
-    handleCreateOperation: {
+    handleCreate: {
         value: function(createOperation) {
             var data = createOperation.data;
 
@@ -1558,7 +1561,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     },
 
 
-    handleUpdateOperation: {
+    handleUpdate: {
       value: function(updateOperation) {
         var data = updateOperation.data;
 
@@ -1675,7 +1678,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     }
 },
 
-    handleDeleteOperation: {
+    handleDelete: {
         value: function(deleteOperation) {
             var data = deleteOperation.data,
                 rawDataOperation = {},
@@ -1716,7 +1719,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         }
     },
 
-    handleCreateTransactionOperation: {
+    handleCreateTransaction: {
         value: function(createTransactionOperation) {
             var self = this,
                 rawDataOperation = {},
@@ -1725,7 +1728,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 transactionObjectDescriptors = createTransactionOperation.dataDescriptor;
 
             if(!transactionObjectDescriptors || !transactionObjectDescriptors.length) {
-                throw new Error("Phront Service handleCreateTransactionOperation doesn't have ObjectDescriptor info");
+                throw new Error("Phront Service handleCreateTransaction doesn't have ObjectDescriptor info");
             }
 
             firstObjectDescriptor = this.objectDescriptorWithModuleId(transactionObjectDescriptors[0]);
@@ -1770,7 +1773,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         }
     },
 
-    handleBatchOperation: {
+    handleBatch: {
         value: function(batchOperation) {
             var self = this,
             batchedOperations = batchOperation.data.batchedOperations,
@@ -1787,7 +1790,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             transactionObjectDescriptors = batchOperation.dataDescriptor;
 
             if(!transactionObjectDescriptors || !transactionObjectDescriptors.length) {
-                throw new Error("Phront Service handleCreateTransactionOperation doesn't have ObjectDescriptor info");
+                throw new Error("Phront Service handleCreateTransaction doesn't have ObjectDescriptor info");
             }
 
             firstObjectDescriptor = this.objectDescriptorWithModuleId(transactionObjectDescriptors[0]);
@@ -1813,7 +1816,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 } else if(iOperation.type === deleteOperationType) {
                     sqlMapPromises.push(this._mapDeleteOperationToSQL(iOperation,rawDataOperation));
                 } else {
-                    console.error("-handleBatchOperation: Operation With Unknown Type: ",iOperation);
+                    console.error("-handleBatch: Operation With Unknown Type: ",iOperation);
                 }
             }
 
@@ -1901,14 +1904,14 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     if (err) {
                         // an error occurred
                         console.log(err, err.stack, rawDataOperation);
-                        operation.type = DataOperation.Type.PerformTransactionFailed;
+                        operation.type = transactionEndOperation.type === DataOperation.Type.PerformTransaction ? DataOperation.Type.PerformTransactionFailed : DataOperation.Type.RollbackTransactionFailed;
                         //Should the data be the error?
                         operation.data = data;
                         reject(operation);
                     }
                     else {
                         // successful response
-                        operation.type = DataOperation.Type.PerformTransactionCompleted;
+                        operation.type = transactionEndOperation.type === DataOperation.Type.PerformTransaction ? DataOperation.Type.PerformTransactionCompleted : DataOperation.Type.RollbackTransactionCompleted;
                         //What should be the operation's payload ? The Raw Transaction Id?
                         operation.data = data;
 
@@ -1920,14 +1923,14 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         }
     },
 
-    handlePerformTransactionOperation: {
+    handlePerformTransaction: {
         value: function(performTransactionOperation) {
             return this._handleTransactionEndOperation(performTransactionOperation);
         }
     },
 
-    handleRollbackTransactionOperation: {
-        value: function(rollbackTransactionOperation) {
+    handleRollbackTransaction: {
+    value: function(rollbackTransactionOperation) {
             return this._handleTransactionEndOperation(rollbackTransactionOperation);
         }
     },
