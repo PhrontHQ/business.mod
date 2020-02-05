@@ -1,0 +1,348 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Event",
+            "propertyDescriptors": [
+                {"@": "id"},
+                {"@": "kind"},
+                {"@": "etag"},
+                {"@": "status"},
+                {"@": "htmlLink"},
+                {"@": "created"},
+                {"@": "updated"},
+                {"@": "summary"},
+                {"@": "description"},
+                {"@": "location"},
+                {"@": "colorId"},
+                {"@": "creator"},
+                {"@": "organizer"},
+                {"@": "start"},
+                {"@": "end"},
+                {"@": "endTimeUnspecified"},
+                {"@": "recurrence"},
+                {"@": "recurringEventId"},
+                {"@": "originalStartTime"},
+                {"@": "transparency"},
+                {"@": "visibility"},
+                {"@": "iCalUID"},
+                {"@": "sequence"},
+                {"@": "attendees"},
+                {"@": "attendeesOmitted"},
+                {"@": "extendedProperties"},
+                {"@": "hangoutLink"},
+                {"@": "conferenceData"},
+                {"@": "anyoneCanAddSelf"},
+                {"@": "guestsCanInviteOthers"},
+                {"@": "guestsCanModify"},
+                {"@": "guestsCanSeeOtherGuests"},
+                {"@": "privateCopy"},
+                {"@": "locked"},
+                {"@": "reminders"},
+                {"@": "source"},
+                {"@": "attachments"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/google-calendar.datareel/model/event.mjson"
+            },
+            "exportName": "Image",
+            "module": {
+                "%": "data/google-calendar.datareel/model/event"
+            },
+            "modulePrototype":{"@": "EventPrototype"},
+            "object":{"@": "EventPrototype"}
+        }
+    },
+    "EventPrototype": {
+        "object": "data/google-calendar.datareel/model/event"
+    },
+    "id": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "id",
+            "valueType": "string"
+        }
+    },
+    "kind": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "kind",
+            "valueType": "string",
+            "defaultValue": "calendar#event"
+        }
+    },
+    "etag": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "etag",
+            "valueType": "string"
+        }
+    },
+    "status": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "status",
+            "valueType": "string"
+        }
+    },
+    "htmlLink": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "htmlLink",
+            "valueType": "string"
+        }
+    },
+    "created": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "created",
+            "valueType": "string",
+            "readOnly": true,
+            "description": "datetime in Creation time of the event (as a RFC3339 timestamp). Read-only."
+        }
+    },
+    "updated": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "updated",
+            "valueType": "string",
+            "readOnly": true,
+            "description": "datetime in Creation time of the event (as a RFC3339 timestamp). Read-only."
+        }
+    },
+    "summary": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "summary",
+            "valueType": "string"
+        }
+    },
+    "description": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "description",
+            "valueType": "string"
+        }
+    },
+    "location": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "location",
+            "valueType": "string"
+        }
+    },
+    "colorId": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "location",
+            "valueType": "string",
+            "description":"The color of the event. This is an ID referring to an entry in the event section of the colors definition (see the colors endpoint). Optional."
+        }
+    },
+    "creator": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "creator",
+            "valueType": "object",
+            "valueDescriptor": {"@": "event-person"}
+        }
+    },
+    "event-person": {
+        "object": "data/google-calendar.datareel/model/event-person.mjson"
+    },
+    "organizer": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "organizer",
+            "valueType": "object",
+            "valueDescriptor": {"@": "event-person"}
+        }
+    },
+    "start": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "start",
+            "valueType": "object",
+            "valueDescriptor": {"@": "event-time"}
+        }
+    },
+    "end": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "end",
+            "valueType": "object",
+            "valueDescriptor": {"@": "event-time"}
+        }
+    },
+    "endTimeUnspecified": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "endTimeUnspecified",
+            "valueType": "boolean"
+        }
+    },
+    "recurrence": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "recurrence",
+            "valueType": "array"
+        }
+    },
+    "recurringEventId": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "recurringEventId",
+            "valueType": "string"
+        }
+    },
+    "originalStartTime": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "start",
+            "valueType": "object",
+            "valueDescriptor": {"@": "event-time"}
+        }
+    },
+    "transparency": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "transparency",
+            "valueType": "string"
+        }
+    },
+    "visibility": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "visibility",
+            "valueType": "string"
+        }
+    },
+    "iCalUID": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "iCalUID",
+            "valueType": "string"
+        }
+    },
+    "sequence": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "sequence",
+            "valueType": "string"
+        }
+    },
+    "attendees": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "attendees",
+            "valueType": "array",
+            "valueDescriptor": {"@": "event-attendee"}
+        }
+    },
+    "event-attendee": {
+        "object": "data/google-calendar.datareel/model/event-attendee.mjson"
+    },
+    "event-time": {
+        "object": "data/google-calendar.datareel/model/event-time.mjson"
+    },
+    "attendeesOmitted": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "attendeesOmitted",
+            "valueType": "boolean"
+        }
+    },
+    "extendedProperties": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "extendedProperties",
+            "valueType": "object",
+            "description":"subproperties are 'private' and 'shared'"
+        }
+    },
+    "hangoutLink": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "hangoutLink",
+            "valueType": "string"
+        }
+    },
+    "conferenceData": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "conferenceData",
+            "valueType": "object",
+            "valueDescriptor": {"@": "event-conference-data"},
+           "description": "TODO - create sub type"
+        }
+    },
+    "event-conference-data": {
+        "object": "data/google-calendar.datareel/model/event-conference-data.mjson"
+    },
+    "anyoneCanAddSelf": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "anyoneCanAddSelf",
+            "valueType": "boolean"
+        }
+    },
+    "guestsCanInviteOthers": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "guestsCanInviteOthers",
+            "valueType": "boolean"
+        }
+    },
+    "guestsCanModify": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "guestsCanModify",
+            "valueType": "boolean"
+        }
+    },
+    "guestsCanSeeOtherGuests": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "guestsCanSeeOtherGuests",
+            "valueType": "boolean"
+        }
+    },
+    "privateCopy": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "privateCopy",
+            "valueType": "boolean"
+        }
+    },
+    "locked": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "locked",
+            "valueType": "boolean"
+        }
+    },
+    "reminders": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "reminders",
+            "valueType": "object",
+            "description": "TODO - create sub type"
+        }
+    },
+    "source": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "source",
+            "valueType": "object",
+            "description": "TODO - create sub type"
+        }
+    },
+    "attachments": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "source",
+            "valueType": "array",
+            "description": "TODO - create sub type"
+        }
+    }
+}

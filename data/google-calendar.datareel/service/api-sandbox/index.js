@@ -160,15 +160,12 @@ const calendar = google.calendar("v3");
 
 
 
-
-
-
-
     listUsers(jwtClient);
-
+    var calendarList;
     const calendarListResult = await calendar.calendarList.list({
         auth: jwtClient
     });
+    calendarList = calendarListResult.data.items;
     console.log("calendarList is: ",calendarListResult.data.items);
     console.log("calendars is: ",calendar.calendars);
 
@@ -185,9 +182,32 @@ const calendar = google.calendar("v3");
     // Make an authorized request to list Calendar events.
     calendar.events.list({
         auth: jwtClient,
-        calendarId: CALENDAR_ID
-    }, function(err, resp) {
-        console.log(resp);
+        calendarId: CALENDAR_ID,
+        "orderBy" : "startTime", //No compatible with recurring events if  singleEvents: true, isn't included
+        //maxResults: 10,
+        singleEvents: true,
+        "timeMin":  new Date('1 February 2020 12:00').toISOString(),
+        "timeMax":  new Date('10 February 2020 12:00').toISOString()
+    }, function(err, response) {
+        if (err) {
+            console.log('The API returned an error: ' + err);
+            if(callback) return callback(err);
+          }
+          console.log(response);
+          var events = response.data.items;
+          if (!events || events.length == 0) {
+            console.log('No upcoming events found.');
+          } else {
+            console.log('Upcoming n events:');
+            for (var i = 0; i < events.length; i++) {
+              var event = events[i];
+              var start = event.start.dateTime || event.start.date;
+              console.log('%s - %s', start, event.summary);
+            }
+            if(callback) {
+                return callback(null, events);
+            }
+          }
     });
 
 
@@ -243,16 +263,17 @@ const calendar = google.calendar("v3");
 
 
 
-    var startDate = new Date('20 November 2019 12:00'),
+    var startDate = new Date('4 February 2020 12:00'),
         startDateString = startDate.toISOString(),
-        endDate = new Date('28 November 2019 13:00'),
+        //endDate = new Date('28 November 2019 13:00'),
+        endDate = new Date('4 February 2020 23:59:59'),
         endDateString = endDate.toISOString(),
         check = {
             auth: jwtClient,
             resource: {
                 timeMin: startDateString,
                 timeMax: endDateString,
-                items: [{id: CALENDAR_ID}]
+                items: [{id: CALENDAR_ID}]/*calendarList*/
             }
         }
 

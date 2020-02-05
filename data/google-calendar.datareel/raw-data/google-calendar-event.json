@@ -1,0 +1,247 @@
+//Resource representations
+{
+    "kind": "calendar#event",
+    "etag": etag,
+    "id": string,
+    "status": string,
+    "htmlLink": string,
+    "created": datetime,
+    "updated": datetime,
+    "summary": string,
+    "description": string,
+    "location": string,
+    "colorId": string,
+    "creator": {
+      "id": string,
+      "email": string,
+      "displayName": string,
+      "self": boolean
+    },
+    "organizer": {
+      "id": string,
+      "email": string,
+      "displayName": string,
+      "self": boolean
+    },
+    "start": {
+      "date": date,
+      "dateTime": datetime,
+      "timeZone": string
+    },
+    "end": {
+      "date": date,
+      "dateTime": datetime,
+      "timeZone": string
+    },
+    "endTimeUnspecified": boolean,
+    "recurrence": [
+      string
+    ],
+    "recurringEventId": string,
+    "originalStartTime": {
+      "date": date,
+      "dateTime": datetime,
+      "timeZone": string
+    },
+    "transparency": string,
+    "visibility": string,
+    "iCalUID": string,
+    "sequence": integer,
+    "attendees": [
+      {
+        "id": string,
+        "email": string,
+        "displayName": string,
+        "organizer": boolean,
+        "self": boolean,
+        "resource": boolean,
+        "optional": boolean,
+        "responseStatus": string,
+        "comment": string,
+        "additionalGuests": integer
+      }
+    ],
+    "attendeesOmitted": boolean,
+    "extendedProperties": {
+      "private": {
+        (key): string
+      },
+      "shared": {
+        (key): string
+      }
+    },
+    "hangoutLink": string,
+    "conferenceData": {
+      "createRequest": {
+        "requestId": string,
+        "conferenceSolutionKey": {
+          "type": string
+        },
+        "status": {
+          "statusCode": string
+        }
+      },
+      "entryPoints": [
+        {
+          "entryPointType": string,
+          "uri": string,
+          "label": string,
+          "pin": string,
+          "accessCode": string,
+          "meetingCode": string,
+          "passcode": string,
+          "password": string
+        }
+      ],
+      "conferenceSolution": {
+        "key": {
+          "type": string
+        },
+        "name": string,
+        "iconUri": string
+      },
+      "conferenceId": string,
+      "signature": string,
+      "notes": string,
+      "gadget": {
+      "type": string,
+      "title": string,
+      "link": string,
+      "iconLink": string,
+      "width": integer,
+      "height": integer,
+      "display": string,
+      "preferences": {
+        (key): string
+      }
+    },
+    "anyoneCanAddSelf": boolean,
+    "guestsCanInviteOthers": boolean,
+    "guestsCanModify": boolean,
+    "guestsCanSeeOtherGuests": boolean,
+    "privateCopy": boolean,
+    "locked": boolean,
+    "reminders": {
+      "useDefault": boolean,
+      "overrides": [
+        {
+          "method": string,
+          "minutes": integer
+        }
+      ]
+    },
+    "source": {
+      "url": string,
+      "title": string
+    },
+    "attachments": [
+      {
+        "fileUrl": string,
+        "title": string,
+        "mimeType": string,
+        "iconLink": string,
+        "fileId": string
+      }
+    ]
+  }
+
+
+
+
+//Sample #1
+{
+    "kind": "calendar#event",
+    "etag": "\"3161663788676000\"",
+    "id": "7j51fqg89rlcja23nl9dd93dc7",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=N2o1MWZxZzg5cmxjamEyM25sOWRkOTNkYzcgYmVub2l0QHBocm9udC5jb20",
+    "created": "2020-02-04T15:58:14.000Z",
+    "updated": "2020-02-04T15:58:14.338Z",
+    "summary": "My Eventt 1",
+    "creator": {
+        "email": "benoit@phront.com",
+        "self": true
+    },
+    "organizer": {
+        "email": "benoit@phront.com",
+        "self": true
+    },
+    "start": {
+        "dateTime": "2020-02-04T05:00:00-08:00"
+    },
+    "end": {
+        "dateTime": "2020-02-04T06:00:00-08:00"
+    },
+    "iCalUID": "7j51fqg89rlcja23nl9dd93dc7@google.com",
+    "sequence": 0,
+    "reminders": {
+        "useDefault": true
+    }
+}
+
+//Sample #2
+{
+    "kind": "calendar#event",
+    "etag": "\"3161662040106000\"",
+    "id": "7gantqtg0r8lotjvs3ihg58k13",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=N2dhbnRxdGcwcjhsb3RqdnMzaWhnNThrMTMgYmVub2l0QHBocm9udC5jb20",
+    "created": "2020-02-04T15:14:26.000Z",
+    "updated": "2020-02-04T15:43:40.053Z",
+    "summary": "Meeting A",
+    "location": "26bis Avenue Daumesnil, 75012 Paris, France",
+    "creator": {
+        "email": "benoit@phront.com",
+        "self": true
+    },
+    "organizer": {
+        "email": "phront.com_ojfb5pjr20g9okkmi3ntp9l96c@group.calendar.google.com",
+        "displayName": "this is a test calendar for Dr No."
+    },
+    "start": {
+        "dateTime": "2020-02-04T09:00:00-08:00"
+    },
+    "end": {
+        "dateTime": "2020-02-04T11:00:00-08:00"
+    },
+    "iCalUID": "7gantqtg0r8lotjvs3ihg58k13@google.com",
+    "sequence": 0,
+    "attendees": [{
+        "email": "marchant@mac.com",
+        "responseStatus": "needsAction"
+    }, {
+        "email": "benoit@phront.com",
+        "self": true,
+        "responseStatus": "accepted"
+    }],
+    "hangoutLink": "https://meet.google.com/tto-upkp-ete",
+    "conferenceData": {
+        "entryPoints": [{
+            "entryPointType": "video",
+            "uri": "https://meet.google.com/tto-upkp-ete",
+            "label": "meet.google.com/tto-upkp-ete"
+        }, {
+            "entryPointType": "more",
+            "uri": "https://tel.meet/tto-upkp-ete?pin=9064743306816",
+            "pin": "9064743306816"
+        }, {
+            "regionCode": "US",
+            "entryPointType": "phone",
+            "uri": "tel:+1-402-442-0195",
+            "label": "+1 402-442-0195",
+            "pin": "444372976"
+        }],
+        "conferenceSolution": {
+            "key": {
+                "type": "hangoutsMeet"
+            },
+            "name": "Hangouts Meet",
+            "iconUri": "https://lh5.googleusercontent.com/proxy/bWvYBOb7O03a7HK5iKNEAPoUNPEXH1CHZjuOkiqxHx8OtyVn9sZ6Ktl8hfqBNQUUbCDg6T2unnsHx7RSkCyhrKgHcdoosAW8POQJm_ZEvZU9ZfAE7mZIBGr_tDlF8Z_rSzXcjTffVXg3M46v"
+        },
+        "conferenceId": "tto-upkp-ete",
+        "signature": "AKipslVtk5kPhlt1gyBUhNW2gnl5"
+    },
+    "reminders": {
+        "useDefault": true
+    }
+}

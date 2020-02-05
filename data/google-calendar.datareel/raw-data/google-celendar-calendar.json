@@ -1,0 +1,101 @@
+//When fetched through calendar.calendarList
+{
+    "kind": "calendar#calendarListEntry",
+    "etag": "\"1580832696227000\"",
+    "id": "phront.com_b99lud83vunada4d40p70i6uos@group.calendar.google.com",
+    "summary": "this is a test calendar for Dr No.",
+    "description": "this is a test calendar for Dr No.",
+    "location": "San Jose",
+    "timeZone": "America/Los_Angeles",
+    "colorId": "22",
+    "backgroundColor": "#f691b2",
+    "foregroundColor": "#000000",
+    "selected": true,
+    "accessRole": "owner",
+    "defaultReminders": [],
+    "conferenceProperties": {
+        "allowedConferenceSolutionTypes": ["hangoutsMeet"]
+    }
+}
+
+//Used to create a calendar with calendar.calendars.insert()
+{
+    "summary": "this is a test calendar for Dr No.",
+    "description": "this is a test calendar for Dr No.",
+    "location": "San Jose",
+    "timeZone": "America/Los_Angeles"
+}
+
+//The returned calendar created:
+{
+    "kind": "calendar#calendar",
+    "etag": "\"Q_CEN9IFQZAA8ly53v2kDJqCMjo\"",
+    "id": "phront.com_upon0e5r4mv8604b28mir2nfls@group.calendar.google.com",
+    "summary": "this is a test calendar for Dr No.",
+    "description": "this is a test calendar for Dr No.",
+    "location": "San Jose",
+    "timeZone": "America/Los_Angeles",
+    "conferenceProperties": {
+        "allowedConferenceSolutionTypes": ["hangoutsMeet"]
+    }
+}
+
+
+Calendar Resource representations:
+{
+  "kind": "calendar#calendar",
+  "etag": etag,
+  "id": string,
+  "summary": string,
+  "description": string,
+  "location": string,
+  "timeZone": string,
+  "conferenceProperties": {
+    "allowedConferenceSolutionTypes": [
+      string
+    ]
+  }
+}
+
+
+
+
+Calendar Resource representations:
+
+{
+    "kind": "calendar#calendarListEntry",
+    "etag": etag,
+    "id": string,
+    "summary": string,
+    "description": string,
+    "location": string,
+    "timeZone": string,
+    "summaryOverride": string,
+    "colorId": string,
+    "backgroundColor": string,
+    "foregroundColor": string,
+    "hidden": boolean,
+    "selected": boolean,
+    "accessRole": string,
+    "defaultReminders": [
+      {
+        "method": string,
+        "minutes": integer
+      }
+    ],
+    "notificationSettings": {
+      "notifications": [
+        {
+          "type": string,
+          "method": string
+        }
+      ]
+    },
+    "primary": boolean,
+    "deleted": boolean,
+    "conferenceProperties": {
+      "allowedConferenceSolutionTypes": [
+        string
+      ]
+    }
+  }
