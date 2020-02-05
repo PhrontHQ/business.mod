@@ -192,10 +192,10 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
             //Set the clientId (in API already)
             deserializedOperation.clientId = event.requestContext.connectionId;
 
-            defaultEventManager.handleEvent(deserializedOperation);
             //console.log("handleEvent(...)",deserializedOperation);
 
             if(deserializedOperation.type ===  DataOperation.Type.Read) {
+                defaultEventManager.handleEvent(deserializedOperation);
 
                 //resultOperationPromise = phrontService.handleRead(deserializedOperation);
                 //phrontService.handleRead(deserializedOperation);
