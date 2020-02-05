@@ -35,6 +35,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
             if( typeof WebSocket !== "undefined") {
                 this._socket = new WebSocket("wss://77mq8uupuc.execute-api.us-west-2.amazonaws.com/dev");
+                //this._socket = new WebSocket("ws://127.0.0.1:8080");
 
                 this._socket.addEventListener("open", this);
                 this._socket.addEventListener("error", this);
@@ -177,6 +178,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     handleReadcompleted: {
         value: function (operation) {
             this.handleReadupdate(operation);
+            //The read is complete
+            this._thenableByOperationId.delete(operation.referrerId);
+
         }
     },
 
