@@ -17,7 +17,7 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     // Require sqlstring to add additional escaping capabilities
     //sqlString = require('sqlstring'),
 
-    
+
     DataOperation = require("montage/data/service/data-operation").DataOperation,
 
     // Require the aws-sdk. This is a dev dependency, so if being used
@@ -51,20 +51,20 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
           this.name = name;
           this.startTime = process.hrtime();
       }
-  
+
       // returns the time in ms since instantiation
       // can be called multiple times
       runtimeMs() {
           const diff = process.hrtime(this.startTime);
           return (diff[0] * this.NS_PER_SEC + diff[1]) * this.MS_PER_NS;
       }
-  
+
       // retuns a string: the time in ms since instantiation
       runtimeMsStr() {
           return `${this.name} took ${this.runtimeMs()} milliseconds`;
       }
   }
-  
+
 
 
     //Node.js specific
@@ -204,7 +204,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           for(var key in dbAuthorization) {
             rawDataOperation[key] = dbAuthorization[key];
           }
-          
+
           return rawDataOperation;
       }
     },
@@ -254,21 +254,21 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
           // return new Promise(function(resolve,reject) {
 
-            self.handleReadOperation(readOperation) 
+            self.handleReadOperation(readOperation)
             .then(function(readUpdatedOperation) {
               var records = readUpdatedOperation.data;
 
               if(records && records.length > 0) {
 
                   //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
-                  self.addRawData(stream, records, readOperation._rawReadExpressionIndexMap);   
+                  self.addRawData(stream, records, readOperation._rawReadExpressionIndexMap);
               }
 
-              self.rawDataDone(stream);    
+              self.rawDataDone(stream);
 
             }, function(readFailedOperation) {
               console.error(readFailedOperation);
-              self.rawDataDone(stream);    
+              self.rawDataDone(stream);
 
             });
         // });
@@ -282,7 +282,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     mapCriteriaToRawStatement: {
       value: function(criteria, mapping) {
         var objectRule,
-            rule,    
+            rule,
             syntax = criteria ? criteria.syntax : null,
             property,
             propertyName,
@@ -301,27 +301,60 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           }
           else if(syntax && syntax.type == "equals") {
             var args = syntax.args;
-            
-            if(args[0].type === "property") {
-              propertyName = args[0].args[1].value;
-              objectRule = mapping.objectMappingRules.get(propertyName);
-              if(objectRule) {
-                propertyDescriptor = objectRule.propertyDescriptor;
-              }
-              rule = objectRule && mapping.rawDataMappingRules.get(objectRule.sourcePath);
-  
-              if(rule) {
-                rawProperty = objectRule.sourcePath;
-                escapedRawProperty = escapeIdentifier(rawProperty);
-              }
-              else {
-                escapedRawProperty = escapeIdentifier(propertyName);
-              }
+
+            //There are 2 arguments, one is a property name, and the other the parameter.
+            //Let's look for the parameter.
+            //The first 2 look for a parsed expression  like "id = $id"
+            if(args[1].type === "property" && args[1].args[0].type === "parameters") {
+                value = criteria.parameters[args[1].args[1].value];
+                propertyName = args[0].args[1].value;
             }
-            if(args[1].type === "parameters") {
-              value = criteria.parameters;
-              escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value);
+            else if(args[0].type === "property" && args[0].args[0].type === "parameters") {
+                value = criteria.parameters[args[0].args[1].value];
+                propertyName = args[1].args[1].value;
             }
+            //This one looks for parsed expression like "id = $""
+            else if(args[1].type === "parameters") {
+                propertyName = args[0].args[1].value;
+                value = criteria.parameters;
+            }
+
+            objectRule = mapping.objectMappingRules.get(propertyName);
+            if(objectRule) {
+              propertyDescriptor = objectRule.propertyDescriptor;
+            }
+            rule = objectRule && mapping.rawDataMappingRules.get(objectRule.sourcePath);
+
+            if(rule) {
+              rawProperty = objectRule.sourcePath;
+              escapedRawProperty = escapeIdentifier(rawProperty);
+            }
+            else {
+              escapedRawProperty = escapeIdentifier(propertyName);
+            }
+
+            escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value);
+
+            // if(args[0].type === "property") {
+            //   propertyName = args[0].args[1].value;
+            //   objectRule = mapping.objectMappingRules.get(propertyName);
+            //   if(objectRule) {
+            //     propertyDescriptor = objectRule.propertyDescriptor;
+            //   }
+            //   rule = objectRule && mapping.rawDataMappingRules.get(objectRule.sourcePath);
+
+            //   if(rule) {
+            //     rawProperty = objectRule.sourcePath;
+            //     escapedRawProperty = escapeIdentifier(rawProperty);
+            //   }
+            //   else {
+            //     escapedRawProperty = escapeIdentifier(propertyName);
+            //   }
+            // }
+            // if(args[1].type === "parameters") {
+            //   value = criteria.parameters;
+            //   escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value);
+            // }
 
             if(propertyDescriptor && propertyDescriptor.valueType == "string") {
                 condition = `${escapedRawProperty} ilike ${escapedValue}`
@@ -372,14 +405,14 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           criteria = readOperation.criteria,
           schemaName = rawDataOperation.schema,
           /*
-            If Read Expressions is a structure like montage serialization values and used for DataQuery's 
+            If Read Expressions is a structure like montage serialization values and used for DataQuery's
             selectBindings:
 
             aDataQuery.selectBindings = {
                 "averageAge": {"<-": "data.map{age}.average()"
             };
 
-            The left side, "averageAge" would be the "As" in the select statement like in: 
+            The left side, "averageAge" would be the "As" in the select statement like in:
 
               SELECT kind, sum(len) AS total FROM films GROUP BY kind;
 
@@ -532,7 +565,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
               if (err) {
                 // an error occurred
-                console.log("!!! handleReadOperation FAILED:",err, err.stack, rawDataOperation.sql); 
+                console.log("!!! handleReadOperation FAILED:",err, err.stack, rawDataOperation.sql);
                 operation.type = DataOperation.Type.ReadFailed;
                 //Should the data be the error?
                 operation.data = err;
@@ -548,10 +581,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 //operation._rawReadExpressionIndexMap = rawReadExpressionMap;
 
                 resolve(operation);
-              }  
+              }
             });
 
-          });             
+          });
           //}
         }
     },
@@ -586,7 +619,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         operation.dataDescriptor = objectDescriptor.module.id;
 
         //When we have an operation to deal with, we'll know which it is.
-        //Here we don't know if this record is a newly created object or one we fetched.  
+        //Here we don't know if this record is a newly created object or one we fetched.
 
         //We have a known dataIdentifier for this object, it's an Update Operation:
         if(dataIdentifier) {
@@ -648,7 +681,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 else {
                     //Here, we don't really use the store value of a regular property's change
                     //It should be exactly the same as the value on the object. Should we really
-                    //use memory to keep a pointer on it? 
+                    //use memory to keep a pointer on it?
                     result = this._mapObjectPropertyToRawData(object, aProperty, operationData);
                     if (this._isAsync(result)) {
                         mappingPromises = mappingPromises || [];
@@ -665,14 +698,14 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
               return Promise.resolve(operation);
             }
 
-            return (mappingPromises 
+            return (mappingPromises
             ? Promise.all(mappingPromises)
             : Promise.resolve(true))
             .then(function(success) {
                 //All mapping done and stored in operation.
                 return new Promise(function(resolve,reject) {
 
-                    self.handleUpdateOperation(operation) 
+                    self.handleUpdateOperation(operation)
                     .then(function(rawUpdateCompletedOperation) {
                         var updateCompletedOperation = new DataOperation();
                         updateCompletedOperation.type = DataOperation.Type.UpdateCompleted;
@@ -691,7 +724,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             },function(mappingError){
                 console.error(mappingError);
             });
-   
+
         } else {
           operation.type = DataOperation.Type.Create;
           operation.data = object
@@ -949,7 +982,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
               return prepareValue(value, type);
             }
         }
-    },  
+    },
     mapPropertyValueToRawTypeExpression: {
       value: function(property, value, type) {
           var mappedValue = this.mapPropertyValueToRawType(property, value, type);
@@ -958,7 +991,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           // }
           return mappedValue;
       }
-  },  
+  },
 
     /*
     CREATE TABLE phront."_Collection"
@@ -1166,11 +1199,11 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             // }
             // if(i<countI-1) {
             //   columnSQL += ',\n';
-            // }      
+            // }
             if(i>0) {
                 columnSQL += ',\n';
-              }      
-  
+              }
+
         }
 
         sql+=createTableTemplatePrefix;
@@ -1185,7 +1218,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         rawDataOperation.continueAfterTimeout = continueAfterTimeout;
         rawDataOperation.includeResultMetadata = includeResultMetadata;
         //rawDataOperation.parameters = parameters;
-        
+
         return rawDataOperation;
     }
   },
@@ -1228,8 +1261,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 //Not sure there's much we can provide as data?
                 operation.data = operation.dataDescriptor;
 
-                resolve(operation);      
-              }    
+                resolve(operation);
+              }
             });
           });
         }
@@ -1287,7 +1320,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     iMappedValue = self.mapPropertyValueToRawTypeExpression(recordKeys[i],iValue);
                     // if(iValue == null || iValue == "") {
                     //   iValue = 'NULL';
-                    // } 
+                    // }
                     // else if(typeof iValue === "string") {
                     //   iValue = escapeString(iValue);
                     //   iValue = `${iValue}`;
@@ -1302,7 +1335,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                 sql = `INSERT INTO ${schemaName}."${tableName}" (${escapedRecordKeys.join(",")})
                             VALUES (${recordKeysValues.join(",")})`;
-  
+
                 return sql;
             });
         }
@@ -1333,11 +1366,11 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                   record = {};
 
                 /*
-                  Pointers to INSERT 
+                  Pointers to INSERT
                   https://www.postgresql.org/docs/8.2/sql-insert.html
-                  
+
                   Smarts:
-                  
+
                   1/ INSERT INTO public."Item" ("Id", name)
                       VALUES  ('1', 'name1'),
                               ('2', 'name2'),
@@ -1345,7 +1378,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                 ` 2/How do I insert multiple values into a postgres table at once?
                     https://stackoverflow.com/questions/20815028/how-do-i-insert-multiple-values-into-a-postgres-table-at-once
-                    INSERT INTO user_subservices(user_id, subservice_id) 
+                    INSERT INTO user_subservices(user_id, subservice_id)
                     SELECT 1 id, x
                     FROM    unnest(ARRAY[1,2,3,4,5,6,7,8,22,33]) x
 
@@ -1363,7 +1396,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                         operation.dataDescriptor = createOperation.dataDescriptor;
                         if (err) {
                             // an error occurred
-                            console.log(err, err.stack, rawDataOperation); 
+                            console.log(err, err.stack, rawDataOperation);
                             operation.type = DataOperation.Type.CreateFailed;
                             //Should the data be the error?
                             operation.data = err;
@@ -1376,9 +1409,9 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                             operation.data = record;
 
                             resolve(operation);
-                        }  
+                        }
                     });
-                });              
+                });
             }
         }
     },
@@ -1450,7 +1483,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 else if(criteria.parameters.hasOwnProperty("id")) {
                     condition = `id = '${criteria.parameters.id}'::uuid`;
                 }
-            } 
+            }
 
             if(dataSnapshotKeys) {
                 for(i=0, countI=dataSnapshotKeys.length;i<countI;i++) {
@@ -1460,7 +1493,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     else {
                         condition = "";
                     }
-    
+
                     iKey = dataSnapshotKeys[i];
                     iValue = dataSnapshot[iKey];
                     condition += `${escapeIdentifier(iKey)} = ${this.mapPropertyValueToRawTypeExpression(iKey,iValue)}`;
@@ -1495,7 +1528,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 if(iValue.hasOwnProperty("addedValues")) {
                     iMappedValue = this.mapPropertyValueToRawTypeExpression(iKey,iValue.addedValues);
                     iAssignment = `${iKeyEscaped} = array_append(${iKeyEscaped}, ${iMappedValue})`;
-                } 
+                }
                 if(iValue.hasOwnProperty("removedValues")) {
                   iMappedValue = this.mapPropertyValueToRawTypeExpression(iKey,iValue.removedValues);
                   iAssignment = `${iKeyEscaped} = array_remove(${iKeyEscaped}, ${iMappedValue})`;
@@ -1518,7 +1551,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             }
 
 
-            sql = `UPDATE  ${schemaName}."${tableName}" SET ${setRecordKeys.join(",")} 
+            sql = `UPDATE  ${schemaName}."${tableName}" SET ${setRecordKeys.join(",")}
             WHERE (${condition})`;
             return Promise.resolve(sql);
         }
@@ -1529,7 +1562,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
       value: function(updateOperation) {
         var data = updateOperation.data;
 
-        //As target should be the ObjectDescriptor in both cases, whether the 
+        //As target should be the ObjectDescriptor in both cases, whether the
         //operation is an instance or ObjectDescriptor operation
         //I might be better to rely on the presence of a criteria or not:
         //No criteria means it's really an operation on the ObjectDescriptor itself
@@ -1559,7 +1592,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     operation.dataDescriptor = objectDescriptor.module.id;
                     if (err) {
                         // an error occurred
-                        console.log(err, err.stack, rawDataOperation); 
+                        console.log(err, err.stack, rawDataOperation);
                         operation.type = DataOperation.Type.UpdateFailed;
                         //Should the data be the error?
                         operation.data = err;
@@ -1572,9 +1605,9 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                         operation.data = record;
 
                         resolve(operation);
-                    }  
+                    }
                 });
-            });             
+            });
         }
       }
     },
@@ -1619,7 +1652,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             else if(criteria.parameters.hasOwnProperty("id")) {
                 condition = `id = '${criteria.parameters.id}'::uuid`;
             }
-        } 
+        }
 
         if(dataSnapshotKeys) {
             for(i=0, countI=dataSnapshotKeys.length;i<countI;i++) {
@@ -1636,7 +1669,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             }
         }
 
-        sql = `DELETE FROM ${schemaName}."${tableName}"  
+        sql = `DELETE FROM ${schemaName}."${tableName}"
         WHERE (${condition})`;
         return Promise.resolve(sql);
     }
@@ -1664,7 +1697,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     operation.dataDescriptor = objectDescriptor.module.id;
                     if (err) {
                         // an error occurred
-                        console.log(err, err.stack, rawDataOperation); 
+                        console.log(err, err.stack, rawDataOperation);
                         operation.type = DataOperation.Type.DeleteFailed;
                         //Should the data be the error?
                         operation.data = err;
@@ -1677,9 +1710,9 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                         operation.data = record;
 
                         resolve(operation);
-                    }  
+                    }
                 });
-            });             
+            });
         }
     },
 
@@ -1700,18 +1733,18 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             //This adds the right access key, db name. etc... to the RawOperation.
             //Right now we assume that all ObjectDescriptors in the transaction goes to the same DB
-            //If not, it needs to be handled before reaching us with an in-memory transaction, 
+            //If not, it needs to be handled before reaching us with an in-memory transaction,
             //or leveraging some other kind of storage for long-running cases.
             this.mapObjectDescriptorToRawOperation(firstObjectDescriptor,rawDataOperation);
 
-            return new Promise(function(resolve,reject) {          
+            return new Promise(function(resolve,reject) {
                 self._rdsDataService.beginTransaction(rawDataOperation, function(err, data) {
                     var operation = new DataOperation();
                     operation.referrerId = createTransactionOperation.id;
                     operation.dataDescriptor = transactionObjectDescriptors;
                     if (err) {
                         // an error occurred
-                        console.log(err, err.stack, rawDataOperation); 
+                        console.log(err, err.stack, rawDataOperation);
                         operation.type = DataOperation.Type.CreateTransactionFailed;
                         //Should the data be the error?
                         operation.data = data;
@@ -1722,12 +1755,12 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                         operation.type = DataOperation.Type.CreateTransactionCompleted;
                         //What should be the operation's payload ? The Raw Transaction Id?
                         operation.data = data;
-    
+
                         resolve(operation);
-                    }  
+                    }
                     });
-  
-              });             
+
+              });
           }
     },
 
@@ -1762,7 +1795,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             //This adds the right access key, db name. etc... to the RawOperation.
             //Right now we assume that all ObjectDescriptors in the transaction goes to the same DB
-            //If not, it needs to be handled before reaching us with an in-memory transaction, 
+            //If not, it needs to be handled before reaching us with an in-memory transaction,
             //or leveraging some other kind of storage for long-running cases.
             if(transactionId) {
                 rawDataOperation.transactionId = transactionId;
@@ -1772,7 +1805,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             //Now loop on operations and create the matching sql:
             for(i=0, countI = batchedOperations && batchedOperations.length;(i<countI);i++) {
-                iOperation = batchedOperations[i];   
+                iOperation = batchedOperations[i];
                 if(iOperation.type === updateOperationType) {
                     sqlMapPromises.push(this._mapUpdateOperationToSQL(iOperation,rawDataOperation));
                 } else if(iOperation.type === createOperationType) {
@@ -1789,17 +1822,17 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 batchSQL = operationSQL.join("\n");
                 rawDataOperation.sql = batchSQL;
 
-                return new Promise(function(resolve,reject) {          
+                return new Promise(function(resolve,reject) {
                     self._rdsDataService.batchExecuteStatement(rawDataOperation, function(err, data) {
                         var operation = new DataOperation();
                         operation.referrerId = batchOperation.id;
                         operation.dataDescriptor = transactionObjectDescriptors;
                         if(transactionId) {
                             data.transactionId = transactionId;
-                        }        
+                        }
                         if (err) {
                             // an error occurred
-                            console.log(err, err.stack, rawDataOperation); 
+                            console.log(err, err.stack, rawDataOperation);
                             operation.type = DataOperation.Type.BatchFailed;
                             //Should the data be the error?
                             operation.data = data;
@@ -1810,12 +1843,12 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                             operation.type = DataOperation.Type.BatchCompleted;
                             //What should be the operation's payload ? The Raw Transaction Id?
                             operation.data = data;
-        
+
                             resolve(operation);
-                        }  
+                        }
                     });
-                });     
-        
+                });
+
             }, function(sqlMapError) {
                 return Promise.reject(sqlMapError);
             });
@@ -1840,12 +1873,12 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             //This adds the right access key, db name. etc... to the RawOperation.
             //Right now we assume that all ObjectDescriptors in the transaction goes to the same DB
-            //If not, it needs to be handled before reaching us with an in-memory transaction, 
+            //If not, it needs to be handled before reaching us with an in-memory transaction,
             //or leveraging some other kind of storage for long-running cases.
             if(transactionId) {
                 rawDataOperation.transactionId = transactionId;
             }
-    
+
             this.mapObjectDescriptorToRawOperation(firstObjectDescriptor,rawDataOperation);
 
             //_rdsDataService.commitTransaction & _rdsDataService.rollbackTransaction make sure the param
@@ -1854,7 +1887,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             delete rawDataOperation.database;
             delete rawDataOperation.schema;
 
-            return new Promise(function(resolve,reject) {   
+            return new Promise(function(resolve,reject) {
                 var method =  transactionEndOperation.type === DataOperation.Type.PerformTransaction
                 ?  "commitTransaction"
                 : "rollbackTransaction";
@@ -1864,10 +1897,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     operation.dataDescriptor = transactionObjectDescriptors;
                     if(transactionId) {
                         data.transactionId = transactionId;
-                    }        
+                    }
                     if (err) {
                         // an error occurred
-                        console.log(err, err.stack, rawDataOperation); 
+                        console.log(err, err.stack, rawDataOperation);
                         operation.type = DataOperation.Type.PerformTransactionFailed;
                         //Should the data be the error?
                         operation.data = data;
@@ -1878,12 +1911,12 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                         operation.type = DataOperation.Type.PerformTransactionCompleted;
                         //What should be the operation's payload ? The Raw Transaction Id?
                         operation.data = data;
-    
+
                         resolve(operation);
-                    }  
+                    }
                 });
-  
-            });             
+
+            });
         }
     },
 
@@ -1908,7 +1941,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           }
           else {
           }    console.log(data);           // successful response
-        });      
+        });
       }
     },
 
@@ -1920,10 +1953,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           }
           else {
           }    console.log(data);           // successful response
-        });      
+        });
       }
     },
-    
+
     commitTransaction: {
         value: function(params) {
             this._rdsDataService.commitTransaction(params, function(err, data) {
@@ -1932,12 +1965,12 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 }
                 else {
                 }    console.log(data);           // successful response
-            });      
+            });
         }
     },
     _executeStatement: {
         value: function(params, callback) {
-          this._rdsDataService.executeStatement(params, callback);      
+          this._rdsDataService.executeStatement(params, callback);
         }
     },
     rollbackTransaction: {
@@ -1948,9 +1981,9 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 }
                 else {
                     console.log(data);           // successful response
-                }    
-            });      
-        }    
+                }
+            });
+        }
     }
 
 });
