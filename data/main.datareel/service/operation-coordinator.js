@@ -182,8 +182,12 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                 resultOperationPromise,
                 self = this;
 
+            console.log("serializedOperation: ",serializedOperation);
+
             this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
             deserializedOperation = this._deserializer.deserializeObject();
+
+            console.log("deserializedOperation: ",JSON.stringify(deserializedOperation));
 
             if(!deserializedOperation.target && deserializedOperation.dataDescriptor) {
                 deserializedOperation.target = mainService.objectDescriptorWithModuleId(deserializedOperation.dataDescriptor);
