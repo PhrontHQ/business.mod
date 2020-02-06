@@ -111,7 +111,9 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                     integerLengthQuotient = Math.floor(operationData.length / integerSizeQuotient),
                     lengthRemainder = operationData.length % integerSizeQuotient,
                     i=0, countI = integerSizeQuotient, iChunk, iReadUpdateOperation,
-                    promises = [];
+                    iPromise = Promise.resolve(true);
+                    promises = [],
+                    self = this;
 
                     if(lengthRemainder === 0 && sizeRemainder > 0) {
                         lengthRemainder = Math.floor(operationData.length*sizeRemainderRatio);
@@ -129,21 +131,25 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                             iReadUpdateOperation.type = DataOperation.Type.ReadCompleted;
                         }
                         iReadUpdateOperation.data = operationData.splice(0,integerLengthQuotient);
-                        promises.push(connection.postToConnection({
-                            ConnectionId: clientId,
-                            Data: this._serializer.serializeObject(iReadUpdateOperation)
-                        }).promise());
+                        iPromise = iPromise.then(function() {
+                            return connection.postToConnection({
+                                ConnectionId: clientId,
+                                Data: self._serializer.serializeObject(iReadUpdateOperation)
+                            }).promise();
+                        })
                     }
 
                     //Sends the last if some left:
                     if(lengthRemainder || operationData.length) {
-                        promises.push(connection.postToConnection({
-                            ConnectionId: clientId,
-                            Data: this._serializer.serializeObject(operation)
-                        }).promise());
+                        iPromise = iPromise.then(function() {
+                            return connection.postToConnection({
+                                ConnectionId: clientId,
+                                Data: self._serializer.serializeObject(operation)
+                            }).promise()
+                        });
                     }
                     console.log(">>>>Large ReadOperation split in "+(countI+lengthRemainder)+ " sub operations: operationDataKBSize:"+operationDataKBSize+", integerSizeQuotient:"+integerSizeQuotient+", sizeRemainder:"+sizeRemainder+", operationData.length:"+operationData.length+", integerLengthQuotient:"+integerLengthQuotient+", lengthRemainder:",lengthRemainder );
-                    return Promise.all(promises);
+                    return iPromise;
             }
         }
     },
