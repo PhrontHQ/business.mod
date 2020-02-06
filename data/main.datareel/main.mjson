@@ -11,15 +11,6 @@
     },
 
     "phrontService": {
-        "object": "data/main.datareel/phront-service.mjson",
-        "values": {
-            "childServices": [
-                {"@": "googleCalendarService"}
-            ]
-        }
-
-    },
-    "googleCalendarService": {
-        "object": "data/google-calendar.datareel/google-calendar-service.mjson"
+        "object": "data/main.datareel/phront-service.mjson"
     }
 }
