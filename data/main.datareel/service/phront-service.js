@@ -516,6 +516,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         var data = readOperation.data,
             rawReadExpressionMap;
 
+            //console.log("PhrontService: handleRead readOperation.id: ",readOperation.id)
         //No implementation/formalization yet to read the schema and retrieve ObjectDescriptors
         //Built from an existing schema. How would we express that in a read criteria? What would be the
         //objectDescriptor property? The model? Does naming that property that way actually work?
@@ -533,7 +534,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           this.mapObjectDescriptorToRawOperation(objectDescriptor,rawDataOperation);
           this.mapReadOperationToRawStatement(readOperation,rawDataOperation);
 
-          return new Promise(function(resolve,reject) {
+          //return new Promise(function(resolve,reject) {
             //var timeID = self._handleReadCount++,
                 //start = Date.now();
                 // startTime = console.time(readOperation.id);
@@ -572,7 +573,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 operation.type = DataOperation.Type.ReadFailed;
                 //Should the data be the error?
                 operation.data = err;
-                reject(operation);
+                objectDescriptor.dispatchEvent(operation);
+                //reject(operation);
               }
               else {
                 // successful response
@@ -587,7 +589,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
               }
             });
 
-          });
+          //});
           //}
         }
     },
