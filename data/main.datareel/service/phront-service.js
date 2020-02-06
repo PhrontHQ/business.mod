@@ -592,6 +592,12 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         }
     },
 
+    handleEventRead: {
+        value: function(readOperation) {
+            return this.handleRead(readOperation);
+        }
+    },
+
     /*
       overriden to efficently counters the data structure
       returned by AWS RDS DataAPI efficently

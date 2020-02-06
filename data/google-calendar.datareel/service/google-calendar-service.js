@@ -30,7 +30,7 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
         "benoit@phront.com"
     );
     const CALENDAR_ID = 'benoit@phront.com';
- 
+
     jwtClient.authorize(function(err, tokens) {
          if (err) {
              console.log(err);
@@ -53,30 +53,30 @@ exports.GoogleCalendarService = GoogleCalendarService = RawDataService.specializ
         }
     },
 
-    handleCreateOperation: {
+    handleCreate: {
         value: function(operation) {
             var data = operation.data;
         }
     },
 
-    handleReadOperation: {
+    handleRead: {
         value: function(operation) {
           var data = operation.data,
             criteria = operation.criteria,
               rawReadExpressionMap;
         }
     },
-    
-    handleUpdateOperation: {
+
+    handleUpdate: {
         value: function(operation) {
           var data = operation.data;
         }
     },
 
-    handleDeleteOperation: {
+    handleDelete: {
         value: function(operation) {
           var data = operation.data;
         }
-    }  
+    }
 
 });

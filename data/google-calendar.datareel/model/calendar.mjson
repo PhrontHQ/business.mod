@@ -26,7 +26,7 @@
     },
     "CalendarPrototype": {
         "object": "data/google-calendar.datareel/model/calendar"
-    }
+    },
     "id": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -39,14 +39,14 @@
         "values": {
             "name": "kind",
             "valueType": "string",
-            "defaultValue": "calendar#calendar",
+            "defaultValue": "calendar#calendar"
         }
     },
     "etag": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "etag",
-            "valueType": "string",
+            "valueType": "string"
         }
     },
     "summary": {
