@@ -11,6 +11,8 @@ DataOperation = require("montage/data/service/data-operation").DataOperation,
 defaultEventManager = require("montage/core/event/event-manager").defaultEventManager,
 sizeof = require('object-sizeof');
 
+//const google = require("googleapis").google;
+
 
 exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinator.prototype */ {
 
@@ -157,7 +159,15 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
 
     handleEvent: {
         value: function(operation) {
-            this.dispatchOperationToConnectionClientId(operation,this.gateway,operation.clientId);
+            var self = this;
+            this.dispatchOperationToConnectionClientId(operation,this.gateway,operation.clientId)
+            .then(function(values) {
+                //resolve
+                self._operationPromisesByReferrerId.get(operation.referrerId)[0]();
+            },function(error) {
+                //reject
+                self._operationPromisesByReferrerId.get(operation.referrerId)[1]();
+            });
         }
     },
     /*
@@ -167,6 +177,9 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
     */
     gateway: {
         value: undefined
+    },
+    _operationPromisesByReferrerId: {
+        value: new Map()
     },
 
     handleMessage: {
@@ -182,12 +195,8 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                 resultOperationPromise,
                 self = this;
 
-            console.log("serializedOperation: ",serializedOperation);
-
             this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
             deserializedOperation = this._deserializer.deserializeObject();
-
-            console.log("deserializedOperation: ",JSON.stringify(deserializedOperation));
 
             if(!deserializedOperation.target && deserializedOperation.dataDescriptor) {
                 deserializedOperation.target = mainService.objectDescriptorWithModuleId(deserializedOperation.dataDescriptor);
@@ -202,8 +211,12 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
             //console.log("handleEvent(...)",deserializedOperation);
 
             if(deserializedOperation.type ===  DataOperation.Type.Read) {
-                defaultEventManager.handleEvent(deserializedOperation);
+                resultOperationPromise = new Promise(function(resolve,reject) {
+                    self._operationPromisesByReferrerId.set(deserializedOperation.id,[resolve,reject]);
+                    defaultEventManager.handleEvent(deserializedOperation);
+                });
 
+                return resultOperationPromise;
                 //resultOperationPromise = phrontService.handleRead(deserializedOperation);
                 //phrontService.handleRead(deserializedOperation);
 
