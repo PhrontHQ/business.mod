@@ -43,7 +43,7 @@ bootstrapPromise = Montage.loadPackage(PATH.join(__dirname, "."), {
 bootstrapPromise.then(function(value) {
     var mockGateway =  {
         postToConnection: function(params) {
-                this._promise = new Promise(function(resolve,reject) { 
+                this._promise = new Promise(function(resolve,reject) {
                     /* params looks like:
                         {
                             ConnectionId: event.requestContext.connectionId,
@@ -69,15 +69,14 @@ bootstrapPromise.then(function(value) {
         var mockContext,
         mockCallback;
 
-        operationCoordinator.handleEvent({
+        operationCoordinator.handleMessage({
             requestContext: {
                 connectionId: uuid.generate()
             },
             "body":serializedOperation
         },mockContext,mockCallback,mockGateway);
     };
-    
+
 },function(rejectError) {
     console.error(rejectError);
 });
-    

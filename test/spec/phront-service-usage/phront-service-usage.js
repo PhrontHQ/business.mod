@@ -14,13 +14,12 @@ var Worker = require("tiny-worker"),
     DataQuery = require("montage/data/model/data-query").DataQuery,
     Montage = require("montage/core/core").Montage,
     //to test client side
-    ClientCollection = require("phront/data/main.datareel/model/collection").Collection,
-    ClientImage = require("phront/data/main.datareel/model/image").Image,
     ClientService = require("phront/data/main.datareel/model/service").Service,
 
     phrontClientService = clientMainService.childServices[0],
     sizeof = require("object-sizeof"),
-    uuid = require("montage/core/uuid");
+    uuid = require("montage/core/uuid"),
+    createUpdateDeleteCollectionImage = require("./use-cases/create-update-delete-collection-image").createUpdateDeleteCollectionImage;
 
 
 
@@ -104,7 +103,7 @@ exports.promise = new Promise(function(resolve,reject) {
             deserializer.init(serializedOperation, require, objectRequires, module, isSync);
             deserializedOperation = deserializer.deserializeObject();
 
-            phrontService.handleReadOperation(deserializedOperation)
+            phrontService.handleRead(deserializedOperation)
             .then(function(operationCompleted) {
                 //serialize
                 completedSerializedOperation = serializer.serializeObject(operationCompleted);
@@ -147,7 +146,7 @@ exports.promise = new Promise(function(resolve,reject) {
                     deserializedOperation = deserializer.deserializeObject();
 
                 console.log("deserializedOperation:",deserializedOperation);
-                
+
             },
             function(serializedFailedOperation) {
                 console.log("serializedFailedOperation:",serializedFailedOperation);
@@ -174,7 +173,7 @@ exports.promise = new Promise(function(resolve,reject) {
                         var serializedCollections = serializer.serializeObject(collections);
                         var dataKBSize = sizeof(serializedCollections) / 1024;
                         console.log("serializedCollections is "+dataKBSize+"KB");
-    
+
                         resolve(collections);
                     },
                     function (error) {
@@ -183,7 +182,7 @@ exports.promise = new Promise(function(resolve,reject) {
                 );
 
         // });
-*/   
+*/
 
 
         // it("can feth a collection and its products", function (done) {
@@ -226,7 +225,7 @@ exports.promise = new Promise(function(resolve,reject) {
                             for(var j=0, countJ = iProducts.length, jProduct;(j<countJ);j++ ) {
                                 jProduct = iProducts[j];
                                 promises.push(getServiceDescriptionHtml(jProduct));
-                            }    
+                            }
                         }
                     }
 
@@ -243,70 +242,10 @@ exports.promise = new Promise(function(resolve,reject) {
     // });
 
     // it("can create, update and delete a collection", function (done) {
-        
-        var aCollection =  clientMainService.createDataObject(ClientCollection);
 
-        aCollection.originId = null;
-        aCollection.title = "Test Collection Title";
-        aCollection.description = "Test Collection description";
-        aCollection.descriptionHtml = "Test Collection descriptionHtml";
-        aCollection.products = null;
-        aCollection.image = null;
-
-        return clientMainService.saveChanges()
-        //return clientMainService.saveDataObject(aCollection)
-        .then(function(createCompletedOperation) {
-            return createCompletedOperation.data;
-        },function(error) {
-            console.error(error);
-        })
-        .then(function(saveOperationResolved) {
-            // change a simple property
-            aCollection.title = "---> Test Collection Title Changed";
-            return clientMainService.saveChanges();
-            //return clientMainService.saveDataObject(aCollection);
-        },function(error) {
-            console.error(error);
-        })
-        .then(function(saveOperationResolved) {
-            // change a simple property and a to-one*/
-
-            var imageDescriptor = clientMainService.objectDescriptorForType(ClientImage);
-
-            var clientImage = clientMainService.createDataObject(imageDescriptor);
-            clientImage.originId = null;
-            clientImage.altText = "altText";
-            clientImage.originalSrc = "http://originalSrc.com/image.png";
-            clientImage.transformedSrc = null;
-            aCollection.image = clientImage;
-            aCollection.title = "Test Collection Title Changed again";
-
-            //Totally new to test
-            return clientMainService.saveChanges();
-            //return clientMainService.saveDataObject(aCollection.image);
-            //return Promise.all([
-            //    clientMainService.saveDataObject(aCollection.image),
-            //    clientMainService.saveDataObject(aCollection)]);
-        },function(saveError) {
-            console.error(saveError);
-        })
-        .then(function(saveCompletedOperation) {
-            // var collection = saveCompletedOperation.data;
-            clientMainService.deleteDataObject(aCollection.image);
-            clientMainService.deleteDataObject(aCollection);
-            return clientMainService.saveChanges();
-
-            // return Promise.all([
-            //     clientMainService.deleteDataObject(aCollection.image),
-            //     clientMainService.deleteDataObject(aCollection)]);
-
-        },function(saveFailedOperation) {
-            console.error(saveFailedOperation);
-        })
-        .then(function(saveOperationResult) {
+        createUpdateDeleteCollectionImage().then(function(passed) {
             console.log("done!!");
-
-        },function(saveError) {
+        },function(error) {
             console.error(saveError);
         });
 
