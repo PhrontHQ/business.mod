@@ -202,13 +202,13 @@ describe("CognitoIdentityService", function () {
             });
 
             it("updates the user identity's primary key if needed", function () {
-                var originalPkey = userIdentity.identifier.primaryKey;
+                var originalPkey = userIdentity.dataIdentifier.primaryKey;
                 userIdentity.username = "confirmed";
                 userIdentity.password = "password";
                 return mainService.saveDataObject(userIdentity)
                 .then(function () {
-                    expect(userIdentity.identifier.primaryKey).toBeTruthy();
-                    expect(userIdentity.identifier.primaryKey).not.toBe(originalPkey);
+                    expect(userIdentity.dataIdentifier.primaryKey).toBeTruthy();
+                    expect(userIdentity.dataIdentifier.primaryKey).not.toBe(originalPkey);
                 });
             });
 

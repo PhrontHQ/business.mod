@@ -177,6 +177,9 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     Knowing the panel and the identity service may be in different thread, they may not be able to address each others. So we should probably use data operations to do the communication anyway
                 */
                 userIdentity = self.objectForTypeRawData(self.userIdentityDescriptor, cognitoUser);
+                // Rather annoying that objectForTypeRawData does not record a snapshot (when the service is uniquing)
+                self.recordSnapshot(userIdentity.dataIdentifier, cognitoUser);
+
                 self._pendingStream = stream;
 
                 // Keep track of the stream to complete when we get all data
@@ -311,7 +314,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
     saveRawData: {
         value: function (record, object) {
             var self = this,
-                cognitoUser = this.snapshotForDataIdentifier(object.identifier);
+                cognitoUser = this.snapshotForDataIdentifier(object.dataIdentifier);
             if (cognitoUser) {
                 cognitoUser.username = record.username;
                 if (cognitoUser.signInUserSession) {
@@ -362,7 +365,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                 var callback = {
                     onSuccess: function () {
                         var rawDataPrimaryKey = cognitoUser.signInUserSession.idToken.payload.sub,
-                            dataIdentifier = object.identifier;
+                            dataIdentifier = object.dataIdentifier;
                         //If we had a temporary object, we need to update the primary key
                         if (dataIdentifier && dataIdentifier.primaryKey !== rawDataPrimaryKey) {
                             dataIdentifier.primaryKey = rawDataPrimaryKey;
@@ -415,7 +418,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                                 /*
                                     this should describe the what the operation applies to
                                 */
-                                validateOperation.criteria = new Criteria().initWithExpression("identifier == $", object.identifier);
+                                validateOperation.criteria = new Criteria().initWithExpression("identifier == $", object.dataIdentifier);
 
                                 /*
                                     this is meant to provide the core of what the operation express. A validateFailed should explain
@@ -446,7 +449,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                             dataOperation.type = DataOperation.Type.ValidateFailed;
                             dataOperation.userMessage = "Invalid MFA Code";
                             dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
-                            dataOperation.criteria = new Criteria().initWithExpression("identifier == $", object.identifier);
+                            dataOperation.criteria = new Criteria().initWithExpression("identifier == $", object.dataIdentifier);
                             dataOperation.data = { mfaCode: undefined };
                             reject(dataOperation);
                         } else {
@@ -527,7 +530,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     var cognitoUser, dataOperation, dataIdentifier, confirmation, codeDeliveryDetails;
                     if (err) {
                         if (err.code === "UsernameExistsException") {
-                            cognitoUser = self.snapshotForDataIdentifier(object.identifier);
+                            cognitoUser = self.snapshotForDataIdentifier(object.dataIdentifier);
                             if (!cognitoUser) {
                                 cognitoUser = new self.CognitoUser({
                                     Username: record.username,
@@ -573,7 +576,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     } else {
                         cognitoUser = result.user;
                         cognitoUser.id = result.userSub;
-                        dataIdentifier = object.identifier;
+                        dataIdentifier = object.dataIdentifier;
                         if (dataIdentifier) {
                             dataIdentifier.primaryKey = cognitoUser.id;
                         } else {
@@ -581,7 +584,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                             self.rootService.recordDataIdentifierForObject(dataIdentifier, object);
                             self.rootService.recordObjectForDataIdentifier(object, dataIdentifier);
                         }
-                        self.recordSnapshot(object.identifier, cognitoUser);
+                        self.recordSnapshot(object.dataIdentifier, cognitoUser);
                         object.isAccountConfirmed = result.userConfirmed;
                         if (object.isAccountConfirmed) {
                             return this._authenticateUser(record, object, cognitoUser);
@@ -613,7 +616,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         dataOperation.type = DataOperation.Type.ValidateFailed;
                         dataOperation.userMessage = "Invalid Verification Code";
                         dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
-                        dataOperation.criteria = new Criteria().initWithExpression("identifier == $", object.identifier);
+                        dataOperation.criteria = new Criteria().initWithExpression("identifier == $", object.dataIdentifier);
                         dataOperation.data = { accountConfirmationCode: undefined };
                         reject(dataOperation);
                     } else {
