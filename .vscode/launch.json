@@ -97,8 +97,15 @@
             "runtimeArgs": [
                 "test/run-node.js"
             ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Spec",
+            "program": "${workspaceFolder}/test/run-node.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
         }
-
-
     ]
 }
