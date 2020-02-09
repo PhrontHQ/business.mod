@@ -226,7 +226,20 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         return this.__rdsDataService;
       }
     },
+/*
+    _googleDataService: {
+        value: undefined
+    },
 
+    googleDataService: {
+        get: function() {
+            if(!this._googleDataService) {
+                this._googleDataService = this.childServices.values().next().value;
+            }
+            return this._googleDataService;
+        }
+    },
+*/
     fetchData: {
       value: function (query, stream) {
           var self = this,
@@ -366,17 +379,37 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           }
           else if(syntax && syntax.type == "has") {
             var args = syntax.args;
-            propertyName = args[1].args[1].value;
+            if(args[1].type === "property") {
+                propertyName = args[1].args[1].value;
+
+                if(args[0].type === "parameters") {
+                    value = criteria.parameters;
+                    escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value,"list");
+                  }
+            }
+            else if(args[0].type === "property") {
+                propertyName = args[0].args[1].value;
+
+                if(args[1].type === "parameters") {
+                    value = criteria.parameters;
+                    if(!Array.isArray(value)) {
+                        value = [value];
+                    }
+                    escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value);
+                  }
+
+            } else {
+                throw new Error("phron-service.js: unhandled syntax in mapCriteriaToRawStatement(criteria: "+JSON.stringify(criteria)+"objectDescriptor: "+mapping.objectDescriptor.name);
+            }
             rawProperty = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
             escapedRawProperty = escapeIdentifier(rawProperty);
 
-            if(args[0].type === "parameters") {
-              value = criteria.parameters;
-              escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value,"list");
+            if(rawProperty === "id")  {
+                condition = `${escapedRawProperty} in ${escapedValue}`
+            } else {
+                condition = `${escapedRawProperty} @> ${escapedValue}`
             }
 
-
-            condition = `${escapedRawProperty} in ${escapedValue}`
 
           }
           else if((criteria && criteria.expression) || (criteria && criteria.syntax) || (criteria && criteria.parameters)) {
@@ -593,12 +626,41 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           //}
         }
     },
-
+/*
     handleEventRead: {
         value: function(readOperation) {
+            var operation = new DataOperation(),
+            objectDescriptor = this.objectDescriptorWithModuleId(readOperation.dataDescriptor);
+            ;
+
+            operation.referrerId = readOperation.id;
+            operation.dataDescriptor = readOperation.dataDescriptor;
+
+            //Carry on the details needed by the coordinator to dispatch back to client
+            // operation.connection = readOperation.connection;
+            operation.clientId = readOperation.clientId;
+
+            return this.googleDataService.handleEventRead(readOperation).
+            then(function(rawEvents) {
+                operation.type = DataOperation.Type.ReadCompleted;
+                //We provide the inserted record as the operation's payload
+                operation.data = rawEvents;
+
+                //Not needed anymore as we request data as json
+                //operation._rawReadExpressionIndexMap = rawReadExpressionMap;
+                objectDescriptor.dispatchEvent(operation);
+            },function(error) {
+                operation.type = DataOperation.Type.ReadFailed;
+                //Should the data be the error?
+                operation.data = err;
+                objectDescriptor.dispatchEvent(operation);
+
+            });
+
             return this.handleRead(readOperation);
         }
     },
+*/
 
     /*
       overriden to efficently counters the data structure
@@ -1344,8 +1406,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     recordKeysValues[i] = iMappedValue;
                 }
 
-                sql = `INSERT INTO ${schemaName}."${tableName}" (${escapedRecordKeys.join(",")})
-                            VALUES (${recordKeysValues.join(",")})`;
+                sql = `INSERT INTO ${schemaName}."${tableName}" (${escapedRecordKeys.join(",")}) VALUES (${recordKeysValues.join(",")})`;
 
                 return sql;
             });
@@ -1562,8 +1623,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             }
 
 
-            sql = `UPDATE  ${schemaName}."${tableName}" SET ${setRecordKeys.join(",")}
-            WHERE (${condition})`;
+            sql = `UPDATE  ${schemaName}."${tableName}" SET ${setRecordKeys.join(",")} WHERE (${condition})`;
             return Promise.resolve(sql);
         }
     },
@@ -1830,11 +1890,12 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             return Promise.all(sqlMapPromises)
             .then(function(operationSQL) {
-                batchSQL = operationSQL.join("\n");
+                batchSQL = operationSQL.join(";\n");
                 rawDataOperation.sql = batchSQL;
 
                 return new Promise(function(resolve,reject) {
-                    self._rdsDataService.batchExecuteStatement(rawDataOperation, function(err, data) {
+                    //rawDataOperation.parameterSets = [[]]; //as a work-around for batch...
+                    self._rdsDataService.executeStatement(rawDataOperation, function(err, data) {
                         var operation = new DataOperation();
                         operation.referrerId = batchOperation.id;
                         operation.dataDescriptor = transactionObjectDescriptors;
