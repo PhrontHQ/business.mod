@@ -202,13 +202,13 @@ describe("CognitoIdentityService", function () {
             });
 
             it("updates the user identity's primary key if needed", function () {
-                var originalPkey = userIdentity.identifier.primaryKey;
+                var originalPkey = userIdentity.dataIdentifier.primaryKey;
                 userIdentity.username = "confirmed";
                 userIdentity.password = "password";
                 return mainService.saveDataObject(userIdentity)
                 .then(function () {
-                    expect(userIdentity.identifier.primaryKey).toBeTruthy();
-                    expect(userIdentity.identifier.primaryKey).not.toBe(originalPkey);
+                    expect(userIdentity.dataIdentifier.primaryKey).toBeTruthy();
+                    expect(userIdentity.dataIdentifier.primaryKey).not.toBe(originalPkey);
                 });
             });
 
@@ -488,7 +488,7 @@ describe("CognitoIdentityService", function () {
                 expect(err.data.hasOwnProperty("username")).toBe(true);
                 expect(err.data.hasOwnProperty("password")).toBe(true);
             });
-        })
+        });
 
         it("rejects the UserIdentity save with a DataOperation that indicates an incorrect password if the new password is rejected", function () {
             userIdentity.password = "password";
@@ -538,6 +538,38 @@ describe("CognitoIdentityService", function () {
             .then(function () {
                 expect(userIdentity.isMfaEnabled).toBe(false);
                 expect(cognitoMock.userInfos.confirmed.smsMfa).toBe(false);
+            });
+        });
+    });
+
+    describe("update user attributes", function () {
+        beforeEach(function () {
+            userIdentity.username = "confirmed";
+            userIdentity.password = "password";
+            return mainService.saveDataObject(userIdentity);
+        });
+
+        describe("phone", function () {
+            it("updates the user's phone_number attribute", function () {
+                userIdentity.phone = "+10987654321";
+                return mainService.saveDataObject(userIdentity)
+                .then(function () {
+                    expect(userIdentity.phone).toBe("+10987654321");
+                    expect(cognitoMock.userInfos.confirmed.attributes.filter(function (attribute) {
+                        return attribute.Name === "phone_number";
+                    })[0].Value).toBe("+10987654321");
+                });
+            });
+
+            it("rejects with a DataOperation if the phone number is invalid", function () {
+                userIdentity.phone = "1234567890";
+                return mainService.saveDataObject(userIdentity)
+                .then(function () {
+                    throw new Error('did not reject');
+                }, function (err) {
+                    expect(err instanceof DataOperation).toBe(true);
+                    expect(err.type).toBe(DataOperation.Type.ValidateFailed);
+                });
             });
         });
     });

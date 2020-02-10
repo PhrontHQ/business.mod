@@ -4,29 +4,45 @@ var BASE_USER_INFOS = {
     "confirmed": {
         username: "confirmed",
         password: "password",
-        email: "confirmed@mail.com",
-        sub: uuid.generate()
+        attributes: [
+            {Name: "sub", Value: uuid.generate()},
+            {Name: "email", Value: "confirmed@mail.com"},
+            {Name: "email_verified", Value: true},
+            {Name: "phone_number", Value: "+11234567890"},
+            {Name: "phone_number_verified", Value: true}
+        ]
     },
     "unconfirmed": {
         username: "unconfirmed",
         password: "password",
-        email: "unconfirmed@mail.com",
-        sub: uuid.generate(),
-        unconfirmed: true
+        unconfirmed: true,
+        attributes: [
+            {Name: "sub", Value: uuid.generate()},
+            {Name: "email", Value: "unconfirmed@mail.com"},
+            {Name: "email_verified", Value: false}
+        ]
     },
     "requiresNewPassword": {
         username: "requiresNewPassword",
         password: "password",
-        email: "requiresnewpassword@mail.com",
-        sub: uuid.generate(),
-        requiresNewPassword: true
+        requiresNewPassword: true,
+        attributes: [
+            {Name: "sub", Value: uuid.generate()},
+            {Name: "email", Value: "requiresnewpassword@mail.com"},
+            {Name: "email_verified", Value: true}
+        ]
     },
     "smsMfa": {
         username: "smsMfa",
         password: "password",
-        email: "smsmfa@mail.com",
-        sub: uuid.generate(),
-        smsMfa: true
+        smsMfa: true,
+        attributes: [
+            {Name: "sub", Value: uuid.generate()},
+            {Name: "email", Value: "smsmfa@mail.com"},
+            {Name: "email_verified", Value: true},
+            {Name: "phone_number", Value: "+11234567890"},
+            {Name: "phone_number_verified", Value: true}
+        ]
     }
 };
 
@@ -111,7 +127,9 @@ Object.defineProperties(CognitoUser.prototype, {
                 idToken: {
                     jwtToken: "abc",
                     payload: {
-                        sub: userInfo.sub
+                        sub: userInfo.attributes.filter(function (attr) {
+                            return attr.Name === "sub";
+                        })[0].Value
                     }
                 },
                 accessToken: {
@@ -192,11 +210,7 @@ Object.defineProperties(CognitoUser.prototype, {
                 return callback(new Error('not authenticated'));
             }
             userData = {
-                UserAttributes: [
-                    { Name: "sub", Value: userInfo.sub },
-                    { Name: "email", Value: userInfo.email },
-                    { Name: "email_confirmed", Value: true }
-                ]
+                UserAttributes: userInfo.attributes
             };
             if (userInfo.smsMfa) {
                 userData.MFAOptions = [{
@@ -205,6 +219,39 @@ Object.defineProperties(CognitoUser.prototype, {
                 }];
             }
             callback(null, userData);
+        }
+    },
+
+    PHONE_NUMBER_REGEX: {
+        value: /^\+\d{11}$/
+    },
+
+    updateAttributes: {
+        value: function (attributeList, callback) {
+            var userInfo = userInfos[this.username],
+                attributeMap,
+                attribute, i;
+            attributeMap = userInfo.attributes.reduce(function (map, attribute) {
+                map[attribute.Name] = attribute;
+                return map;
+            });
+            for (i = 0; (attribute = attributeList[i]); ++i) {
+                if (attribute.Name === "phone_number" && !this.PHONE_NUMBER_REGEX.test(attribute.Value)) {
+                    callback({
+                        code: "InvalidParameterException",
+                        name: "InvalidParameterException",
+                        message: "Invalid phone number format."
+                    });
+                    return;
+                }
+                if (attribute.Name in attributeMap) {
+                    attributeMap[attribute.Name].Value = attribute.Value;
+                } else {
+                    attributeMap[attribute.Name] = attribute;
+                    userInfo.attributes.push(attribute);
+                }
+            }
+            callback(null);
         }
     },
 
@@ -250,7 +297,7 @@ Object.defineProperties(CognitoUserPool.prototype, {
      */
     signUp: {
         value: function (username, password, attributeList, validationdata, callback, clientMetadata) {
-            var user, emailAttribute, userInfo;
+            var user, emailAttribute, userInfo, sub;
             if (Object.keys(userInfos).indexOf(username) !== -1) {
                 return callback({
                     code: "UsernameExistsException",
@@ -259,7 +306,7 @@ Object.defineProperties(CognitoUserPool.prototype, {
                 });
             }
             emailAttribute = attributeList.filter(function (attribute) {
-                return attribute.Name === "email"
+                return attribute.Name === "email";
             })[0];
             if (!emailAttribute) {
                 return callback({
@@ -285,16 +332,19 @@ Object.defineProperties(CognitoUserPool.prototype, {
                 Username: username,
                 Pool: this
             });
+            sub = uuid.generate();
+            attributeList.push({Name: "sub", Value: sub});
             userInfo = {
                 username: username,
                 password: password,
-                sub: uuid.generate()
+                unconfirmed: this.requireEmailVerification,
+                attributes: attributeList
             };
             userInfos[username] = userInfo;
             callback(null, {
                 user: user,
                 userConfirmed: false,
-                userSub: userInfo.sub,
+                userSub: sub,
                 codeDeliveryDetails: {
                     AttributeName: "email",
                     DeliveryMedium: "EMAIL",
