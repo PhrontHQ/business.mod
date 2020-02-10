@@ -20,6 +20,7 @@ var Worker = require("tiny-worker"),
     sizeof = require("object-sizeof"),
     uuid = require("montage/core/uuid"),
     createUpdateDeleteCollectionImage = require("./use-cases/create-update-delete-collection-image").createUpdateDeleteCollectionImage;
+    createEtiamaProServices = require("./use-cases/create-etiama-pro-services").createEtiamaProServices;
 
 
 
@@ -243,12 +244,20 @@ exports.promise = new Promise(function(resolve,reject) {
 
     // it("can create, update and delete a collection", function (done) {
 
-        createUpdateDeleteCollectionImage().then(function(passed) {
-            console.log("done!!");
-        },function(error) {
-            console.error(saveError);
-        });
+        // createUpdateDeleteCollectionImage().then(function(passed) {
+        //     console.log("done!!");
+        // },function(error) {
+        //     console.error(saveError);
+        // });
+
 
     // });
+
+    createEtiamaProServices().then(function(passed) {
+        console.log("done!!");
+    },function(error) {
+        console.error(saveError);
+    });
+
 
 });
