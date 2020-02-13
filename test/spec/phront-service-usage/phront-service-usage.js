@@ -15,11 +15,12 @@ var Worker = require("tiny-worker"),
     Montage = require("montage/core/core").Montage,
     //to test client side
     ClientService = require("phront/data/main.datareel/model/service").Service,
-
+    Promise = require("montage/core/promise").Promise,
     phrontClientService = clientMainService.childServices[0],
     sizeof = require("object-sizeof"),
     uuid = require("montage/core/uuid"),
-    createUpdateDeleteCollectionImage = require("./use-cases/create-update-delete-collection-image").createUpdateDeleteCollectionImage;
+    createUpdateDeleteCollectionImage = require("./use-cases/create-update-delete-collection-image").createUpdateDeleteCollectionImage,
+    crudPerson = require("./use-cases/crud-person").crudPerson,
     createEtiamaProServices = require("./use-cases/create-etiama-pro-services").createEtiamaProServices;
 
 
@@ -32,9 +33,20 @@ var pseudoSocket = {
 };
 
 phrontClientService._socket = pseudoSocket;
+//Assuming the worker is immediatly available
+phrontClientService._socketOpenPromise = new Promise(function(resolve, reject) {
+    dataWorker._resolve = resolve;
+    dataWorker._reject = reject;
+});
 
 dataWorker.onmessage = function (ev) {
-    phrontClientService.handleMessage(ev);
+    if(ev.data.DataWorkerReady=== true) {
+        dataWorker._resolve(true);
+    } else if(typeof ev.data.DataWorkerError !== "undefined") {
+        dataWorker._reject(ev.data.DataWorkerError);
+    } else {
+        phrontClientService.handleMessage(ev);
+    }
 //dataWorker.terminate();
 };
 dataWorker.onerror = function (error) {
@@ -45,8 +57,6 @@ dataWorker.onerror = function (error) {
 
 //dataWorker.postMessage("{ping:'ping'}");
 
-//Assuming the worker is immediatly available
-phrontClientService._socketOpenPromise = Promise.resolve(true);
 
 exports.promise = new Promise(function(resolve,reject) {
 
@@ -253,11 +263,18 @@ exports.promise = new Promise(function(resolve,reject) {
 
     // });
 
-    createEtiamaProServices().then(function(passed) {
+    // createEtiamaProServices().then(function(passed) {
+    //     console.log("done!!");
+    // },function(error) {
+    //     console.error(saveError);
+    // });
+
+    crudPerson().then(function(passed) {
         console.log("done!!");
     },function(error) {
         console.error(saveError);
     });
+
 
 
 });

@@ -2,6 +2,7 @@ var Montage = require("montage/montage"),
     PATH = require("path"),
     DataOperation, DataStream, mainService, DataQuery, Criteria, OperationCoordinator, operationCoordinator,
     uuid = require("montage/core/uuid"),
+    Promise = require("montage/core/promise").Promise,
     bootstrapPromise;
 
 
@@ -36,11 +37,9 @@ bootstrapPromise = Montage.loadPackage(PATH.join(__dirname, "."), {
     return [DataOperation,DataStream,mainService, DataQuery, Criteria, OperationCoordinator];
 },function(rejectError) {
     console.error(rejectError);
-    return Promise.reject(rejectError);
-});
-
-
-bootstrapPromise.then(function(value) {
+    throw rejectError;
+})
+.then(function(value) {
     var mockGateway =  {
         postToConnection: function(params) {
                 this._promise = new Promise(function(resolve,reject) {
@@ -73,10 +72,15 @@ bootstrapPromise.then(function(value) {
             requestContext: {
                 connectionId: uuid.generate()
             },
-            "body":serializedOperation
-        },mockContext,mockCallback,mockGateway);
+            "body": serializedOperation
+        }, mockContext, mockCallback, mockGateway);
     };
+
+    postMessage({DataWorkerReady:true});
+
 
 },function(rejectError) {
     console.error(rejectError);
+    postMessage({DataWorkerError: rejectError});
+    Promise.reject(rejectError);
 });
