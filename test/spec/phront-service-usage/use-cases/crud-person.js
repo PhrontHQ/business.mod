@@ -12,32 +12,48 @@ Person = require("phront/data/main.datareel/model/person").Person;
 
 
 exports.crudPerson = function() {
+    var person,
+        userIdentity,
+        personCriteria = new Criteria().initWithExpression("firstName == $firstName && lastName == $lastName", {
+        firstName: "Steve",
+        lastName: "Jobs"
+    });
 
-var person = mainService.createDataObject(Person),
-                userIdentity;
 
-    //userIdentity = this.application.user;
+    var personQuery = DataQuery.withTypeAndCriteria(Person, personCriteria);
+    return mainService.fetchData(personQuery)
+    .then(function (fetchedPersons) {
+        //if found, we delete them.
+        var i, countI, iPerson;
 
-    person.firstName = "Steve";
-    person.lastName = "Jobs";
-    person.email = "steve@apple.com";
-    // person.image = null;
-    // person.addresses = [];
-    // person.orders = [];
-    // person.tags = [];
-    // person.userIdentities = [userIdentity];
-    // person.employerRelationships = [];
-    return mainService.saveChanges()
-    .then(function (createCompletedOperation) {
-        //Fetch/create SISTRA
-        var personCriteria = new Criteria().initWithExpression("firstName == $firstName && lastName == $lastName", {
-            firstName: "Steve",
-            lastName: "Jobs"
-        });
+        for(i=0, countI = fetchedPersons.length;(i<countI);i++) {
+            mainService.deleteDataObject(fetchedPersons[i]);
+        }
+        return mainService.saveChanges();
+    })
+    .then(function (resultResults) {
+        //Now clean, create it:
+
+        person = mainService.createDataObject(Person);
+
+        //userIdentity = this.application.user;
+
+        person.firstName = "Steve";
+        person.lastName = "Jobs";
+        person.email = "steve@apple.com";
+        // person.image = null;
+        // person.addresses = [];
+        // person.orders = [];
+        // person.tags = [];
+        // person.userIdentities = [userIdentity];
+        // person.employerRelationships = [];
 
         console.log("personCriteria.evaluate(person) is "+ personCriteria.evaluate(person));
 
-        var personQuery = DataQuery.withTypeAndCriteria(Person, personCriteria);
+        return mainService.saveChanges();
+    })
+    .then(function (createCompletedOperation) {
+        //Fetch to make sure it was created
         return mainService.fetchData(personQuery);
     }, function (error) {
         Promise.reject(error);
@@ -58,7 +74,8 @@ var person = mainService.createDataObject(Person),
         Promise.reject(error);
     })
     .then(function(result) {
-        return mainService.deleteDataObject(person);
+        mainService.deleteDataObject(person);
+        return mainService.saveChanges();
     }, function (error) {
         Promise.reject(error);
     })
