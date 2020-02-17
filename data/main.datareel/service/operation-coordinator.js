@@ -11,9 +11,6 @@ DataOperation = require("montage/data/service/data-operation").DataOperation,
 defaultEventManager = require("montage/core/event/event-manager").defaultEventManager,
 sizeof = require('object-sizeof');
 
-//const google = require("googleapis").google;
-
-
 exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinator.prototype */ {
 
     /***************************************************************************
@@ -102,7 +99,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
 
                 */
 
-               console.log("dispatchOperationToConnectionClientId: referrerId "+operation.referrerId);
+               //console.log("dispatchOperationToConnectionClientId: referrerId "+operation.referrerId);
 
                 var integerSizeQuotient = Math.floor(operationDataKBSize / this.MAX_PAYLOAD_SIZE),
                     sizeRemainder = operationDataKBSize % this.MAX_PAYLOAD_SIZE,
@@ -148,7 +145,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                             }).promise()
                         });
                     }
-                    console.log(">>>>Large ReadOperation split in "+(countI+lengthRemainder)+ " sub operations: operationDataKBSize:"+operationDataKBSize+", integerSizeQuotient:"+integerSizeQuotient+", sizeRemainder:"+sizeRemainder+", operationData.length:"+operationData.length+", integerLengthQuotient:"+integerLengthQuotient+", lengthRemainder:",lengthRemainder );
+                    //console.log(">>>>Large ReadOperation split in "+(countI+lengthRemainder)+ " sub operations: operationDataKBSize:"+operationDataKBSize+", integerSizeQuotient:"+integerSizeQuotient+", sizeRemainder:"+sizeRemainder+", operationData.length:"+operationData.length+", integerLengthQuotient:"+integerLengthQuotient+", lengthRemainder:",lengthRemainder );
                     return iPromise;
             }
         }
