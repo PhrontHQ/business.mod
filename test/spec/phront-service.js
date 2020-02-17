@@ -18,7 +18,7 @@ var PhrontService = require("phront/data/main.datareel/service/phront-service").
 
 
 
-//Hack phrontClientService and Augment operationCoordinator for tests, 
+//Hack phrontClientService and Augment operationCoordinator for tests,
 //making it assume the role of the WebSocket for phrontClientService
 /*
 phrontClientService._socketOpenPromise = Promise.resolve(true);
@@ -39,14 +39,14 @@ describe("PhrontService -Create Database", function() {
 
 	it("can create the storage for an ObjectDescriptor ", function (done) {
 
-      
+
         function importObjectDescriptor(iType) {
             console.log("create "+iType.name);
             iOperation = new DataOperation();
             iOperation.type = DataOperation.Type.Create;
             iOperation.data = iType;
-            
-            phrontService.handleCreateOperation(iOperation)
+
+            phrontService.handleCreate(iOperation)
             .then(function(createCompletedOperation) {
                 console.log("createCompletedOperation:",createCompletedOperation.objectDescriptor.name);
             },
@@ -61,7 +61,7 @@ describe("PhrontService -Create Database", function() {
             importObjectDescriptor(types[i]);
         }
     });
-    
+
     // it("can import data for an ObjectDescriptor from another source", function (done) {
     //     var phrontService = mainService.childServices[0];
     //         types = phrontService.types;
@@ -101,7 +101,7 @@ describe("PhrontService -Read data from serialized operations", function() {
             deserializer.init(serializedOperation, require, objectRequires, module, isSync);
             deserializedOperation = deserializer.deserializeObject();
 
-            return phrontService.handleReadOperation(deserializedOperation)
+            return phrontService.handleRead(deserializedOperation)
             .then(function(operationCompleted) {
                 //serialize
                 completedSerializedOperation = serializer.serializeObject(operationCompleted);
@@ -148,13 +148,13 @@ describe("PhrontService -Read data from serialized operations", function() {
         //             deserializedOperation = deserializer.deserializeObject();
 
         //         console.log("deserializedOperation:",deserializedOperation);
-                
+
         //     },
         //     function(serializedFailedOperation) {
         //         console.log("serializedFailedOperation:",serializedFailedOperation);
         //     });
         // });
-    
+
 
         // it("can feth a collection and its products", function (done) {
 
@@ -190,6 +190,6 @@ describe("PhrontService -Read data from serialized operations", function() {
         //     });
 
         // });
-   
+
 
 });
