@@ -49,7 +49,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "title","description","images","link","productType","vendors","variants"
+                "title","description","images","link","productType"
             ]
         }
     },

@@ -1,0 +1,88 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "EventConferenceData",
+            "propertyDescriptors": [
+                {"@": "createRequest"},
+                {"@": "entryPoints"},
+                {"@": "conferenceSolution"},
+                {"@": "conferenceId"},
+                {"@": "signature"},
+                {"@": "notes"},
+                {"@": "gadget"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/event-conference-data.mjson"
+            },
+            "exportName": "EventConferenceData",
+            "module": {
+                "%": "data/main.datareel/model/event-timestamp"
+            },
+            "modulePrototype": {"@": "EventConferenceData"},
+            "object": {"@": "EventConferenceData"}
+        }
+    },
+    "EventConferenceData": {
+        "object": "data/main.datareel/model/event-conference-data"
+    },
+    "createRequest": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "createRequest",
+            "valueType": "object",
+            "description": "TODO-ceeate subtype"
+        }
+    },
+    "entryPoints": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "entryPoints",
+            "valueType": "array",
+            "valueDescriptor": {"@": "conference-entry-point"},
+            "description": "datetime in Creation time of the event (as a RFC3339 timestamp). Read-only."
+        }
+    },
+
+    "conference-entry-point": {
+        "object": "data/main.datareel/model/conference-entry-point.mjson"
+    },
+
+    "conferenceSolution": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "conferenceSolution",
+            "valueType": "object",
+            "description": "TODO-ceeate subtype"
+        }
+    },
+    "conferenceId": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "conferenceId",
+            "valueType": "string"
+        }
+    },
+    "signature": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "signature",
+            "valueType": "string"
+        }
+    },
+    "notes": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "notes",
+            "valueType": "string"
+        }
+    },
+    "gadget": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "gadget",
+            "valueType": "object",
+            "description": "TODO-ceeate subtype"
+        }
+    }
+}

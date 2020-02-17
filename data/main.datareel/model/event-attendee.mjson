@@ -1,0 +1,74 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "EventAttendee",
+            "propertyDescriptors": [
+                {"@": "organizer"},
+                {"@": "resource"},
+                {"@": "optional"},
+                {"@": "responseStatus"},
+                {"@": "comment"},
+                {"@": "additionalGuests"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/event-attendee.mjson"
+            },
+            "exportName": "EventAttendee",
+            "module": {
+                "%": "data/main.datareel/model/event-attendee"
+            },
+            "modulePrototype":{"@": "EventAttendee"},
+            "object":{"@": "EventAttendee"},
+            "parent":{"@": "EventPerson"}
+        }
+    },
+    "EventAttendee": {
+        "object": "data/main.datareel/model/event-attendee"
+    },
+    "EventPerson": {
+        "object": "data/main.datareel/model/event-person"
+    },
+    "organizer": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "organizer",
+            "valueType": "boolean"
+        }
+    },
+    "resource": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "resource",
+            "valueType": "boolean"
+        }
+    },
+    "optional": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "optional",
+            "valueType": "boolean"
+        }
+    },
+    "responseStatus": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "responseStatus",
+            "valueType": "string"
+        }
+    },
+    "comment": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "comment",
+            "valueType": "string"
+        }
+    },
+    "additionalGuests": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "additionalGuests",
+            "valueType": "number"
+        }
+    }
+}

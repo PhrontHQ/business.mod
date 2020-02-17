@@ -12,6 +12,7 @@
                 {"@": "serviceMapping"},
                 {"@": "productVariantPricePairMapping"},
                 {"@": "moneyMapping"},
+                {"@": "partyMapping"},
                 {"@": "organizationMapping"},
                 {"@": "addressMapping"},
                 {"@": "imageMapping"},
@@ -25,10 +26,12 @@
                 {"@": "productVariant"},
                 {"@": "productVariantPricePair"},
                 {"@": "money"},
+                {"@": "party"},
                 {"@": "organization"},
                 {"@": "address"},
                 {"@": "image"},
-                {"@": "person"}
+                {"@": "person"},
+                {"@": "event"}
             ]
         }
     },
@@ -89,6 +92,14 @@
         "object": "data/main.datareel/mapping/money-mapping.mjson"
     },
 
+    "party": {
+        "object": "data/main.datareel/model/party.mjson"
+    },
+
+    "partyMapping": {
+        "object": "data/main.datareel/mapping/party-mapping.mjson"
+    },
+
     "organization": {
         "object": "data/main.datareel/model/organization.mjson"
     },
@@ -119,6 +130,14 @@
 
     "personMapping": {
         "object": "data/main.datareel/mapping/person-mapping.mjson"
+    },
+
+    "event": {
+        "object": "data/main.datareel/model/event.mjson"
+    },
+
+    "eventMapping": {
+        "object": "data/main.datareel/mapping/event-mapping.mjson"
     }
 
 }

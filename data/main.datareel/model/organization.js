@@ -7,7 +7,12 @@ var Party = require("./party").Party;
 
 
 exports.Organization = Party.specialize(/** @lends Organization.prototype */ {
-
+    constructor: {
+        value: function Organization() {
+            this.super();
+            return this;
+        }
+    },
     name: {
         value: undefined
     },

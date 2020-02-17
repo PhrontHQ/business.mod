@@ -130,6 +130,7 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "vendors",
+            "valueType": "array",
             "cardinality": -1,
             "valueDescriptor": {"@": "organization_descriptor"}
         }
@@ -176,7 +177,7 @@
         "values": {
             "name": "options",
             "cardinality": -1,
-            "valueDescriptor": {"@": "productOptionDescriptor"}       
+            "valueDescriptor": {"@": "productOptionDescriptor"}
         }
     },
     "orders": {

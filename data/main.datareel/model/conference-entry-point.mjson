@@ -1,0 +1,86 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ConferenceEntryPoint",
+            "propertyDescriptors": [
+                {"@": "entryPointType"},
+                {"@": "uri"},
+                {"@": "label"},
+                {"@": "pin"},
+                {"@": "accessCode"},
+                {"@": "meetingCode"},
+                {"@": "passcode"},
+                {"@": "password"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/conference-entry-point.mjson"
+            },
+            "exportName": "ConferenceEntryPoint",
+            "module": {
+                "%": "data/main.datareel/model/conference-entry-point"
+            },
+            "modulePrototype":{"@": "ConferenceEntryPoint"},
+            "object":{"@": "ConferenceEntryPoint"}
+        }
+    },
+    "ConferenceEntryPoint": {
+        "object": "data/main.datareel/model/conference-entry-point"
+    },
+    "entryPointType": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "entryPointType",
+            "valueType": "string"
+        }
+    },
+    "uri": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "uri",
+            "valueType": "string"
+        }
+    },
+    "label": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "label",
+            "valueType": "string"
+        }
+    },
+    "pin": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "pin",
+            "valueType": "string"
+        }
+    },
+    "accessCode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "accessCode",
+            "valueType": "string"
+        }
+    },
+    "meetingCode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "meetingCode",
+            "valueType": "string"
+        }
+    },
+    "passcode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "passcode",
+            "valueType": "string"
+        }
+    },
+    "password": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "password",
+            "valueType": "string"
+        }
+    }
+}

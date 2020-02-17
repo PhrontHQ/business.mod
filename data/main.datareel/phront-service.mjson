@@ -14,8 +14,10 @@
                 {"@": "moneyMapping"},
                 {"@": "organizationMapping"},
                 {"@": "addressMapping"},
+                {"@": "partyMapping"},
                 {"@": "imageMapping"},
-                {"@": "personMapping"}
+                {"@": "personMapping"},
+                {"@": "event-mapping"}
             ],
             "types": [
                 {"@": "object"},
@@ -25,11 +27,19 @@
                 {"@": "productVariant"},
                 {"@": "productVariantPricePair"},
                 {"@": "money"},
+                {"@": "party"},
                 {"@": "organization"},
                 {"@": "address"},
                 {"@": "image"},
-                {"@": "person"}
-            ],
+                {"@": "person"},
+                {"@": "event"},
+                {"@": "calendar"},
+                {"@": "conference-entry-point"},
+                {"@": "event-attendee"},
+                {"@": "event-conference-data"},
+                {"@": "event-person"},
+                {"@": "event-time"}
+           ],
             "userIdentityServices": [
                 {"@": "cognitoIdentityService"}
             ]
@@ -108,6 +118,14 @@
         "object": "data/main.datareel/mapping/address-mapping.mjson"
     },
 
+    "party": {
+        "object": "data/main.datareel/model/party.mjson"
+    },
+
+    "partyMapping": {
+        "object": "data/main.datareel/mapping/party-mapping.mjson"
+    },
+
     "image": {
         "object": "data/main.datareel/model/image.mjson"
     },
@@ -126,6 +144,38 @@
 
     "AuthenticationPolicy": {
         "object": "montage/data/service/user-authentication-policy"
+    },
+
+    "event": {
+        "object": "data/main.datareel/model/event.mjson"
+    },
+
+    "event-mapping": {
+        "object": "data/main.datareel/mapping/event-mapping.mjson"
+    },
+
+    "calendar": {
+        "object": "data/main.datareel/model/calendar.mjson"
+    },
+
+    "conference-entry-point": {
+        "object": "data/main.datareel/model/conference-entry-point.mjson"
+    },
+
+    "event-attendee": {
+        "object": "data/main.datareel/model/event-attendee.mjson"
+    },
+
+    "event-conference-data": {
+        "object": "data/main.datareel/model/event-conference-data.mjson"
+    },
+
+    "event-person": {
+        "object": "data/main.datareel/model/event-person.mjson"
+    },
+
+    "event-time": {
+        "object": "data/main.datareel/model/event-time.mjson"
     },
 
     "cognitoIdentityService": {

@@ -17,8 +17,9 @@
                                     "converter": {"@": "suborganizationsConverter"}},
                     "tags": {"<->": "tags"},
                     "mainContact": {"<->":"mainContactId",
-                                    "converter": {"@": "mainContactConverter"}}
-
+                                    "converter": {"@": "mainContactConverter"}},
+                    "services": {"<->": "id",
+                                    "converter": {"@": "servicesConverter"}}
                 }
             },
             "rawDataMapping": {
@@ -51,5 +52,12 @@
         "values": {
             "convertExpression": "id == $"
         }
+    },
+    "servicesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "vendorIds.has($)"
+        }
     }
+
 }

@@ -1,0 +1,96 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "EventPerson",
+            "propertyDescriptors": [
+                {"@": "id"},
+                {"@": "email"},
+                {"@": "displayName"},
+                {"@": "self"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/event-attendee.mjson"
+            },
+            "exportName": "EventAttendee",
+            "module": {
+                "%": "data/main.datareel/model/event-attendee"
+            },
+            "modulePrototype":{"@": "EventPerson"},
+            "object":{"@": "EventPerson"}
+        }
+    },
+    "EventPerson": {
+        "object": "data/main.datareel/model/event-person"
+    },
+    "id": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "id",
+            "valueType": "string"
+        }
+    },
+    "email": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "email",
+            "valueType": "string"
+        }
+    },
+    "displayName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "displayName",
+            "valueType": "string"
+        }
+    },
+    "organizer": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "organizer",
+            "valueType": "boolean"
+        }
+    },
+    "self": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "self",
+            "valueType": "boolean"
+        }
+    },
+    "resource": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "resource",
+            "valueType": "boolean"
+        }
+    },
+    "optional": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "optional",
+            "valueType": "boolean"
+        }
+    },
+    "responseStatus": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "responseStatus",
+            "valueType": "string"
+        }
+    },
+    "comment": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "comment",
+            "valueType": "string"
+        }
+    },
+    "additionalGuests": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "additionalGuests",
+            "valueType": "number"
+        }
+    }
+}

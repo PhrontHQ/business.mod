@@ -15,7 +15,8 @@
                 {"@": "mainContact"},
                 {"@": "employeeRelationships"},
                 {"@": "customerRelationships"},
-                {"@": "supplierRelationships"}
+                {"@": "supplierRelationships"},
+                {"@": "services"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/organization.mjson"
@@ -28,7 +29,7 @@
             "parent":{"@": "PartyDescriptor"},
             "userInterfaceDescriptorModules": {
                 "*": {
-                    "%": "./organisation-ui-descriptor.mjson"
+                    "%": "./organization-ui-descriptor.mjson"
                 }
             }
 
@@ -36,7 +37,7 @@
     },
     "organization": {
         "object": "data/main.datareel/model/organization"
-    },    
+    },
 
     "PartyDescriptor": {
         "object": "data/main.datareel/model/party.mjson"
@@ -158,6 +159,21 @@
             "cardinality": -1,
             "valueDescriptor": {"@": "root"}
        }
+    },
+
+    "services": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "services",
+            "valueType": "array",
+            "cardinality": -1,
+            "inversePropertyName": "vendors",
+            "valueDescriptor": {"@": "servicesDescriptor"}
+       }
+    },
+
+    "servicesDescriptor": {
+        "object": "data/main.datareel/model/service.mjson"
     }
 
 }
