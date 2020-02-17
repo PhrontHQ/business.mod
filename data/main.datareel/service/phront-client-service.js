@@ -34,8 +34,11 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             this.super();
 
             if( typeof WebSocket !== "undefined") {
-                this._socket = new WebSocket("wss://77mq8uupuc.execute-api.us-west-2.amazonaws.com/dev");
-                //this._socket = new WebSocket("ws://127.0.0.1:8080");
+                // if(window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
+                        // this._socket = new WebSocket("ws://127.0.0.1:8080");
+                // } else {
+                    this._socket = new WebSocket("wss://77mq8uupuc.execute-api.us-west-2.amazonaws.com/dev");
+                //}
 
                 this._socket.addEventListener("open", this);
                 this._socket.addEventListener("error", this);
@@ -164,22 +167,26 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             var referrer = operation.referrerId,
             records = operation.data,
             stream = this._thenableByOperationId.get(referrer);
+            //if(operation.type === DataOperation.Type.ReadUpdate) console.log("handleReadupdate  referrerId: ",referrer);
 
             if(records && records.length > 0) {
 
                 //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
                 this.addRawData(stream, records);
-                this.rawDataDone(stream);
             }
-
         }
     },
 
     handleReadcompleted: {
         value: function (operation) {
+            //console.log("handleReadcompleted  referrerId: ",operation.referrerId);
             this.handleReadupdate(operation);
             //The read is complete
+            var stream = this._thenableByOperationId.get(operation.referrerId);
+            this.rawDataDone(stream);
             this._thenableByOperationId.delete(operation.referrerId);
+
+            //console.log("handleReadcompleted -clear _thenableByOperationId- referrerId: ",operation.referrerId);
 
         }
     },
@@ -249,7 +256,14 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     */
    addOneRawData: {
         value: function (stream, rawData, context) {
-        return this.super(stream, JSON.parse(rawData[0].stringValue), context);
+            //Data coming from Postresql
+            if(Array.isArray(rawData)) {
+                return this.super(stream, JSON.parse(rawData[0].stringValue), context);
+            }
+            //Possible others
+            else {
+                return this.super(stream, rawData, context);
+            }
         }
     },
 
@@ -307,6 +321,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
             propertyNameQuery.prefetchExpressions = [propertyName];
 
+            //console.log(objectDescriptor.name+": fetchObjectProperty "+ " -"+propertyName);
+
             return this.fetchData(propertyNameQuery);
         }
     },
@@ -318,22 +334,74 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             stream = stream || new DataStream();
             stream.query = query;
 
+            // make sure type is an object descriptor or a data object descriptor.
+            // query.type = this.rootService.objectDescriptorForType(query.type);
+
+
             this._socketOpenPromise.then(function() {
                 var objectDescriptor = query.type,
-                readOperation = new DataOperation(),
-                serializedOperation;
+                    criteria = query.criteria,
+                    parameters = criteria ? criteria.parameters : undefined,
+                    rawParameters = parameters,
+                    readOperation = new DataOperation(),
+                    promises,
+                    serializedOperation;
 
-              //We need to turn this into a Read Operation. Difficulty is to turn the query's criteria into
-              //one that doesn't rely on objects. What we need to do before handing an operation over to another context
-              //bieng a worker on the client side or a worker on the server side, is to remove references to live objects.
-              //One way to do this is to replace every object in a criteria's parameters by it's data identifier.
-              //Another is to serialize the criteria.
-              readOperation.type = DataOperation.Type.Read;
-              readOperation.dataDescriptor = objectDescriptor.module.id;
-              readOperation.criteria = query.criteria;
-              readOperation.objectExpressions = query.prefetchExpressions;
+                /*
+                    We need to turn this into a Read Operation. Difficulty is to turn the query's criteria into
+                    one that doesn't rely on objects. What we need to do before handing an operation over to another context
+                    bieng a worker on the client side or a worker on the server side, is to remove references to live objects.
+                    One way to do this is to replace every object in a criteria's parameters by it's data identifier.
+                    Another is to serialize the criteria.
+                */
+                readOperation.type = DataOperation.Type.Read;
+                readOperation.dataDescriptor = objectDescriptor.module.id;
+                readOperation.criteria = query.criteria;
+                readOperation.objectExpressions = query.prefetchExpressions;
 
-                self._dispatchReadOperation(readOperation, stream);
+                /*
+
+                    this is half-assed, we're mapping full objects to RawData, but not the properties in the expression.
+                    phront-service does it, but we need to stop doing it half way there and the other half over there.
+                    SaveChanges is cleaner, but the job is also easier there.
+
+                */
+                if(parameters && typeof criteria.parameters === "object") {
+                    var keys = Object.keys(parameters),
+                        i, countI, iKey, iValue, iRecord;
+
+                    rawParameters = Array.isArray(parameters) ? [] : {};
+
+                    for(i=0, countI = keys.length;(i < countI); i++) {
+                        iKey  = keys[i];
+                        iValue = parameters[iKey];
+                        if(iValue.dataIdentifier) {
+
+                            /*
+                                this isn't working because it's causing triggers to fetch properties we don't have
+                                and somehow fails, but it's wastefull. Going back to just put primary key there.
+                            */
+                            // iRecord = {};
+                            // rawParameters[iKey] = iRecord;
+                            // (promises || (promises = [])).push(
+                            //     self._mapObjectToRawData(iValue, iRecord)
+                            // );
+                            rawParameters[iKey] = iValue.dataIdentifier.primaryKey;
+
+                        } else {
+                            rawParameters[iKey] = iValue;
+                        }
+
+                    }
+                    // if(promises) promises = Promise.all(promises);
+                }
+                if(!promises) promises = Promise.resolve(true);
+                promises.then(function() {
+                    if(criteria) readOperation.criteria.parameters = rawParameters;
+                    self._dispatchReadOperation(readOperation, stream);
+                    if(criteria) readOperation.criteria.parameters = parameters;
+
+                });
             });
 
           return stream;
@@ -572,10 +640,10 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
 
                     //If nothing to do, we bail out
-                    if(createdDataObjects.size === 0 && changedDataObjects === 0 && deletedDataObjects === 0){
+                    if(createdDataObjects.size === 0 && changedDataObjects.size === 0 && deletedDataObjects.size === 0) {
                         operation = new DataOperation();
                         operation.type = DataOperation.Type.NoOp;
-                        return Promise.resolve(operation);
+                        resolve(operation);
                     }
 
                     //we assess object's validity:
@@ -612,6 +680,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         else {
                             return;
                         }
+                    }, function(error) {
+                        reject(error);
                     })
                     .then(function() {
                         //Now that all objects are valid we can proceed and kickstart a transaction as it needs to do the round trip
@@ -634,8 +704,11 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                             return _createTransactionPromise;
                         }, function(error) {
-                            console.error;
+                            console.error("Error tryimng to communicate with server");
+                            reject(error);
                         });
+                    }, function(error) {
+                        reject(error);
                     })
                     .then(function(createTransactionResult) {
                         var iterator;
@@ -680,6 +753,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                         return Promise.all(batchedOperationPromises);
 
+                    }, function(error) {
+                        reject(error);
                     })
                     .then(function(batchedOperations) {
                         //Now proceed to build the batch operation
@@ -702,6 +777,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         self._dispatchOperation(batchOperation);
 
                         return batchOperationPromise;
+                    }, function(error) {
+                        reject(error);
                     })
                     .then(function(batchedOperationResult) {
                         var transactionId = batchedOperationResult.data.transactionId;
@@ -754,6 +831,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             console.error("- saveChanges: Unknown batchedOperationResult:",batchedOperationResult);
                             reject(new Error("- saveChanges: Unknown batchedOperationResult:"+JSON.stringify(batchedOperationResult)));
                         }
+                    }, function(error) {
+                        reject(error);
                     })
                     .then(function(transactionOperationResult) {
                         if(transactionOperationResult.type === DataOperation.Type.PerformTransactionCompleted) {
@@ -779,6 +858,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                         resolve(transactionOperationResult);
 
+                    }, function(error) {
+                        reject(error);
                     });
 
                 }
@@ -1480,8 +1561,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                 //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
                 this.addRawData(stream, records);
-                this.rawDataDone(stream);
             }
+            this.rawDataDone(stream);
 
         }
     },
