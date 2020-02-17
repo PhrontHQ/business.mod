@@ -39,9 +39,8 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     escapeLiteral = pgutils.escapeLiteral,
     literal = pgutils.literal,
     escapeString = pgutils.escapeString,
+    pgstringify = require('./pgstringify'),
     PhrontService;
-
-
 
     class Timer {
       // Automatically starts the timer
@@ -289,9 +288,37 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         return stream;
       }
     },
+    inlineCriteriaParameters: {
+        value: true
+    },
+    mapCriteriaToRawCriteria: {
+        value: function(criteria, mapping) {
+            var rawCriteria,
+                rawExpression,
+                rawParameters;
 
+            if(!criteria) return undefined;
 
+            if(criteria.parameters) {
+                if(this.inlineCriteriaParameters) {
+                    rawParameters = criteria.parameters;
+                } else {
+                    //If we could use parameters with the DataAPI (we can't because it doesn't support some types we need like uuid and uuid[]), we would need stringify to create a new set of parameters. Scope can be different objects, so instead of trying to clone whatever it is, it would be easier to modify stringify so it returns the whole new raw criteria that would contain both the expression and the new parameters bound for SQL.
+                    // rawParameters = {};
+                    // Object.assign(rawParameters,criteria.parameters);
+                    throw new Error("phron-service.js: mapCriteriaToRawCriteria doesn't handle the use of parametrized SQL query with a dictionary of parameters. If we could use parameters with the DataAPI (we can't because it doesn't support some types we need like uuid and uuid[]), we would need stringify to create a new set of parameters. Scope can be different objects, so instead of trying to clone whatever it is, it would be easier to modify stringify so it returns the whole new raw criteria that would contain both the expression and the new parameters bound for SQL. -> "+JSON.stringify(criteria)+"objectDescriptor: "+mapping.objectDescriptor.name);
 
+                }
+
+            }
+
+            rawExpression = this.stringify(criteria.syntax,rawParameters,mapping);
+            rawCriteria = new Criteria().initWithExpression(rawExpression, this.inlineCriteriaParameters ? null : rawParameters);
+            return rawCriteria;
+        }
+
+    },
+/*
     mapCriteriaToRawStatement: {
       value: function(criteria, mapping) {
         var objectRule,
@@ -304,7 +331,15 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             escapedRawProperty,
             value,
             escapedValue,
+            pgstringifiedValue,
           condition;
+
+
+        //   if(criteria) {
+        //     pgstringifiedValue = this.stringify(criteria.syntax,criteria.parameters,mapping);
+        //     console.log(pgstringifiedValue);
+        //   }
+
         //Going to be ugly...
           //We need to transform the criteria into a SQL equivalent. Hard-coded for a single object for now
 
@@ -379,29 +414,55 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           }
           else if(syntax && syntax.type == "has") {
             var args = syntax.args;
-            if(args[1].type === "property") {
-                propertyName = args[1].args[1].value;
+            // if(args[1].type === "property") {
+            //     propertyName = args[1].args[1].value;
+
+            //     if(args[0].type === "parameters") {
+            //         value = criteria.parameters;
+            //         escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value,"list");
+            //     }
+            // }
+            // else
+            if(args[0].type === "parameters") {
+                if(args[1].type === "property") {
+                    propertyName = args[1].args[1].value;
+                }
+                else {
+                    throw new Error("phront-service.js: unhandled syntax in mapCriteriaToRawStatement(criteria: "+JSON.stringify(criteria)+"objectDescriptor: "+mapping.objectDescriptor.name);
+                }
+                value = criteria.parameters;
+                rawProperty = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
+                escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value,"list");
+
+            } else if(args[0].type === "property") {
+                propertyName = args[0].args[1].value;
 
                 if(args[0].type === "parameters") {
                     value = criteria.parameters;
+                    rawProperty = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
                     escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value,"list");
-                  }
-            }
-            else if(args[0].type === "property") {
-                propertyName = args[0].args[1].value;
-
-                if(args[1].type === "parameters") {
+                }
+                else if(args[1].type === "parameters") {
                     value = criteria.parameters;
                     if(!Array.isArray(value)) {
                         value = [value];
                     }
+                    rawProperty = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
                     escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value);
-                  }
+                } else if(args[1].type === "property" && args[1].args[0].type === "parameters") {
+                    var parametersKey = args[1].args[1].value;
+                    value = criteria.parameters[parametersKey];
+                    if(!Array.isArray(value)) {
+                        value = [value];
+                    }
+                    rawProperty = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
+                    escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value);
+                }
 
             } else {
                 throw new Error("phron-service.js: unhandled syntax in mapCriteriaToRawStatement(criteria: "+JSON.stringify(criteria)+"objectDescriptor: "+mapping.objectDescriptor.name);
             }
-            rawProperty = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
+            // rawProperty = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
             escapedRawProperty = escapeIdentifier(rawProperty);
 
             if(rawProperty === "id")  {
@@ -418,7 +479,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           return condition;
       }
     },
-
+*/
     HAS_DATA_API_UUID_ARRAY_BUG: {
       value: false
     },
@@ -459,6 +520,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           readExpressions = readOperation.readExpressions,
           i, countI, iKey, iValue, iAssignment, iPrimaryKey, iPrimaryKeyValue,
           iKeyValue,
+          rawCriteria,
           condition,
           rawReadExpressionsArray,
           anExpression,
@@ -526,7 +588,11 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
               WHERE f.did = d.did
           */
 
-          condition = this.mapCriteriaToRawStatement(criteria, mapping);
+         rawCriteria = this.mapCriteriaToRawCriteria(criteria, mapping);
+         condition = rawCriteria ? rawCriteria.expression : undefined;
+        //     console.log(" new condition: ",condition);
+        //condition = this.mapCriteriaToRawStatement(criteria, mapping);
+        // console.log(" old condition: ",condition);
 
           sql = `SELECT (SELECT row_to_json(_) FROM (SELECT ${escapedRawReadExpressionsArray.join(",")}) as _) FROM ${schemaName}."${tableName}"`;
           if(condition) {
@@ -535,6 +601,9 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           //sql = `SELECT ${escapedRawReadExpressionsArray.join(",")} FROM ${schemaName}."${tableName}" WHERE (${condition})`;
 
           rawDataOperation.sql = sql;
+          if(rawCriteria && rawCriteria.parameters) {
+            rawDataOperation.parameters = rawCriteria.parameters;
+          }
 
           //return rawReadExpressionMap;
       }
@@ -576,7 +645,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             // if(rawDataOperation.sql.indexOf('"name" = ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1) {
             //   console.log(rawDataOperation.sql);
             // }
-            // console.log("executeStatement "+rawDataOperation.sql);
+            //console.log("executeStatement "+rawDataOperation.sql);
 
             self._executeStatement(rawDataOperation, function(err, data) {
               //var endTime  = console.timeEnd(readOperation.id);
@@ -994,7 +1063,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           }
           else {
             if(propertyDescriptor.cardinality === 1) {
-              return this.mapPropertyDescriptorTypeToRawType(propertyDescriptorType);
+              return this.mapPropertyDescriptorTypeToRawType(propertyDescriptorType, propertyValueDescriptor);
             } else {
               //We have a cardinality of n. The propertyDescriptor.collectionValueType should tell us if it's a list or a map
               //But if we don't have a propertyValueDescriptor and propertyDescriptorType is an array, we don't know what
@@ -1007,15 +1076,31 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
               if(propertyDescriptorType === "object") {
                 return "jsonb";
               }
-              else return this.mapPropertyDescriptorTypeToRawType(propertyDescriptorType)+"[]";
+              else return this.mapPropertyDescriptorTypeToRawType(propertyDescriptorType, propertyValueDescriptor)+"[]";
             }
 
           }
     }
   },
 
+  /*
+
+     "timeRange": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "timeRange",
+            "valueType": "date",
+            "collectionValueType": "range",
+            "valueDescriptor": {"@": "range"}
+        }
+    },
+
+    needs to be saved as TSTZRANGE
+
+  */
+
   mapPropertyDescriptorTypeToRawType: {
-      value: function(propertyDescriptorType) {
+      value: function(propertyDescriptorType, propertyValueDescriptor) {
         if(propertyDescriptorType === "string" || propertyDescriptorType === "URL" ) {
           return "text";
         }
@@ -1034,7 +1119,11 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
           return "text[]";
         }
         else if(propertyDescriptorType === "object") {
-          return "jsonb";
+            // if() {
+
+            // } else {
+                return "jsonb";
+            //}
         }
         else {
           console.error("mapPropertyDescriptorTypeToRawType: unable to map "+propertyDescriptorType+" to RawType");
@@ -1057,14 +1146,28 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         }
     },
     mapPropertyValueToRawTypeExpression: {
-      value: function(property, value, type) {
-          var mappedValue = this.mapPropertyValueToRawType(property, value, type);
-          // if(mappedValue !== "NULL" && (Array.isArray(value) || typeof value === "string")) {
-          //   return `'${mappedValue}'`;
-          // }
-          return mappedValue;
-      }
-  },
+        value: function(property, value, type) {
+            var mappedValue = this.mapPropertyValueToRawType(property, value, type);
+            // if(mappedValue !== "NULL" && (Array.isArray(value) || typeof value === "string")) {
+            //   return `'${mappedValue}'`;
+            // }
+            return mappedValue;
+        }
+    },
+    mapPropertyDescriptorValueToRawValue: {
+        value: function(propertyDescriptor, value, type) {
+            if(value == null || value == "") {
+                return "NULL";
+            }
+            else if(typeof value === "string") {
+              return escapeString(value);
+            }
+            else {
+              return prepareValue(value, type);
+            }
+        }
+    },
+
 
     /*
     CREATE TABLE phront."_Collection"
@@ -2059,3 +2162,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     }
 
 });
+
+
+Object.assign(PhrontService.prototype, pgstringify);
+
