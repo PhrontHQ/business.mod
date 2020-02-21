@@ -35,9 +35,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
             if( typeof WebSocket !== "undefined") {
                 // if(window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
-                        // this._socket = new WebSocket("ws://127.0.0.1:8080");
+                    this._socket = new WebSocket("ws://127.0.0.1:7272");
                 // } else {
-                    this._socket = new WebSocket("wss://77mq8uupuc.execute-api.us-west-2.amazonaws.com/dev");
+                    //this._socket = new WebSocket("wss://77mq8uupuc.execute-api.us-west-2.amazonaws.com/dev");
                 //}
 
                 this._socket.addEventListener("open", this);
@@ -162,6 +162,27 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
+    createObjectDescriptorStore: {
+        value: function (objectDescriptor) {
+            console.log("create "+objectDescriptor.name);
+            var iOperation = new DataOperation();
+
+            iOperation.type = DataOperation.Type.Create;
+            iOperation.data = objectDescriptor.module.id;
+            iOperation.dataDescriptor = objectDescriptor.module.id;
+
+            var createPromise = new Promise(function(resolve, reject) {
+                iOperation._promiseResolve = resolve;
+                iOperation._promiseReject = reject;
+                });
+            this._thenableByOperationId.set(iOperation.id,createPromise);
+            this._dispatchOperation(iOperation);
+
+            return createPromise;
+
+        }
+    },
+
     handleReadupdate: {
         value: function (operation) {
             var referrer = operation.referrerId,
@@ -188,6 +209,14 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
             //console.log("handleReadcompleted -clear _thenableByOperationId- referrerId: ",operation.referrerId);
 
+        }
+    },
+
+    handleReadfailed: {
+        value: function (operation) {
+            var stream = this._thenableByOperationId.get(operation.referrerId);
+            this.rawDataError(stream,operation.data);
+            this._thenableByOperationId.delete(operation.referrerId);
         }
     },
 

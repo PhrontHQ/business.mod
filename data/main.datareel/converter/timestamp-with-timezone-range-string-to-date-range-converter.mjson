@@ -1,0 +1,25 @@
+{
+    "converter_descriptor": {
+        "object": "montage/core/converter/converter.mjson"
+    },
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "TimestampWithTimezoneRangeStringToDateRangeConverter",
+            "customPrototype": false,
+            "parent": {
+                "@": "converter_descriptor"
+            },
+            "propertyDescriptors": [],
+            "propertyDescriptorGroups": {},
+            "propertyValidationRules": {},
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/converter/timestamp-with-timezone-range-string-to-date-range-converter.mjson"
+            },
+            "exportName": "TimestampWithTimezoneRangeStringToDateRangeConverter",
+            "module": {
+                "%": "data/main.datareel/converter/timestamp-with-timezone-range-string-to-date-range-converter"
+            }
+        }
+    }
+}

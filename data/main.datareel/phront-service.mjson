@@ -17,6 +17,7 @@
                 {"@": "partyMapping"},
                 {"@": "imageMapping"},
                 {"@": "personMapping"},
+                {"@": "calendar-mapping"},
                 {"@": "event-mapping"}
             ],
             "types": [
@@ -156,6 +157,10 @@
 
     "calendar": {
         "object": "data/main.datareel/model/calendar.mjson"
+    },
+
+    "calendar-mapping": {
+        "object": "data/main.datareel/mapping/calendar-mapping.mjson"
     },
 
     "conference-entry-point": {

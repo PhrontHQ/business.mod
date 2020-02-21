@@ -294,6 +294,10 @@ module.exports = {
                 syntax.args[1].type === "literal" &&
                 /^[\w\d_]+$/.test(syntax.args[1].value)
             ) {
+                //When processing "vendors.name == $.name", we end up here for "name"
+                //and then call dataService.stringify(..) that handles "vendors,
+                //and it's concatenated wirh a "." again.
+                //So this is likely where we should handle joins.
                 return dataService.stringify(syntax.args[0], scope, dataMapping, {
                     type: "scope"
                 }) + '.' + syntax.args[1].value;

@@ -21,6 +21,7 @@ var Worker = require("tiny-worker"),
     uuid = require("montage/core/uuid"),
     createUpdateDeleteCollectionImage = require("./use-cases/create-update-delete-collection-image").createUpdateDeleteCollectionImage,
     crudPerson = require("./use-cases/crud-person").crudPerson,
+    crudEvent = require("./use-cases/crud-event").crudEvent,
     createEtiamaProServices = require("./use-cases/create-etiama-pro-services").createEtiamaProServices;
 
 
@@ -269,12 +270,17 @@ exports.promise = new Promise(function(resolve,reject) {
     //     console.error(saveError);
     // });
 
-    crudPerson().then(function(passed) {
+    // crudPerson().then(function(passed) {
+    //     console.log("done!!");
+    // },function(error) {
+    //     console.error(saveError);
+    // });
+
+    crudEvent().then(function(passed) {
         console.log("done!!");
     },function(error) {
         console.error(saveError);
     });
-
 
 
 });

@@ -16,6 +16,8 @@
                 {"@": "organizationMapping"},
                 {"@": "addressMapping"},
                 {"@": "imageMapping"},
+                {"@": "calendarMapping"},
+                {"@": "eventMapping"},
                 {"@": "personMapping"}
             ],
             "types": [
@@ -31,7 +33,12 @@
                 {"@": "address"},
                 {"@": "image"},
                 {"@": "person"},
-                {"@": "event"}
+                {"@": "calendar"},
+                {"@": "event"},
+                {"@": "conference-entry-point"},
+                {"@": "event-attendee"},
+                {"@": "event-conference-data"},
+                {"@": "event-person"}
             ]
         }
     },
@@ -132,12 +139,37 @@
         "object": "data/main.datareel/mapping/person-mapping.mjson"
     },
 
+    "calendar": {
+        "object": "data/main.datareel/model/calendar.mjson"
+    },
+
+    "calendarMapping": {
+        "object": "data/main.datareel/mapping/calendar-mapping.mjson"
+    },
+
     "event": {
         "object": "data/main.datareel/model/event.mjson"
     },
 
     "eventMapping": {
         "object": "data/main.datareel/mapping/event-mapping.mjson"
+    },
+
+    "conference-entry-point": {
+        "object": "data/main.datareel/model/conference-entry-point.mjson"
+    },
+
+    "event-attendee": {
+        "object": "data/main.datareel/model/event-attendee.mjson"
+    },
+
+    "event-conference-data": {
+        "object": "data/main.datareel/model/event-conference-data.mjson"
+    },
+
+    "event-person": {
+        "object": "data/main.datareel/model/event-person.mjson"
     }
+
 
 }

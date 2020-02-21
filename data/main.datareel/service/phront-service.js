@@ -1,6 +1,7 @@
 var RawDataService = require("montage/data/service/raw-data-service").RawDataService,
     Criteria = require("montage/core/criteria").Criteria,
     ObjectDescriptor = require("montage/core/meta/object-descriptor").ObjectDescriptor,
+    RawEmbeddedValueToObjectConverter = require("montage/data/converter/raw-embedded-value-to-object-converter").RawEmbeddedValueToObjectConverter,
     // DataQuery = require("montage/data/model/data-query").DataQuery,
     DataStream = require("montage/data/service/data-stream").DataStream,
     //Montage = require("montage").Montage,
@@ -291,6 +292,16 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     inlineCriteriaParameters: {
         value: true
     },
+    /*
+        as we move into being able to handle the traversal of relationships, we'll need to map that to joins,
+        which means that mapping the criteria will have to introduce new tables, most likely with aliases, into the FROM section
+        which is still handled outside of this, but it has to unified so we can dynamically add the tables/attributes we need to join
+
+        we might need to rename the method, or create a larger scope one, such as:
+        mapDataQueryToRawDataQuery
+
+    */
+
     mapCriteriaToRawCriteria: {
         value: function(criteria, mapping) {
             var rawCriteria,
@@ -1045,42 +1056,47 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
     */
 
-  mapPropertyDescriptorToRawType: {
-    value: function(propertyDescriptor) {
-      var propertyDescriptorType = propertyDescriptor.valueType,
-      //For backward compatibility, propertyDescriptor.valueDescriptor still returns a Promise....
-      //propertyValueDescriptor = propertyDescriptor.valueDescriptor;
-      //So until we fix this, tap into the private instance variable that contains what we want:
-      propertyValueDescriptor = propertyDescriptor._valueDescriptorReference;
+    mapPropertyDescriptorToRawType: {
+        value: function(propertyDescriptor, rawDataMappingRule) {
+            var propertyDescriptorType = propertyDescriptor.valueType,
+                reverter = rawDataMappingRule.reverter,
+                //For backward compatibility, propertyDescriptor.valueDescriptor still returns a Promise....
+                //propertyValueDescriptor = propertyDescriptor.valueDescriptor;
+                //So until we fix this, tap into the private instance variable that contains what we want:
+                propertyValueDescriptor = propertyDescriptor._valueDescriptorReference;
 
-          if(propertyValueDescriptor) {
-            if(propertyDescriptor.cardinality === 1) {
-              return "uuid";
+            if(propertyValueDescriptor) {
+                if(propertyValueDescriptor.name === "Range") {
+                    return "tstzrange";
+                } else if(reverter instanceof RawEmbeddedValueToObjectConverter) {
+                    return "jsonb";
+                } else if(propertyDescriptor.cardinality === 1) {
+                    return "uuid";
+                }
+                else {
+                    return "uuid[]";
+                }
             }
             else {
-              return "uuid[]";
-            }
-          }
-          else {
-            if(propertyDescriptor.cardinality === 1) {
-              return this.mapPropertyDescriptorTypeToRawType(propertyDescriptorType, propertyValueDescriptor);
-            } else {
-              //We have a cardinality of n. The propertyDescriptor.collectionValueType should tell us if it's a list or a map
-              //But if we don't have a propertyValueDescriptor and propertyDescriptorType is an array, we don't know what
-              //kind of type would be in the array...
-              //We also don't know wether these objects should be stored inlined as JSONB for example. A valueDescriptor just
-              //tells what structured object is expected as value in JS, not how it is stored. That is a SQL Mapping's job.
-              //How much of expression data mapping could be leveraged for that?
+                if(propertyDescriptor.cardinality === 1) {
+                    return this.mapPropertyDescriptorTypeToRawType(propertyDescriptorType, propertyValueDescriptor);
+                } else {
+                    //We have a cardinality of n. The propertyDescriptor.collectionValueType should tell us if it's a list or a map
+                    //But if we don't have a propertyValueDescriptor and propertyDescriptorType is an array, we don't know what
+                    //kind of type would be in the array...
+                    //We also don't know wether these objects should be stored inlined as JSONB for example. A valueDescriptor just
+                    //tells what structured object is expected as value in JS, not how it is stored. That is a SQL Mapping's job.
+                    //How much of expression data mapping could be leveraged for that?
 
-              //If it's to-many and objets, we go for jsonb
-              if(propertyDescriptorType === "object") {
-                return "jsonb";
-              }
-              else return this.mapPropertyDescriptorTypeToRawType(propertyDescriptorType, propertyValueDescriptor)+"[]";
-            }
+                    //If it's to-many and objets, we go for jsonb
+                    if(propertyDescriptorType === "object") {
+                        return "jsonb";
+                    }
+                    else return this.mapPropertyDescriptorTypeToRawType(propertyDescriptorType, propertyValueDescriptor)+"[]";
+                }
 
-          }
-    }
+            }
+        }
   },
 
   /*
@@ -1350,7 +1366,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
               columnName  = iPropertyDescriptor.name;
             }
 
-            columnType = this.mapPropertyDescriptorToRawType(iPropertyDescriptor);
+            columnType = this.mapPropertyDescriptorToRawType(iPropertyDescriptor, iRule);
             columnSQL+= escapeIdentifier(columnName) + " "+columnType;
 
             if(columnType === 'text') {
@@ -1527,7 +1543,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         value: function(createOperation) {
             var data = createOperation.data;
 
-            if(data instanceof ObjectDescriptor) {
+            if(createOperation.data === createOperation.dataDescriptor) {
+                createOperation.data = this.objectDescriptorWithModuleId(createOperation.dataDescriptor);
                 return this.handleCreateObjectDescriptorOperation(createOperation);
             } else {
               var rawDataOperation = {},
