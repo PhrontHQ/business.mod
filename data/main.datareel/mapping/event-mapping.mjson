@@ -6,6 +6,10 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
+                    "calendar": {
+                        "<->": "calendarId",
+                        "converter": {"@": "calendar-converter"}
+                    },
                     "kind": {"<->": "kind"},
                     "etag": {"<->": "etag"},
                     "status": {"<->": "status"},
@@ -15,15 +19,13 @@
                         "converter": {"@": "RFC3339UTCStringToDateConverter"}
                     },
                     "updated": {
-                        "<->": "created",
+                        "<->": "updated",
                         "converter": {"@": "RFC3339UTCStringToDateConverter"}
                     },
                     "summary": {"<->": "summary"},
                     "description": {"<->": "description"},
-                    "creator": {
-                        "<->": "creator",
-                        "converter": {"@": "event-person-converter"}
-                    },
+                    "location": {"<->": "location"},
+                    "colorId": {"<->": "colorId"},
                     "creator": {
                         "<->": "creator",
                         "converter": {"@": "event-creator-converter"}
@@ -32,20 +34,17 @@
                         "<->": "organizer",
                         "converter": {"@": "event-organizer-converter"}
                     },
-                    "start": {
-                        "<->": "start",
-                        "converter": {"@": "event-start-converter"}
-                    },
-                    "end": {
-                        "<->": "end",
-                        "converter": {"@": "event-end-converter"}
+                    "timeRange": {
+                        "<->": "timeRange",
+                        "converter": {"@": "string-to-range-converter"}
                     },
                     "endTimeUnspecified": {"<->": "endTimeUnspecified"},
                     "recurrence": {"<->": "recurrence"},
-                    "recurringEventId": {"<->": "recurringEventId"},
-                    "originalStartTime": {
-                        "<->": "originalStartTime",
-                        "converter": {"@": "event-originalStartTime-converter"}
+                    "recurringEvent": {"<->": "recurringEventId",
+                        "converter": {"@": "recurringEventForeignKeyConverter"}},
+                    "originalTimeRange": {
+                        "<->": "originalTimeRange",
+                        "converter": {"@": "string-to-range-converter"}
                     },
                     "transparency": {"<->": "transparency"},
                     "visibility": {"<->": "visibility"},
@@ -78,8 +77,14 @@
                 }
             },
             "requisitePropertyNames": [
-                "title","description","images","link","productType","vendors","variants"
+                "summary","description","location","kind","status","created"
             ]
+        }
+    },
+
+    "calendar-converter": {
+        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
         }
     },
 
@@ -111,8 +116,16 @@
         }
     },
 
-    "event-originalStartTime-converter": {
-        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+    "recurringEventForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+
+    "string-to-range-converter": {
+        "prototype": "data/main.datareel/converter/timestamp-with-timezone-range-string-to-date-range-converter",
         "values": {
         }
     },

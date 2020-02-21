@@ -1,0 +1,39 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "CalendarDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "kind": {"<->": "kind"},
+                    "etag": {"<->": "etag"},
+                    "summary": {"<->": "summary"},
+                    "description": {"<->": "description"},
+                    "location": {"<->": "location"},
+                    "timeZone": {"<->": "timeZone"},
+                    "conferenceProperties": {"<->": "conferenceProperties"},
+                    "events": {"<->": "id",
+                                    "converter": {"@": "eventsConverter"}}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "kind","summary","description","location","timeZone", "conferenceProperties"
+            ]
+        }
+    },
+    "eventsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "calendarId == $"
+        }
+    },
+
+    "CalendarDescriptor": {
+        "object": "data/main.datareel/model/calendar.mjson"
+    }
+}
