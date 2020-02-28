@@ -39,6 +39,7 @@
         "values": {
             "name": "entryPoints",
             "valueType": "array",
+            "cardinality": -1,
             "valueDescriptor": {"@": "conference-entry-point"},
             "description": "datetime in Creation time of the event (as a RFC3339 timestamp). Read-only."
         }

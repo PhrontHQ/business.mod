@@ -309,7 +309,51 @@ const calendar = google.calendar("v3");
         }
     })
 
-
-
     console.log(JSON.stringify(calendarListResult.data));
+
+
+    //insert:
+    var event =
+{
+     summary: meeting.title,
+     description: meeting.agenda,
+     start:
+     {
+         dateTime: meeting.startTime,
+         timeZone: "Africa/Johannesburg"
+     },
+     end:
+     {
+         dateTime: meeting.endTime,
+         timeZone: "Africa/Johannesburg",
+     },
+     attendees:
+     [
+         { email: meeting.hostEmail, displayName: meeting.hostName },
+         { email: meeting.clientEmail, displayName: meeting.clientName }
+     ]
+};
+
+var entry =
+{
+     auth: auth,
+     calendarId: meeting.hostCalendarId,
+     sendUpdates: "all",
+     sendNotifications: true,
+     resource: event
+}
+
+calendar.events.insert(entry, function(err, event)
+{
+    if (err)
+    {
+        console.log('There was an error contacting the Calendar service: ' + err);
+        response.sendStatus(500);
+        return;
+    }
+
+    response.sendStatus(200);
+});
+
+
 })();

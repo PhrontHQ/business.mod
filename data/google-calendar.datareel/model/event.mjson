@@ -144,6 +144,7 @@
         "values": {
             "name": "creator",
             "valueType": "object",
+            "cardinality": 1,
             "valueDescriptor": {"@": "event-person"}
         }
     },
@@ -155,6 +156,7 @@
         "values": {
             "name": "organizer",
             "valueType": "object",
+            "cardinality": 1,
             "valueDescriptor": {"@": "event-person"}
         }
     },
@@ -163,6 +165,7 @@
         "values": {
             "name": "start",
             "valueType": "object",
+            "cardinality": 1,
             "valueDescriptor": {"@": "event-time"}
         }
     },
@@ -200,6 +203,7 @@
         "values": {
             "name": "start",
             "valueType": "object",
+            "cardinality": 1,
             "valueDescriptor": {"@": "event-time"}
         }
     },
@@ -236,6 +240,7 @@
         "values": {
             "name": "attendees",
             "valueType": "array",
+            "cardinality": -1,
             "valueDescriptor": {"@": "event-attendee"}
         }
     },
@@ -272,6 +277,7 @@
         "values": {
             "name": "conferenceData",
             "valueType": "object",
+            "cardinality": 1,
             "valueDescriptor": {"@": "event-conference-data"},
            "description": "TODO - create sub type"
         }

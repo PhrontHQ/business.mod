@@ -1,42 +1,39 @@
-var Target = require("montage/core/target").Target;
+var Target = require("montage/core/target").Target,
 
 /**
- * @class EventPerson
+ * @class Image
  * Models https://help.shopify.com/en/api/graphql-admin-api/reference/object/image
  * @extends Object
  */
 
 
-exports.EventConferenceData = Target.specialize(/** @lends EventPerson.prototype */ {
+exports.Calendar = Target.specialize(/** @lends Calendar.prototype */ {
     constructor: {
-        value: function EventConferenceData() {
+        value: function Calendar() {
             this.super();
             //console.log("Phront Calendar created");
             return this;
         }
     },
-    createRequest: {
+    id: {
         value: undefined
     },
-    entryPoints: {
+    kind: {
         value: undefined
     },
-    conferenceSolution: {
+    etag: {
         value: undefined
     },
-    conferenceSolution: {
+    summary: {
         value: undefined
     },
-    conferenceId: {
+    description: {
         value: undefined
     },
-    signature: {
+    location: {
         value: undefined
     },
-    notes: {
-        value: undefined
-    },
-    gadget: {
+    conferenceProperties: {
         value: undefined
     }
 });

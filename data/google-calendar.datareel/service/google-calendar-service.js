@@ -16,7 +16,7 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     GoogleCalendarService;
 
 
-    const key = require('/Users/benoit/Sites/marchant/etiama/phront/data/google-calendar.datareel/service/service-account-authorization/storephront-259805-98fb8c147018.json');
+    const key = require('/data/google-calendar.datareel/service/service-account-authorization/storephront-259805-98fb8c147018.json');
 
 
 //This will need to be factored out to be reused for other contex.
@@ -64,6 +64,38 @@ exports.GoogleCalendarService = GoogleCalendarService = RawDataService.specializ
           var data = operation.data,
             criteria = operation.criteria,
               rawReadExpressionMap;
+        }
+    },
+
+    handleEventRead: {
+        value: function(operation) {
+        var data = operation.data,
+          criteria = operation.criteria;
+
+        return new Promise(function(resolve,reject) {
+
+            // Make an authorized request to list Calendar events.
+            calendar.events.list({
+                auth: jwtClient,
+                calendarId: CALENDAR_ID,
+                "orderBy" : "startTime", //No compatible with recurring events if  singleEvents: true, isn't included
+                //maxResults: 10,
+                singleEvents: true,
+                "timeMin":  new Date('1 February 2020 12:00').toISOString(),
+                "timeMax":  new Date('10 February 2020 12:00').toISOString()
+            }, function(err, response) {
+                if (err) {
+                    console.log('The API returned an error: ' + err);
+                    reject(err);
+                }
+                console.log(response);
+                //events:
+                resolve(response.data.items);
+            });
+        });
+
+
+
         }
     },
 

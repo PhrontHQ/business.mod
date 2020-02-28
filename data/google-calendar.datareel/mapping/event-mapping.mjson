@@ -78,7 +78,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "title","description","images","link","productType","vendors","variants"
+                "summary","description"
             ]
         }
     },
