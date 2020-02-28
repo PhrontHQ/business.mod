@@ -18,6 +18,8 @@
                 {"@": "imageMapping"},
                 {"@": "calendarMapping"},
                 {"@": "eventMapping"},
+                {"@": "eventPersonMapping"},
+                {"@": "eventAttendeeMapping"},
                 {"@": "personMapping"}
             ],
             "types": [
@@ -163,12 +165,20 @@
         "object": "data/main.datareel/model/event-attendee.mjson"
     },
 
+    "eventAttendeeMapping": {
+        "object": "data/main.datareel/mapping/event-attendee-mapping.mjson"
+    },
+
     "event-conference-data": {
         "object": "data/main.datareel/model/event-conference-data.mjson"
     },
 
     "event-person": {
         "object": "data/main.datareel/model/event-person.mjson"
+    },
+
+    "eventPersonMapping": {
+        "object": "data/main.datareel/mapping/event-person-mapping.mjson"
     }
 
 
