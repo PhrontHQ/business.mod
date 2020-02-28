@@ -1,4 +1,4 @@
-var Target = require("montage/core/target").Target;
+var Montage = require("montage").Montage;
 
 /**
  * @class EventPerson
@@ -7,7 +7,7 @@ var Target = require("montage/core/target").Target;
  */
 
 
-exports.EventPerson = Target.specialize(/** @lends EventPerson.prototype */ {
+exports.EventPerson = Montage.specialize(/** @lends EventPerson.prototype */ {
     constructor: {
         value: function EventPerson() {
             this.super();
@@ -24,7 +24,10 @@ exports.EventPerson = Target.specialize(/** @lends EventPerson.prototype */ {
     displayName: {
         value: undefined
     },
-    self: {
+    isSelf: {
+        value: undefined
+    },
+    person: {
         value: undefined
     }
 });

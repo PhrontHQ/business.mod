@@ -1,4 +1,4 @@
-var Target = require("montage/core/target").Target;
+var Object = require("./object").Object;
 
 /**
  * @class Image
@@ -157,7 +157,7 @@ var Target = require("montage/core/target").Target;
 */
 
 
-exports.Event = Target.specialize(/** @lends Event.prototype */ {
+exports.Event = Object.specialize(/** @lends Event.prototype */ {
     constructor: {
         value: function Event() {
             this.super();
@@ -165,7 +165,7 @@ exports.Event = Target.specialize(/** @lends Event.prototype */ {
             return this;
         }
     },
-    id: {
+    calendar: {
         value: undefined
     },
     kind: {
@@ -204,10 +204,7 @@ exports.Event = Target.specialize(/** @lends Event.prototype */ {
     organizer: {
         value: undefined
     },
-    start: {
-        value: undefined
-    },
-    end: {
+    timeRange: {
         value: undefined
     },
     endTimeUnspecified: {
@@ -216,10 +213,10 @@ exports.Event = Target.specialize(/** @lends Event.prototype */ {
     recurrence: {
         value: undefined
     },
-    recurringEventId: {
+    recurringEvent: {
         value: undefined
     },
-    originalStartTime: {
+    originalTimeRange: {
         value: undefined
     },
     transparency: {

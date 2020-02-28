@@ -4,35 +4,32 @@
         "values": {
             "name": "Calendar",
             "propertyDescriptors": [
-                {"@": "id"},
                 {"@": "kind"},
                 {"@": "etag"},
                 {"@": "summary"},
                 {"@": "description"},
                 {"@": "location"},
                 {"@": "timeZone"},
-                {"@": "conferenceProperties"}
+                {"@": "conferenceProperties"},
+                {"@": "events"}
             ],
             "objectDescriptorModule": {
                 "%":"data/main.datareel/model/calendar.mjson"
             },
-            "exportName": "Image",
+            "exportName": "Calendar",
             "module": {
                 "%": "data/main.datareel/model/calendar"
             },
             "modulePrototype":{"@": "CalendarPrototype"},
-            "object":{"@": "CalendarPrototype"}
+            "object":{"@": "CalendarPrototype"},
+            "parent":{"@": "Object"}
         }
     },
     "CalendarPrototype": {
         "object": "data/main.datareel/model/calendar"
     },
-    "id": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "id",
-            "valueType": "string"
-        }
+    "Object": {
+        "object": "data/main.datareel/model/object.mjson"
     },
     "kind": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -83,6 +80,19 @@
             "name": "conferenceProperties",
             "valueType": "object"
         }
+    },
+    "events": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "events",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "event-descriptor"}
+        }
+    },
+    "event-descriptor": {
+        "object": "data/main.datareel/model/event.mjson"
     }
+
 
 }

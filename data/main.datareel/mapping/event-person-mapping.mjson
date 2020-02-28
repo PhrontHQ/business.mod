@@ -1,0 +1,34 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "EventPerson"},
+            "objectMapping": {
+                "rules": {
+                    "email": {"<->": "email"},
+                    "displayName": {"<->": "displayName"},
+                    "isSelf": {"<->": "isSelf"},
+                    "person": {"<->": "personId",
+                        "converter": {"@": "person-converter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "email","displayName","isSelf","person"
+            ]
+        }
+    },
+
+    "EventPerson": {
+        "object": "data/main.datareel/model/event-person.mjson"
+    },
+    "person-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+        }
+    }
+}

@@ -19,11 +19,6 @@
                 "rules": {
                 }
             },
-            "detections": {
-                        "<-": "{sensorId: id, rawData: icd101aReport.detection}",
-                        "converter": {"@": "detectionsForeignKeyConverter"}
-            },
-
             "requisitePropertyNames": [
                 "name","quantity","product","totalCost"
             ]
@@ -38,13 +33,5 @@
         "values": {
             "convertExpression": "$.has(id)"
         }
-    },
-    "detectionsForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
-        "properties": {
-            "convertExpression": "sensorId == $.id && rawData == $.icd101aReport.detection"
-        }
     }
-
-
 }

@@ -1,4 +1,4 @@
-var Target = require("montage/core/target").Target;
+var EventPerson = require("./event-person").EventPerson;
 
 /**
  * @class EventAttendee
@@ -7,7 +7,7 @@ var Target = require("montage/core/target").Target;
  */
 
 
-exports.EventAttendee = Target.specialize(/** @lends EventAttendee.prototype */ {
+exports.EventAttendee = EventPerson.specialize(/** @lends EventAttendee.prototype */ {
     constructor: {
         value: function EventAttendee() {
             this.super();
@@ -24,16 +24,16 @@ exports.EventAttendee = Target.specialize(/** @lends EventAttendee.prototype */ 
     displayName: {
         value: undefined
     },
-    organizer: {
+    isOrganizer: {
         value: undefined
     },
     self: {
         value: undefined
     },
-    resource: {
+    isResource: {
         value: undefined
     },
-    optional: {
+    isOptional: {
         value: undefined
     },
     responseStatus: {
@@ -42,7 +42,7 @@ exports.EventAttendee = Target.specialize(/** @lends EventAttendee.prototype */ 
     comment: {
         value: undefined
     },
-    additionalGuests: {
+    additionalGuestCount: {
         value: undefined
     }
 });

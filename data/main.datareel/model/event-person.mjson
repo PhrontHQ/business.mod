@@ -4,10 +4,10 @@
         "values": {
             "name": "EventPerson",
             "propertyDescriptors": [
-                {"@": "id"},
                 {"@": "email"},
                 {"@": "displayName"},
-                {"@": "self"}
+                {"@": "isSelf"},
+                {"@": "person"}
             ],
             "objectDescriptorModule": {
                 "%":"data/main.datareel/model/event-attendee.mjson"
@@ -23,13 +23,6 @@
     "EventPerson": {
         "object": "data/main.datareel/model/event-person"
     },
-    "id": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "id",
-            "valueType": "string"
-        }
-    },
     "email": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -44,53 +37,23 @@
             "valueType": "string"
         }
     },
-    "organizer": {
+    "isSelf": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "organizer",
+            "name": "isSelf",
             "valueType": "boolean"
         }
     },
-    "self": {
+    "person": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "self",
-            "valueType": "boolean"
+            "name": "person",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "person-descriptor"}
         }
     },
-    "resource": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "resource",
-            "valueType": "boolean"
-        }
-    },
-    "optional": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "optional",
-            "valueType": "boolean"
-        }
-    },
-    "responseStatus": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "responseStatus",
-            "valueType": "string"
-        }
-    },
-    "comment": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "comment",
-            "valueType": "string"
-        }
-    },
-    "additionalGuests": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "additionalGuests",
-            "valueType": "number"
-        }
+    "person-descriptor": {
+        "object": "data/main.datareel/model/person.mjson"
     }
 }

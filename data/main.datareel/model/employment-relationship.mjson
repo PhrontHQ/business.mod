@@ -32,7 +32,7 @@
             "name": "employmentType",
             "valueType": "object",
             "cardinality": 1,
-            "valueDescriptor": {"@": "employment_type_descriptor"}       
+            "valueDescriptor": {"@": "employment_type_descriptor"}
         }
     },
     "employment_type_descriptor": {
@@ -45,7 +45,7 @@
             "valueType": "object",
             "cardinality": 1,
             "inversePropertyName": "employeeRelationships",
-            "valueDescriptor": {"@": "organization_descriptor"}       
+            "valueDescriptor": {"@": "organization_descriptor"}
         }
     },
     "organization_descriptor": {
@@ -58,7 +58,7 @@
             "valueType": "object",
             "cardinality": 1,
             "inversePropertyName": "employerRelationships",
-            "valueDescriptor": {"@": "person_descriptor"}       
+            "valueDescriptor": {"@": "person_descriptor"}
         }
     },
     "person_descriptor": {
@@ -70,7 +70,7 @@
             "name": "jobTitle",
             "valueType": "object",
             "cardinality": 1,
-            "valueDescriptor": {"@": "employment_type_descriptor"}       
+            "valueDescriptor": {"@": "employment_type_descriptor"}
         }
     }
 

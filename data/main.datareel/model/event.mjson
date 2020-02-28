@@ -4,7 +4,7 @@
         "values": {
             "name": "Event",
             "propertyDescriptors": [
-                {"@": "id"},
+                {"@": "calendar"},
                 {"@": "kind"},
                 {"@": "etag"},
                 {"@": "status"},
@@ -17,12 +17,11 @@
                 {"@": "colorId"},
                 {"@": "creator"},
                 {"@": "organizer"},
-                {"@": "start"},
-                {"@": "end"},
+                {"@": "timeRange"},
                 {"@": "endTimeUnspecified"},
                 {"@": "recurrence"},
-                {"@": "recurringEventId"},
-                {"@": "originalStartTime"},
+                {"@": "recurringEvent"},
+                {"@": "originalTimeRange"},
                 {"@": "transparency"},
                 {"@": "visibility"},
                 {"@": "iCalUID"},
@@ -45,27 +44,33 @@
             "objectDescriptorModule": {
                 "%":"data/main.datareel/model/event.mjson"
             },
-            "exportName": "Image",
+            "exportName": "Event",
             "module": {
                 "%": "data/main.datareel/model/event"
             },
             "modulePrototype":{"@": "EventPrototype"},
             "object":{"@": "EventPrototype"},
-            "parent":{"@": "objectDescriptor"}
+            "parent":{"@": "Object"}
         }
     },
     "EventPrototype": {
         "object": "data/main.datareel/model/event"
     },
-     "objectDescriptor": {
+    "Object": {
         "object": "data/main.datareel/model/object.mjson"
     },
-    "id": {
+    "calendar": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "id",
-            "valueType": "string"
+            "name": "calendar",
+            "valueType": "object",
+            "cardinality": 1,
+            "isSearchable": true,
+            "valueDescriptor": {"@": "calendar-descriptor"}
         }
+    },
+    "calendar-descriptor": {
+        "object": "data/main.datareel/model/calendar.mjson"
     },
     "kind": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -138,7 +143,7 @@
     "colorId": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "location",
+            "name": "colorId",
             "valueType": "string",
             "description":"The color of the event. This is an ID referring to an entry in the event section of the colors definition (see the colors endpoint). Optional."
         }
@@ -148,6 +153,7 @@
         "values": {
             "name": "creator",
             "valueType": "object",
+            "isSearchable": true,
             "valueDescriptor": {"@": "event-person"}
         }
     },
@@ -159,7 +165,8 @@
         "values": {
             "name": "organizer",
             "valueType": "object",
-            "valueDescriptor": {"@": "event-person"}
+            "valueDescriptor": {"@": "event-person"},
+            "isSearchable": true
         }
     },
      "timeRange": {
@@ -168,27 +175,12 @@
             "name": "timeRange",
             "valueType": "date",
             "collectionValueType": "range",
-            "valueDescriptor": {"@": "range"}
+            "valueDescriptor": {"@": "range"},
+            "isSearchable": true
         }
     },
     "range": {
         "object": "montage/core/range.mjson"
-    },
-    "start": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "start",
-            "valueType": "object",
-            "valueDescriptor": {"@": "event-time"}
-        }
-    },
-    "end": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "end",
-            "valueType": "object",
-            "valueDescriptor": {"@": "event-time"}
-        }
     },
     "endTimeUnspecified": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -204,19 +196,23 @@
             "valueType": "array"
         }
     },
-    "recurringEventId": {
+    "recurringEvent": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "recurringEventId",
-            "valueType": "string"
+            "name": "recurringEvent",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "root"}
+
         }
     },
-    "originalStartTime": {
+    "originalTimeRange": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "start",
-            "valueType": "object",
-            "valueDescriptor": {"@": "event-time"}
+            "name": "originalTimeRange",
+            "valueType": "date",
+            "collectionValueType": "range",
+            "valueDescriptor": {"@": "range"}
         }
     },
     "transparency": {
@@ -252,14 +248,12 @@
         "values": {
             "name": "attendees",
             "valueType": "array",
+            "isSearchable": true,
             "valueDescriptor": {"@": "event-attendee"}
         }
     },
     "event-attendee": {
         "object": "data/main.datareel/model/event-attendee.mjson"
-    },
-    "event-time": {
-        "object": "data/main.datareel/model/event-time.mjson"
     },
     "attendeesOmitted": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -356,7 +350,7 @@
     "attachments": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "source",
+            "name": "attachments",
             "valueType": "array",
             "description": "TODO - create sub type"
         }

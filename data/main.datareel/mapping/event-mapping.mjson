@@ -83,7 +83,7 @@
     },
 
     "calendar-converter": {
-        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
         }
     },

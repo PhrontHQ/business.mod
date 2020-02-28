@@ -1,4 +1,4 @@
-var Target = require("montage/core/target").Target;
+var Object = require("./object").Object;
 
 /**
  * @class Calendar
@@ -7,16 +7,13 @@ var Target = require("montage/core/target").Target;
  */
 
 
-exports.Calendar = Target.specialize(/** @lends Calendar.prototype */ {
+exports.Calendar = Object.specialize(/** @lends Calendar.prototype */ {
     constructor: {
         value: function Calendar() {
             this.super();
             //console.log("Phront Calendar created");
             return this;
         }
-    },
-    id: {
-        value: undefined
     },
     kind: {
         value: undefined
@@ -34,6 +31,9 @@ exports.Calendar = Target.specialize(/** @lends Calendar.prototype */ {
         value: undefined
     },
     conferenceProperties: {
+        value: undefined
+    },
+    events: {
         value: undefined
     }
 });

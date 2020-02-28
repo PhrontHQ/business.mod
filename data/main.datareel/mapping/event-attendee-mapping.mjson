@@ -1,0 +1,29 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "EventAttendee"},
+            "objectMapping": {
+                "rules": {
+                    "isOrganizer": {"<->": "isOrganizer"},
+                    "isResource": {"<->": "isResource"},
+                    "isOptional": {"<->": "isOptional"},
+                    "responseStatus": {"<->": "responseStatus"},
+                    "comment": {"<->": "comment"},
+                    "additionalGuestCount": {"<->": "additionalGuestCount"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "isOrganizer","isResource","isOptional","comment","isResource","additionalGuestCount"
+            ]
+        }
+    },
+
+    "EventAttendee": {
+        "object": "data/main.datareel/model/event-attendee.mjson"
+    }
+}

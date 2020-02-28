@@ -4,12 +4,12 @@
         "values": {
             "name": "EventAttendee",
             "propertyDescriptors": [
-                {"@": "organizer"},
-                {"@": "resource"},
-                {"@": "optional"},
+                {"@": "isOrganizer"},
+                {"@": "isResource"},
+                {"@": "isOptional"},
                 {"@": "responseStatus"},
                 {"@": "comment"},
-                {"@": "additionalGuests"}
+                {"@": "additionalGuestCount"}
             ],
             "objectDescriptorModule": {
                 "%":"data/main.datareel/model/event-attendee.mjson"
@@ -29,24 +29,24 @@
     "EventPerson": {
         "object": "data/main.datareel/model/event-person"
     },
-    "organizer": {
+    "isOrganizer": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "organizer",
+            "name": "isOrganizer",
             "valueType": "boolean"
         }
     },
-    "resource": {
+    "isResource": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "resource",
+            "name": "isResource",
             "valueType": "boolean"
         }
     },
-    "optional": {
+    "isOptional": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "optional",
+            "name": "isOptional",
             "valueType": "boolean"
         }
     },
@@ -64,10 +64,10 @@
             "valueType": "string"
         }
     },
-    "additionalGuests": {
+    "additionalGuestCount": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "additionalGuests",
+            "name": "additionalGuestCount",
             "valueType": "number"
         }
     }
