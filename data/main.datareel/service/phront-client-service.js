@@ -604,14 +604,21 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
     saveChanges: {
         value: function () {
-            var self = this,
 
+            //If nothing to do, we bail out as early as possible.
+            if(this.createdDataObjects.size === 0 && this.changedDataObjects.size === 0 && this.deletedDataObjects.size === 0) {
+                var noOpOperation = new DataOperation();
+                noOpOperation.type = DataOperation.Type.NoOp;
+                return Promise.resolve(noOpOperation);
+            }
+
+            var self = this,
             //Ideally, this should be saved in IndexedDB so if something happen
             //we can at least try to recover.
-                createdDataObjects = new Set(this.createdDataObjects),//Set
-                changedDataObjects = new Set(this.changedDataObjects),//Set
-                deletedDataObjects = new Set(this.deletedDataObjects),//Set
-                dataObjectChanges = new Map(this.dataObjectChanges);//Map
+            createdDataObjects = new Set(this.createdDataObjects),//Set
+            changedDataObjects = new Set(this.changedDataObjects),//Set
+            deletedDataObjects = new Set(this.deletedDataObjects),//Set
+            dataObjectChanges = new Map(this.dataObjectChanges);//Map
 
             //We've made copies, so we clear right away to make room for a new cycle:
             this.createdDataObjects.clear();
@@ -707,12 +714,12 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             resolve(validatefailedOperation);
                         }
                         else {
-                            return;
+                            return transactionObjectDescriptors;
                         }
                     }, function(error) {
                         reject(error);
                     })
-                    .then(function() {
+                    .then(function(transactionObjectDescriptors) {
                         //Now that all objects are valid we can proceed and kickstart a transaction as it needs to do the round trip
                         //We keep the promise and continue to prepare the work.
                         return self._socketOpenPromise.then(function () {

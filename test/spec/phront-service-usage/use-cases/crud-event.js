@@ -2,6 +2,7 @@ var mainService = require("phront/test/data/client-main.datareel/main.mjson").mo
 Criteria = require("montage/core/criteria").Criteria,
 DataStream = require("montage/data/service/data-stream").DataStream,
 DataQuery = require("montage/data/model/data-query").DataQuery,
+Range = require("montage/core/range").Range,
 Event = require("phront/data/main.datareel/model/event").Event,
 Calendar = require("phront/data/main.datareel/model/calendar").Calendar,
 EventPerson = require("phront/data/main.datareel/model/event-person").EventPerson,
@@ -94,7 +95,7 @@ exports.crudEvent = function() {
         return Promise.reject(error);
     })
     .then(function(fetchedCalendar) {
-        calendar.description = "this is the descriptiono of a test calendar for Dr Yes.";
+        calendar.description = "this is the description of a test calendar for Dr Yes.";
         return mainService.saveChanges();
     }, function (error) {
         return Promise.reject(error);
