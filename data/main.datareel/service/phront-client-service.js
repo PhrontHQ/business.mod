@@ -16,6 +16,7 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     uuid = require("montage/core/uuid"),
     WebSocket = require("montage/core/web-socket").WebSocket,
     DataEvent = require("montage/data/model/data-event").DataEvent,
+    DeleteRule = require("montage/core/meta/property-descriptor").DeleteRule,
     PhrontClientService;
 
 
@@ -248,7 +249,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                 Now resolving the promise finishes the job in saveObjectData that has the object in scope.
             */
-            referrerOperation._promiseReject(operation);
+            referrerOperation._promiseResolve(operation);
         }
     },
 
@@ -465,6 +466,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 removedValues = aPropertyChanges.removedValues;
                 for(i=0, countI=removedValues.length;i<countI;i++) {
                     iValue = removedValues[i];
+                    //TODO: Check if the removed value should be itself be deleted
+                    //if(aPropertyDeleteRule === DeleteRule.CASCADE){}
                     removedValues[i] = this.dataIdentifierForObject(iValue).primaryKey;
                 }
 
@@ -613,12 +616,12 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             }
 
             var self = this,
-            //Ideally, this should be saved in IndexedDB so if something happen
-            //we can at least try to recover.
-            createdDataObjects = new Set(this.createdDataObjects),//Set
-            changedDataObjects = new Set(this.changedDataObjects),//Set
-            deletedDataObjects = new Set(this.deletedDataObjects),//Set
-            dataObjectChanges = new Map(this.dataObjectChanges);//Map
+                //Ideally, this should be saved in IndexedDB so if something happen
+                //we can at least try to recover.
+                createdDataObjects = new Set(this.createdDataObjects),//Set
+                changedDataObjects = new Set(this.changedDataObjects),//Set
+                deletedDataObjects = new Set(this.deletedDataObjects),//Set
+                dataObjectChanges = new Map(this.dataObjectChanges);//Map
 
             //We've made copies, so we clear right away to make room for a new cycle:
             this.createdDataObjects.clear();
@@ -646,7 +649,6 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         transactionObjectDescriptors = new Set(),
                         transactionObjecDescriptorModuleIds,
                         batchOperation,
-                        batchOperationPromise,
                         batchedOperationPromises,
                         dataOperationsByObject = new Map(),
                         changedDataObjectOperations = new Map(),
@@ -663,7 +665,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         performTransactionOperationPromise,
                         rollbackTransactionOperation,
                         rollbackTransactionOperationPromise,
-                        rawTransactionId;
+                        createTransactionCompletedId;
 
 
 
@@ -740,7 +742,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                             return _createTransactionPromise;
                         }, function(error) {
-                            console.error("Error tryimng to communicate with server");
+                            console.error("Error trying to communicate with server");
                             reject(error);
                         });
                     }, function(error) {
@@ -755,7 +757,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             return reject(error);
                         }
 
-                        rawTransactionId = createTransactionResult.data.transactionId;
+                        //createTransactionCompletedId = createTransactionResult.data.transactionId;
+                        createTransactionCompletedId = createTransactionResult.id;
 
                         /*
                             Now that we have cleaned sets, an open transaction, we build all individual operations. Rigth now we have lost the timestamps related to individual changes. If it turns out we need it (EOF/CoreData have it along with a delegate method to intervene) then the recording of changes in DataService will need to be overahauled to track timestamps. When we add undoManagementt to DataService, that subsystem will have every single change in a list as they happen and could also be leveraged?
@@ -800,7 +803,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         batchOperation.dataDescriptor = transactionObjecDescriptorModuleIds,
                         batchOperation.data = {
                                 batchedOperations: batchedOperations,
-                                transactionId: rawTransactionId
+                                transactionId: createTransactionCompletedId
                         };
                         batchOperation.referrerId = createTransaction.id;
 
@@ -817,7 +820,6 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         reject(error);
                     })
                     .then(function(batchedOperationResult) {
-                        var transactionId = batchedOperationResult.data.transactionId;
 
                         if(batchedOperationResult.type === DataOperation.Type.BatchCompleted) {
                             //We proceed to commit:
@@ -826,9 +828,13 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             performTransactionOperation.dataDescriptor = transactionObjecDescriptorModuleIds,
                             //Not sure we need any data here?
                             //performTransactionOperation.data = batchedOperations;
+
+                            //The createTransactionCompleted.id is the backend transacionId we need.
+                            //It would also make sense to treat the referrerId of the performTransactionOperation
+                            //to be the id of the createTransactionCompleted that preceded it.
                             performTransactionOperation.referrerId = createTransaction.id;
                             performTransactionOperation.data = {
-                                transactionId: transactionId
+                                transactionId: createTransactionCompletedId
                             };
 
                             performTransactionOperationPromise = new Promise(function(resolve, reject) {
@@ -1016,6 +1022,73 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
 
 
+
+    /**
+     * Map the properties of an object that have changed to be included as data in a DataOperation
+     *
+     * @method
+     * @argument {Object} object - The object whose data should be saved.
+     * @argument {DataOperation.Type} operationType - The object whose data should be saved.
+     * @returns {external:Promise} - A promise fulfilled to operationData when mapping is done.
+     *
+     */
+    _mapObjectChangesToOperationData: {
+        value: function (object, dataObjectChanges, operationData, snapshot, dataSnapshot, isDeletedObject, objectDescriptor) {
+            var aProperty,
+                aRawProperty,
+                snapshotValue,
+                anObjectDescriptor = objectDescriptor || this.objectDescriptorForObject(object),
+                aPropertyChanges,
+                aPropertyDescriptor,
+                result,
+                mappingPromise,
+                mappingPromises,
+                //There's a risk here for a deletedObject that it's values have been changed
+                //and therefore wouldn't match what was fetched. We need to test that.
+
+                //TEST maybe we don't need the isDeletedObject flag as deletedObjects shouldn't have
+                //dataObjectChanges
+                propertyIterator = isDeletedObject
+                    ? Object.keys(object).values()
+                    : dataObjectChanges.keys(),
+                mapping = this.mappingWithType(anObjectDescriptor);
+
+            while(aProperty = propertyIterator.next().value) {
+                aRawProperty = mapping.mapObjectPropertyNameToRawPropertyName(aProperty);
+                snapshotValue = snapshot[aRawProperty];
+                aPropertyChanges = dataObjectChanges ? dataObjectChanges.get(aProperty) : undefined;
+                aPropertyDescriptor = anObjectDescriptor.propertyDescriptorForName(aProperty);
+
+                //For delete, we're looping over Object.keys(object), which may contain properties that aren't
+                //serializable. Ourr goal for delete is to use these values for optimistic locking, so no change, no need
+                //If we pass this down to _processObjectChangesForProperty, it will attempt to map and fail if no aPropertyDescriptor
+                //exists. So we catch it here since we know the context about the operation.
+                if(isDeletedObject && (!aPropertyDescriptor || !aPropertyChanges)) {
+                    continue;
+                }
+
+                result = this._processObjectChangesForProperty(object, aProperty, aPropertyDescriptor, aRawProperty, aPropertyChanges, operationData, snapshot, dataSnapshot);
+
+                if(result && this._isAsync(result)) {
+                    (mappingPromises || (mappingPromises = [])).push(result);
+                }
+            }
+
+            if(mappingPromises && mappingPromises.length) {
+                mappingPromise = Promise.all(mappingPromises);
+            }
+
+
+            return (mappingPromise
+                ? mappingPromise.then(function() {
+                    return operationData;
+                })
+                : Promise.resolve(operationData))
+
+
+        }
+    },
+
     /**
      * Creates one save operation for an object, eirher a create, an update or a delete
      * .
@@ -1050,14 +1123,11 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     operation = new DataOperation(),
                     dataIdentifier = this.dataIdentifierForObject(object),
                     objectDescriptor = this.objectDescriptorForObject(object),
-                    mapping = this.mappingWithType(objectDescriptor),
                     //We make a shallow copy so we can remove properties we don't care about
                     snapshot = Object.assign({},object.dataIdentifier && this.snapshotForDataIdentifier(object.dataIdentifier)),
                     dataSnapshot = {},
-                    snapshotValue,
                     dataObjectChanges = dataObjectChangesMap.get(object),
                     propertyIterator,
-                    aProperty, aRawProperty,
                     isNewObject = operationType
                         ? operationType === DataOperation.Type.Create
                         : self.rootService.createdDataObjects.has(object),
@@ -1068,8 +1138,6 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                                             : DataOperation.Type.Update,
                     isDeletedObject = localOperationType === DataOperation.Type.Delete,
                     operationData = {},
-                    mappingPromise,
-                    mappingPromises,
                     i, iValue, countI;
 
                 operation.target = operation.dataDescriptor = objectDescriptor.module.id;
@@ -1093,55 +1161,20 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                 operation.data = operationData;
 
-                // if(isNewObject) {
-                //     mappingPromise =  this._mapObjectToRawData(object, operationData);
-                // } else {
 
-                    /*
-                        The last fetched values of the properties that changed, so the backend can use it to make optimistic-locking update
-                        with a where that conditions that the current value is still
-                        the one that was last fecthed by the client making the update.
+                /*
+                    The last fetched values of the properties that changed, so the backend can use it to make optimistic-locking update
+                    with a where that conditions that the current value is still
+                    the one that was last fecthed by the client making the update.
 
-                        For deletedObjects, if there were changes, we don't care about them, it's not that relevant, we're going to use all known properties fetched client side to eventually catch a conflict if someone made a change in-between.
-                    */
-                    if(!isNewObject) {
-                        operation.snapshot = dataSnapshot;
-                    }
+                    For deletedObjects, if there were changes, we don't care about them, it's not that relevant, we're going to use all known properties fetched client side to eventually catch a conflict if someone made a change in-between.
+                */
+                if(!isNewObject) {
+                    operation.snapshot = dataSnapshot;
+                }
 
-                    propertyIterator = isDeletedObject
-                        ? Object.keys(object).values()
-                        : dataObjectChanges.keys();
-                    while(aProperty = propertyIterator.next().value) {
-                        aRawProperty = mapping.mapObjectPropertyNameToRawPropertyName(aProperty);
-                        snapshotValue = snapshot[aRawProperty];
-                        aPropertyChanges = dataObjectChanges ? dataObjectChanges.get(aProperty) : undefined;
-                        aPropertyDescriptor = objectDescriptor.propertyDescriptorForName(aProperty);
-
-                        //For delete, we're looping over Object.keys(object), which may contain properties that aren't
-                        //serializable. Ourr goal for delete is to use these values for optimistic locking, so no change, no need
-                        //If we pass this down to _processObjectChangesForProperty, it will attempt to map and fail if no aPropertyDescriptor
-                        //exists. So we catch it here since we know the context about the operation.
-                        if(isDeletedObject && (!aPropertyDescriptor || !aPropertyChanges)) {
-                            continue;
-                        }
-
-                        result = this._processObjectChangesForProperty(object, aProperty, aPropertyDescriptor, aRawProperty, aPropertyChanges, operationData, snapshot, dataSnapshot);
-
-                        if(result && this._isAsync(result)) {
-                            (mappingPromises || (mappingPromises = [])).push(result);
-                        }
-                    }
-
-                    if(mappingPromises && mappingPromises.length) {
-                        mappingPromise = Promise.all(mappingPromises);
-                    }
-                //}
-
-
-                return (mappingPromise
-                    ? mappingPromise
-                    : Promise.resolve(true))
-                    .then(function(success) {
+                return this._mapObjectChangesToOperationData(object,dataObjectChanges,operationData, snapshot, dataSnapshot,isDeletedObject, objectDescriptor)
+                    .then(function(resolvedOperationData) {
 
                         if(!isDeletedObject && Object.keys(operationData).length === 0) {
                             //if there are no changes known, it's a no-op: if it's an existing object,

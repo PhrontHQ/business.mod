@@ -22,6 +22,7 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
 
 
     DataOperation = require("montage/data/service/data-operation").DataOperation,
+    DataOperationType = require("montage/data/service/data-operation").DataOperationType,
 
     // Require the aws-sdk. This is a dev dependency, so if being used
     // outside of a Lambda execution environment, it must be manually installed.
@@ -79,7 +80,7 @@ if (https) {
         keepAlive: true,
         maxSockets: 50, // same as aws-sdk
         rejectUnauthorized: true  // same as aws-sdk
-    })
+    });
     sslAgent.setMaxListeners(0); // same as aws-sdk
 }
 
@@ -146,6 +147,15 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     constructor: {
         value: function PhrontService() {
             RawDataService.call(this);
+
+
+            if(this._mapResponseHandlerByOperationType.size === 0) {
+                this._mapResponseHandlerByOperationType.set(DataOperationType.create, this.mapHandledCreateResponseToOperation);
+                this._mapResponseHandlerByOperationType.set(DataOperationType.read, this.mapHandledReadResponseToOperation);
+                this._mapResponseHandlerByOperationType.set(DataOperationType.update, this.mapHandledUpdateResponseToOperation);
+                this._mapResponseHandlerByOperationType.set(DataOperationType.delete, this.mapHandledDeleteResponseToOperation);
+            }
+
         }
     },
 
@@ -325,7 +335,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             }
 
-            rawExpression = this.stringify(criteria.syntax, rawParameters, mapping);
+            rawExpression = this.stringify(criteria.syntax, rawParameters, [mapping]);
             rawCriteria = new Criteria().initWithExpression(rawExpression, this.inlineCriteriaParameters ? null : rawParameters);
             return rawCriteria;
         }
@@ -563,7 +573,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             escapedRawReadExpressionsArray = [];
             rawReadExpressionsIterator = rawReadExpressions.values();
             i = 0;
-            while (anExpression = rawReadExpressionsIterator.next().value) {
+            while ((anExpression = rawReadExpressionsIterator.next().value)) {
                 rawReadExpressionsArray.push(anExpression);
                 //rawReadExpressionMap.set(anExpression,i);
 
@@ -584,9 +594,9 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     }
                 }
                 else {
-                    anEscapedExpression = escapeIdentifier(anExpression)
+                    anEscapedExpression = escapeIdentifier(anExpression);
                 }
-                escapedRawReadExpressionsArray.push(anEscapedExpression);
+                escapedRawReadExpressionsArray.push(`"${tableName}".${anEscapedExpression}`);
 
                 i++;
             }
@@ -609,7 +619,12 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             sql = `SELECT (SELECT row_to_json(_) FROM (SELECT ${escapedRawReadExpressionsArray.join(",")}) as _) FROM ${schemaName}."${tableName}"`;
             if (condition) {
-                sql += ` WHERE (${condition})`;
+                //Let's try if it doestn't start by a JOIN before going for not containing one at all
+                if(condition.indexOf("JOIN") !== 0) {
+                    sql += ` WHERE (${condition})`;
+                } else {
+                    sql += ` ${condition}`;
+                }
             }
             //sql = `SELECT ${escapedRawReadExpressionsArray.join(",")} FROM ${schemaName}."${tableName}" WHERE (${condition})`;
 
@@ -672,42 +687,45 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 //   else if(rawDataOperation.sql.indexOf('"name" ilike ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1 && data.records.length > 0){
                 //       console.log("organization found by name");
                 //   }
-                var operation = new DataOperation();
-
-                operation.referrerId = readOperation.id;
-                operation.dataDescriptor = readOperation.dataDescriptor;
-
-                //Carry on the details needed by the coordinator to dispatch back to client
-                // operation.connection = readOperation.connection;
-                operation.clientId = readOperation.clientId;
-                //console.log("executed Statement err:",err, "data:",data);
-
-                if (err) {
-                    // an error occurred
-                    console.log("!!! handleRead FAILED:", err, err.stack, rawDataOperation.sql);
-                    operation.type = DataOperation.Type.ReadFailed;
-                    //Should the data be the error?
-                    operation.data = err;
-                    objectDescriptor.dispatchEvent(operation);
-                    //reject(operation);
-                }
-                else {
-                    // successful response
-                    operation.type = DataOperation.Type.ReadCompleted;
-                    //We provide the inserted record as the operation's payload
-                    operation.data = data.records;
-
-                    //Not needed anymore as we request data as json
-                    //operation._rawReadExpressionIndexMap = rawReadExpressionMap;
-                    objectDescriptor.dispatchEvent(operation);
-                    //resolve(operation);
-                }
+                var operation = self.mapHandledReadResponseToOperation(readOperation, err, data/*, record*/);
+                objectDescriptor.dispatchEvent(operation);
             });
 
             //});
             //}
         }
     },
+
+    mapHandledReadResponseToOperation: {
+        value: function(readOperation, err, data, records) {
+            var operation = new DataOperation();
+
+            operation.referrerId = readOperation.id;
+            operation.dataDescriptor = readOperation.dataDescriptor;
+
+            //Carry on the details needed by the coordinator to dispatch back to client
+            // operation.connection = readOperation.connection;
+            operation.clientId = readOperation.clientId;
+            //console.log("executed Statement err:",err, "data:",data);
+
+            if (err) {
+                // an error occurred
+                //console.log("!!! handleRead FAILED:", err, err.stack, rawDataOperation.sql);
+                operation.type = DataOperation.Type.ReadFailed;
+                //Should the data be the error?
+                operation.data = err;
+            }
+            else {
+                // successful response
+                operation.type = DataOperation.Type.ReadCompleted;
+                //We provide the inserted record as the operation's payload
+                operation.data = data.records;
+            }
+            return operation;
+        }
+    },
+
+
     /*
         handleEventRead: {
             value: function(readOperation) {
@@ -758,7 +776,6 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     saveDataObject: {
         value: function (object) {
             var self = this,
-                objectDescriptor,
                 operation = new DataOperation(),
                 dataIdentifier = this.dataIdentifierForObject(object),
                 objectDescriptor = this.objectDescriptorForObject(object),
@@ -803,7 +820,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 this.clearRegisteredChangesForDataObject(object);
 
                 changesIterator = dataObjectChanges.keys();
-                while (aProperty = changesIterator.next().value) {
+                while ((aProperty = changesIterator.next().value)) {
                     aValueChanges = dataObjectChanges.get(aProperty);
                     aPropertyDescriptor = objectDescriptor.propertyDescriptorForName(aProperty);
 
@@ -882,7 +899,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             } else {
                 operation.type = DataOperation.Type.Create;
-                operation.data = object
+                operation.data = object;
 
                 return new Promise(function (resolve, reject) {
 
@@ -1520,7 +1537,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
     },
     performCreateObjectDescriptorOperation: {
         value: function (dataOperation, callback) {
-            return this._executeStatement(dataOperation, callback)
+            return this._executeStatement(dataOperation, callback);
         }
     },
 
@@ -1567,9 +1584,85 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
 
 
     /*
-      Modifying a table, when adding a property descriptor to an objectdescriptor
-      ALTER TABLE table_name
-      ADD COLUMN new_column_name data_type;
+        Modifying a table, when adding a property descriptor to an objectdescriptor
+        ALTER TABLE table_name
+        ADD COLUMN new_column_name data_type;
+
+
+        //Query to get all tables:
+        SELECT * FROM information_schema.tables where table_schema = 'phront';
+
+        //Query to get a table's columns:
+        SELECT * FROM information_schema.columns WHERE table_schema = 'phront' AND table_name = 'Event'
+
+        Tables: Postgres table information can be retrieved either from the information_schema.tables view, or from the pg_catalog.pg_tables view. Below are example queries:
+
+        select * from information_schema.tables;
+
+        select * from pg_catalog.pg_tables;
+
+
+        Schemas: This query will get the user's currently selected schema:
+
+        select current_schema();
+
+        These queries will return all schemas in the database:
+
+        select * from information_schema.schemata;
+
+        select * from pg_catalog.pg_namespace
+
+
+        Databases: This query will get the user's currently selected database:
+
+        select current_database();
+
+        This query will return all databases for the server:
+
+        select * from pg_catalog.pg_database
+
+
+        Views: These queries will return all views across all schemas in the database:
+
+        select * from information_schema.views
+
+        select * from pg_catalog.pg_views;
+
+        Columns for Tables
+
+        This query will return column information for a table named employee:
+
+
+        SELECT
+            *
+        FROM
+            information_schema.columns
+        WHERE
+            table_name = 'employee'
+        ORDER BY
+            ordinal_position;
+
+        Indexes
+
+        This query will return all index information in the database:
+
+
+        select * from pg_catalog.pg_indexes;
+
+        Functions
+
+        This query will return all functions in the database. For user-defined functions, the routine_definition column will have the function body:
+
+
+        select * from information_schema.routines where routine_type = 'FUNCTION';
+
+        Triggers
+
+        This query will return all triggers in the database. The action_statement column contains the trigger body:
+
+
+        select * from information_schema.triggers;
+
     */
 
     /**
@@ -1636,7 +1729,15 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                     recordKeysValues[i] = iMappedValue;
                 }
 
-                sql = `INSERT INTO ${schemaName}."${tableName}" (${escapedRecordKeys.join(",")}) VALUES (${recordKeysValues.join(",")})`;
+                /*
+                    INSERT INTO table (column1, column2, …)
+                    VALUES
+                    (value1, value2, …),
+                    (value1, value2, …) ,...;
+                */
+
+
+                sql = `INSERT INTO ${schemaName}."${tableName}" (${escapedRecordKeys.join(",")}) VALUES (${recordKeysValues.join(",")}) RETURNING id`;
 
                 return sql;
             });
@@ -1693,31 +1794,54 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 //console.log(sql);
                 return new Promise(function (resolve, reject) {
                     self._executeStatement(rawDataOperation, function (err, data) {
-                        var operation = new DataOperation();
-                        operation.referrerId = createOperation.id;
-
-                        operation.dataDescriptor = createOperation.dataDescriptor;
-                        if (err) {
-                            // an error occurred
-                            console.log(err, err.stack, rawDataOperation);
-                            operation.type = DataOperation.Type.CreateFailed;
-                            //Should the data be the error?
-                            operation.data = err;
-                            reject(operation);
-                        }
-                        else {
-                            // successful response
-                            operation.type = DataOperation.Type.CreateCompleted;
-                            //We provide the inserted record as the operation's payload
-                            operation.data = record;
-
-                            resolve(operation);
-                        }
+                        var operation = self.mapHandledCreateResponseToOperation(createOperation, err, data, record);
+                        resolve(operation);
                     });
                 });
             }
         }
     },
+
+    mapHandledCreateResponseToOperation: {
+        value: function(createOperation, err, data, record) {
+            var operation = new DataOperation();
+            operation.referrerId = createOperation.id;
+            operation.clientId = createOperation.clientId;
+
+            operation.dataDescriptor = createOperation.dataDescriptor;
+            if (err) {
+                // an error occurred
+                console.log(err, err.stack, rawDataOperation);
+                operation.type = DataOperation.Type.CreateFailed;
+                //Should the data be the error?
+                operation.data = err;
+            }
+            else {
+                // successful response
+                operation.type = DataOperation.Type.CreateCompleted;
+                //We provide the inserted record as the operation's payload
+                operation.data = record;
+            }
+            return operation;
+        }
+    },
+
+    _mapResponseHandlerByOperationType: {
+        value: new Map()
+    },
+
+    mapResponseHandlerForOperation: {
+        value: function(operation) {
+            return this._mapResponseHandlerByOperationType.get(operation.type);
+        }
+    },
+
+    mapOperationResponseToOperation: {
+        value: function(operation, err, data, record) {
+            return this.mapResponseHandlerForOperation(operation).apply(this, arguments);
+        }
+    },
+
 
     /*
         Postgresql Array:
@@ -1775,8 +1899,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 dataSnapshot = updateOperation.snapshot,
                 dataSnapshotKeys = dataSnapshot ? Object.keys(dataSnapshot) : null,
                 condition,
-                sql,
-                self = this;
+                sql;
 
 
             //We need to transform the criteria into a SQL equivalent. Hard-coded for a single object for now
@@ -1892,30 +2015,38 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 //console.log(sql);
                 return new Promise(function (resolve, reject) {
                     self._executeStatement(rawDataOperation, function (err, data) {
-                        var operation = new DataOperation();
-                        operation.referrerId = updateOperation.id;
-                        operation.dataDescriptor = objectDescriptor.module.id;
-                        if (err) {
-                            // an error occurred
-                            console.log(err, err.stack, rawDataOperation);
-                            operation.type = DataOperation.Type.UpdateFailed;
-                            //Should the data be the error?
-                            operation.data = err;
-                            reject(operation);
-                        }
-                        else {
-                            // successful response
-                            operation.type = DataOperation.Type.UpdateCompleted;
-                            //We provide the inserted record as the operation's payload
-                            operation.data = record;
-
-                            resolve(operation);
-                        }
+                        var operation = self.mapHandledUpdateResponseToOperation(updateOperation, err, data, record);
+                        resolve(operation);
                     });
                 });
             }
         }
     },
+
+    mapHandledUpdateResponseToOperation: {
+        value: function(updateOperation, err, data, record) {
+            var operation = new DataOperation();
+            operation.referrerId = updateOperation.id;
+            operation.clientId = updateOperation.clientId;
+            operation.dataDescriptor = objectDescriptor.module.id;
+            if (err) {
+                // an error occurred
+                console.log(err, err.stack, rawDataOperation);
+                operation.type = DataOperation.Type.UpdateFailed;
+                //Should the data be the error?
+                operation.data = err;
+            }
+            else {
+                // successful response
+                operation.type = DataOperation.Type.UpdateCompleted;
+                //We provide the inserted record as the operation's payload
+                operation.data = record;
+
+            }
+            return operation;
+        }
+    },
+
 
     /**
      * Handles the mapping of a delete operation to SQL.
@@ -1944,9 +2075,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 iKeyValue,
                 dataSnapshot = deleteOperation.snapshot,
                 dataSnapshotKeys = dataSnapshot ? Object.keys(dataSnapshot) : null,
-                condition,
-                sql,
-                self = this;
+                condition;
 
 
             //We need to transform the criteria into a SQL equivalent. Hard-coded for a single object for now
@@ -1997,27 +2126,33 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
             //console.log(sql);
             return new Promise(function (resolve, reject) {
                 self._executeStatement(rawDataOperation, function (err, data) {
-                    var operation = new DataOperation();
-                    operation.referrerId = deleteOperation.id;
-                    operation.dataDescriptor = objectDescriptor.module.id;
-                    if (err) {
-                        // an error occurred
-                        console.log(err, err.stack, rawDataOperation);
-                        operation.type = DataOperation.Type.DeleteFailed;
-                        //Should the data be the error?
-                        operation.data = err;
-                        reject(operation);
-                    }
-                    else {
-                        // successful response
-                        operation.type = DataOperation.Type.DeleteCompleted;
-                        //We provide the inserted record as the operation's payload
-                        operation.data = record;
-
-                        resolve(operation);
-                    }
+                    var operation = self.mapHandledDeleteResponseToOperation(deleteOperation, err, data, record);
+                    resolve(operation);
                 });
             });
+        }
+    },
+
+    mapHandledDeleteResponseToOperation: {
+        value: function(deleteOperation, err, data, record) {
+            var operation = new DataOperation();
+            operation.referrerId = deleteOperation.id;
+            operation.clientId = deleteOperation.clientId;
+            operation.dataDescriptor = objectDescriptor.module.id;
+            if (err) {
+                // an error occurred
+                console.log(err, err.stack, rawDataOperation);
+                operation.type = DataOperation.Type.DeleteFailed;
+                //Should the data be the error?
+                operation.data = err;
+            }
+            else {
+                // successful response
+                operation.type = DataOperation.Type.DeleteCompleted;
+                //We provide the inserted record as the operation's payload
+                operation.data = record;
+            }
+            return operation;
         }
     },
 
@@ -2057,6 +2192,9 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                     }
                     else {
                         // successful response
+                        //For CreateTreansactionCompleted, we're going to use the id provided by the backend
+                        operation.id = data.transactionId;
+
                         operation.type = DataOperation.Type.CreateTransactionCompleted;
                         //What should be the operation's payload ? The Raw Transaction Id?
                         operation.data = data;
@@ -2075,6 +2213,75 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
         }
     },
 
+    MaxSQLStatementLength: {
+        value: 65536
+    },
+
+    _executeBatchStatement: {
+        value: function(batchOperation, startIndex, endIndex, batchedOperations, rawDataOperation, rawOperationRecords, responseOperations) {
+            var self = this;
+            //Time to execute
+            return new Promise(function (resolve, reject) {
+                //rawDataOperation.parameterSets = [[]]; //as a work-around for batch...
+                self._rdsDataService.executeStatement(rawDataOperation, function (err, data) {
+                    var response = this;
+
+                    if (err) {
+
+                        var operation = new DataOperation();
+                        operation.referrerId = batchOperation.id;
+                        operation.dataDescriptor = batchOperation.dataDescriptor;
+                            // an error occurred
+                        console.log(err, err.stack, rawDataOperation);
+                        operation.type = DataOperation.Type.BatchFailed;
+                        //Should the data be the error?
+                        if(!data) {
+                            data = {
+                                transactionId: batchOperation.data.transactionId
+                            };
+                            data.error = err;
+                        }
+                        operation.data = data;
+                        reject(operation);
+                    }
+                    else {
+                        var i, countI, iData, iOperation, readType = DataOperation.Type.Read, iFetchesults;
+
+                        for(i=startIndex, countI = endIndex; (i<countI); i++) {
+                            iRecord = rawOperationRecords[i];
+                            iOperation = batchedOperations[i];
+
+                            //Only map back for read results, if we get it from _rdsDataService.executeStatement ...
+                            if(iOperation.type === readType) {
+                                iFetchesults = data.records[i];
+                                if(iFetchesults) {
+                                    responseOperations[i] = self.mapOperationResponseToOperation(iOperation,err, data, iFetchesults);
+                                }
+
+                            }
+                        }
+
+                        if(response.hasNextPage()) {
+                            response.nextPage(arguments.callee);
+                        }
+                        else {
+                            //Nothing more to do, we resolve
+                            resolve(true);
+                        }
+
+                        // executeStatementData.push(data);
+                        // successful response
+                        // operation.type = DataOperation.Type.BatchCompleted;
+                        // //What should be the operation's payload ? The Raw Transaction Id?
+                        // operation.data = data;
+
+                        // resolve(operation);
+                    }
+                });
+            });
+        }
+    },
+
     handleBatch: {
         value: function (batchOperation) {
             var self = this,
@@ -2087,7 +2294,9 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 transactionId = batchOperation.data.transactionId,
                 rawDataOperation = {},
                 firstObjectDescriptor,
-                i, countI, sqlMapPromises = [],
+                rawOperationRecords = [],
+                i, countI, sqlMapPromises = [], iRecord,
+                createdCount = 0,
                 //For a transaction, .dataDescriptor holds an array vs a single one.
                 transactionObjectDescriptors = batchOperation.dataDescriptor;
 
@@ -2111,12 +2320,15 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
             //Now loop on operations and create the matching sql:
             for (i = 0, countI = batchedOperations && batchedOperations.length; (i < countI); i++) {
                 iOperation = batchedOperations[i];
+                iRecord = {};
+                rawOperationRecords[i] = iRecord;
                 if (iOperation.type === updateOperationType) {
-                    sqlMapPromises.push(this._mapUpdateOperationToSQL(iOperation, rawDataOperation));
+                    sqlMapPromises.push(this._mapUpdateOperationToSQL(iOperation, rawDataOperation,iRecord ));
                 } else if (iOperation.type === createOperationType) {
-                    sqlMapPromises.push(this._mapCreateOperationToSQL(iOperation, rawDataOperation));
+                    sqlMapPromises.push(this._mapCreateOperationToSQL(iOperation, rawDataOperation, iRecord));
+                    createdCount++;
                 } else if (iOperation.type === deleteOperationType) {
-                    sqlMapPromises.push(this._mapDeleteOperationToSQL(iOperation, rawDataOperation));
+                    sqlMapPromises.push(this._mapDeleteOperationToSQL(iOperation, rawDataOperation, iRecord));
                 } else {
                     console.error("-handleBatch: Operation With Unknown Type: ", iOperation);
                 }
@@ -2124,15 +2336,105 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
 
             return Promise.all(sqlMapPromises)
                 .then(function (operationSQL) {
+                    var i, countI, iBatch = "", iStatement,
+                    MaxSQLStatementLength = self.MaxSQLStatementLength,
+                    batchPromises = [],
+                    operationData = "",
+                    executeStatementErrors = [],
+                    executeStatementData = [],
+                    responseOperations = [],
+                    iBatchRawDataOperation,
+                    startIndex,
+                    endIndex,
+                    lastIndex;
+
+                    for(i=0, startIndex=0, countI = operationSQL.length, lastIndex = countI-1;(i<countI); i++) {
+
+                        if(iBatch.length) {
+                            iBatch += ";\n";
+                        }
+                        iStatement = operationSQL[i];
+                        if( ((iStatement.length+iBatch.length) > MaxSQLStatementLength) || (i === lastIndex) ) {
+
+                            if(i === lastIndex) {
+                                iBatch += iStatement;
+                                iBatch += ";\n";
+                                endIndex = i;
+                            } else {
+                                endIndex = i-1;
+                            }
+                            //Time to execute what we have before it becomes too big:
+                            iBatchRawDataOperation = {};
+                            Object.assign(iBatchRawDataOperation,rawDataOperation);
+                            iBatchRawDataOperation.sql = iBatch;
+
+                            //Right now _executeBatchStatement will create symetric response operations if we pass responseOperations as an argument. This is implemented by using the data of the original create/update operations to eventually send it back. We can do without that, but we need to re-test that when we do batch of fetches and re-activate it.
+                            batchPromises.push(self._executeBatchStatement(batchOperation, startIndex, endIndex, batchedOperations, iBatchRawDataOperation, rawOperationRecords, responseOperations));
+
+                            //Now we continue:
+                            iBatch = iStatement;
+                            startIndex = i;
+                        } else {
+                                iBatch += iStatement;
+                        }
+                    }
+
+                    return Promise.all(batchPromises)
+                    .then(function() {
+                        // if(executeStatementErrors.length) {
+                        //     operation.type = DataOperation.Type.BatchFailed;
+                        //     //Should the data be the error?
+                        //     if(!data) {
+                        //         data = {
+                        //             transactionId: transactionId
+                        //         };
+                        //         data.error = executeStatementErrors;
+                        //     }
+                        //     operation.data = data;
+
+                        // }
+                        // else {
+                            // successful response
+                            var operation = new DataOperation();
+                            operation.referrerId = batchOperation.id;
+                            operation.dataDescriptor = transactionObjectDescriptors;
+                            operation.type = DataOperation.Type.BatchCompleted;
+
+                            /*
+                                Aurora DataAPI doesn't really return much when it comes to a
+                                updates and inserts, not that we need it to. When a batch operation is part of a saveChanges, the client has what it needs already, in which case, we don't need to send back much, except the transactionId. Which is better anyway, but it's also
+                                a problem if we did as we run into the AWS API Gateway websocket payload limits. And so far we've worked around the pbm for a ReadCompleted by creating ReadUpdate in-between, ending by a read completed.
+
+                                We can do the same with a batch, but we don't have for a batch the kind of object like a DataStream that we have for a fetch/read.
+
+                                However, if we can execute a batch of reads/fetch, so the client sends  all the fetch at once, which will spare spawning too much lambda functions, we'll run into the same problem on the way back, unless we send back the individual reponses as read update/completed themselves, only using the batchCompleted
+                                as away to know we're done. Because on the client side, they are individual reqquests created by triggers for example and client code rely on getting a response to these specifically.
+
+                                for now, if we have a transactionId, it means a "saveChanges" we only send that back as this is the cue that we are in a saveChanges.
+                            */
+                            //responseOperations should be empty except for batched readcompleted operations
+                            operation.data = responseOperations;
+                            if (transactionId) {
+                                operation.data.transactionId = transactionId;
+                            }
+
+                        //}
+
+
+
+                        return operation;
+
+                    },function(batchFailedOperation) {
+                        return Promise.resolve(batchFailedOperation);
+                    });
+
+                    /*
                     batchSQL = operationSQL.join(";\n");
                     rawDataOperation.sql = batchSQL;
 
                     return new Promise(function (resolve, reject) {
                         //rawDataOperation.parameterSets = [[]]; //as a work-around for batch...
                         self._rdsDataService.executeStatement(rawDataOperation, function (err, data) {
-                            var operation = new DataOperation();
-                            operation.referrerId = batchOperation.id;
-                            operation.dataDescriptor = transactionObjectDescriptors;
                             if (data && transactionId) {
                                 data.transactionId = transactionId;
                             }
@@ -2141,8 +2443,14 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                                 console.log(err, err.stack, rawDataOperation);
                                 operation.type = DataOperation.Type.BatchFailed;
                                 //Should the data be the error?
+                                if(!data) {
+                                    data = {
+                                        transactionId: transactionId
+                                    };
+                                    data.error = err;
+                                }
                                 operation.data = data;
-                                reject(operation);
+                                resolve(operation);
                             }
                             else {
                                 // successful response
@@ -2154,6 +2462,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                             }
                         });
                     });
+                    */
 
                 }, function (sqlMapError) {
                     return Promise.reject(sqlMapError);
@@ -2201,7 +2510,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                     var operation = new DataOperation();
                     operation.referrerId = transactionEndOperation.id;
                     operation.dataDescriptor = transactionObjectDescriptors;
-                    if (transactionId) {
+                    if (data && transactionId) {
                         data.transactionId = transactionId;
                     }
                     if (err) {
@@ -2210,7 +2519,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                         operation.type = transactionEndOperation.type === DataOperation.Type.PerformTransaction ? DataOperation.Type.PerformTransactionFailed : DataOperation.Type.RollbackTransactionFailed;
                         //Should the data be the error?
                         operation.data = data;
-                        reject(operation);
+                        resolve(operation);
                     }
                     else {
                         // successful response

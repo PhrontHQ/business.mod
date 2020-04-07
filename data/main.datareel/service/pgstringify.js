@@ -17,12 +17,12 @@ var parse = require("montage/core/frb/parse"),
 // }
 
 function makeBlockStringifier(type) {
-    return function (syntax, scope, parent, dataService, dataMapping) {
-        var chain = type + '{' + dataService.stringify(syntax.args[1], scope, dataMapping) + '}';
+    return function (syntax, scope, parent, dataService, dataMappings) {
+        var chain = type + '{' + dataService.stringify(syntax.args[1], scope, dataMappings) + '}';
         if (syntax.args[0].type === "value") {
             return chain;
         } else {
-            return dataService.stringify(syntax.args[0], scope, dataMapping) + '.' + chain;
+            return dataService.stringify(syntax.args[0], scope, dataMappings) + '.' + chain;
         }
     };
 }
@@ -31,13 +31,26 @@ module.exports = {
 
     makeBlockStringifier: makeBlockStringifier,
 
-    stringifyChild: function stringifyChild(child, scope, dataMapping) {
-        var arg = this.stringify(child, scope, dataMapping);
+    stringifyChild: function stringifyChild(child, scope, dataMappings) {
+        var arg = this.stringify(child, scope, dataMappings);
         if (!arg) return "this";
         return arg;
     },
 
-    stringify: function (syntax, scope, dataMapping, parent) {
+
+    /**
+     * stringifies a criteria to SQL, criteria expressed for the objectDescriptor's that's in dataMapping
+     * as dataMapping.objectDescriptor.
+     * @deprecated
+     * @function
+     * @param {object} syntax name of the property descriptor to create
+     * @param {object} scope
+     * @param {ExpressionDataMapping[]} dataMappings a stack of dataMappings as expression traverses relationships starting with the type searched
+     * @param {object} parent syntax's parent in the AST.
+     * @returns {string}
+     */
+
+    stringify: function (syntax, scope, dataMappings, parent) {
         var stringifiers = this.stringifiers,
             stringifier,
             string,
@@ -45,7 +58,7 @@ module.exports = {
 
         if ((stringifier = stringifiers[syntax.type])) {
             // operators
-            string = stringifier(syntax, scope, parent, this, dataMapping);
+            string = stringifier(syntax, scope, parent, this, dataMappings);
         } else if (syntax.inline) {
             // inline invocations
             string = "&";
@@ -64,12 +77,12 @@ module.exports = {
             var chain;
             if (syntax.args.length === 1 && syntax.args[0].type === "mapBlock") {
                 // map block function calls
-                chain = syntax.type + "{" + this.stringify(syntax.args[0].args[1], scope, dataMapping) + "}";
+                chain = syntax.type + "{" + this.stringify(syntax.args[0].args[1], scope, dataMappings) + "}";
                 syntax = syntax.args[0];
             } else {
                 // normal function calls
                 if((stringifier = this.functionStringifiers[syntax.type])) {
-                    chain = stringifier(syntax, scope, parent, this, dataMapping);
+                    chain = stringifier(syntax, scope, parent, this, dataMappings);
 
                 } else {
                     chain = syntax.type;
@@ -78,7 +91,7 @@ module.exports = {
                     args = syntax.args;
                     for(i=1, countI = args.length;i<countI;i++) {
                         chain += i > 1 ? ", " : "";
-                        chain += this.stringifyChild(args[i],scope, dataMapping);
+                        chain += this.stringifyChild(args[i],scope, dataMappings);
                     }
                     chain += ")";
                 }
@@ -92,7 +105,7 @@ module.exports = {
                     syntax.type === "has") {
                 string = chain;
             } else {
-                string = this.stringify(syntax.args[0], scope, dataMapping) + "." + chain;
+                string = this.stringify(syntax.args[0], scope, dataMappings) + "." + chain;
             }
         }
 
@@ -110,10 +123,11 @@ module.exports = {
     },
 
     functionStringifiers: {
-        has: function(syntax, scope, parent, dataService, dataMapping) {
+        has: function(syntax, scope, parent, dataService, dataMappings) {
             var chain,
                 value, propertyName, rawProperty, escapedRawProperty, escapedValue, condition,
-                i, countI, args;
+                i, countI, args,
+                dataMapping = dataMappings[dataMappings.length-1];
 
             chain = "(";
 
@@ -182,11 +196,11 @@ module.exports = {
 
     stringifiers: {
 
-        value: function (syntax, scope, parent, dataService, dataMapping) {
+        value: function (syntax, scope, parent, dataService, dataMappings) {
             return '';
         },
 
-        literal: function (syntax, scope, parent, dataService, dataMapping) {
+        literal: function (syntax, scope, parent, dataService, dataMappings) {
             if (typeof syntax.value === 'string') {
                 return "'" + syntax.value.replace("'", "\\'") + "'";
             } else {
@@ -194,33 +208,33 @@ module.exports = {
             }
         },
 
-        parameters: function (syntax, scope, parent, dataService, dataMapping) {
+        parameters: function (syntax, scope, parent, dataService, dataMappings) {
             return typeof scope === "string" ? dataService.mapPropertyDescriptorValueToRawValue(undefined,scope) : '$';
         },
 
-        record: function (syntax, scope, parent, dataService, dataMapping) {
+        record: function (syntax, scope, parent, dataService, dataMappings) {
             return "{" + Object.map(syntax.args, function (value, key) {
                 var string;
                 if (value.type === "value") {
                     string = "this";
                 } else {
-                    string = dataService.stringify(value, scope, dataMapping);
+                    string = dataService.stringify(value, scope, dataMappings);
                 }
                 return key + ": " + string;
             }).join(", ") + "}";
         },
 
-        tuple: function (syntax, scope, parent, dataService, dataMapping) {
+        tuple: function (syntax, scope, parent, dataService, dataMappings) {
             return "[" + Object.map(syntax.args, function (value) {
                 if (value.type === "value") {
                     return "this";
                 } else {
-                    return dataService.stringify(value, scope, dataMapping);
+                    return dataService.stringify(value, scope, dataMappings);
                 }
             }).join(", ") + "]";
         },
 
-        component: function (syntax, scope, parent, dataService, dataMapping) {
+        component: function (syntax, scope, parent, dataService, dataMappings) {
             var label;
             if (scope && scope.components && syntax.component) {
                 if (scope.components.getObjectLabel) {
@@ -254,10 +268,99 @@ module.exports = {
 
         inlineCriteriaParameters: true,
 
-        property: function (syntax, scope, parent, dataService, dataMapping) {
+        _propertyName: function (propertyName, scope, parent, dataService, dataMappings) {
+            var dataMapping = dataMappings[dataMappings.length-1],
+                objectDescriptor = dataMapping.objectDescriptor,
+                rawPropertyValue = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName),
+                rule = dataMapping.rawDataMappingRules.get(rawPropertyValue),
+                propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyName),
+                //For backward compatibility, propertyDescriptor.valueDescriptor still returns a Promise....
+                //propertyValueDescriptor = propertyDescriptor.valueDescriptor;
+                //So until we fix this, tap into the private instance variable that contains what we want:
+                propertyDescriptorValueDescriptor,
+                //propertyDescriptorValueDescriptor = propertyDescriptor.valueDescriptor,
+                result;
+
+            //ToMany
+            if(propertyDescriptor && propertyDescriptor.cardinality > 1) {
+
+                propertyDescriptorValueDescriptor = propertyDescriptor._valueDescriptorReference;
+
+                //This is the case where the table hosts the array of ids
+
+                if(rule.targetPath !== "id") {
+                /*
+                    We're trying to transform Service's vendors into something like:
+
+                    //test query:
+                    SELECT * FROM "Service" JOIN "Organization"
+                    ON "Organization".id = ANY ("Service"."vendorIds")
+                    where "Organization".name = 'SISTRA';
+                */
+
+                    result = `JOIN "${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = ANY ("${objectDescriptor.name}"."${rawPropertyValue}")`;
+                    dataMappings.push(dataService.mappingWithType(propertyDescriptorValueDescriptor));
+                    return result;
+                }
+                //This is the case where we use the object's id to be found in the uuid[] on the other side
+                else {
+                    throw new Error("Implementation missing for toMany where mapping rule's target path is 'id'");
+                }
+            } else {
+                return `"${objectDescriptor.name}".${escapeIdentifier(dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName))}`
+                //return escapeIdentifier(dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName));
+            }
+
+        },
+
+        property: function _property(syntax, scope, parent, dataService, dataMappings) {
+            var dataMapping = dataMappings[dataMappings.length-1],
+                _propertyNameStringifier = _property._propertyName || (_property._propertyName = dataService.stringifiers._propertyName);
+
             if (syntax.args[0].type === "value") {
                 if (typeof syntax.args[1].value === "string") {
-                    return escapeIdentifier(dataMapping.mapObjectPropertyNameToRawPropertyName(syntax.args[1].value));
+
+                    return _propertyNameStringifier(syntax.args[1].value, scope, parent, dataService, dataMappings);
+
+                    // var propertyValue = syntax.args[1].value,
+                    //     objectDescriptor = dataMapping.objectDescriptor,
+                    //     rawPropertyValue = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyValue),
+                    //     rule = dataMapping.rawDataMappingRules.get(rawPropertyValue),
+                    //     propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyValue),
+                    //     //For backward compatibility, propertyDescriptor.valueDescriptor still returns a Promise....
+                    //     //propertyValueDescriptor = propertyDescriptor.valueDescriptor;
+                    //     //So until we fix this, tap into the private instance variable that contains what we want:
+                    //     propertyDescriptorValueDescriptor = propertyDescriptor._valueDescriptorReference,
+                    //     //propertyDescriptorValueDescriptor = propertyDescriptor.valueDescriptor,
+                    //     result;
+
+                    // //ToMany
+                    // if(propertyDescriptor.cardinality > 1) {
+
+                    //     //This is the case where the table hosts the array of ids
+
+                    //     if(rule.targetPath !== "id") {
+                    //     /*
+                    //         We're trying to transform Service's vendors into something like:
+
+                    //         //test query:
+                    //         SELECT * FROM "Service" JOIN "Organization"
+                    //         ON "Organization".id = ANY ("Service"."vendorIds")
+                    //         where "Organization".name = 'SISTRA';
+                    //     */
+
+                    //         result = `JOIN "${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = ANY ("${objectDescriptor.name}"."${rawPropertyValue}")`;
+                    //         dataMappings.push(dataService.mappingWithType(propertyDescriptorValueDescriptor));
+                    //         return result;
+                    //     }
+                    //     //This is the case where we use the object's id to be found in the uuid[] on the other side
+                    //     else {
+
+                    //     }
+                    // } else {
+                    //     return escapeIdentifier(dataMapping.mapObjectPropertyNameToRawPropertyName(syntax.args[1].value));
+                    // }
+
                 }
                 /*
                     ?
@@ -265,6 +368,7 @@ module.exports = {
                     Number literals are digits with an optional mantissa.
                 */
                 else if (syntax.args[1].type === "literal") {
+                    //It likely that "." needs to be transformed into a "and"
                     return "." + syntax.args[1].value;
                 } else {
                     return "this[" + dataService.stringify(syntax.args[1], scope, dataMapping) + "]";
@@ -298,85 +402,109 @@ module.exports = {
                 //and then call dataService.stringify(..) that handles "vendors,
                 //and it's concatenated wirh a "." again.
                 //So this is likely where we should handle joins.
-                return dataService.stringify(syntax.args[0], scope, dataMapping, {
-                    type: "scope"
-                }) + '.' + syntax.args[1].value;
-            } else {
-                return dataService.stringify(syntax.args[0], {
-                    type: "scope"
-                }, dataMapping, scope) + '[' + dataService.stringify(syntax.args[1], scope, dataMapping) + ']';
+                var dataMappingsLength = dataMappings.length,
+                    argZeroStringified =  dataService.stringify(syntax.args[0], scope, dataMappings, {
+                        type: "scope"
+                    }),
+                    argOneStringified =  _propertyNameStringifier(syntax.args[1].value, scope, {
+                        type: "scope"
+                    }, dataService, dataMappings),
+                    lastDataMapping = dataMappings[dataMappings.length - 1],
+                    result;
+
+                    /*
+                        Here the behavior is different if we go from a property/relation in [0] that requires a join
+                        to a property that is a column of the last table joined to. If 2 relations across tables follow
+                        on the 2 slots, we need to just chain the join
+
+                        otherwise, we need to add an "and". Right now we look at the produced syntax, which isn't great
+                        and we might need to bring the processing of the 2 sides in one place where we'd generate both sides
+                        and be in a better position looking at the model to make the right decision than looking at the striong result.
+                    */
+                    if(argOneStringified.indexOf("JOIN") !== 0) {
+                        result = `${argZeroStringified} AND ${argOneStringified}`;
+                    } else {
+                        result = `${argZeroStringified} ${argOneStringified}`;
+                    }
+
+                    //return argZeroStringified + '.' + syntax.args[1].value;
+                    return result;
+                } else {
+                    return dataService.stringify(syntax.args[0], {
+                        type: "scope"
+                    }, dataMapping, scope) + '[' + dataService.stringify(syntax.args[1], scope, dataMappings) + ']';
             }
         },
 
-        "with": function (syntax, scope, parent, dataService, dataMapping) {
-            var right = dataService.stringify(syntax.args[1], scope, dataMapping, syntax);
-            return dataService.stringify(syntax.args[0], scope, dataMapping) + "." + right;
+        "with": function (syntax, scope, parent, dataService, dataMappings) {
+            var right = dataService.stringify(syntax.args[1], scope, dataMappings, syntax);
+            return dataService.stringify(syntax.args[0], scope, dataMappings) + "." + right;
         },
 
-        not: function (syntax, scope, parent, dataService, dataMapping) {
+        not: function (syntax, scope, parent, dataService, dataMappings) {
             if (syntax.args[0].type === "equals") {
                 return (
-                    dataService.stringify(syntax.args[0].args[0], scope, dataMapping, {type: "equals"}) +
+                    dataService.stringify(syntax.args[0].args[0], scope, dataMappings, {type: "equals"}) +
                     " != " +
-                    dataService.stringify(syntax.args[0].args[1], scope, dataMapping, {type: "equals"})
+                    dataService.stringify(syntax.args[0].args[1], scope, dataMappings, {type: "equals"})
                 );
             } else {
-                return '!' + dataService.stringify(syntax.args[0], scope, dataMapping, syntax)
+                return '!' + dataService.stringify(syntax.args[0], scope, dataMappings, syntax)
             }
         },
 
-        neg: function (syntax, scope, parent, dataService, dataMapping) {
-            return '-' + dataService.stringify(syntax.args[0], scope, dataMapping, syntax)
+        neg: function (syntax, scope, parent, dataService, dataMappings) {
+            return '-' + dataService.stringify(syntax.args[0], scope, dataMappings, syntax)
         },
 
-        toNumber: function (syntax, scope, parent, dataService, dataMapping) {
-            return '+' + dataService.stringify(syntax.args[0], scope, dataMapping, syntax)
+        toNumber: function (syntax, scope, parent, dataService, dataMappings) {
+            return '+' + dataService.stringify(syntax.args[0], scope, dataMappings, syntax)
         },
 
-        parent: function (syntax, scope, parent, dataService, dataMapping) {
-            return '^' + dataService.stringify(syntax.args[0], scope, dataMapping, syntax)
+        parent: function (syntax, scope, parent, dataService, dataMappings) {
+            return '^' + dataService.stringify(syntax.args[0], scope, dataMappings, syntax)
         },
 
-        if: function (syntax, scope, parent, dataService, dataMapping) {
+        if: function (syntax, scope, parent, dataService, dataMappings) {
             return (
-                dataService.stringify(syntax.args[0], scope, dataMapping, syntax) + " ? " +
-                dataService.stringify(syntax.args[1], scope, dataMapping) + " : " +
-                dataService.stringify(syntax.args[2], scope, dataMapping)
+                dataService.stringify(syntax.args[0], scope, dataMappings, syntax) + " ? " +
+                dataService.stringify(syntax.args[1], scope, dataMappings) + " : " +
+                dataService.stringify(syntax.args[2], scope, dataMappings)
             );
         },
 
-        event: function (syntax, scope, parent, dataService, dataMapping) {
-            return syntax.when + " " + syntax.event + " -> " + dataService.stringify(syntax.listener, scope, dataMapping);
+        event: function (syntax, scope, parent, dataService, dataMappings) {
+            return syntax.when + " " + syntax.event + " -> " + dataService.stringify(syntax.listener, scope, dataMappings);
         },
 
-        binding: function (arrow, syntax, scope, parent, dataService, dataMapping) {
+        binding: function (arrow, syntax, scope, parent, dataService, dataMappings) {
 
-            var header = dataService.stringify(syntax.args[0], scope, dataMapping) + " " + arrow + " " + dataService.stringify(syntax.args[1], scope, dataMapping);
+            var header = dataService.stringify(syntax.args[0], scope, dataMappings) + " " + arrow + " " + dataService.stringify(syntax.args[1], scope, dataMappings);
             var trailer = "";
 
             var descriptor = syntax.descriptor;
             if (descriptor) {
                 for (var name in descriptor) {
-                    trailer += ", " + name + ": " + dataService.stringify(descriptor[name], scope, dataMapping);
+                    trailer += ", " + name + ": " + dataService.stringify(descriptor[name], scope, dataMappings);
                 }
             }
 
             return header + trailer;
         },
 
-        bind: function (syntax, scope, parent, dataService, dataMapping) {
+        bind: function (syntax, scope, parent, dataService, dataMappings) {
             return this.binding("<-", syntax, scope, dataService);
         },
 
-        bind2: function (syntax, scope, parent, dataService, dataMapping) {
+        bind2: function (syntax, scope, parent, dataService, dataMappings) {
             return this.binding("<->", syntax, scope, dataService);
         },
 
-        assign: function (syntax, scope, parent, dataService, dataMapping) {
-            return dataService.stringify(syntax.args[0], scope, dataMapping) + ": " + dataService.stringify(syntax.args[1], scope, dataMapping);
+        assign: function (syntax, scope, parent, dataService, dataMappings) {
+            return dataService.stringify(syntax.args[0], scope, dataMappings) + ": " + dataService.stringify(syntax.args[1], scope, dataMappings);
         },
 
-        block: function (syntax, scope, parent, dataService, dataMapping) {
+        block: function (syntax, scope, parent, dataService, dataMappings) {
             var header = "@" + syntax.label;
             if (syntax.connection) {
                 if (syntax.connection === "prototype") {
@@ -384,25 +512,25 @@ module.exports = {
                 } else if (syntax.connection === "object") {
                     header += " : ";
                 }
-                header += dataService.stringify({type: 'literal', value: syntax.module}, scope, dataMapping);
+                header += dataService.stringify({type: 'literal', value: syntax.module}, scope, dataMappings);
                 if (syntax.exports && syntax.exports.type !== "value") {
-                    header += " " + dataService.stringify(syntax.exports, scope, dataMapping);
+                    header += " " + dataService.stringify(syntax.exports, scope, dataMappings);
                 }
             }
             return header + " {\n" + syntax.statements.map(function (statement) {
-                return "    " + dataService.stringify(statement, scope, dataMapping) + ";\n";
+                return "    " + dataService.stringify(statement, scope, dataMappings) + ";\n";
             }).join("") + "}\n";
         },
 
-        sheet: function (syntax, scope, parent, dataService, dataMapping) {
+        sheet: function (syntax, scope, parent, dataService, dataMappings) {
             return "\n" + syntax.blocks.map(function (block) {
-                return dataService.stringify(block, scope, dataMapping);
+                return dataService.stringify(block, scope, dataMappings);
             }).join("\n") + "\n";
         }
         /*
         ,
 
-        has: function (syntax, scope, parent, dataService, dataMapping) {
+        has: function (syntax, scope, parent, dataService, dataMappings) {
 
             var args = syntax.args,
                 i, countI, result = "",
@@ -415,7 +543,7 @@ module.exports = {
                     result += " ";
                 }
 
-                stringifiedArg = dataService.stringify(args[i],scope, dataMapping, syntax);
+                stringifiedArg = dataService.stringify(args[i],scope, dataMappings, syntax);
 
                 result += stringifiedArg
             }
@@ -425,7 +553,7 @@ module.exports = {
 */
 /*        ,
 
-        equal: function (syntax, scope, parent, dataService, dataMapping) {
+        equal: function (syntax, scope, parent, dataService, dataMappings) {
             var args = syntax.args,
                 i, countI, result = "",
                 mappedToken = dataService.mapTokenToRawToken(token);
@@ -439,7 +567,7 @@ module.exports = {
                     result += mappedToken;
                     result += " ";
                 }
-                result += dataService.stringify(args[i],scope, dataMapping, syntax);
+                result += dataService.stringify(args[i],scope, dataMappings, syntax);
             }
 
             return result.trim();
@@ -473,7 +601,7 @@ module.exports = {
 typeToToken.forEach(function (token, type) {
 
     if(typeof module.exports.stringifiers[type] !== "function") {
-        module.exports.stringifiers[type] = function (syntax, scope, parent, dataService, dataMapping) {
+        module.exports.stringifiers[type] = function (syntax, scope, parent, dataService, dataMappings) {
 
             var args = syntax.args,
                 i, countI, result = "",
@@ -484,7 +612,7 @@ typeToToken.forEach(function (token, type) {
                     result += mappedToken;
                     result += " ";
                 }
-                result += dataService.stringify(args[i],scope, dataMapping, syntax);
+                result += dataService.stringify(args[i],scope, dataMappings, syntax);
             }
 
             return result.trim();
