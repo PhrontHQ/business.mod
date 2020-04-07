@@ -1,0 +1,19 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/user-interface-descriptor",
+        "values": {
+            "inspectorComponentModule": {
+                "%": "data/main.datareel/inspectors/service.reel"
+            },
+            "creatorInspectorComponentModule": {
+                "%": "data/main.datareel/creators/service.reel"
+            },
+            "collectionInspectorComponentModule": {
+                "%": "montage/ui/list.reel"
+            },
+            "collectionNameExpression": "'Services'",
+            "nameExpression": "title",
+            "descriptionExpression": "description"
+        }
+    }
+}

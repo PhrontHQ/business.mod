@@ -35,5 +35,8 @@ exports.Calendar = Object.specialize(/** @lends Calendar.prototype */ {
     },
     events: {
         value: undefined
+    },
+    color: {
+        value: undefined
     }
 });

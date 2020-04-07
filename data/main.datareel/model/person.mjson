@@ -12,8 +12,8 @@
                 {"@": "addresses"},
                 {"@": "tags"},
                 {"@": "userIdentities"},
-                {"@": "employerRelationships"}
-
+                {"@": "employerRelationships"},
+                {"@": "services"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/person.mjson"
@@ -126,7 +126,23 @@
     },
     "employmentRelationshipDescriptor": {
         "object": "data/main.datareel/model/employment-relationship.mjson"
+    },
+
+    "services": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "services",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "serviceDescriptor"},
+            "inversePropertyName": "providers"
+        }
+    },
+
+    "serviceDescriptor": {
+        "object": "data/main.datareel/model/service.mjson"
     }
+
 
 
 }

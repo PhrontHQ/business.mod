@@ -1,0 +1,120 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Order",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "customer"},
+                {"@": "orderLineItems"},
+                {"@": "transactions"},
+                {"@": "billingAddress"},
+                {"@": "shippingAddress"},
+                {"@": "doesBillingAddressMatchShippingAddress"},
+                {"@": "cancellationDate"},
+                {"@": "cancellationReason"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/order.mjson"
+            },
+            "exportName": "Order",
+            "module": {
+                "%": "data/main.datareel/model/order"
+            },
+            "object":{"@": "order"},
+            "parent":{"@": "Object"}
+        }
+    },
+    "order": {
+        "object": "data/main.datareel/model/order"
+    },
+    "Object": {
+        "object": "data/main.datareel/model/object.mjson"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "customer": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "customer",
+            "valueType": "object"
+        }
+    },
+     "orderLineItems": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "orderLineItems",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "order-line-item_descriptor"}
+        }
+    },
+     "order-line-item_descriptor": {
+        "object": "data/main.datareel/model/order-line-item.mjson"
+    },
+    "transactions": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "transactions",
+            "cardinality": -1,
+            "inversePropertyName": "order",
+            "valueDescriptor": {"@": "order-transaction"}
+        }
+    },
+     "order-transaction": {
+        "object": "data/main.datareel/model/order-transaction.mjson"
+    },
+
+    "billingAddress": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "billingAddress",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "address_descriptor"}
+        }
+    },
+    "shippingAddress": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "shippingAddress",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "address_descriptor"}
+        }
+    },
+    "address_descriptor": {
+        "object": "data/main.datareel/model/address.mjson"
+    },
+    "doesBillingAddressMatchShippingAddress": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "doesBillingAddressMatchShippingAddress",
+            "valueType": "boolean"
+        }
+    },
+    "cancellationDate": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "cancellationDate",
+            "valueType": "date"
+        }
+    },
+    "cancellationReason": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "cancellationReason",
+            "cardinality": 1,
+            "valueType": "enum",
+            "enumValues": [
+                "Customer",
+                "Declined",
+                "Fraud",
+                "Inventory",
+                "Other"
+            ]
+        }
+    }
+}

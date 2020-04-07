@@ -132,7 +132,8 @@
             "name": "vendors",
             "valueType": "array",
             "cardinality": -1,
-            "valueDescriptor": {"@": "organization_descriptor"}
+            "valueDescriptor": {"@": "organization_descriptor"},
+            "isSearchable": true
         }
     },
     "storefront": {

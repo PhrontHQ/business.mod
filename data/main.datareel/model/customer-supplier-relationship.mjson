@@ -5,14 +5,15 @@
             "name": "CustomerSupplierRelationship",
             "propertyDescriptors": [
                 {"@": "customer"},
-                {"@": "supplier"}
+                {"@": "supplier"},
+                {"@": "orders"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/customer-supplier-relationship.mjson"
             },
             "exportName": "CustomerSupplierRelationship",
             "module": {
-                "%": "data/main.datareel/model/party-party-relationship"
+                "%": "data/main.datareel/model/customer-supplier-relationship"
             },
             "object":{"@": "customer-supplier-relationship"},
             "parent":{"@": "party-party-relationship"}
@@ -29,9 +30,7 @@
         "values": {
             "name": "customer",
             "valueType": "object",
-            "cardinality": 1,
-            "inversePropertyName": "supplierRelationships",
-            "valueDescriptor": {"@": "organization_descriptor"}       
+            "cardinality": 1
         }
     },
     "organization_descriptor": {
@@ -43,9 +42,20 @@
             "name": "supplier",
             "valueType": "object",
             "cardinality": 1,
-            "inversePropertyName": "customerRelationships",
-            "valueDescriptor": {"@": "organization_descriptor"}       
+            "valueDescriptor": {"@": "organization_descriptor"}
         }
+    },
+    "orders": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "orders",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "orderDescriptor"}
+        }
+    },
+    "orderDescriptor": {
+        "object": "data/main.datareel/model/order.mjson"
     }
 
 }

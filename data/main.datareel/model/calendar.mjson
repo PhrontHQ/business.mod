@@ -11,7 +11,8 @@
                 {"@": "location"},
                 {"@": "timeZone"},
                 {"@": "conferenceProperties"},
-                {"@": "events"}
+                {"@": "events"},
+                {"@": "color"}
             ],
             "objectDescriptorModule": {
                 "%":"data/main.datareel/model/calendar.mjson"
@@ -92,6 +93,14 @@
     },
     "event-descriptor": {
         "object": "data/main.datareel/model/event.mjson"
+    },
+    "color": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "color",
+            "valueType": "string",
+            "description":"The color of the event. This is an ID referring to an entry in the event section of the colors definition (see the colors endpoint). Optional."
+        }
     }
 
 

@@ -1,0 +1,79 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "OrderTransaction",
+            "propertyDescriptors": [
+                {"@": "order"},
+                {"@": "amount"},
+                {"@": "paymentGateway"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/order-transaction.mjson"
+            },
+            "exportName": "OrderTransaction",
+            "module": {
+                "%": "data/main.datareel/model/order-transaction"
+            },
+            "object":{"@": "OrderTransaction"},
+            "parent":{"@": "Object"}
+        }
+    },
+    "OrderTransaction": {
+        "object": "data/main.datareel/model/order-transaction"
+    },
+    "Object": {
+        "object": "data/main.datareel/model/object.mjson"
+    },
+    "order": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "order",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "transactions",
+            "valueDescriptor": {"@": "order_descriptor"}
+        }
+    },
+    "order_descriptor": {
+        "object": "data/main.datareel/model/order.mjson"
+    },
+    "amount": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "amount",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "money_descriptor"}
+        }
+    },
+    "money_descriptor": {
+        "object": "data/main.datareel/model/money.mjson"
+    },
+    "paymentGateway": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "paymentGateway",
+            "valueType": "object",
+            "description": "WIP to be finished when we get to payment"
+        }
+    },
+    "kind": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "kind",
+            "cardinality": 1,
+            "valueType": "enum",
+            "enumValues": [
+                "Void",
+                "Capture",
+                "Change",
+                "EMVAuthorization",
+                "Refund",
+                "Sale",
+                "SuggestedRefund",
+                "Authorization"
+            ]
+        }
+    }
+}

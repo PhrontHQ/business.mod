@@ -1,0 +1,40 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "B2CCustomerSupplierRelationship",
+            "propertyDescriptors": [
+                {"@": "customer"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/b-2-c-customer-supplier-relationship.mjson"
+            },
+            "exportName": "B2CCustomerSupplierRelationship",
+            "module": {
+                "%": "data/main.datareel/model/b-2-c-customer-supplier-relationship"
+            },
+            "object":{"@": "b-2-c-customer-supplier-relationship"},
+            "parent":{"@": "customer-supplier-relationship"}
+        }
+    },
+    "b-2-c-customer-supplier-relationship": {
+        "object": "data/main.datareel/model/"b-2-c-customer-supplier-relationship"
+    },
+    "customer-supplier-relationship": {
+        "object": "data/main.datareel/model/customer-supplier-relationship.mjson"
+    },
+    "customer": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "customer",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "supplierRelationships",
+            "valueDescriptor": {"@": "person_descriptor"}
+        }
+    },
+    "person_descriptor": {
+        "object": "data/main.datareel/model/person.mjson"
+    }
+
+}

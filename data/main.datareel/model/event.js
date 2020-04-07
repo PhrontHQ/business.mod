@@ -195,7 +195,7 @@ exports.Event = Object.specialize(/** @lends Event.prototype */ {
     location: {
         value: undefined
     },
-    colorId: {
+    color: {
         value: undefined
     },
     creator: {
@@ -269,6 +269,12 @@ exports.Event = Object.specialize(/** @lends Event.prototype */ {
     },
     attachments: {
         value: undefined
+    },
+    task: {
+        value: {
+            task: "Task-Proto-task-property",
+            name: "Task-Proto-name-property"
+        }
     }
 
 });

@@ -14,7 +14,8 @@
                 {"@": "tags"},
                 {"@": "mainContact"},
                 {"@": "employeeRelationships"},
-                {"@": "customerRelationships"},
+                {"@": "b2cCustomerRelationships"},
+                {"@": "b2bCustomerRelationships"},
                 {"@": "supplierRelationships"},
                 {"@": "services"}
             ],
@@ -47,7 +48,8 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "name",
-            "valueType": "string"
+            "valueType": "string",
+            "isSearchable": true
         }
     },
     "type": {
@@ -77,7 +79,8 @@
             "name": "addresses",
             "valueType": "array",
             "cardinality": -1,
-            "valueDescriptor": {"@": "addresses_descriptor"}
+            "valueDescriptor": {"@": "addresses_descriptor"},
+            "isSearchable": true
        }
     },
 
@@ -141,20 +144,36 @@
         "object": "data/main.datareel/model/employment-relationship.mjson"
     },
 
-    "customerRelationships": {
+    "b2cCustomerRelationships": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "customerRelationships",
+            "name": "b2cCustomerRelationships",
             "valueType": "array",
             "cardinality": -1,
-            "valueDescriptor": {"@": "root"}
+            "valueDescriptor": {"@": "B2CCustomerSupplierRelationship"}
        }
+    },
+    "B2CCustomerSupplierRelationship": {
+        "object": "data/main.datareel/model/b-2-c-customer-supplier-relationship"
+    },
+
+    "b2bCustomerRelationships": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "b2bCustomerRelationships",
+            "valueType": "array",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "B2BCustomerSupplierRelationship"}
+       }
+    },
+    "B2BCustomerSupplierRelationship": {
+        "object": "data/main.datareel/model/b-2-b-customer-supplier-relationship"
     },
 
     "supplierRelationships": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "customerRelationships",
+            "name": "supplierRelationships",
             "valueType": "array",
             "cardinality": -1,
             "valueDescriptor": {"@": "root"}

@@ -6,10 +6,10 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
-                    "name": {"<->": "Name"},
-                    "quantity": {"<->": "Quantity"},
+                    "name": {"<->": "name"},
+                    "quantity": {"<->": "quantity"},
                     "product": {
-                                    "<->": "productId",
+                                    "<->": "product",
                                     "converter": {"@": "productForeignKeyConverter"}},
                     "totalCost": {"<->": "Total Cost ($)"}
 

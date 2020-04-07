@@ -6,7 +6,8 @@
             "propertyDescriptors": [
                 {"@": "name"},
                 {"@": "quantity"},
-                {"@": "productItem"},
+                {"@": "purchasedItem"},
+                {"@": "purchasedVariant"},
                 {"@": "price"},
                 {"@": "totalCost"},
                 {"@": "belongsToOrder"}
@@ -38,12 +39,20 @@
             "valueType": "number"
         }
     },
-    "productItem": {
+    "purchasedItem": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "productItem",
+            "name": "purchasedItem",
             "cardinality": 1,
-            "valueDescriptor": {"@": "product_descriptor"}
+            "valueType": "object"
+        }
+    },
+    "purchasedVariant": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "purchasedVariant",
+            "cardinality": 1,
+            "valueType": "object"
         }
     },
     "price": {

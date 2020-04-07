@@ -1,11 +1,11 @@
 var Object = require("./object").Object;
 /**
- * @class Party
+ * @class ServiceEngagement
  * @extends Object
  */
 
 
-exports.Party = Object.specialize(/** @lends Party.prototype */ {
+exports.ServiceEngagement = Object.specialize(/** @lends ServiceEngagement.prototype */ {
 
     existenceTimeRange: {
         value: undefined

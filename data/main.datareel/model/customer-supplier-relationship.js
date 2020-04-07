@@ -12,6 +12,9 @@ exports.CustomerSupplierRelationship = PartyPartyRelationship.specialize(/** @le
     },
     supplier: {
         value: undefined
+    },
+    orders: {
+        value: undefined
     }
 
 });

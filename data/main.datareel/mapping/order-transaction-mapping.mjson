@@ -1,0 +1,54 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "OrderTransaction"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "order": {
+                        "<->": "orderId",
+                        "converter": {"@": "orderConverter"}
+                    },
+                    "amount": {
+                        "<->": "amount",
+                        "converter": {"@": "amountConverter"}
+                    },
+                    "paymentGateway": {
+                        "<->": "paymentGatewayId",
+                        "converter": {"@": "paymentGatewayConverter"}
+                    }
+
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "firstName","lastName","email","phone","addresses"
+            ]
+        }
+    },
+
+    "OrderTransaction": {
+        "object": "data/main.datareel/model/order-transaction.mjson"
+    },
+    "orderConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "amountConverter": {
+        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
+        }
+    },
+    "paymentGatewayConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    }
+}

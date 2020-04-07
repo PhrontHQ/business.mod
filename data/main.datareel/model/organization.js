@@ -43,7 +43,10 @@ exports.Organization = Party.specialize(/** @lends Organization.prototype */ {
     employeeRelationships: {
         value: undefined
     },
-    customerRelationships: {
+    b2cCustomerRelationships: {
+        value: undefined
+    },
+    b2bCustomerRelationships: {
         value: undefined
     },
     supplierRelationships: {

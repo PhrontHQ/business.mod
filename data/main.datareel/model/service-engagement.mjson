@@ -1,0 +1,75 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ServiceEngagement",
+            "propertyDescriptors": [
+                {"@": "service"},
+                {"@": "serviceVariant"},
+                {"@": "scheduledEvent"},
+                {"@": "actualEvent"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/service-engagement".mjson"
+            },
+            "exportName": "ServiceEngagement",
+            "module": {
+                "%": "data/main.datareel/model/service-engagement""
+            },
+            "object":{"@": "ServiceEngagement"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "ServiceEngagement": {
+        "object": "data/main.datareel/model/service-engagement"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/object.mjson"
+    },
+    "service": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "service",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "serviceDescriptor"}
+        }
+    },
+    "serviceDescriptor": {
+        "object": "montage/core/service.mjson"
+    },
+    "serviceVariant": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "service",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "serviceVariantDescriptor"}
+        }
+    },
+    "serviceVariantDescriptor": {
+        "object": "montage/core/product-variant.mjson"
+    },
+    "scheduledEvent": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "scheduledEvent",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "eventDescriptor"}
+        }
+    },
+    "eventDescriptor": {
+        "object": "montage/core/event.mjson"
+    },
+    "actualEvent": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "actualEvent",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "eventDescriptor"}
+        }
+    }
+
+}

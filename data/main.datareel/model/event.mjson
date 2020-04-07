@@ -14,7 +14,7 @@
                 {"@": "summary"},
                 {"@": "description"},
                 {"@": "location"},
-                {"@": "colorId"},
+                {"@": "color"},
                 {"@": "creator"},
                 {"@": "organizer"},
                 {"@": "timeRange"},
@@ -140,10 +140,10 @@
             "valueType": "string"
         }
     },
-    "colorId": {
+    "color": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "colorId",
+            "name": "color",
             "valueType": "string",
             "description":"The color of the event. This is an ID referring to an entry in the event section of the colors definition (see the colors endpoint). Optional."
         }
