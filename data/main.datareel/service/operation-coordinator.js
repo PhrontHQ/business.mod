@@ -114,20 +114,22 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
 
                     if(lengthRemainder === 0 && sizeRemainder > 0) {
                         lengthRemainder = Math.floor(operationData.length*sizeRemainderRatio);
-                        integerLengthQuotient = operationData.length-lengthRemainder;
+                        integerLengthQuotient = integerLengthQuotient-Math.floor(lengthRemainder/integerSizeQuotient);
+                        //integerLengthQuotient = operationData.length-lengthRemainder;
                     }
 
                     iReadUpdateOperation = new DataOperation();
                     iReadUpdateOperation.type = DataOperation.Type.ReadUpdate;
                     iReadUpdateOperation.dataDescriptor = operation.dataDescriptor;
-                    iReadUpdateOperation.criteria = operation.dataDescriptor;
+                    iReadUpdateOperation.criteria = operation.criteria;
                     iReadUpdateOperation.referrerId = operation.referrerId;
 
                     for(;(i<countI);i++) {
-                        if((operation.type === DataOperation.Type.ReadCompleted) && i === (countI-1) && (lengthRemainder === 0)) {
+                        iReadUpdateOperation.data = operationData.splice(0,integerLengthQuotient);
+                        if((operation.type === DataOperation.Type.ReadCompleted) && i === (countI-1) && (operationData.length === 0)) {
                             iReadUpdateOperation.type = DataOperation.Type.ReadCompleted;
                         }
-                        iReadUpdateOperation.data = operationData.splice(0,integerLengthQuotient);
+
                         iPromise = iPromise.then(function() {
                             return connection.postToConnection({
                                 ConnectionId: clientId,
@@ -268,7 +270,8 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
 
                 },function(operationFailed) {
                     console.error("OperationCoordinator: resultOperationPromise failed ",operationFailed);
-                    return self._serializer.serializeObject(operationFailed);
+                    return self.dispatchOperationToConnectionClientId(operationFailed,gatewayClient,event.requestContext.connectionId);
+                    // return self._serializer.serializeObject(operationFailed);
                 });
             }
         }
