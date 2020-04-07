@@ -74,7 +74,11 @@
             "type": "node",
             "request": "launch",
             "name": "npm test",
-            "program": "${workspaceFolder}/test/run-node.js"
+            "program": "${workspaceFolder}/test/run-node.js",
+            "autoAttachChildProcesses": true,
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
         },
         {
             "type": "node",
