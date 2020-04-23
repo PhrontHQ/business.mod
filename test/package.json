@@ -17,9 +17,11 @@
   "scripts": {},
   "mappings": {
     "montage": "../node_modules/montage",
-    "montage-testing": "../node_modules/montage-testing",
+    "bluebird": "../node_modules/montage/node_modules/bluebird",
     "object-sizeof": "../node_modules/object-sizeof",
-    "phront": "../"
+    "phront": "../",
+    "tiny-worker": "../node_modules/tiny-worker"
   },
+  "manifest": true,
   "private": true
 }

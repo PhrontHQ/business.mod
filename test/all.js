@@ -1,9 +1,11 @@
-console.log('montage-testing', 'Start');
+console.log('Phront testing', 'Start');
 
-module.exports = require("montage-testing").run(require, [
+module.exports = require("montage/testing/run").run(require, [
     // TODO: Broken
     // "spec/phront-service",
-    "spec/cognito-identity-service-spec"
+    "spec/data-models/event-spec",
+    //"spec/data-models/service-spec"
+    //"spec/cognito-identity-service-spec"
 ]).then(function () {
     console.log('montage-testing', 'End');
 }, function (err) {
