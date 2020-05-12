@@ -24,6 +24,7 @@
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.27",
     "montage": "github:marchant/montage#montage-19",
+    "montage-geo": "github:montagejs/montage-geo.git#master",
     "object-sizeof": "^1.5.2",
     "serverless": "~1.53.0",
     "sqlstring": "^2.3.1",
