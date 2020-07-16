@@ -6,19 +6,46 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
-                    "existenceTimeRange": {"<->": "existenceTimeRange"}
-                }
+                    "existenceTimeRange": {
+                        "<->": "existenceTimeRange",
+                        "converter": {"@": "string-to-range-converter"}
+                    },
+                    "contactInformation": {
+                        "<->":"contactInformationId",
+                        "converter": {"@": "contactInformationConverter"}
+                    },
+                    "calendars": {
+                        "<->": "id",
+                        "converter": {"@": "calendarsConverter"}
+                    }
+               }
             },
             "rawDataMapping": {
                 "rules": {
                 }
             },
             "requisitePropertyNames": [
+                "existenceTimeRange", "contactInformation", "calendars"
             ]
         }
     },
-
     "PartyDescriptor": {
         "object": "data/main.datareel/model/party.mjson"
+    },
+    "string-to-range-converter": {
+        "prototype": "../converter/RFC3339UTC-range-string-to-range-converter"
+    },
+    "contactInformationConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "calendarsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "ownerId == $"
+        }
     }
+
 }

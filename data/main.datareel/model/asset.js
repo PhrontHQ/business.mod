@@ -52,6 +52,20 @@ The text content of the asset, such as the HTML and Liquid markup of a template 
 
 */
 
+/*
+
+For achieving point-in-time consistency for LOBs, you have to modify your application logic to store the version ID of the modified object in Amazon S3 along with the transaction in the relational database. This change in the application is minimal compared to the TCO savings and performance improvement of the overall application.
+
+https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/VirtualHosting.html#VirtualHostingCustomURLs
+    Example CNAME Method
+
+    To use this method, you must configure your DNS name as a CNAME alias for bucketname.s3.us-east-1.amazonaws.com. For more information, see Customizing Amazon S3 URLs with CNAMEs. This example uses the following:
+
+
+*/
+
 
 exports.Asset = Object.specialize(/** @lends Asset.prototype */ {
     constructor: {
@@ -60,15 +74,13 @@ exports.Asset = Object.specialize(/** @lends Asset.prototype */ {
             return this;
         }
     },
-
+    s3Id: {
+        value: undefined
+    },
     altText: {
         value: undefined
     },
     originalSrc: {
         value: undefined
-    },
-    transformedSrc: {
-        value: undefined
     }
-
 });

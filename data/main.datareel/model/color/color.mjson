@@ -1,0 +1,56 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Color",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "colorSpace"},
+                {"@": "channels"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/color/color.mjson"
+            },
+            "exportName": "Color",
+            "module": {
+                "%": "data/main.datareel/model/color/color"
+            },
+            "modulePrototype":{"@": "color"},
+            "object":{"@": "color"},
+            "parent":{"@": "ObjectDescriptor"}
+        }
+    },
+    "color": {
+        "object": "data/main.datareel/model/color/color"
+    },
+    "ObjectDescriptor": {
+        "object": "data/main.datareel/model/object.mjson"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "colorSpace": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "colorSpace",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "colorSpaceDescriptor"}
+        }
+    },
+    "colorSpaceDescriptor": {
+        "object": "data/main.datareel/model/color/color-space.mjson"
+    },
+    "channels": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "channels",
+            "valueType": "number",
+            "cardinality": 4
+        }
+    }
+
+}

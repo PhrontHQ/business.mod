@@ -1,0 +1,54 @@
+
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "EmailAddress",
+            "propertyDescriptors": [
+                {"@": "email"},
+                {"@": "userName"},
+                {"@": "domain"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/messaging-channel/email-address.mjson"
+            },
+            "exportName": "EmailAddress",
+            "module": {
+                "%": "data/main.datareel/model/messaging-channel/email-address"
+            },
+            "modulePrototype":{"@": "EmailAddress"},
+            "object":{"@": "EmailAddress"},
+            "parent":{"@": "MessagingChannelDescriptor"}
+        }
+    },
+    "EmailAddress": {
+        "object": "data/main.datareel/model/messaging-channel/email-address"
+    },
+    "MessagingChannelDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+    },
+    "email": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "email",
+            "valueType": "string"
+        }
+    },
+    "userName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "userName",
+            "valueType": "string",
+            "definition": "email.split('@').0"
+        }
+    },
+    "domain": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "domain",
+            "valueType": "string",
+            "definition": "email.split('@').1"
+        }
+    }
+
+}

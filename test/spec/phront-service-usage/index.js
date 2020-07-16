@@ -2,7 +2,7 @@
 
 var Montage = require('montage/montage');
 var PATH = require("path");
-global.XMLHttpRequest = require('xhr2');
+// global.XMLHttpRequest = require('xhr2');
 var OperationCoordinatorPromise;
 
 // //From Montage

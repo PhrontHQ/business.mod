@@ -1,0 +1,53 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Asset",
+            "propertyDescriptors": [
+                {"@": "s3Id"},
+                {"@": "altText"},
+                {"@": "originalSrc"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/asset.mjson"
+            },
+            "exportName": "Asset",
+            "module": {
+                "%": "data/main.datareel/model/asset"
+            },
+            "modulePrototype":{"@": "AssetPrototype"},
+            "object":{"@": "AssetPrototype"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "AssetPrototype": {
+        "object": "data/main.datareel/model/asset"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/object.mjson"
+    },
+    "s3Id": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "altText",
+            "isLocalizable": true,
+            "valueType": "string"
+        }
+    },
+    "altText": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "altText",
+            "isLocalizable": true,
+            "valueType": "string"
+        }
+    },
+    "originalSrc": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "originalSrc",
+            "valueType": "URL"
+        }
+    }
+
+}

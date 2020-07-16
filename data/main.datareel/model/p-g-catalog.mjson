@@ -1,0 +1,40 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PGCatalog",
+            "propertyDescriptors": [
+                {"@": "namespaceName"},
+                {"@": "oid"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/p-g-catalog.mjson"
+            },
+            "exportName": "PGCatalog",
+            "module": {
+                "%": "data/main.datareel/model/p-g-catalog"
+            },
+            "object":{"@": "PGCatalog"},
+            "modulePrototype": {"@": "PGClass"}
+
+        }
+    },
+    "PGClass": {
+        "object": "data/main.datareel/model/p-g-catalog"
+    },
+    "namespaceName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "namespaceName",
+            "valueType": "string"
+        }
+    },
+    "oid": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "oid",
+            "valueType": "number"
+        }
+    }
+
+}

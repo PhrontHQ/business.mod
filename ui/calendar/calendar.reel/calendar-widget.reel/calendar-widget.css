@@ -1,1 +1,339 @@
-.CalendarWidget{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;min-height:0;position:relative;border-spacing:0;font-weight:200}.CalendarWidget>header{margin-bottom:1em}.CalendarWidget caption{padding:1em 0;text-align:left}.CalendarWidget-date{font-size:1.5em;-ms-flex:1;flex:1}.CalendarWidget-substitution{-ms-flex:1;flex:1;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column}.Calendar-navigation button{font-size:.8em;height:2.5em;background-color:#222b35}.CalendarWidget-todayButton.Button{margin-right:8px;margin-right:.5rem}.Calendar-navigation{-ms-flex:1;flex:1;display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;margin-bottom:1em}.Calendar-navigation-buttons{display:-ms-flexbox;display:flex;margin-right:1em}.CalendarWidget-previousMonthButton svg{transform:rotate(180deg)}.CalendarWidget thead td{background-color:#13181d;font-weight:200;text-align:center}.CalendarWidget-taskCategories{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center}.Calendar-view-substitution,.CalendarWidget-view{-ms-flex:1;flex:1;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;min-height:0}.Calendar-view-month{-ms-flex:1;flex:1}.CalendarWidget-view-header{display:-ms-flexbox;display:flex;-ms-flex-negative:0;flex-shrink:0;-ms-flex-align:end;align-items:flex-end;border:1px solid transparent;position:relative}.CalendarWidget-view-timezone{-ms-flex:1;flex:1;text-align:center;font-size:12px;font-size:.75rem}.CalendarWidget-view-days{display:-ms-flexbox;display:flex;-ms-flex:1;flex:1;background-color:#13181d}.CalendarWidget-view-day{-ms-flex:1;flex:1;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;min-height:0}.CalendarWidget-view-day-title{-ms-flex:1;flex:1;-ms-flex-item-align:center;-ms-grid-row-align:center;align-self:center;font-size:12.8px;font-size:.8rem;padding:8px 4px;padding:.5rem .25rem;color:#e0e5e5}.CalendarWidget-allDayEvents{position:relative;padding:.15em .25em;padding-bottom:1em;background-color:#384049}.CalendarWidget-view-main{-ms-flex:1;flex:1;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;min-height:0;border:1px solid #16171a;background-color:#1d252d;height:22.5em}.CalendarWidget-view-main .Scrollview-transform{-ms-flex:none;flex:none}@media (min-height:70em){.CalendarWidget-view-main{height:40em}}.CalendarWidget-view-content{display:-ms-flexbox;display:flex;position:relative}.CalendarWidget-view-hours{-ms-flex:1;flex:1;position:relative;background-color:#222b35}.CalendarWidget-view-hours:before{content:"";position:absolute;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(#16171a 1px,transparent 0);background-size:3rem 3rem;background-position:-1px -1px}.CalendarWidget-view-hour{text-align:right;font-size:12.8px;font-size:.8rem;padding:4px 8px;padding:.25rem .5rem;position:relative;line-height:1.5em;height:48px;height:3rem;border-right:1px solid #16171a}.CalendarWidget-view-dayColumns{-ms-flex:1;flex:1;display:-ms-flexbox;display:flex;position:relative}.CalendarWidget-view-dayColumns:before{content:"";position:absolute;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(#16171a 1px,transparent 0),linear-gradient(rgba(22,23,26,.3) 1px,transparent 0);background-size:3rem 3rem,3rem 3rem;background-position:-1px -1px,-1px calc(3rem / 2 - 1px)}.CalendarWidget-view-dayColumn{position:relative;-ms-flex:1;flex:1;-ms-flex-direction:column;flex-direction:column}.CalendarWidget-view-dayColumn:not(:last-child){border-right:1px solid #16171a}.CalendarWidget-view-column--axis{-ms-flex:1;flex:1;max-width:48px;max-width:3rem}.CalendarWidget-view-header .CalendarWidget-view-column--axis{display:-ms-flexbox;display:flex}.CalendarWidget-event{width:100%;display:none;position:absolute;-ms-flex-align:center;align-items:center;cursor:pointer;transform:translateY(2px);border:1px solid transparent}.CalendarWidget-event.is-displayed,.CalendarWidget-event.is-visible{display:block}.CalendarWidget-event.event-is-overlayed{border-color:#1d252d;right:0;width:auto}.CalendarWidget-allDayEvents .CalendarWidget-event{position:relative}.MonthView .CalendarWidget-event{position:relative;width:auto}.CalendarWidget-event-inner{overflow:hidden;border-radius:2px;font-size:12px;font-size:.75rem;padding:0 1.6px;padding:0 .1rem;color:#fff}.CalendarWidget-event-inner span{white-space:nowrap;text-overflow:ellipsis;overflow:hidden;display:block}.CalendarWidget-event.type-rsync_copy .CalendarWidget-event-inner{background-color:#bf360c}.CalendarWidget-event.type-volume_scrub .CalendarWidget-event-inner{background-color:#880e4f}.CalendarWidget-event.type-replication_sync .CalendarWidget-event-inner{background-color:#7b1fa2}.CalendarWidget-event.type-disk_parallel_test .CalendarWidget-event-inner{background-color:#311b92}.CalendarWidget-event.type-update_checkfetch .CalendarWidget-event-inner{background-color:#00695c}.CalendarWidget-event.type-volume_snapshot_dataset .CalendarWidget-event-inner{background-color:#f57f17}.CalendarWidget-event.type-calendar_task_command .CalendarWidget-event-inner{background-color:#33691e}.CalendarWidget-event.is-selected .CalendarWidget-event-inner{color:#fff;background-color:#0c5688}
+.CalendarWidget {
+    --hourHeight:3rem;
+
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-height: 0;
+    position: relative;
+    border-spacing: 0;
+    font-weight: 200;
+}
+
+.CalendarWidget>header {
+    margin-bottom: 1em
+}
+
+.CalendarWidget caption {
+    padding: 1em 0;
+    text-align: left
+}
+
+.CalendarWidget-date {
+    font-size: 1.5em;
+    -ms-flex: 1;
+    flex: 1
+}
+
+.CalendarWidget-substitution {
+    -ms-flex: 1;
+    flex: 1;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column
+}
+
+.Calendar-navigation button {
+    font-size: .8em;
+    height: 2.5em;
+    background-color: #222b35
+}
+
+.CalendarWidget-todayButton.Button {
+    margin-right: 8px;
+    margin-right: .5rem
+}
+
+.Calendar-navigation {
+    -ms-flex: 1;
+    flex: 1;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    margin-bottom: 1em
+}
+
+.Calendar-navigation-buttons {
+    display: -ms-flexbox;
+    display: flex;
+    margin-right: 1em
+}
+
+.CalendarWidget-previousMonthButton svg {
+    transform: rotate(180deg)
+}
+
+.CalendarWidget thead td {
+    background-color: #13181d;
+    font-weight: 200;
+    text-align: center
+}
+
+.CalendarWidget-taskCategories {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center
+}
+
+.Calendar-view-substitution,
+.CalendarWidget-view {
+    -ms-flex: 1;
+    flex: 1;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-height: 0
+}
+
+.Calendar-view-month {
+    -ms-flex: 1;
+    flex: 1
+}
+
+.CalendarWidget-view-header {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -ms-flex-align: end;
+    align-items: flex-end;
+    border: 1px solid transparent;
+    position: relative
+}
+
+.CalendarWidget-view-timezone {
+    -ms-flex: 1;
+    flex: 1;
+    text-align: center;
+    font-size: 12px;
+    font-size: .75rem
+}
+
+.CalendarWidget-view-days {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex: 1;
+    flex: 1;
+    background-color: #13181d
+}
+
+.CalendarWidget-view-day {
+    -ms-flex: 1;
+    flex: 1;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-height: 0
+}
+
+.CalendarWidget-view-day-title {
+    -ms-flex: 1;
+    flex: 1;
+    -ms-flex-item-align: center;
+    -ms-grid-row-align: center;
+    align-self: center;
+    font-size: 12.8px;
+    font-size: .8rem;
+    padding: 8px 4px;
+    padding: .5rem .25rem;
+    color: #e0e5e5
+}
+
+.CalendarWidget-allDayEvents {
+    position: relative;
+    padding: .15em .25em;
+    padding-bottom: 1em;
+    background-color: #384049
+}
+
+.CalendarWidget-view-main {
+    -ms-flex: 1;
+    flex: 1;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-height: 0;
+    border: 1px solid #16171a;
+    background-color: #1d252d;
+    height: 22.5em
+}
+
+.CalendarWidget-view-main .Scrollview-transform {
+    -ms-flex: none;
+    flex: none
+}
+
+@media (min-height:70em) {
+    .CalendarWidget-view-main {
+        height: 40em
+    }
+}
+
+.CalendarWidget-view-content {
+    display: -ms-flexbox;
+    display: flex;
+    position: relative
+}
+
+.CalendarWidget-view-hours {
+    -ms-flex: 1;
+    flex: 1;
+    position: relative;
+    background-color: #222b35
+}
+
+.CalendarWidget-view-hours:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: linear-gradient(#16171a 1px, transparent 0);
+    background-size: var(--hourHeight) var(--hourHeight);
+    background-position: -1px -1px
+}
+
+.CalendarWidget-view-hour {
+    text-align: right;
+    font-size: 12.8px;
+    font-size: .8rem;
+    padding: 4px 8px;
+    padding: .25rem .5rem;
+    position: relative;
+    line-height: 1.5em;
+    height: 48px;
+    height: var(--hourHeight);
+    border-right: 1px solid #16171a
+}
+
+.CalendarWidget-view-dayColumns {
+    -ms-flex: 1;
+    flex: 1;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative
+}
+
+.CalendarWidget-view-dayColumns:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: linear-gradient(#16171a 1px, transparent 0), linear-gradient(rgba(22, 23, 26, .3) 1px, transparent 0);
+    background-size: var(--hourHeight) var(--hourHeight), var(--hourHeight) var(--hourHeight);
+    background-position: -1px -1px, -1px calc(var(--hourHeight) / 2 - 1px);
+}
+
+.CalendarWidget-view-dayColumn {
+    position: relative;
+    -ms-flex: 1;
+    flex: 1;
+    -ms-flex-direction: column;
+    flex-direction: column
+}
+
+.CalendarWidget-view-dayColumn:not(:last-child) {
+    border-right: 1px solid #16171a
+}
+
+.CalendarWidget-view-column--axis {
+    -ms-flex: 1;
+    flex: 1;
+    max-width: calc(var(--hourHeight));
+}
+
+.CalendarWidget-view-header .CalendarWidget-view-column--axis {
+    display: -ms-flexbox;
+    display: flex
+}
+
+.CalendarWidget-event {
+    width: 100%;
+    display: none;
+    position: absolute;
+    -ms-flex-align: center;
+    align-items: center;
+    cursor: pointer;
+    transform: translateY(2px);
+    border: 1px solid transparent
+}
+
+.CalendarWidget-event.is-displayed,
+.CalendarWidget-event.is-visible {
+    display: block
+}
+
+.CalendarWidget-event.event-is-overlayed {
+    border-color: #1d252d;
+    right: 0;
+    width: auto
+}
+
+.CalendarWidget-allDayEvents .CalendarWidget-event {
+    position: relative
+}
+
+.MonthView .CalendarWidget-event {
+    position: relative;
+    width: auto
+}
+
+.CalendarWidget-event-inner {
+    overflow: hidden;
+    border-radius: 2px;
+    font-size: 12px;
+    font-size: .75rem;
+    padding: 0 1.6px;
+    padding: 0 .1rem;
+    color: #fff
+}
+
+.CalendarWidget-event-inner span {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block
+}
+
+.CalendarWidget-event.type-rsync_copy .CalendarWidget-event-inner {
+    background-color: #bf360c
+}
+
+.CalendarWidget-event.type-volume_scrub .CalendarWidget-event-inner {
+    background-color: #880e4f
+}
+
+.CalendarWidget-event.type-replication_sync .CalendarWidget-event-inner {
+    background-color: #7b1fa2
+}
+
+.CalendarWidget-event.type-disk_parallel_test .CalendarWidget-event-inner {
+    background-color: #311b92
+}
+
+.CalendarWidget-event.type-update_checkfetch .CalendarWidget-event-inner {
+    background-color: #00695c
+}
+
+.CalendarWidget-event.type-volume_snapshot_dataset .CalendarWidget-event-inner {
+    background-color: #f57f17
+}
+
+.CalendarWidget-event.type-calendar_task_command .CalendarWidget-event-inner {
+    background-color: #33691e
+}
+
+.CalendarWidget-event.is-selected .CalendarWidget-event-inner {
+    color: #fff;
+    background-color: #0c5688
+}

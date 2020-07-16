@@ -214,7 +214,7 @@
         "object": "data/main.datareel/model/product-variant.mjson"
     },
     "address_descriptor": {
-        "object": "data/main.datareel/model/address.mjson"
+        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
     },
     "productOptionDescriptor": {
         "object": "data/main.datareel/model/product-option.mjson"

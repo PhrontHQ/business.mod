@@ -4,10 +4,14 @@
         "values": {
             "name": "EventAttendee",
             "propertyDescriptors": [
+                {"@": "scheduledTimeRange"},
+                {"@": "actualTimeRange"},
+                {"@": "role"},
+                {"@": "calendar"},
                 {"@": "isOrganizer"},
                 {"@": "isResource"},
                 {"@": "isOptional"},
-                {"@": "responseStatus"},
+                {"@": "participationStatus"},
                 {"@": "comment"},
                 {"@": "additionalGuestCount"}
             ],
@@ -27,8 +31,53 @@
         "object": "data/main.datareel/model/event-attendee"
     },
     "EventPerson": {
-        "object": "data/main.datareel/model/event-person"
+        "object": "data/main.datareel/model/event-person.mjson"
     },
+    "scheduledTimeRange": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "scheduledTimeRange",
+            "valueType": "range",
+            "collectionValueType": "date",
+            "isSearchable": true
+        }
+    },
+     "actualTimeRange": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "actualTimeRange",
+            "valueType": "range",
+            "collectionValueType": "date",
+            "isSearchable": true
+        }
+    },
+
+    "role": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "role",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "role-descriptor"}
+        }
+    },
+    "role-descriptor": {
+        "object": "data/main.datareel/model/role.mjson"
+    },
+    "calendar": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "calendar",
+            "valueType": "object",
+            "cardinality": 1,
+            "isSearchable": true,
+            "valueDescriptor": {"@": "calendar-descriptor"}
+        }
+    },
+    "calendar-descriptor": {
+        "object": "data/main.datareel/model/calendar.mjson"
+    },
+
     "isOrganizer": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -50,10 +99,10 @@
             "valueType": "boolean"
         }
     },
-    "responseStatus": {
+    "participationStatus": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "responseStatus",
+            "name": "participationStatus",
             "valueType": "string"
         }
     },

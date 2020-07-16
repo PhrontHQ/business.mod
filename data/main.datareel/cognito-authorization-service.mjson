@@ -1,0 +1,12 @@
+{
+    "root": {
+        "prototype": "./service/cognito-authorization-service",
+        "values": {
+            "name": "CognitoIdentityService",
+            "userPoolId": "us-west-2_jBAg8wI35",
+            "types": [
+                {"@": "user-dentity"}
+            ]
+        }
+    }
+}

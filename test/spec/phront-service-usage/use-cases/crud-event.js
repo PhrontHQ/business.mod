@@ -51,7 +51,7 @@ exports.crudEvent = function() {
 
         calendar = mainService.createDataObject(Calendar);
         calendar.summary = "this is a test calendar for Dr No.";
-        calendar.description = "this is the descriptiono of a test calendar for Dr No.";
+        calendar.description = "this is the description of a test calendar for Dr No.";
         calendar.location = "San Jose";
         calendar.timeZone = "America/Los_Angeles";
 

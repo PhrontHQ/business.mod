@@ -1,0 +1,89 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="service.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "values": {
+                "element": {"#": "service"},
+                "imageElement": {"#": "image"},
+                "backgroundImageElement": {"#": "backgroundImage"},
+                "image": {"<-": "data.images.0.originalSrc"},
+                "descriptionElement": {"#": "description"},
+                "description": {"<-": "data.descriptionHtml"}
+            }
+        },
+        "main": {
+            "prototype": "ui/section.reel",
+            "values": {
+                "element": {"#": "main"}
+            }
+        },
+        "vendor": {
+            "prototype": "montage/ui/text.reel",
+            "values": {
+                "element": {"#": "vendor"},
+                "value": {"<-": "@owner.data.vendors.0.name"}
+            }
+        },
+        "distance": {
+            "prototype": "montage/ui/text.reel",
+            "values": {
+                "element": {"#": "distance"},
+                "value": "1,4 km"
+            }
+        },
+        "title": {
+            "prototype": "montage/ui/text.reel",
+            "values": {
+                "element": {"#": "title"},
+                "value": {"<-": "@owner.data.title"}
+            }
+        },
+        "variantsSection": {
+            "prototype": "ui/section.reel",
+            "values": {
+                "element": {"#": "variantsSection"},
+                "title": {"<-": "@owner.data.variants.length > 1 ? 'Variantes' : null"}
+            }
+        },
+        "variants": {
+            "prototype": "ui/variants.reel",
+            "values": {
+                "element": {"#": "variants"},
+                "variants": {"<-": "@owner.data.variants"}
+            }
+        },
+        "mapSection": {
+            "prototype": "ui/section.reel",
+            "values": {
+                "element": {"#": "mapSection"},
+                "title": "Emplacements"
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="service" class="Service">
+        <div class="wrapper">
+            <div data-montage-id="image" class="Service-image"></div>
+            <div data-montage-id="backgroundImage" class="Service-backgroundImage"></div>
+            <div class="Service-content">
+                <div data-montage-id="main">
+                    <div class="Service-location">
+                        <span data-montage-id="vendor" class="Service-vendor"></span>
+                        <span data-montage-id="distance" class="Service-distance"></span>
+                    </div>
+                    <div data-montage-id="title" class="Service-title"></div>
+                    <div data-montage-id="description" class="Service-description"></div>
+                </div>
+                <div data-montage-id="variantsSection">
+                    <div data-montage-id="variants"></div>
+                </div>
+                <div data-montage-id="mapSection">
+                    <div class="Service-map"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

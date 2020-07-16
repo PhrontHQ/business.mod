@@ -27,7 +27,7 @@
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "id",
+            "name": "name",
             "valueType": "string"
         }
     },

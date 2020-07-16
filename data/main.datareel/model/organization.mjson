@@ -13,7 +13,7 @@
                 {"@": "suborganizations"},
                 {"@": "tags"},
                 {"@": "mainContact"},
-                {"@": "employeeRelationships"},
+                {"@": "employmentPositions"},
                 {"@": "b2cCustomerRelationships"},
                 {"@": "b2bCustomerRelationships"},
                 {"@": "supplierRelationships"},
@@ -105,7 +105,7 @@
     },
 
     "addresses_descriptor": {
-        "object": "data/main.datareel/model/address.mjson"
+        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
     },
 
 
@@ -131,19 +131,27 @@
         "object": "data/main.datareel/model/person.mjson"
     },
 
-    "employeeRelationships": {
+    "employmentPositions": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "employeeRelationships",
+            "name": "employmentPositions",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "employmentRelationshipDescriptor"}
+            "valueDescriptor": {"@": "employmentPositionDescriptor"}
        }
     },
-    "employmentRelationshipDescriptor": {
-        "object": "data/main.datareel/model/employment-relationship.mjson"
+    "employmentPositionDescriptor": {
+        "object": "data/main.datareel/model/employment-position.mjson"
     },
-
+    "employees": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "employees",
+            "valueType": "object",
+            "cardinality": -1,
+            "definition": "employmentPositions.map{staffingHistory.employee}"
+       }
+    },
     "b2cCustomerRelationships": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {

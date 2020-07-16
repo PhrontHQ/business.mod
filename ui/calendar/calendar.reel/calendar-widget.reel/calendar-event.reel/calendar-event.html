@@ -20,15 +20,15 @@
                 "element": {"#": "name"}
             },
             "bindings": {
-                "value": {"<-": "@owner.object.task.name"}
+                "value": {"<-": "@owner.object[@owner.titleExpression]"}
             }
         }
     }
     </script>
 </head>
 <body>
-    <div data-montage-id="owner" class="CalendarEvent CalendarWidget-event">
-        <div class="CalendarWidget-event-inner">
+    <div data-montage-id="owner" class="CalendarEvent CalendarWidget-event is-displayed">
+        <div class="CalendarWidget-event-inner is-displayed">
             <div data-montage-id="name"></div>
         </div>
     </div>

@@ -1,0 +1,36 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "ResourceDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "calendars": {
+                        "<->": "id",
+                        "converter": {"@": "calendarsConverter"}
+                    },
+                    "name": {"<->": "name"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "name"
+            ]
+        }
+    },
+
+    "ResourceDescriptor": {
+        "object": "data/main.datareel/model/resource.mjson"
+    },
+
+    "calendarsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "resourceId == $"
+        }
+    }
+}

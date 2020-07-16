@@ -1,0 +1,30 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ColorSpace",
+            "propertyDescriptors": [
+                {"@": "name"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/color/color-space.mjson"
+            },
+            "exportName": "ColorSpace",
+            "module": {
+                "%": "data/main.datareel/model/color/color-space"
+            },
+            "object":{"@": "color-space"}
+        }
+    },
+    "color-space": {
+        "object": "data/main.datareel/model/color/color-space"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    }
+
+}

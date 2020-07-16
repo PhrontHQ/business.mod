@@ -4,7 +4,9 @@
         "values": {
             "name": "Party",
             "propertyDescriptors": [
-                {"@": "existenceTimeRange"}
+                {"@": "existenceTimeRange"},
+                {"@": "contactInformation"},
+                {"@": "calendars"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/party.mjson"
@@ -27,12 +29,36 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "existenceTimeRange",
-            "valueType": "object",
+            "valueType": "date",
             "cardinality": 1,
-            "valueDescriptor": {"@": "range_descriptor"}       
+            "valueDescriptor": {"@": "range_descriptor"}
         }
     },
     "range_descriptor": {
         "object": "montage/core/range.mjson"
+    },
+    "contactInformation": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "contactInformation",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "contactInformationDescriptor"}
+        }
+    },
+    "contactInformationDescriptor": {
+        "object": "data/main.datareel/model/contact-information.mjson"
+    },
+    "calendars": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "calendars",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "owner",
+            "valueDescriptor": {"@": "calendar_descriptor"}
+        }
+    },
+    "calendar_descriptor": {
+        "object": "data/main.datareel/model/calendar.mjson"
     }
 }

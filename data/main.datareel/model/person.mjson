@@ -4,17 +4,18 @@
         "values": {
             "name": "Person",
             "propertyDescriptors": [
-                {"@": "firstName"},
+                {"@": "name"},
+                {"@": "images"},
+                {"@": "tags"},
+                {"@": "userIdentities"},
+                {"@": "employmentHistory"},
+                {"@": "services"},
+                 {"@": "firstName"},
                 {"@": "lastName"},
                 {"@": "email"},
                 {"@": "phone"},
-                {"@": "images"},
-                {"@": "addresses"},
-                {"@": "tags"},
-                {"@": "userIdentities"},
-                {"@": "employerRelationships"},
-                {"@": "services"}
-            ],
+                {"@": "addresses"}
+           ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/person.mjson"
             },
@@ -43,6 +44,17 @@
     },
     "PartyDescriptor": {
         "object": "data/main.datareel/model/party.mjson"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "name_descriptor"}
+        }
+    },
+    "name_descriptor": {
+        "object": "data/main.datareel/model/person-name.mjson"
     },
     "firstName": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -93,7 +105,7 @@
        }
     },
     "addresses_descriptor": {
-        "object": "data/main.datareel/model/address.mjson"
+        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
     },
     "tags": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -109,23 +121,25 @@
             "name": "userIdentities",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "userIdentity_descriptor"}
+            "valueDescriptor": {"@": "userIdentity_descriptor"},
+            "inversePropertyName": "person"
        }
     },
     "userIdentity_descriptor": {
         "object": "data/main.datareel/model/user-identity.mjson"
     },
-    "employerRelationships": {
+    "employmentHistory": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "employerRelationships",
+            "name": "employmentHistory",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "employmentRelationshipDescriptor"}
+            "valueDescriptor": {"@": "employmentPositionStaffingDescriptor"},
+            "inversePropertyName": "employee"
        }
     },
-    "employmentRelationshipDescriptor": {
-        "object": "data/main.datareel/model/employment-relationship.mjson"
+    "employmentPositionStaffingDescriptor": {
+        "object": "data/main.datareel/model/employment-position-staffing.mjson"
     },
 
     "services": {

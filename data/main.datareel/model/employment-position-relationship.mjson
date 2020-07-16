@@ -1,0 +1,75 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "EmploymentPositionRelationship",
+            "propertyDescriptors": [
+                {"@": "firstEmploymentPosition"},
+                {"@": "firstEmploymentPositionRole"},
+                {"@": "secondEmploymentPosition"},
+                {"@": "secondEmploymentPositionRole"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/employment-position-relationship.mjson"
+            },
+            "exportName": "EmploymentPositionRelationship",
+            "module": {
+                "%": "data/main.datareel/model/party-party-relationship"
+            },
+            "object":{"@": "employment-position-relationship"},
+            "parent":{"@": "party-party-relationship"}
+        }
+    },
+    "employment-position-relationship": {
+        "object": "data/main.datareel/model/employment-position-relationship"
+    },
+    "party-party-relationship": {
+        "object": "data/main.datareel/model/party-party-relationship.mjson"
+    },
+    "firstEmploymentPosition": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "firstEmploymentPosition",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "employment_position_descriptor"}
+        }
+    },
+    "employment_position_descriptor": {
+        "object": "data/main.datareel/model/employment-position.mjson"
+    },
+    "firstEmploymentPositionRole": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "firstEmploymentPositionRole",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "role_descriptor"},
+            "definition": "firstEmploymentPosition.position.role"
+        }
+    },
+    "role_descriptor": {
+        "object": "data/main.datareel/model/role.mjson"
+    },
+    "secondEmploymentPosition": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "secondEmploymentPosition",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "employerRelationships",
+            "valueDescriptor": {"@": "employment_position_descriptor"}
+        }
+    },
+    "secondEmploymentPositionRole": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "secondEmploymentPositionRole",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "role_descriptor"},
+            "definition": "secondEmploymentPosition.position.role"
+       }
+    }
+
+}

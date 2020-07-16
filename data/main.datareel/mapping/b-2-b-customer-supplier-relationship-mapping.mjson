@@ -1,0 +1,35 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "B2BCustomerSupplierRelationshipDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "customer": {
+                        "<->":"customerId",
+                        "converter": {"@": "customerConverter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "customer"
+            ]
+        }
+    },
+
+    "B2BCustomerSupplierRelationshipDescriptor": {
+        "object": "data/main.datareel/model/b-2-b-customer-supplier-relationship.mjson"
+    },
+    "customerConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    }
+
+}

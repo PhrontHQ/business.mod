@@ -1,0 +1,57 @@
+
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "InstantMessageAddress",
+            "propertyDescriptors": [
+                {"@": "serviceName"},
+                {"@": "userName"},
+                {"@": "provider"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/messaging-channel/instant-message-address.mjson"
+            },
+            "exportName": "InstantMessageAddress",
+            "module": {
+                "%": "data/main.datareel/model/messaging-channel/instant-message-address"
+            },
+            "modulePrototype":{"@": "InstantMessageAddress"},
+            "object":{"@": "InstantMessageAddress"},
+            "parent":{"@": "MessagingChannelDescriptor"}
+        }
+    },
+    "InstantMessageAddress": {
+        "object": "data/main.datareel/model/messaging-channel/instant-message-address"
+    },
+    "MessagingChannelDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+    },
+    "serviceName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "serviceName",
+            "valueType": "string"
+        }
+    },
+    "userName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "userName",
+            "valueType": "string"
+        }
+    },
+    "provider": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "provider",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "OrganizationDescriptor"}
+        }
+    },
+    "OrganizationDescriptor": {
+        "object": "data/main.datareel/model/organization.mjson"
+    }
+
+}

@@ -1,4 +1,4 @@
-var aTestStr = 
+var aTestStr =
 `{
     "root": {
         "prototype": "montage/core/meta/module-object-descriptor",
@@ -20,18 +20,18 @@ var aTestStr =
                 {"@": "longitude"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/address.mjson"
+                "%": "data/main.datareel/model/messaging-channel/postal-address.mjson"
             },
             "exportName": "Address",
             "module": {
-                "%": "data/main.datareel/model/address"
+                "%": "data/main.datareel/model/messaging-channel/postal-address"
             },
             "object":{"@": "address"},
             "parent":{"@": "objectDescriptor"}
         }
     },
     "address": {
-        "object": "data/main.datareel/model/address"
+        "object": "data/main.datareel/model/messaging-channel/postal-address"
     },
     "objectDescriptor": {
         "object": "data/main.datareel/model/object.mjson"
@@ -127,10 +127,10 @@ var aTestStr =
             "valueType": "number"
         }
     }
-    
+
 }`;
 
-/* 
+/*
     would using a Proxy help during reviving for future objects like {"@": "name"} ?
 */
 

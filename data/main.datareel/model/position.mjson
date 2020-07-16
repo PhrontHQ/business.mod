@@ -1,0 +1,57 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Position",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "role"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/position.mjson"
+            },
+            "exportName": "Position",
+            "module": {
+                "%": "data/main.datareel/model/position"
+            },
+            "object":{"@": "position"},
+            "parent":{"@": "PartyDescriptor"},
+            "userInterfaceDescriptorModules": {
+                "*": {
+                    "%": "./position-ui-descriptor.mjson"
+                }
+            }
+
+        }
+    },
+    "position": {
+        "object": "data/main.datareel/model/position"
+    },
+
+    "PartyDescriptor": {
+        "object": "data/main.datareel/model/party.mjson"
+    },
+
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true
+        }
+    },
+    "role": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "role",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "role_descriptor"}
+        }
+    },
+    "role_descriptor": {
+        "object": "data/main.datareel/model/role.mjson"
+    }
+
+}

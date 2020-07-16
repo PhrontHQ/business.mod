@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="service.css">
+    <!--
+        Removed from inspector:
+
+        "validationController": {"@": "validationController"},
+    -->
+    <script type="text/montage-serialization">
+        {
+            "owner": {
+                "values": {
+                    "element": {"#": "owner"}
+                }
+            },
+
+            "inspector": {
+                "prototype": "ui/inspectors/inspector.reel",
+                "properties": {
+                    "element": {"#": "inspector"},
+                    "controller": {"@": "owner"},
+                    "extraDeleteMessage": "I am sure that I wish to delete this user and its home directory and/or group"
+                },
+                "bindings": {
+                    "context": {"<-": "@owner.context"},
+                    "canDelete": {"<-": "@owner.canUserDelete"},
+                    "canRevert": {"<-": "@owner.canUserEdit"},
+                    "canSave": {"<-": "@owner.canUserEdit"},
+                    "extraDeleteFlags": {"<-": "@owner.extraDeleteFlags"},
+                    "isFooterHidden": {"<-": "!@owner.canUserEdit"}
+                }
+            },
+        
+            "title": {
+                "prototype": "ui/controls/field-text-input.reel",
+                "values": {
+                    "element": {"#": "title"},
+                    "label": "Title",
+                    "placeholder": "enter Service's title",
+                    "value": {"<->": "@owner.data.title"},
+                    "readonly": {"<-": "!@owner.canUserEdit"}
+                }
+            },
+
+            "description": {
+                "prototype": "ui/controls/field-text-area.reel",
+                "values": {
+                    "element": {"#": "description"},
+                    "label": "Description",
+                    "placeholder": "enter Service's description",
+                    "value": {"<->": "@owner.data.description"},
+                    "readonly": {"<-": "!@owner.canUserEdit"}
+                }
+            },
+
+            "duration": {
+                "prototype": "montage/ui/text.reel",
+                "values": {
+                    "element": {"#": "duration"},
+                    "value": {"<-": "@owner.data.duration"}
+                }
+            }
+
+        }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="ServiceInspector">
+        <div data-montage-id="inspector">
+            <div data-montage-id="title"></div>
+            <div data-montage-id="description"></div>
+            <div data-montage-id="duration"></div>
+        </div>
+    </div>
+</body>
+</html>

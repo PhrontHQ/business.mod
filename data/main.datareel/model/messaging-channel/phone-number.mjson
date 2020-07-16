@@ -1,0 +1,52 @@
+
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PhoneNumber",
+            "propertyDescriptors": [
+                {"@": "countryCode"},
+                {"@": "nationalNumber"},
+                {"@": "extension"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/messaging-channel/phone-number.mjson"
+            },
+            "exportName": "PhoneNumber",
+            "module": {
+                "%": "data/main.datareel/model/messaging-channel/phone-number"
+            },
+            "modulePrototype":{"@": "phone-number"},
+            "object":{"@": "phone-number"},
+            "parent":{"@": "MessagingChannelDescriptor"}
+        }
+    },
+    "phone-number": {
+        "object": "data/main.datareel/model/messaging-channel/phone-number"
+    },
+    "MessagingChannelDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+    },
+    "countryCode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "countryCode",
+            "valueType": "string"
+        }
+    },
+    "nationalNumber": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "nationalNumber",
+            "valueType": "string"
+        }
+    },
+    "extension": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "extension",
+            "valueType": "string"
+        }
+    }
+
+}

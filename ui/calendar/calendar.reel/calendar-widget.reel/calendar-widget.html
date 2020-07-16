@@ -105,7 +105,9 @@
                 "taskCategories": {"<-": "@owner.taskCategories.filter{checked}"},
                 "selectedTask": {"<->":"@owner.selectedTask"},
                 "selectedDay": {"<->":"@owner.selectedDay"},
-                "firstDayOfWeek": {"<-": "@owner.object._firstDayOfWeek"}
+                "firstDayOfWeek": {"<-": "@owner.object._firstDayOfWeek"},
+                "timeRange": {"<->":"@owner.timeRange"},
+                "data": {"<->":"@owner.data"}
             }
         },
         "weekView": {
@@ -120,7 +122,9 @@
                 "selectedTask": {"<->":"@owner.selectedTask"},
                 "selectedDay": {"<->":"@owner.selectedDay"},
                 "gmtOffset": {"<-": "@owner.object._gmtOffset"},
-                "firstDayOfWeek": {"<-": "@owner.object._firstDayOfWeek"}
+                "firstDayOfWeek": {"<-": "@owner.object._firstDayOfWeek"},
+                "timeRange": {"<->":"@owner.timeRange"},
+                "data": {"<->":"@owner.data"}
             }
         },
         "dayView": {
@@ -134,7 +138,9 @@
                 "taskCategories": {"<-": "@owner.taskCategories.filter{checked}"},
                 "selectedTask": {"<->":"@owner.selectedTask"},
                 "selectedDay": {"<->":"@owner.selectedDay"},
-                "gmtOffset": {"<-": "@owner.object._gmtOffset"}
+                "gmtOffset": {"<-": "@owner.object._gmtOffset"},
+                "timeRange": {"<->":"@owner.timeRange"},
+                "data": {"<->":"@owner.data"}
             }
         },
         "taskFilter": {

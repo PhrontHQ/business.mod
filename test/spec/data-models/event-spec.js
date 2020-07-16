@@ -5,12 +5,15 @@ DataQuery = require("montage/data/model/data-query").DataQuery,
 Range = require("montage/core/range").Range,
 Event = require("phront/data/main.datareel/model/event").Event,
 Calendar = require("phront/data/main.datareel/model/calendar").Calendar,
-EventPerson = require("phront/data/main.datareel/model/event-person").EventPerson,
 EventAttendee = require("phront/data/main.datareel/model/event-attendee").EventAttendee,
 EventConferenceData = require("phront/data/main.datareel/model/event-conference-data").EventConferenceData,
 Person = require("phront/data/main.datareel/model/person").Person,
 EventSystemDescriptors = [Event,Calendar],
 phrontServiceConnectionPromise = require("../phront-service-connection").promise;
+
+//Test for loading .js witrh export / mport with require.
+// var LocalizedString = require("phront/data/main.datareel/model/localized-string").LocalizedString;
+
 
 
 describe("Events", function () {
@@ -70,7 +73,7 @@ describe("Events", function () {
                 return mainService.saveChanges();
 
             }, function(error) {
-                if(error.message.indexOf('"phront.Calendar" does not exist') !== -1) {
+                if((error.message.indexOf('"phront.Calendar" does not exist') !== -1) || (error.message.indexOf('"phront.Event" does not exist') !== -1)) {
                     //We need to find a way expose the creation of a object descriptor's storage
                     //to the main data service.
                     var phrontClientService = mainService.childServices[0];
@@ -115,7 +118,7 @@ describe("Events", function () {
                     now = Date.now(),
                     year = today.getFullYear(),
                     month = today.getMonth(),
-                    day = today.getDay(),
+                    day = today.getDate(),
                     dayInMilliseconds = 24*60*60*1000,
                     hourInMilliseconds = 60*60*1000,
                     _40MinutesInMilliseconds = 60*60*1000,
@@ -140,8 +143,11 @@ describe("Events", function () {
                         /*
                             new Date(year, monthIndex [, day [, hours [, minutes [, seconds [, milliseconds]]]]])
                         */
-                        eventBegin = startUTCMilliseconds + i*dayInMilliseconds + j*hourInMilliseconds;
-                        eventEnd = eventBegin + _40MinutesInMilliseconds;
+                        // eventBegin = startUTCMilliseconds + i*dayInMilliseconds + j*hourInMilliseconds;
+                        // eventEnd = eventBegin + _40MinutesInMilliseconds;
+                        eventBegin = new Date(year, month, day+i, 8+j, 0, 0, 0);
+                        //Random duration of max 59mn
+                        eventEnd = new Date(year, month, day+i, 8+j, Math.floor(Math.random() * Math.floor(59)), 59, 999);
                         event.timeRange = new Range(new Date(eventBegin), new Date(eventEnd));
 
                         attendeeOne = new EventAttendee();

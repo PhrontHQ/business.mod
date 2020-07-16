@@ -30,8 +30,12 @@
         "values": {
             "name": "customer",
             "valueType": "object",
+            "valueDescriptor": {"@": "party_descriptor"},
             "cardinality": 1
         }
+    },
+    "party_descriptor": {
+        "object": "data/main.datareel/model/party.mjson"
     },
     "organization_descriptor": {
         "object": "data/main.datareel/model/organization.mjson"

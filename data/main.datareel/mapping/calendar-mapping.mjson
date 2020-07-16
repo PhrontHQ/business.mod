@@ -3,26 +3,40 @@
         "prototype": "montage/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "CalendarDescriptor"},
+            "rawDataTypeName": "Calendar",
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
-                    "kind": {"<->": "kind"},
                     "etag": {"<->": "etag"},
-                    "summary": {"<->": "summary"},
+                    "name": {"<->": "name"},
                     "description": {"<->": "description"},
                     "location": {"<->": "location"},
                     "timeZone": {"<->": "timeZone"},
                     "conferenceProperties": {"<->": "conferenceProperties"},
-                    "events": {"<->": "id",
-                                    "converter": {"@": "eventsConverter"}}
+                    "events": {
+                        "<->": "id",
+                        "converter": {"@": "eventsConverter"}
+                    },
+                    "owner": {
+                        "<->": "{personId: personId, organizationId: organizationId, employmentPositionStaffingId: employmentPositionStaffingId, resourceId: resourceId}",
+                        "converter": {"@": "ownerConverter"}
+                    },
+                    "color": {
+                        "<->": "colorId",
+                        "converter": {"@": "color-converter"}
+                    }
                 }
             },
             "rawDataMapping": {
                 "rules": {
-                }
+                    "personId": {"<-": "owner.objectDescriptor == @PersonDescriptor ? owner.primaryKey : null"},
+                    "organizationId": {"<-": "owner.objectDescriptor == @OrganizationDescriptor ? owner.primaryKey : null"},
+                    "employmentPositionStaffingId": {"<-": "owner.objectDescriptor == @EmploymentPositionStaffingDescriptor ? owner.primaryKey : null"},
+                    "resourceId": {"<-": "owner.objectDescriptor == @ResourceDescriptor ? owner.primaryKey : null"}
+               }
             },
             "requisitePropertyNames": [
-                "kind","summary","description","location","timeZone", "conferenceProperties"
+                "owner", "name", "description", "location", "timeZone", "conferenceProperties"
             ]
         }
     },
@@ -32,8 +46,54 @@
             "convertExpression": "calendarId == $"
         }
     },
-
+    "color-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "ownerPersonForeignKeyMapping": {
+        "prototype": "montage/data/service/raw-data-type-mapping",
+        "properties": {
+            "type": {"@": "PersonDescriptor"},
+            "expression": "personId.defined()"
+        }
+    },
+    "ownerOrganizationForeignKeyMapping": {
+        "prototype": "montage/data/service/raw-data-type-mapping",
+        "properties": {
+            "type": {"@": "OrganizationDescriptor"},
+            "expression": "organizationId.defined()"
+        }
+    },
+    "ownerEmploymentPositionStaffingForeignKeyMapping": {
+        "prototype": "montage/data/service/raw-data-type-mapping",
+        "properties": {
+            "type": {"@": "EmploymentPositionStaffingDescriptor"},
+            "expression": "employmentPositionStaffingId.defined()"
+        }
+    },
+    "ownerConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $",
+            "foreignDescriptorMappings": [{"@": "ownerPersonForeignKeyMapping"},{"@": "ownerOrganizationForeignKeyMapping"},{"@": "ownerEmploymentPositionStaffingForeignKeyMapping"}]
+        }
+    },
     "CalendarDescriptor": {
         "object": "data/main.datareel/model/calendar.mjson"
+    },
+    "PersonDescriptor": {
+        "object": "data/main.datareel/model/person.mjson"
+    },
+    "OrganizationDescriptor": {
+        "object": "data/main.datareel/model/organization.mjson"
+    },
+    "EmploymentPositionStaffingDescriptor": {
+        "object": "data/main.datareel/model/employment-position-staffing.mjson"
+    },
+    "ResourceDescriptor": {
+        "object": "data/main.datareel/model/resource.mjson"
     }
+
 }

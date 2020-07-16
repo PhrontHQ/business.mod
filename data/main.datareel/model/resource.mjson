@@ -1,0 +1,43 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Resource",
+            "propertyDescriptors": [
+                {"@": "name"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/resource.mjson"
+            },
+            "exportName": "Resource",
+            "module": {
+                "%": "data/main.datareel/model/resource"
+            },
+            "object":{"@": "resource"},
+            "parent":{"@": "PartyDescriptor"},
+            "userInterfaceDescriptorModules": {
+                "*": {
+                    "%": "./position-ui-descriptor.mjson"
+                }
+            }
+
+        }
+    },
+    "resource": {
+        "object": "data/main.datareel/model/resource"
+    },
+
+    "PartyDescriptor": {
+        "object": "data/main.datareel/model/party.mjson"
+    },
+
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "isSearchable": true
+        }
+    }
+
+}

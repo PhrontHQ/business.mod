@@ -18,7 +18,7 @@
         }
     },
     "employment-type": {
-        "object": "data/main.datareel/model/employment-relationship"
+        "object": "data/main.datareel/model/employment-type"
     },
     "object_descriptor": {
         "object": "data/main.datareel/model/object.mjson"
@@ -28,7 +28,8 @@
         "values": {
             "name": "name",
             "valueType": "string",
-            "cardinality": 1       
+            "isLocalizable": true,
+            "cardinality": 1
         }
     }
 }

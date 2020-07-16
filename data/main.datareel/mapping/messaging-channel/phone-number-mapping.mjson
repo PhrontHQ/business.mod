@@ -1,0 +1,26 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "PhoneNumber"},
+            "objectMapping": {
+                "rules": {
+                    "countryCode": {"<->": "countryCode"},
+                    "nationalNumber": {"<->": "nationalNumber"},
+                    "extension": {"<->": "extension"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "countryCode","nationalNumber","extension"
+            ]
+        }
+    },
+
+    "PhoneNumber": {
+        "object": "data/main.datareel/model/messaging-channel/phone-number.mjson"
+    }
+}

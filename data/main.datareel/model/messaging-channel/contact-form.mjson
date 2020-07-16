@@ -1,0 +1,44 @@
+
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ContactForm",
+            "propertyDescriptors": [
+                {"@": "url"},
+                {"@": "formData"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/messaging-channel/contact-form.mjson"
+            },
+            "exportName": "ContactForm",
+            "module": {
+                "%": "data/main.datareel/model/messaging-channel/contact-form"
+            },
+            "modulePrototype":{"@": "ContactForm"},
+            "object":{"@": "ContactForm"},
+            "parent":{"@": "MessagingChannelDescriptor"}
+        }
+    },
+    "ContactForm": {
+        "object": "data/main.datareel/model/messaging-channel/contact-form"
+    },
+    "MessagingChannelDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+    },
+    "url": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "url",
+            "valueType": "URL"
+        }
+    },
+    "formData": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "formData",
+            "valueType": "FormData"
+        }
+    }
+
+}

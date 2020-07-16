@@ -10,6 +10,16 @@
                 "element": {"#": "owner"}
             }
         },
+        "inspector": {
+            "prototype": "ui/inspectors/inspector.reel",
+            "properties": {
+                "element": {"#": "inspector"},
+                "isFooterHidden": true
+            },
+            "bindings": {
+                "context": {"<-": "@owner.context"}
+            }
+        },
         "calendarWidget": {
             "prototype": "./calendar-widget.reel",
             "properties": {
@@ -20,7 +30,9 @@
                 "taskCategories": {"<-": "@owner.taskCategories"},
                 "selectedPeriod": {"<->": "@owner.selectedPeriod"},
                 "selectedTask": {"<->": "@owner.selectedObject"},
-                "selectedDay": {"<->": "@owner.selectedDay"}
+                "selectedDay": {"<->": "@owner.selectedDay"},
+                "timeRange": {"<->":"@owner.timeRange"},
+                "data": {"<->":"@owner.data"}
             }
         },
         "list": {
@@ -42,16 +54,6 @@
             },
             "bindings": {
                 "value": {"<-": "'GMT' + @owner.object._gmtOffset"}
-            }
-        },
-        "inspector": {
-            "prototype": "ui/inspectors/inspector.reel",
-            "properties": {
-                "element": {"#": "inspector"},
-                "isFooterHidden": true
-            },
-            "bindings": {
-                "context": {"<-": "@owner.context"}
             }
         }
     }

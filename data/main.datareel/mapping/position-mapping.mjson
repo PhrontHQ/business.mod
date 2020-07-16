@@ -1,0 +1,37 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "PositionDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "name": {
+                        "<->": "name"
+                    },
+                    "role": {
+                        "<->":"roleId",
+                        "converter": {"@": "roleConverter"}
+                    }
+               }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "existenceTimeRange", "contactInformation", "calendars"
+            ]
+        }
+    },
+    "PositionDescriptor": {
+        "object": "data/main.datareel/model/position.mjson"
+    },
+    "roleConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    }
+
+}

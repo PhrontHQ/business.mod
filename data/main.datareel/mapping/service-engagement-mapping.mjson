@@ -1,0 +1,41 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "ServiceEngagementObjectDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "service": {"<->": "serviceId"},
+                    "serviceVariant": {
+                        "<->": "serviceVariantId",
+                        "converter": {"@": "toOneConverter"}
+                    },
+                    "event": {
+                        "<->": "eventId",
+                        "converter": {"@": "toOneConverter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "service","serviceVariant","event"
+            ]
+        }
+    },
+
+    "ServiceEngagementObjectDescriptor": {
+        "object": "data/main.datareel/model/service-engagement.mjson"
+    },
+
+    "toOneConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    }
+
+}

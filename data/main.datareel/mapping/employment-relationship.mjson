@@ -1,0 +1,69 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "EmploymentRelationshipDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "employmentType": {"<->":"employmentTypeId",
+                                    "converter": {"@": "employmentTypeConverter"}},
+                    "employer": {"<->":"employerId",
+                                    "converter": {"@": "employerConverter"}},
+                    "employee": {"<->":"employeeId",
+                                    "converter": {"@": "employeeConverter"}},
+                    "role": {"<->":"roleId",
+                                    "converter": {"@": "roleConverter"}}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "name","type","email","phone","addresses","tags","mainContact"
+            ]
+        }
+    },
+
+    "EmploymentRelationshipDescriptor": {
+        "object": "data/main.datareel/model/employment-relationship.mjson"
+    },
+    "addressesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }
+    },
+    "suborganizationsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }
+    },
+    "employmentTypeConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "employerConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "employeeConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "roleConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    }
+
+}

@@ -4,7 +4,6 @@
         "values": {
             "name": "PartyPartyRelationship",
             "propertyDescriptors": [
-                {"@": "relationshipExistenceTimeRange"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/party-party-relationship.mjson"
@@ -14,23 +13,14 @@
                 "%": "data/main.datareel/model/party-party-relationship"
             },
             "object":{"@": "party-party-relationship"},
-            "parent":{"@": "objectDescriptor"}
+            "parent":{"@": "PartyDescriptor"}
         }
     },
     "party-party-relationship": {
         "object": "data/main.datareel/model/party-party-relationship"
     },
-    "objectDescriptor": {
-        "object": "data/main.datareel/model/object.mjson"
-    },
-    "relationshipExistenceTimeRange": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "relationshipExistenceTimeRange",
-            "valueType": "object",
-            "cardinality": 1,
-            "valueDescriptor": {"@": "range_descriptor"}       
-        }
+    "PartyDescriptor": {
+        "object": "data/main.datareel/model/party.mjson"
     },
     "range_descriptor": {
         "object": "montage/core/range.mjson"

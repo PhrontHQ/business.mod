@@ -6,6 +6,14 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
+                    "calendars": {
+                        "<->": "id",
+                        "converter": {"@": "calendarsConverter"}
+                    },
+                    "name": {
+                        "<->": "name",
+                        "converter": {"@": "name-converter"}
+                    },
                     "firstName": {"<->": "firstName"},
                     "lastName": {"<->": "lastName"},
                     "email": {"<->": "email"},
@@ -28,6 +36,16 @@
     "PersonDescriptor": {
         "object": "data/main.datareel/model/person.mjson"
     },
+    "calendarsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "personId == $"
+        }
+    },
+    "name-converter": {
+        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter"
+    },
+
     "addressesConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {

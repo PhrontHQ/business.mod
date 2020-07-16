@@ -17,7 +17,7 @@
             },
             "exportName": "EventConferenceData",
             "module": {
-                "%": "data/main.datareel/model/event-timestamp"
+                "%": "data/main.datareel/model/event-conference-data"
             },
             "modulePrototype": {"@": "EventConferenceData"},
             "object": {"@": "EventConferenceData"}

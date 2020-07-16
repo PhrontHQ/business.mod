@@ -1,0 +1,68 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "MessagingChannel",
+            "propertyDescriptors": [
+                {"@": "label"},
+                {"@": "preferredForParties"},
+                {"@": "description"},
+                {"@": "tags"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+            },
+            "exportName": "MessagingChannel",
+            "module": {
+                "%": "data/main.datareel/model/messaging-channel/messaging-channel"
+            },
+            "modulePrototype":{"@": "MessagingChannel"},
+            "object":{"@": "MessagingChannel"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "MessagingChannel": {
+        "object": "data/main.datareel/model/messaging-channel/messaging-channel"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/object.mjson"
+    },
+    "label": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "label",
+            "isLocalizable": true,
+            "valueType": "string"
+       }
+    },
+    "preferredForParties": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "preferredForParties",
+            "valueType": "array",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "PartyDescriptor"},
+            "isSearchable": true
+        }
+    },
+    "PartyDescriptor": {
+        "object": "data/main.datareel/model/party.mjson"
+    },
+    "description": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "description",
+            "isLocalizable": true,
+            "valueType": "string"
+        }
+    },
+    "tags": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "tags",
+            "isLocalizable": true,
+            "cardinality": -1,
+            "valueType": "string"
+        }
+    }
+}

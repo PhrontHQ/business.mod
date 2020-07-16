@@ -1,0 +1,45 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "LocalizedString",
+            "propertyDescriptors": [
+                {"@": "locale"},
+                {"@": "localization"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/localized-string.mjson"
+            },
+            "exportName": "LocalizedString",
+            "module": {
+                "%": "data/main.datareel/model/localized-string"
+            },
+            "modulePrototype":{"@": "LocalizedStringPrototype"},
+            "object":{"@": "LocalizedStringPrototype"}
+        }
+    },
+    "LocalizedStringPrototype": {
+        "object": "data/main.datareel/model/localized-string"
+    },
+    "locale": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "locale",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "locale_descriptor"}
+        }
+    },
+    "locale_descriptor": {
+        "object": "montage/core/locale.mjson"
+    },
+
+    "localization": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "localization",
+            "valueType": "object"
+        }
+    }
+
+}

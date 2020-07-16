@@ -10,7 +10,7 @@
                 "element": {"#": "owner"}
             },
             "bindings": {
-                "classList.has('is-today')": {"<-": "@owner.data.isToday"}
+                "classList.has('is-today')": {"<-": "@owner.data.0.isToday"}
             }
         },
         "dayEvents": {
@@ -19,7 +19,7 @@
                 "element": {"#": "dayEvents"}
             },
             "bindings": {
-                "content": {"<-": "@owner.data.events.filter{hour != '*' && minute != '*' && second != '*'}"}
+                "content": {"<-": "@owner.data"}
             }
         },
         "event": {

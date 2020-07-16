@@ -1,0 +1,33 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="section.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "values": {
+                "element": {"#": "section"}
+            }
+        },
+        "title": {
+            "prototype": "montage/ui/text.reel",
+            "values": {
+                "element": {"#": "title"},
+                "value": {"<-": "@owner.title"}
+            }
+        },
+        "description": {
+            "prototype": "montage/ui/text.reel",
+            "values": {
+                "element": {"#": "description"},
+                "value": {"<-": "@owner.description"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="section" class="Section">
+        <div data-montage-id="title" class="Section-title"></div>
+        <div data-montage-id="description" class="Section-description"></div>
+        <div data-param="*"></div>
+    </div>
+</body>

@@ -1,0 +1,24 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "InstantMessageAddressDescriptor"},
+            "objectMapping": {
+                "rules": {
+                    "email": {"<->": "email"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "email"
+            ]
+        }
+    },
+
+    "InstantMessageAddressDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/instant-message-address.mjson"
+    }
+}

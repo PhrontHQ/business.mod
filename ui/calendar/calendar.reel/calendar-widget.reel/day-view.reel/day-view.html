@@ -39,9 +39,10 @@
                 "element": {"#": "dayHeader"}
             },
             "bindings": {
-                "data": {"<-": "@owner.displayedDay"},
+                "data": {"<-": "@owner.data.filter{!isAllDay}"},
                 "taskCategories": {"<-": "@owner.taskCategories"},
-                "selectedTask": {"<->": "@owner.selectedTask"}
+                "selectedTask": {"<->": "@owner.selectedTask"},
+                "timeRange": {"<->":"@owner.timeRange"}
             }
         },
         "dayColumn": {
@@ -50,9 +51,10 @@
                 "element": {"#": "dayColumn"}
             },
             "bindings": {
-                "data": {"<-": "@owner.displayedDay"},
+                "data": {"<-": "@owner.data"},
                 "taskCategories": {"<-": "@owner.taskCategories"},
-                "selectedTask": {"<->": "@owner.selectedTask"}
+                "selectedTask": {"<->": "@owner.selectedTask"},
+                "timeRange": {"<->":"@owner.timeRange"}
             }
         },
         "GMT": {

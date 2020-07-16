@@ -10,38 +10,80 @@
                 {"@": "productVariantMapping"},
                 {"@": "productMapping"},
                 {"@": "serviceMapping"},
+                {"@": "serviceEngagementMapping"},
+                {"@": "messagingChannelMapping"},
+                {"@": "PhoneNumberMapping"},
+                {"@": "InstantMessageAddressMapping"},
+                {"@": "EmailAddressMapping"},
                 {"@": "productVariantPricePairMapping"},
                 {"@": "moneyMapping"},
                 {"@": "partyMapping"},
                 {"@": "organizationMapping"},
-                {"@": "addressMapping"},
+                {"@": "postalAddressMapping"},
                 {"@": "imageMapping"},
                 {"@": "calendarMapping"},
                 {"@": "eventMapping"},
+                {"@": "role-mapping"},
                 {"@": "eventPersonMapping"},
                 {"@": "eventAttendeeMapping"},
-                {"@": "personMapping"}
+                {"@": "personMapping"},
+                {"@": "orderMapping"},
+                {"@": "orderLineItemMapping"},
+                {"@": "orderTransactionMapping"},
+                {"@": "contactInformationMapping"},
+                {"@": "positionMapping"},
+                {"@": "EmploymentPositionMapping"},
+                {"@": "EmploymentTypeMapping"},
+                {"@": "EmploymentPositionRelationshipMapping"},
+                {"@": "EmploymentPositionStaffingMapping"},
+                {"@": "CustomerSupplierRelationshipMapping"},
+                {"@": "B2CCustomerSupplierRelationshipMapping"},
+                {"@": "B2BCustomerSupplierRelationshipMapping"}
             ],
             "types": [
                 {"@": "object"},
+                {"@": "LocalizedString"},
                 {"@": "collection"},
                 {"@": "product"},
                 {"@": "service"},
+                {"@": "serviceEngagement"},
+                {"@": "messagingChannel"},
+                {"@": "PhoneNumber"},
+                {"@": "InstantMessageAddress"},
+                {"@": "EmailAddress"},
                 {"@": "productVariant"},
                 {"@": "productVariantPricePair"},
                 {"@": "money"},
                 {"@": "party"},
+                {"@": "partyPartyRelationship"},
                 {"@": "organization"},
-                {"@": "address"},
+                {"@": "postalAddress"},
                 {"@": "image"},
                 {"@": "person"},
                 {"@": "calendar"},
                 {"@": "event"},
+                {"@": "role"},
                 {"@": "conference-entry-point"},
                 {"@": "event-attendee"},
                 {"@": "event-conference-data"},
-                {"@": "event-person"}
+                {"@": "event-person"},
+                {"@": "order"},
+                {"@": "orderLineItem"},
+                {"@": "orderTransaction"},
+                {"@": "contactInformation"},
+                {"@": "position"},
+                {"@": "EmploymentPosition"},
+                {"@": "EmploymentType"},
+                {"@": "EmploymentPositionRelationship"},
+                {"@": "EmploymentPositionStaffing"},
+                {"@": "CustomerSupplierRelationship"},
+                {"@": "B2CCustomerSupplierRelationship"},
+                {"@": "B2BCustomerSupplierRelationship"}
+
+            ],
+            "rawDataTypeMappings": [
             ]
+
         }
     },
 
@@ -51,6 +93,10 @@
 
     "objectMapping": {
         "object": "data/main.datareel/mapping/object-mapping.mjson"
+    },
+
+    "LocalizedString": {
+        "object": "data/main.datareel/model/localized-string.mjson"
     },
 
     "collection": {
@@ -75,6 +121,46 @@
 
     "serviceMapping": {
         "object": "data/main.datareel/mapping/service-mapping.mjson"
+    },
+
+    "serviceEngagement": {
+        "object": "data/main.datareel/model/service-engagement.mjson"
+    },
+
+    "serviceEngagementMapping": {
+        "object": "data/main.datareel/mapping/service-engagement-mapping.mjson"
+    },
+
+    "messagingChannel": {
+        "object": "data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+    },
+
+    "messagingChannelMapping": {
+        "object": "data/main.datareel/mapping/messaging-channel/messaging-channel-mapping.mjson"
+    },
+
+    "PhoneNumber": {
+        "object": "data/main.datareel/model/messaging-channel/phone-number.mjson"
+    },
+
+    "PhoneNumberMapping": {
+        "object": "data/main.datareel/mapping/messaging-channel/phone-number-mapping.mjson"
+    },
+
+    "InstantMessageAddress": {
+        "object": "data/main.datareel/model/messaging-channel/instant-message-address.mjson"
+    },
+
+    "InstantMessageAddressMapping": {
+        "object": "data/main.datareel/mapping/messaging-channel/instant-message-address-mapping.mjson"
+    },
+
+    "EmailAddress": {
+        "object": "data/main.datareel/model/messaging-channel/email-address.mjson"
+    },
+
+    "EmailAddressMapping": {
+        "object": "data/main.datareel/mapping/messaging-channel/email-address-mapping.mjson"
     },
 
     "productVariant": {
@@ -109,6 +195,10 @@
         "object": "data/main.datareel/mapping/party-mapping.mjson"
     },
 
+    "partyPartyRelationship": {
+        "object": "data/main.datareel/model/party-party-relationship.mjson"
+    },
+
     "organization": {
         "object": "data/main.datareel/model/organization.mjson"
     },
@@ -117,12 +207,12 @@
         "object": "data/main.datareel/mapping/organization-mapping.mjson"
     },
 
-    "address": {
-        "object": "data/main.datareel/model/address.mjson"
+    "postalAddress": {
+        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
     },
 
-    "addressMapping": {
-        "object": "data/main.datareel/mapping/address-mapping.mjson"
+    "postalAddressMapping": {
+        "object": "data/main.datareel/mapping/messaging-channel/postal-address-mapping.mjson"
     },
 
     "image": {
@@ -157,6 +247,14 @@
         "object": "data/main.datareel/mapping/event-mapping.mjson"
     },
 
+    "role": {
+        "object": "data/main.datareel/model/role.mjson"
+    },
+
+    "role-mapping": {
+        "object": "data/main.datareel/mapping/role-mapping.mjson"
+    },
+
     "conference-entry-point": {
         "object": "data/main.datareel/model/conference-entry-point.mjson"
     },
@@ -179,7 +277,100 @@
 
     "eventPersonMapping": {
         "object": "data/main.datareel/mapping/event-person-mapping.mjson"
+    },
+
+    "order": {
+        "object": "data/main.datareel/model/order.mjson"
+    },
+
+    "orderMapping": {
+        "object": "data/main.datareel/mapping/order-mapping.mjson"
+    },
+
+    "orderLineItem": {
+        "object": "data/main.datareel/model/order-line-item.mjson"
+    },
+
+    "orderLineItemMapping": {
+        "object": "data/main.datareel/mapping/order-line-item-mapping.mjson"
+    },
+
+    "orderTransaction": {
+        "object": "data/main.datareel/model/order-transaction.mjson"
+    },
+
+    "orderTransactionMapping": {
+        "object": "data/main.datareel/mapping/order-transaction-mapping.mjson"
+    },
+
+    "contactInformation": {
+        "object": "data/main.datareel/model/contact-information.mjson"
+    },
+
+    "contactInformationMapping": {
+        "object": "data/main.datareel/mapping/contact-information-mapping.mjson"
+    },
+
+    "position": {
+        "object": "data/main.datareel/model/position.mjson"
+    },
+
+    "positionMapping": {
+        "object": "data/main.datareel/mapping/position-mapping.mjson"
+    },
+
+    "EmploymentPosition": {
+        "object": "data/main.datareel/model/employment-position.mjson"
+    },
+
+    "EmploymentPositionMapping": {
+        "object": "data/main.datareel/mapping/employment-position-mapping.mjson"
+    },
+
+    "EmploymentType": {
+        "object": "data/main.datareel/model/employment-type.mjson"
+    },
+
+    "EmploymentTypeMapping": {
+        "object": "data/main.datareel/mapping/employment-type-mapping.mjson"
+    },
+
+    "EmploymentPositionRelationship": {
+        "object": "data/main.datareel/model/employment-position-relationship.mjson"
+    },
+
+    "EmploymentPositionRelationshipMapping": {
+        "object": "data/main.datareel/mapping/employment-position-relationship-mapping.mjson"
+    },
+
+    "EmploymentPositionStaffing": {
+        "object": "data/main.datareel/model/employment-position-staffing.mjson"
+    },
+
+    "EmploymentPositionStaffingMapping": {
+        "object": "data/main.datareel/mapping/employment-position-staffing-mapping.mjson"
+    },
+
+    "CustomerSupplierRelationship": {
+        "object": "data/main.datareel/model/customer-supplier-relationship.mjson"
+    },
+    "CustomerSupplierRelationshipMapping": {
+        "object": "data/main.datareel/mapping/customer-supplier-relationship-mapping.mjson"
+    },
+
+    "B2CCustomerSupplierRelationship": {
+        "object": "data/main.datareel/model/b-2-c-customer-supplier-relationship.mjson"
+    },
+
+    "B2CCustomerSupplierRelationshipMapping": {
+        "object": "data/main.datareel/mapping/b-2-c-customer-supplier-relationship-mapping.mjson"
+    },
+
+    "B2BCustomerSupplierRelationship": {
+        "object": "data/main.datareel/model/b-2-b-customer-supplier-relationship.mjson"
+    },
+
+    "B2BCustomerSupplierRelationshipMapping": {
+        "object": "data/main.datareel/mapping/b-2-b-customer-supplier-relationship-mapping.mjson"
     }
-
-
 }

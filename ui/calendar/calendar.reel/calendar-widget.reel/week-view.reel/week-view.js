@@ -1,5 +1,6 @@
 var Component = require("montage/ui/component").Component,
     Promise = require("montage/core/promise").Promise,
+    Range = require("montage/core/range").Range,
     MONTHS = [
         "January",
         "February",
@@ -70,9 +71,24 @@ exports.WeekView = Component.specialize({
     gotoToday: {
         value: function() {
             var currentPeriod = new Date(),
-                dayOfWeek = (currentPeriod.getDay() + 7 - (this.firstDayOfWeek || 0)) % 7;
+                //The getDay() method returns the day of the week for the specified date according to local time, where 0 represents Sunday.
+                currentPeriodDayOfWeek = currentPeriod.getDay(),
+                //The getDate() method returns the day of the month for the specified date according to local time.
+                currentPeriodDayOfMonth = currentPeriod.getDate(),
+                dayOfWeek = (currentPeriodDayOfWeek + 7 - (this.firstDayOfWeek || 0)) % 7,
+                //dayToLastOfWeek = 7 - (currentPeriodDayOfWeek+ (this.firstDayOfWeek || 0)) % 7,
+                dayToLastOfWeek = ((7 - (this.firstDayOfWeek || 0)) - currentPeriodDayOfWeek - 1) % 7;
 
-            currentPeriod.setDate(currentPeriod.getDate() - dayOfWeek);
+            currentPeriod.setDate(currentPeriodDayOfMonth - dayOfWeek);
+            currentPeriod.setHours(0,0,0,0);
+
+            /*
+                //Set timeRange:
+                var lastDateOfWeek = new Date(currentPeriod.getFullYear(), currentPeriod.getMonth(), currentPeriodDayOfMonth+dayToLastOfWeek);
+                lastDateOfWeek.setHours(23,59,59,999);
+                this.timeRange = new Range(currentPeriod,lastDateOfWeek);
+            */
+
             this._currentPeriod = currentPeriod;
             this._updateCalendar();
         }
@@ -93,7 +109,16 @@ exports.WeekView = Component.specialize({
                 date = this._currentPeriod.getDate(),
                 today = new Date(),
                 dayDate,
-                days = [];
+                days = [],
+                currentPeriodDayOfWeek = this._currentPeriod.getDay(),
+                currentPeriodDayOfMonth = this._currentPeriod.getDate(),
+                dayToLastOfWeek = ((7 - (this.firstDayOfWeek || 0)) - currentPeriodDayOfWeek - 1) % 7;
+
+                //Set timeRange:
+                var lastDateOfWeek = new Date(this._currentPeriod.getFullYear(), this._currentPeriod.getMonth(), currentPeriodDayOfMonth+dayToLastOfWeek);
+                lastDateOfWeek.setHours(23,59,59,999);
+                this.timeRange = new Range(this._currentPeriod,lastDateOfWeek);
+
             for (var i = 0; i < 7; i++) {
                 dayDate = new Date(year, month, date + i);
                 days.push({
@@ -109,13 +134,13 @@ exports.WeekView = Component.specialize({
                     rawDate: dayDate
                 });
             }
-            Promise.each(days, function(day) {
-                console.error("Needs Mock tasks");
-                return Promise.resolve([]);
-                // return self.application.sectionService.getTasksScheduleOnDay(day).then(function(tasks) {
-                //     day.events = tasks;
-                // });
-            });
+            // Promise.each(days, function(day) {
+            //     console.error("Needs Mock tasks");
+            //     return Promise.resolve([]);
+            //     // return self.application.sectionService.getTasksScheduleOnDay(day).then(function(tasks) {
+            //     //     day.events = tasks;
+            //     // });
+            // });
             this.days = days;
             this.displayedPeriodLabel = this._getDisplayedLabel();
         }

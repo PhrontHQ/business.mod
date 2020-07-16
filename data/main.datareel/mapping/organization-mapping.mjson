@@ -6,6 +6,10 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
+                    "calendars": {
+                        "<->": "id",
+                        "converter": {"@": "calendarsConverter"}
+                    },
                     "name": {"<->": "name"},
                     "type": {"<->": "type"},
                     "email": {"<->": "email"},
@@ -19,7 +23,19 @@
                     "mainContact": {"<->":"mainContactId",
                                     "converter": {"@": "mainContactConverter"}},
                     "services": {"<->": "id",
-                                    "converter": {"@": "servicesConverter"}}
+                                    "converter": {"@": "servicesConverter"}},
+                    "employmentPositions": {
+                        "<->": "id",
+                        "converter": {"@": "employmentPositionsConverter"}
+                    },
+                    "b2cCustomerRelationships": {
+                        "<->": "id",
+                        "converter": {"@": "b2cCustomerRelationshipsConverter"}
+                    },
+                    "b2bCustomerRelationships": {
+                        "<->": "id",
+                        "converter": {"@": "b2bCustomerRelationshipsConverter"}
+                    }
                 }
             },
             "rawDataMapping": {
@@ -35,6 +51,14 @@
     "OrganizationDescriptor": {
         "object": "data/main.datareel/model/organization.mjson"
     },
+
+    "calendarsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "organizationId == $"
+        }
+    },
+
     "addressesConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
@@ -58,6 +82,23 @@
         "values": {
             "convertExpression": "vendorIds.has($)"
         }
+    },
+    "employmentPositionsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "employerId == $"
+        }
+    },
+    "b2cCustomerRelationshipsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "supplierId == $"
+        }
+    },
+    "b2bCustomerRelationshipsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "supplierId == $"
+        }
     }
-
 }

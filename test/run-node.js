@@ -3,7 +3,7 @@ var jasmineRequire = require('jasmine-core/lib/jasmine-core/jasmine.js');
 var JasmineConsoleReporter = require('jasmine-console-reporter');
 var Montage = require('montage/montage');
 var PATH = require("path");
-global.XMLHttpRequest = require('xhr2');
+//global.XMLHttpRequest = require('xhr2');
 
 // Init
 var jasmine = jasmineRequire.core(jasmineRequire);
@@ -46,13 +46,13 @@ jasmineEnv.addReporter({
 Montage.loadPackage(PATH.join(__dirname, "."), {
     mainPackageLocation: PATH.join(__dirname, "../")
 })
-// Preload montage to avoid montage-testing/montage to be loaded
+//Preload montage to avoid montage-testing/montage to be loaded
 .then(function (mr) {
     return mr.async('montage').then(function (montage) {
          return mr;
     });
 })
-// Execute
+//Execute
 .then(function (mr) {
     return mr.async("all");
 }).then(function () {

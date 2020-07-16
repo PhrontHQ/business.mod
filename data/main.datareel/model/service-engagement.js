@@ -6,8 +6,15 @@ var Object = require("./object").Object;
 
 
 exports.ServiceEngagement = Object.specialize(/** @lends ServiceEngagement.prototype */ {
+    service: {
+        value: undefined
+    },
 
-    existenceTimeRange: {
+    serviceVariant: {
+        value: undefined
+    },
+
+    event: {
         value: undefined
     }
 

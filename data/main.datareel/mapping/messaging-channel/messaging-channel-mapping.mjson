@@ -1,0 +1,28 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "MessagingChannelDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "label": {"<->": "label"},
+                    "preferredForParties": {"<->": "preferredForParties"},
+                    "description": {"<->": "description"},
+                    "tags": {"<->": "tags"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "label","description","tags"
+            ]
+        }
+    },
+
+    "MessagingChannelDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+    }
+}

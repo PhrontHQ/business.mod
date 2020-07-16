@@ -1,0 +1,35 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "InstantMessageAddressDescriptor"},
+            "objectMapping": {
+                "rules": {
+                    "serviceName": {"<->": "serviceName"},
+                    "userName": {"<->": "userName"},
+                    "provider": {
+                        "<->": "provider",
+                        "converter": {"@": "providerConverter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "serviceName","userName"
+            ]
+        }
+    },
+
+    "InstantMessageAddressDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/instant-message-address.mjson"
+    },
+    "providerConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    }
+}

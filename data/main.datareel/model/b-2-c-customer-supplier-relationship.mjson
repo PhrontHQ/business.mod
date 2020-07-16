@@ -18,7 +18,7 @@
         }
     },
     "b-2-c-customer-supplier-relationship": {
-        "object": "data/main.datareel/model/"b-2-c-customer-supplier-relationship"
+        "object": "data/main.datareel/model/b-2-c-customer-supplier-relationship"
     },
     "customer-supplier-relationship": {
         "object": "data/main.datareel/model/customer-supplier-relationship.mjson"

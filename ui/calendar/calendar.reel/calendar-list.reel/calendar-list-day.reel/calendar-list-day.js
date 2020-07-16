@@ -80,8 +80,8 @@ exports.CalendarListDay = Component.specialize(/** @lends CalendarListDay# */ {
                         name: "Task-F-name"
                     },
                     hour:"1",
-                    minute:"00",
-                    second:"00"
+                    minute:"0",
+                    second:"0"
                 },
                 {
                     name: "G",
@@ -90,8 +90,8 @@ exports.CalendarListDay = Component.specialize(/** @lends CalendarListDay# */ {
                         name: "Task-G-name"
                     },
                     hour:"2",
-                    minute:"00",
-                    second:"00"
+                    minute:"0",
+                    second:"0"
                },
                 {
                     name: "H",
@@ -100,8 +100,8 @@ exports.CalendarListDay = Component.specialize(/** @lends CalendarListDay# */ {
                         name: "Task-H-name"
                     },
                     hour:"3",
-                    minute:"00",
-                    second:"00"
+                    minute:"0",
+                    second:"0"
             },
                 {
                     name: "I",
@@ -110,8 +110,8 @@ exports.CalendarListDay = Component.specialize(/** @lends CalendarListDay# */ {
                         name: "Task-I-name"
                     },
                     hour:"4",
-                    minute:"00",
-                    second:"00"
+                    minute:"0",
+                    second:"0"
           },
                 {
                     name: "J",
@@ -120,8 +120,8 @@ exports.CalendarListDay = Component.specialize(/** @lends CalendarListDay# */ {
                         name: "Task-J-name"
                     },
                     hour:"5",
-                    minute:"00",
-                    second:"00"
+                    minute:"0",
+                    second:"0"
               }];
                 // this.application.sectionService.getTasksScheduleOnDay(this._object).then(function(tasks) {
                 //     self.events = tasks;

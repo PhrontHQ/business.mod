@@ -17,6 +17,7 @@
   "scripts": {},
   "mappings": {
     "montage": "../node_modules/montage",
+    "montage-geo": "../node_modules/montage-geo",
     "bluebird": "../node_modules/montage/node_modules/bluebird",
     "object-sizeof": "../node_modules/object-sizeof",
     "phront": "../",

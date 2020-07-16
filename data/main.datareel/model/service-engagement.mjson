@@ -6,18 +6,29 @@
             "propertyDescriptors": [
                 {"@": "service"},
                 {"@": "serviceVariant"},
-                {"@": "scheduledEvent"},
-                {"@": "actualEvent"}
+                {"@": "event"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/service-engagement".mjson"
+                "%": "data/main.datareel/model/service-engagement.mjson"
             },
             "exportName": "ServiceEngagement",
             "module": {
-                "%": "data/main.datareel/model/service-engagement""
+                "%": "data/main.datareel/model/service-engagement"
             },
             "object":{"@": "ServiceEngagement"},
-            "parent":{"@": "objectDescriptor"}
+            "parent":{"@": "objectDescriptor"},
+            "userInterfaceDescriptorModules": {
+                "*": {
+                    "%": "./service-engagement-ui-descriptor.mjson"
+                },
+                "montage/ui/list-item.reel": {
+                    "%": "./service-engagement-list-item-ui-descriptor.mjson"
+                },
+                "montage/ui/cascading-list.reel": {
+                    "%": "./service-engagement-calendar-ui-descriptor.mjson"
+                }
+            }
+
         }
     },
     "ServiceEngagement": {
@@ -36,7 +47,7 @@
         }
     },
     "serviceDescriptor": {
-        "object": "montage/core/service.mjson"
+        "object": "./service.mjson"
     },
     "serviceVariant": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -44,32 +55,24 @@
             "name": "service",
             "valueType": "object",
             "cardinality": 1,
-            "valueDescriptor": {"@": "serviceVariantDescriptor"}
+            "valueDescriptor": {"@": "ProductVariantDescriptor"}
         }
     },
-    "serviceVariantDescriptor": {
-        "object": "montage/core/product-variant.mjson"
+    "ProductVariantDescriptor": {
+        "object": "./product-variant.mjson"
     },
-    "scheduledEvent": {
+    "event": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "scheduledEvent",
+            "name": "event",
             "valueType": "object",
             "cardinality": 1,
+            "inversePropertyName": "serviceEngagement",
             "valueDescriptor": {"@": "eventDescriptor"}
         }
     },
     "eventDescriptor": {
-        "object": "montage/core/event.mjson"
-    },
-    "actualEvent": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "actualEvent",
-            "valueType": "object",
-            "cardinality": 1,
-            "valueDescriptor": {"@": "eventDescriptor"}
-        }
+        "object": "./event.mjson"
     }
 
 }

@@ -57,7 +57,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch via NPM",
-            "runtimeExecutable": "/Users/benoit/.nvm/versions/node/v10.16.3/bin/npm",
+            "runtimeExecutable": "npm",
             "cwd": "${workspaceFolder}",
             "runtimeArgs": [
                 "run-script",
@@ -74,8 +74,10 @@
             "type": "node",
             "request": "launch",
             "name": "npm test",
-            "program": "${workspaceFolder}/test/run-node.js",
             "autoAttachChildProcesses": true,
+            "runtimeExecutable": "~/.nvm/versions/node/v12.16.1/bin/node",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/test/run-node.js",
             "skipFiles": [
                 "<node_internals>/**"
             ]

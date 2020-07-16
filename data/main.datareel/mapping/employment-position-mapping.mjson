@@ -1,0 +1,65 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "EmploymenPositiontDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "allowedEmploymentTypes": {
+                        "<->":"allowedEmploymentTypeIds",
+                        "converter": {"@": "allowedEmploymentTypesConverter"}
+                    },
+                    "employer": {
+                        "<->":"employerId",
+                        "converter": {"@": "employerConverter"}
+                    },
+                    "position": {
+                        "<->":"positionId",
+                        "converter": {"@": "positionConverter"}
+                    },
+                    "staffingHistory": {
+                        "<->":"id",
+                        "converter": {"@": "staffingHistoryConverter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "allowedEmploymentTypes","employer","position"
+            ]
+        }
+    },
+
+    "EmploymenPositiontDescriptor": {
+        "object": "data/main.datareel/model/employment-position.mjson"
+    },
+    "allowedEmploymentTypesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }
+    },
+    "employerConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "positionConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "staffingHistoryConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "employmentPositionId == $"
+        }
+    }
+
+}

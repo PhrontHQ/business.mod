@@ -36,6 +36,14 @@ exports.EventAttendee = EventPerson.specialize(/** @lends EventAttendee.prototyp
     isOptional: {
         value: undefined
     },
+
+    /*
+    The attendee's response status. Possible values are:
+        "needsAction" - The attendee has not responded to the invitation.
+        "declined" - The attendee has declined the invitation.
+        "tentative" - The attendee has tentatively accepted the invitation.
+        "accepted" - The attendee has accepted the invitation.
+    */
     responseStatus: {
         value: undefined
     },

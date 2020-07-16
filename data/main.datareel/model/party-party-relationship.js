@@ -1,14 +1,10 @@
-var Object = require("./object").Object;
+var Party = require("./party").Party;
 /**
- * @class Person
+ * @class PartyPartyRelationship
  * @extends Object
  */
 
 
-exports.PartyPartyRelationship = Object.specialize(/** @lends Person.prototype */ {
-
-    relationshipExistenceTimeRange: {
-        value: undefined
-    }
+exports.PartyPartyRelationship = Party.specialize(/** @lends PartyPartyRelationship.prototype */ {
 
 });

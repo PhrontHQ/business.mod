@@ -264,11 +264,11 @@ exports.promise = new Promise(function(resolve,reject) {
 
     // });
 
-    // createEtiamaProServices().then(function(passed) {
-    //     console.log("done!!");
-    // },function(error) {
-    //     console.error(saveError);
-    // });
+    createEtiamaProServices().then(function(passed) {
+        console.log("done!!");
+    },function(saveError) {
+        console.error(saveError);
+    });
 
     // crudPerson().then(function(passed) {
     //     console.log("done!!");
@@ -276,11 +276,11 @@ exports.promise = new Promise(function(resolve,reject) {
     //     console.error(saveError);
     // });
 
-    crudEvent().then(function(passed) {
-        console.log("done!!");
-    },function(error) {
-        console.error(saveError);
-    });
+    // crudEvent().then(function(passed) {
+    //     console.log("done!!");
+    // },function(error) {
+    //     console.error(saveError);
+    // });
 
 
 });

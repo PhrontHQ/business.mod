@@ -1,0 +1,35 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "EmploymenPositiontRelationshipDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "firstEmploymentPosition": {"<->":"firstEmploymentPositionId",
+                                    "converter": {"@": "employmentPositionConverter"}},
+                    "secondEmploymentPosition": {"<->":"secondEmploymentPositionId",
+                                    "converter": {"@": "employmentPositionConverter"}}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "firstEmploymentPosition","secondEmploymentPosition"
+            ]
+        }
+    },
+
+    "EmploymenPositiontRelationshipDescriptor": {
+        "object": "data/main.datareel/model/employment-position-relationship.mjson"
+    },
+    "employmentPositionConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    }
+
+}

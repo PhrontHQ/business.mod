@@ -1,0 +1,24 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "ColorSpaceDescriptor"},
+            "rawDataPrimaryKeys":["name"],
+            "objectMapping": {
+                "rules": {
+                    "name": {
+                        "<->": "name"
+                    }
+                }
+            },
+            "requisitePropertyNames": [
+                "name"
+            ]
+        }
+    },
+
+    "ColorSpaceDescriptor": {
+        "object": "data/main.datareel/model/color-space.mjson"
+    }
+
+}

@@ -5,6 +5,11 @@ exports.CalendarWidget = Component.specialize({
         value: null
     },
 
+
+    timeRange: {
+        value: null
+    },
+
     _currentView: {
         value: null
     },

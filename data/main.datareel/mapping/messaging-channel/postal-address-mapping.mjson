@@ -1,0 +1,47 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "AddressDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "name": {"<->": "name"},
+                    "firstName": {"<->": "firstName"},
+                    "lastName": {"<->": "lastName"},
+                    "phone": {"<->": "phone"},
+                    "company": {"<->": "company"},
+                    "address1": {"<->": "address1"},
+                    "address2": {"<->": "address2"},
+                    "city": {"<->": "city"},
+                    "provinceCode": {"<->": "provinceCode"},
+                    "zip": {"<->": "zip"},
+                    "country": {"<->": "country"},
+                    "location": {
+                        "<->": "location",
+                         "converter": {"@": "locationConverter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+               "name", "firstName","lastName","phone","company","address1","address2","city","provinceCode","zip","country","location"
+            ]
+        }
+    },
+
+    "AddressDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
+    },
+
+    "locationConverter": {
+        "prototype": "montage-geo/logic/converter/wkt-to-geometry-converter",
+        "values": {
+            "convertingSRID": "4326",
+            "convertingGeometryLayout":"XYZ"
+        }
+    }
+}

@@ -4,32 +4,30 @@
         "values": {
             "name": "Event",
             "propertyDescriptors": [
+                {"@": "participatingResource"},
                 {"@": "calendar"},
-                {"@": "kind"},
-                {"@": "etag"},
-                {"@": "status"},
-                {"@": "htmlLink"},
-                {"@": "created"},
-                {"@": "updated"},
+                {"@": "scheduledTimeRange"},
+                {"@": "actualTimeRange"},
+                {"@": "parent"},
+                {"@": "children"},
+                {"@": "isBlocking"},
+                {"@": "participation"},
+                {"@": "participationRoles"},
+                {"@": "participationStatus"},
+                {"@": "reminders"},
+                {"@": "eventURL"},
                 {"@": "summary"},
                 {"@": "description"},
                 {"@": "location"},
                 {"@": "color"},
-                {"@": "creator"},
                 {"@": "organizer"},
-                {"@": "timeRange"},
-                {"@": "endTimeUnspecified"},
-                {"@": "recurrence"},
+                {"@": "isAllDay"},
+                {"@": "recurrenceRule"},
                 {"@": "recurringEvent"},
-                {"@": "originalTimeRange"},
-                {"@": "transparency"},
                 {"@": "visibility"},
                 {"@": "iCalUID"},
                 {"@": "sequence"},
                 {"@": "attendees"},
-                {"@": "attendeesOmitted"},
-                {"@": "extendedProperties"},
-                {"@": "hangoutLink"},
                 {"@": "conferenceData"},
                 {"@": "anyoneCanAddSelf"},
                 {"@": "guestsCanInviteOthers"},
@@ -37,8 +35,6 @@
                 {"@": "guestsCanSeeOtherGuests"},
                 {"@": "privateCopy"},
                 {"@": "locked"},
-                {"@": "reminders"},
-                {"@": "source"},
                 {"@": "attachments"}
             ],
             "objectDescriptorModule": {
@@ -50,15 +46,32 @@
             },
             "modulePrototype":{"@": "EventPrototype"},
             "object":{"@": "EventPrototype"},
-            "parent":{"@": "Object"}
+            "parent":{"@": "ObjectDescriptor"}
         }
     },
     "EventPrototype": {
         "object": "data/main.datareel/model/event"
     },
-    "Object": {
+    "ObjectDescriptor": {
         "object": "data/main.datareel/model/object.mjson"
     },
+    "participatingResource": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "participatingResource",
+            "valueType": "object",
+            "description": "The object for which the time is booked. Typically a Person, or a resource like afacility or equipment",
+            "valueDescriptor": {"@": "PartyDescriptor"}
+        }
+    },
+    "PartyDescriptor": {
+        "object": "data/main.datareel/model/party.mjson"
+    },
+
+    "ResourceDescriptor": {
+        "object": "data/main.datareel/model/resource.mjson"
+    },
+
     "calendar": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -72,51 +85,126 @@
     "calendar-descriptor": {
         "object": "data/main.datareel/model/calendar.mjson"
     },
-    "kind": {
+    "scheduledTimeRange": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "kind",
+            "name": "scheduledTimeRange",
+            "valueType": "range",
+            "collectionValueType": "date",
+            "isSearchable": true
+        }
+    },
+    "actualTimeRange": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "actualTimeRange",
+            "valueType": "range",
+            "collectionValueType": "date"
+        }
+    },
+    "parent": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "parent",
+            "cardinality": 1,
+             "valueType": "object",
+            "isSearchable": true,
+            "valueDescriptor": {"@": "root"}
+        }
+    },
+    "children": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "children",
+            "cardinality": -1,
+            "valueType": "array",
+            "isSearchable": true,
+            "valueDescriptor": {"@": "root"}
+        }
+    },
+    "isBlocking": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "isBlocking",
+            "valueType": "boolean",
+            "defaultValue": true,
+            "description": "The equivalent of iCal Time Transparency"
+       }
+    },
+    "participationEmum": {
+        "prototype": "montage/core/enum",
+        "values": {
+            "members":[
+                "Required",
+                "Optional",
+                "None"
+            ]
+        }
+    },
+    "participation": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "participation",
             "valueType": "string",
-            "defaultValue": "calendar#event"
-        }
+            "valueDescriptor": {"@": "participationEmum"},
+            "defaultValue": {"=": "@participationEmum.Required"},
+            "description": "Rquivalent of iCal's Participation Role'REQ-PARTICIPANT, OPT-PARTICIPANT & NON-PARTICIPANT"
+       }
     },
-    "etag": {
+    "participationRoles": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "etag",
-            "valueType": "string"
+            "name": "participationRoles",
+            "cardinality": -1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "role-descriptor"},
+            "drescription": "Organizer, attendee, are very important role in any setting, but roles will allow more elaborated semantics in the context of things like service engagements or tasks in a project for example."
         }
     },
-    "status": {
-        "prototype": "montage/core/meta/property-descriptor",
+    "role-descriptor": {
+        "object": "data/main.datareel/model/role.mjson"
+    },
+    "participationStatusEmum": {
+        "prototype": "montage/core/enum",
         "values": {
-            "name": "status",
-            "valueType": "string"
+            "members":[
+                "NeedsAction",
+                "Accepted",
+                "Declined",
+                "TentativelyAccepted",
+                "Delegated",
+                "Proposed"
+            ]
         }
     },
-    "htmlLink": {
+    "participationStatus": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "htmlLink",
-            "valueType": "string"
-        }
-    },
-    "created": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "created",
+            "name": "participationStatus",
             "valueType": "string",
-            "readOnly": true,
-            "description": "datetime in Creation time of the event (as a RFC3339 timestamp). Read-only."
+            "valueDescriptor": {"@": "participationStatusEmum"},
+           "description": "Proposed is to volonteer free time slots that should be picked first preferably. An enum whose values depend on deferent type of events like event (NEEDS-ACTION/ACCEPTED/ DECLINED/TENTATIVELY ACCEPTED/DELEGATED), todo(same as event + COMPLETED/IN-PROCESS), journal (NEEDS-ACTION/ACCEPTED/ DECLINED), alarm?, see https://tools.ietf.org/html/rfc5545#section-3.2.12. We need to add cancelled, which would happen when a root event only"
         }
     },
-    "updated": {
+    "reminders": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "updated",
-            "valueType": "string",
-            "readOnly": true,
-            "description": "datetime in Creation time of the event (as a RFC3339 timestamp). Read-only."
+            "name": "reminders",
+            "cardinality": -1,
+            "valueType": "array",
+            "isSearchable": true,
+            "valueDescriptor": {"@": "AlarmsDescriptor"},
+            "description": "Should it be named reminders instead? See alarms in https://tools.ietf.org/html/rfc5545#section-3.6.6 and reminders in https://developers.google.com/calendar/v3/reference/events"
+        }
+    },
+    "AlarmsDescriptor": {
+        "object": "data/main.datareel/model/alarm.mjson"
+    },
+    "eventURL": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "eventURL",
+            "valueType": "URL"
         }
     },
     "summary": {
@@ -137,62 +225,52 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "location",
-            "valueType": "string"
+            "valueType": "object",
+            "valueDescriptor": {"@": "PostalAddressDescriptor"},
+            "isSearchable": true
         }
+    },
+    "PostalAddressDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
     },
     "color": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "color",
             "valueType": "string",
-            "description":"The color of the event. This is an ID referring to an entry in the event section of the colors definition (see the colors endpoint). Optional."
+            "description":"The color of the event."
         }
     },
-    "creator": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "creator",
-            "valueType": "object",
-            "isSearchable": true,
-            "valueDescriptor": {"@": "event-person"}
-        }
-    },
-    "event-person": {
-        "object": "data/main.datareel/model/event-person.mjson"
+     "ColorDescriptor": {
+        "object": "data/main.datareel/model/color/color.mjson"
     },
     "organizer": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "organizer",
             "valueType": "object",
-            "valueDescriptor": {"@": "event-person"},
+            "valueDescriptor": {"@": "PersonDescriptor"},
+            "isSearchable": true,
+            "definition": "parent ? parent.resource : resource"
+        }
+    },
+    "PersonDescriptor": {
+        "object": "data/main.datareel/model/person.mjson"
+    },
+
+    "isAllDay": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "isAllDay",
+            "valueType": "boolean",
             "isSearchable": true
         }
     },
-     "timeRange": {
+
+    "recurrenceRule": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "timeRange",
-            "valueType": "date",
-            "collectionValueType": "range",
-            "valueDescriptor": {"@": "range"},
-            "isSearchable": true
-        }
-    },
-    "range": {
-        "object": "montage/core/range.mjson"
-    },
-    "endTimeUnspecified": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "endTimeUnspecified",
-            "valueType": "boolean"
-        }
-    },
-    "recurrence": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "recurrence",
+            "name": "recurrenceRule",
             "valueType": "array"
         }
     },
@@ -204,22 +282,6 @@
             "cardinality": 1,
             "valueDescriptor": {"@": "root"}
 
-        }
-    },
-    "originalTimeRange": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "originalTimeRange",
-            "valueType": "date",
-            "collectionValueType": "range",
-            "valueDescriptor": {"@": "range"}
-        }
-    },
-    "transparency": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "transparency",
-            "valueType": "string"
         }
     },
     "visibility": {
@@ -240,7 +302,8 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "sequence",
-            "valueType": "string"
+            "valueType": "number",
+            "description": "When a calendar component is created, its sequence number is 0.  It is monotonically incremented by the Organizer's CUA each time the Organizer makes a significant revision to the calendar component."
         }
     },
     "attendees": {
@@ -248,33 +311,8 @@
         "values": {
             "name": "attendees",
             "valueType": "array",
-            "isSearchable": true,
-            "valueDescriptor": {"@": "event-attendee"}
-        }
-    },
-    "event-attendee": {
-        "object": "data/main.datareel/model/event-attendee.mjson"
-    },
-    "attendeesOmitted": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "attendeesOmitted",
-            "valueType": "boolean"
-        }
-    },
-    "extendedProperties": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "extendedProperties",
-            "valueType": "object",
-            "description":"subproperties are 'private' and 'shared'"
-        }
-    },
-    "hangoutLink": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "hangoutLink",
-            "valueType": "string"
+            "definition": "children.map{resource}.filter{.objectDescriptor == @PersonDescriptor}",
+            "description": "It's missing the organizer here"
         }
     },
     "conferenceData": {
@@ -331,28 +369,31 @@
             "valueType": "boolean"
         }
     },
-    "reminders": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "reminders",
-            "valueType": "object",
-            "description": "TODO - create sub type"
-        }
-    },
-    "source": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "source",
-            "valueType": "object",
-            "description": "TODO - create sub type"
-        }
-    },
     "attachments": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "attachments",
-            "valueType": "array",
-            "description": "TODO - create sub type"
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "AssetDescriptor"}
         }
+    },
+    "AssetDescriptor": {
+        "object": "data/main.datareel/model/asset.mjson"
+    },
+    "serviceEngagement": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "serviceEngagement",
+            "valueType": "object",
+            "valueDescriptor": {"@": "ServiceEngagement"},
+            "cardinality": 1,
+            "inversePropertyName": "event",
+            "isSearchable": true
+        }
+    },
+    "ServiceEngagement": {
+        "object": "data/main.datareel/model/service-engagement.mjson"
     }
+
 }

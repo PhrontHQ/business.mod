@@ -1,0 +1,50 @@
+.Variants,
+.Variants thead,
+.Variants tbody,
+.Variants tr,
+.Variants th,
+.Variants td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    font-weight: normal;
+    vertical-align: baseline;
+    background: transparent;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+.Variants {
+    box-shadow: 0 0 1px rgba(0, 0, 0, .5);
+    overflow: hidden;
+    font-size: .14em;
+    border-radius: 4px;
+}
+
+.Variants td {
+    color: #666;
+}
+.pro .Variants td {
+    color: #fff;
+}
+
+.Variants td,
+.Variants th {
+    line-height: 3.2em;
+    padding-left: 1.2em;
+    padding-right: 2.4em;
+}
+
+.Variants td:last-child {
+    text-align: right;
+}
+
+.Variants tbody tr:nth-child(odd) {
+    background: #fafafa;
+}
+
+.pro .Variants tbody tr:nth-child(odd) {
+    background: #181e25;
+}

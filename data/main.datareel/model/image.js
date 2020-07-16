@@ -1,4 +1,4 @@
-var Object = require("./object").Object;
+var Asset = require("./asset").Asset;
 
 /**
  * @class Image
@@ -7,7 +7,7 @@ var Object = require("./object").Object;
  */
 
 
-exports.Image = Object.specialize(/** @lends Image.prototype */ {
+exports.Image = Asset.specialize(/** @lends Image.prototype */ {
     constructor: {
         value: function Image() {
             this.super();

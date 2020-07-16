@@ -1,0 +1,44 @@
+//Example:
+
+
+aws rds-data batch-execute-statement --resource-arn "arn:aws:rds:us-east-1:123456789012:cluster:mydbcluster" \
+--database "mydb" --secret-arn "arn:aws:secretsmanager:us-east-1:123456789012:secret:mysecret" \
+--sql "insert into mytable values (:id, :val)" \
+--parameter-sets "[[{\"name\": \"id\", \"value\": {\"longValue\": 1}},{\"name\": \"val\", \"value\": {\"stringValue\": \"ValueOne\"}}],
+[{\"name\": \"id\", \"value\": {\"longValue\": 2}},{\"name\": \"val\", \"value\": {\"stringValue\": \"ValueTwo\"}}],
+[{\"name\": \"id\", \"value\": {\"longValue\": 3}},{\"name\": \"val\", \"value\": {\"stringValue\": \"ValueThree\"}}]]"
+            
+
+
+
+
+aws rds-data batch-execute-statement --resource-arn "arn:aws:rds:us-west-2:537014313177:cluster:storephront-database" \
+--database "postgres" --secret-arn "arn:aws:secretsmanager:us-west-2:537014313177:secret:storephront-database-postgres-user-access-QU2fSB" \
+--sql "insert into phront.\"Event\" RETURNING id values (:id, :"modificationDate", :"creationDate", :"summary", :"description", :"timeRange", :"calendarId", :"attendees")" \
+--parameter-sets "[[{\"name\": \"id\", \"value\": {\"stringValue\": 'E1C5DF62-557F-4546-ACC1-4F316E24BE63'}},{\"name\": \"modificationDate\", \"value\": {\"stringValue\": \"2020-03-11T00:36:40.436Z\"}},{\"name\": \"creationDate\", \"value\": {\"stringValue\": \"2020-03-11T00:36:40.436Z\"}},{\"name\": \"summary\", \"value\": {\"stringValue\": \"Meeting with myself and I #11\"}},{\"name\": \"description\", \"value\": {\"stringValue\": \"Trying to figure stuff out on Tue Mar 10 2020 17:36:40 GMT-0700 (Pacific Daylight Time)"}},{\"name\": \"timeRange\", \"value\": {\"stringValue\": \"[2020-03-29T09:08:00.000Z,2020-03-29T10:08:00.000Z]\"}},{\"name\": \"calendarId\", \"value\": {\"stringValue\": \"EFA80FCB-EC79-499C-9A7C-4B2FD6F51F8D\"}},{\"name\": \"attendees\", \"value\": {\"stringValue\": \"["{\"email\":\"marchant@mac.com\",\"displayName\":\"Benoit Marchant (@mac.com)\"}","{\"email\":\"benoit@phront.com\",\"displayName\":\"Benoit Marchant (@phront.com)\"}"]\"}}],
+[{\"name\": \"id\", \"value\": {\"stringValue\": 'F188FEA2-5868-43EE-9706-AEC409D4B1AD'}},{\"name\": \"modificationDate\", \"value\": {\"stringValue\": \"2020-03-11T00:36:40.436Z\"}},{\"name\": \"creationDate\", \"value\": {\"stringValue\": \"2020-03-11T00:36:40.436Z\"}},{\"name\": \"summary\", \"value\": {\"stringValue\": \"Meeting with myself and I #12\"}},{\"name\": \"description\", \"value\": {\"stringValue\": \"Trying to figure stuff out on Tue Mar 10 2020 17:36:40 GMT-0700 (Pacific Daylight Time)"}},{\"name\": \"timeRange\", \"value\": {\"stringValue\": \"[2020-03-29T09:08:00.000Z,2020-03-29T10:08:00.000Z]\"}},{\"name\": \"calendarId\", \"value\": {\"stringValue\": \"EFA80FCB-EC79-499C-9A7C-4B2FD6F51F8D\"}},{\"name\": \"attendees\", \"value\": {\"stringValue\": \"["{\"email\":\"marchant@mac.com\",\"displayName\":\"Benoit Marchant (@mac.com)\"}","{\"email\":\"benoit@phront.com\",\"displayName\":\"Benoit Marchant (@phront.com)\"}"]\"}}]]"
+            
+
+
+aws rds-data batch-execute-statement --resource-arn "arn:aws:rds:us-west-2:537014313177:cluster:storephront-database" \
+--database "postgres" --secret-arn "arn:aws:secretsmanager:us-west-2:537014313177:secret:storephront-database-postgres-user-access-QU2fSB" \
+--sql "insert into phront.\"Event\" RETURNING id values (:id, :modificationDate, :creationDate, :summary, :description, :timeRange, :calendarId, :attendees)" \
+--parameter-sets "[[{\"name\": \"id\", \"value\": {\"stringValue\": \"E1C5DF62-557F-4546-ACC1-4F316E24BE63\"}},{\"name\": \"modificationDate\", \"value\": {\"stringValue\": \"2020-03-11T00:36:40.436Z\"}},{\"name\": \"creationDate\", \"value\": {\"stringValue\": \"2020-03-11T00:36:40.436Z\"}},{\"name\": \"summary\", \"value\": {\"stringValue\": \"Meeting with myself and I #11\"}},{\"name\": \"description\", \"value\": {\"stringValue\": \"Trying to figure stuff out on Tue Mar 10 2020 17:36:40 GMT-0700 (Pacific Daylight Time)"}},{\"name\": \"timeRange\", \"value\": {\"stringValue\": \"[2020-03-29T09:08:00.000Z,2020-03-29T10:08:00.000Z]\"}},{\"name\": \"calendarId\", \"value\": {\"stringValue\": \"EFA80FCB-EC79-499C-9A7C-4B2FD6F51F8D\"}},{\"name\": \"attendees\", \"value\": {\"stringValue\": \"["{\"email\":\"marchant@mac.com\",\"displayName\":\"Benoit Marchant (@mac.com)\"}","{\"email\":\"benoit@phront.com\",\"displayName\":\"Benoit Marchant (@phront.com)\"}"]\"}}],
+[{\"name\": \"id\", \"value\": {\"stringValue\": \"F188FEA2-5868-43EE-9706-AEC409D4B1AD\"}},{\"name\": \"modificationDate\", \"value\": {\"stringValue\": \"2020-03-11T00:36:40.436Z\"}},{\"name\": \"creationDate\", \"value\": {\"stringValue\": \"2020-03-11T00:36:40.436Z\"}},{\"name\": \"summary\", \"value\": {\"stringValue\": \"Meeting with myself and I #12\"}},{\"name\": \"description\", \"value\": {\"stringValue\": \"Trying to figure stuff out on Tue Mar 10 2020 17:36:40 GMT-0700 (Pacific Daylight Time)"}},{\"name\": \"timeRange\", \"value\": {\"stringValue\": \"[2020-03-29T09:08:00.000Z,2020-03-29T10:08:00.000Z]\"}},{\"name\": \"calendarId\", \"value\": {\"stringValue\": \"EFA80FCB-EC79-499C-9A7C-4B2FD6F51F8D\"}},{\"name\": \"attendees\", \"value\": {\"stringValue\": \"["{\"email\":\"marchant@mac.com\",\"displayName\":\"Benoit Marchant (@mac.com)\"}","{\"email\":\"benoit@phront.com\",\"displayName\":\"Benoit Marchant (@phront.com)\"}"]\"}}]]"
+
+
+
+aws rds-data batch-execute-statement --resource-arn "arn:aws:rds:us-west-2:537014313177:cluster:storephront-database" \
+--database "postgres" --secret-arn "arn:aws:secretsmanager:us-west-2:537014313177:secret:storephront-database-postgres-user-access-QU2fSB" \
+--sql "insert into phront.\"Event\" values (:id, :modificationDate, :creationDate, :summary)  RETURNING id" \
+--parameter-sets "[ \
+[{\"name\": \"id\", \"value\": {\"stringValue\": \"E1C5DF62-557F-4546-ACC1-4F316E24BE63\"}}, \
+ {\"name\": \"modificationDate\", \"value\": {\"stringValue\": \"2020-03-11T00:36:40.436Z\"}}, \
+ {\"name\": \"creationDate\", \"value\": {\"stringValue\": \"2020-03-11T00:36:40.436Z\"}}, \
+ {\"name\": \"summary\", \"value\": {\"stringValue\": \"Meeting with myself and I #11\"}}]]"
+
+
+
+
+
+

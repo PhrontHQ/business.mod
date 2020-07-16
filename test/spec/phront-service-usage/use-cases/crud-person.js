@@ -5,7 +5,7 @@ DataQuery = require("montage/data/model/data-query").DataQuery,
 Collection = require("phront/data/main.datareel/model/collection").Collection,
 Image = require("phront/data/main.datareel/model/image").Image,
 Organization = require("phront/data/main.datareel/model/organization").Organization,
-Address = require("phront/data/main.datareel/model/address").Address,
+PostalAddress = require("phront/data/main.datareel/model/messaging-channel/postal-address").PostalAddress,
 Service = require("phront/data/main.datareel/model/service").Service,
 Person = require("phront/data/main.datareel/model/person").Person;
 
@@ -36,7 +36,7 @@ exports.crudPerson = function() {
 
         person = mainService.createDataObject(Person);
 
-        //userIdentity = this.application.user;
+        //userIdentity = this.application.userIdentity;
 
         person.firstName = "Steve";
         person.lastName = "Jobs";

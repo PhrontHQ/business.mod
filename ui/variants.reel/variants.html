@@ -1,0 +1,61 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="variants.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "values": {
+                "element": {"#": "variants"}
+            }
+        },
+        "headerRepetition": {
+            "prototype": "montage/ui/repetition.reel",
+            "values": {
+                "element": {"#": "headerRepetition"},
+                "content": {"<-": "@owner.columns"}
+            }
+        },
+        "columnName": {
+            "prototype": "montage/ui/text.reel",
+            "values": {
+                "element": {"#": "columnName"},
+                "value": {"<-": "@headerRepetition:iteration.object"}
+            }
+        },
+        "rowRepetition": {
+            "prototype": "montage/ui/repetition.reel",
+            "values": {
+                "element": {"#": "rowRepetition"},
+                "content": {"<-": "@owner.rows"}
+            }
+        },
+        "cellRepetition": {
+            "prototype": "montage/ui/repetition.reel",
+            "values": {
+                "element": {"#": "cellRepetition"},
+                "content": {"<-": "@rowRepetition:iteration.object"}
+            }
+        },
+        "cell": {
+            "prototype": "montage/ui/text.reel",
+            "values": {
+                "element": {"#": "cell"},
+                "value": {"<-": "@cellRepetition:iteration.object"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <table data-montage-id="variants" class="Variants">
+        <thead>
+            <tr data-montage-id="headerRepetition">
+                <th data-montage-id="columnName"></th>
+            </tr>
+        </thead>
+        <tbody data-montage-id="rowRepetition">
+            <tr data-montage-id="cellRepetition">
+                <td data-montage-id="cell"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>

@@ -19,7 +19,8 @@
                 {"@": "images"},
                 {"@": "addresses"},
                 {"@": "tags"},
-                {"@": "mfaCode"}
+                {"@": "mfaCode"},
+                {"@": "person"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/user-identity.mjson"
@@ -147,7 +148,7 @@
        }
     },
     "addresses_descriptor": {
-        "object": "data/main.datareel/model/address.mjson"
+        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
     },
     "tags": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -163,5 +164,18 @@
             "name": "mfaCode",
             "valueType": "string"
        }
+    },
+    "person": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "userIdentities",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "personDescriptor"},
+            "inversePropertyName": "userIdentities"
+       }
+    },
+    "personDescriptor": {
+        "object": "data/main.datareel/model/person.mjson"
     }
 }

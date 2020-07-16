@@ -1,0 +1,54 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Role",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "description"},
+                {"@": "tags"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/role.mjson"
+            },
+            "exportName": "Role",
+            "module": {
+                "%": "data/main.datareel/model/role"
+            },
+            "modulePrototype":{"@": "Role"},
+            "object":{"@": "Role"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "Role": {
+        "object": "data/main.datareel/model/role"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/object.mjson"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "isLocalizable": true,
+            "valueType": "string"
+        }
+    },
+    "description": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "description",
+            "isLocalizable": true,
+            "valueType": "string"
+        }
+    },
+    "tags": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "tags",
+            "isLocalizable": true,
+            "valueType": "string",
+            "cardinality": -1
+        }
+    }
+}

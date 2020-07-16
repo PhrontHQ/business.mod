@@ -14,7 +14,12 @@
                     "lastName": {"<->": "lastName"},
                     "email": {"<->": "email"},
                     "phone": {"<->": "phone_number"},
-                    "tags": {"<->": "tags"}
+                    "tags": {"<->": "tags"},
+                    "person": {
+                        "<->": "id",
+                        "converter": {"@": "person-converter"}
+                    }
+
                 }
             },
             "rawDataMapping": {
@@ -31,5 +36,13 @@
 
     "UserIdentityDescriptor": {
         "object": "data/main.datareel/model/user-identity.mjson"
+    },
+
+    "person-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }
     }
+
 }

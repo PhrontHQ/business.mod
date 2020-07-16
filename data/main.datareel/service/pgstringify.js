@@ -9,7 +9,9 @@ var parse = require("montage/core/frb/parse"),
     escapeIdentifier = pgutils.escapeIdentifier,
     escapeLiteral = pgutils.escapeLiteral,
     literal = pgutils.literal,
-    escapeString = pgutils.escapeString;
+    escapeString = pgutils.escapeString,
+    RangeDescriptor = require("montage/core/range.mjson").montageObject,
+    Range = require("montage/core/range").Range;
 
 // module.exports.stringify = stringify;
 // function stringify(syntax, scope) {
@@ -98,14 +100,17 @@ module.exports = {
 
             }
             // left-side if it exists
-            if (syntax.args[0].type === "value" ||
+            if (syntax.args[0].type === "value") {
                 /*
                 departure from frb stringify. watch that it doesn't break others use cases, possibly in a chain?
                 */
-                    syntax.type === "has") {
+               //|| syntax.type === "has") {
                 string = chain;
             } else {
-                string = this.stringify(syntax.args[0], scope, dataMappings) + "." + chain;
+                //string = this.stringify(syntax.args[0], scope, dataMappings) + "." + chain;
+                string = this.stringify(syntax.args[0], scope, dataMappings);
+                string += " ";
+                string += chain;
             }
         }
 
@@ -122,8 +127,121 @@ module.exports = {
         }
     },
 
+    _rawOperatorByMethodInvocationType: {
+        value: {
+            "has": "@>",
+            "overlaps": "&&"
+        }
+    },
+
+    rawOperatorForMethodInvocationType: {
+        value: function(methodInvocation) {
+            return this._rawOperatorByMethodInvocationType[methodInvocation];
+        }
+
+    },
+
+    _stringifyCollectionOperator: function(syntax, scope, parent, dataService, dataMappings, operator, operatorForId) {
+        var chain = "",
+            value, propertyName, rawProperty, escapedRawProperty, escapedValue, condition,
+            i, countI, args,
+            dataMapping = dataMappings[dataMappings.length-1],
+            objectDescriptor = dataMapping.objectDescriptor,
+            propertyDescriptor, propertyValueDescriptor;
+
+            //chain = "(";
+
+        args = syntax.args;
+
+        if(args[0].type === "parameters") {
+            if(args[1].type === "property") {
+                propertyName = args[1].args[1].value;
+                propertyDescriptor = objectDescriptor ? objectDescriptor.propertyDescriptorForName(propertyName) : null;
+                propertyValueDescriptor = propertyDescriptor ? propertyDescriptor._valueDescriptorReference : null;
+
+                if((propertyName === "id" || (propertyDescriptor && propertyDescriptor.cardinality === 1)) && Array.isArray(scope)) {
+                    propertyName = `ARRAY[${propertyName}]`;
+                }
+            }
+            else {
+                throw new Error("pgstringify.js: unhandled syntax in has functionStringifiers syntax: "+JSON.stringify(syntax)+"objectDescriptor: "+dataMapping.objectDescriptor.name);
+            }
+            value = scope;
+            // rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
+            // escapedValue = dataService.mapPropertyValueToRawTypeExpression(rawProperty,value,"list");
+            escapedValue = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
+
+        } else if(args[0].type === "property") {
+            propertyName = args[0].args[1].value;
+            propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyName);
+            propertyValueDescriptor = propertyDescriptor ? propertyDescriptor._valueDescriptorReference : null;
+
+            if(args[0].type === "parameters") {
+                value = scope;
+                rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
+                escapedValue = dataService.mapPropertyValueToRawTypeExpression(rawProperty,value,"list");
+            }
+            else if(args[1].type === "parameters") {
+                value = scope;
+                if(!Array.isArray(value)) {
+                    value = [value];
+                }
+                rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
+                escapedValue = dataService.mapPropertyValueToRawTypeExpression(rawProperty,value);
+            } else if(args[1].type === "property" && args[1].args[0].type === "parameters") {
+                var parametersKey = args[1].args[1].value;
+                value = scope[parametersKey];
+
+                if((propertyValueDescriptor && propertyValueDescriptor.name !== "Range") && !Array.isArray(value)) {
+                    value = [value];
+                }
+
+                rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
+                escapedValue = dataService.mapPropertyValueToRawTypeExpression(rawProperty,value);
+            }
+
+        } else {
+            throw new Error("phron-service.js: unhandled syntax in mapCriteriaToRawStatement(criteria: "+JSON.stringify(criteria)+"objectDescriptor: "+mapping.objectDescriptor.name);
+        }
+        // rawProperty = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
+        //escapedRawProperty = escapeIdentifier(rawProperty);
+
+        // if(rawProperty === "id")  {
+        //     //<@ should work here as well as in:
+        //     //SELECT * FROM phront."Event" where '2020-04-09 12:38:00+00'::TIMESTAMPTZ <@ "timeRange"  ;
+        //     //condition = `${escapedRawProperty} ${operatorForId} ${escapedValue}`
+        //     condition = `${operatorForId} ${escapedValue}`
+        // } else {
+            //condition = `${escapedRawProperty} ${operator} ${escapedValue}`
+            condition = `${operator} ${escapedValue}`
+       // }
+
+
+        chain += condition;
+/*
+        for(i=1, countI = args.length;i<countI;i++) {
+            chain += i > 1 ? ", " : "";
+            chain += dataService.stringifyChild(args[i],scope, dataMapping);
+        }
+*/
+        //commenting out parenthesis here as it's too ealy to know if we need some here. Could create regression with has()
+        //chain += ")";
+        return chain;
+    },
+
+
     functionStringifiers: {
         has: function(syntax, scope, parent, dataService, dataMappings) {
+
+            return dataService._stringifyCollectionOperator(syntax, scope, parent, dataService, dataMappings, "@>", "in");
+
+            /*
+                The (first) implementation bellow ends up inversing array parameter on the left and property on the right
+                but it doesn't play well with the rest of the chaining as the part before "has(..)" is added by another
+                part of the code.
+
+                If for some (performance?) reason we needed to revert to that, we'd have to single it out more so it stand on it's own for dealing with both left and right.
+            */
             var chain,
                 value, propertyName, rawProperty, escapedRawProperty, escapedValue, condition,
                 i, countI, args,
@@ -176,6 +294,8 @@ module.exports = {
             escapedRawProperty = escapeIdentifier(rawProperty);
 
             if(rawProperty === "id")  {
+                //<@ should work here as well as in:
+                //SELECT * FROM phront."Event" where '2020-04-09 12:38:00+00'::TIMESTAMPTZ <@ "timeRange"  ;
                 condition = `${escapedRawProperty} in ${escapedValue}`
             } else {
                 condition = `${escapedRawProperty} @> ${escapedValue}`
@@ -191,7 +311,14 @@ module.exports = {
 */
             chain += ")";
             return chain;
+        },
+        overlaps: function _overlaps(syntax, scope, parent, dataService, dataMappings) {
+            return dataService._stringifyCollectionOperator(syntax, scope, parent, dataService, dataMappings, "&&", "<@");
+        },
+        intersects: function _intersects(syntax, scope, parent, dataService, dataMappings) {
+            return dataService._stringifyCollectionOperator(syntax, scope, parent, dataService, dataMappings, "@>", "<@");
         }
+
     },
 
     stringifiers: {
@@ -209,7 +336,8 @@ module.exports = {
         },
 
         parameters: function (syntax, scope, parent, dataService, dataMappings) {
-            return typeof scope === "string" ? dataService.mapPropertyDescriptorValueToRawValue(undefined,scope) : '$';
+            return dataService.mapPropertyDescriptorValueToRawValue(undefined,scope);
+            //return typeof scope === "string" ? dataService.mapPropertyDescriptorValueToRawValue(undefined,scope) : '$';
         },
 
         record: function (syntax, scope, parent, dataService, dataMappings) {
@@ -299,7 +427,7 @@ module.exports = {
                 */
 
                     result = `JOIN "${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = ANY ("${objectDescriptor.name}"."${rawPropertyValue}")`;
-                    dataMappings.push(dataService.mappingWithType(propertyDescriptorValueDescriptor));
+                    dataMappings.push(dataService.mappingForType(propertyDescriptorValueDescriptor));
                     return result;
                 }
                 //This is the case where we use the object's id to be found in the uuid[] on the other side
@@ -350,7 +478,7 @@ module.exports = {
                     //     */
 
                     //         result = `JOIN "${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = ANY ("${objectDescriptor.name}"."${rawPropertyValue}")`;
-                    //         dataMappings.push(dataService.mappingWithType(propertyDescriptorValueDescriptor));
+                    //         dataMappings.push(dataService.mappingForType(propertyDescriptorValueDescriptor));
                     //         return result;
                     //     }
                     //     //This is the case where we use the object's id to be found in the uuid[] on the other side
@@ -526,6 +654,26 @@ module.exports = {
             return "\n" + syntax.blocks.map(function (block) {
                 return dataService.stringify(block, scope, dataMappings);
             }).join("\n") + "\n";
+        },
+        or: function (syntax, scope, parent, dataService, dataMappings) {
+
+            //a list of Or becomes a tree of as syntax args go by 2
+            //If the value of properties/expression involved is boolean, than we should use "or" operator
+            //however if it's a or of properties and they are not of type boolean, then we should use COALESCE()
+            //and we should really use only one COALESCE for all.
+
+            var args = syntax.args,
+                i, countI, result = "";
+            for(i = 0, countI = args.length;i<countI;i++) {
+                if(i > 0) {
+                    result += " ";
+                    result += "or";
+                    result += " ";
+                }
+                result += dataService.stringify(args[i],scope, dataMappings, syntax);
+            }
+
+            return result.trim();
         }
         /*
         ,

@@ -3,7 +3,8 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     ObjectDescriptor = require("montage/core/meta/object-descriptor").ObjectDescriptor,
     RawEmbeddedValueToObjectConverter = require("montage/data/converter/raw-embedded-value-to-object-converter").RawEmbeddedValueToObjectConverter,
     RawForeignValueToObjectConverter = require("montage/data/converter/raw-foreign-value-to-object-converter").RawForeignValueToObjectConverter,
-
+    Range = require("montage/core/range").Range,
+    WktToGeometryConverter = require("montage-geo/logic/converter/wkt-to-geometry-converter").WktToGeometryConverter,
     // DataQuery = require("montage/data/model/data-query").DataQuery,
     DataStream = require("montage/data/service/data-stream").DataStream,
     //Montage = require("montage").Montage,
@@ -11,8 +12,8 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     uuid = require("montage/core/uuid"),
     DataOrdering = require("montage/data/model/data-ordering").DataOrdering,
     //DESCENDING = DataOrdering.DESCENDING,
-    //evaluate = require("montage/frb/evaluate"),
-    Set = require("montage/collections/set"),
+    //evaluate = require("montage/core/frb/evaluate"),
+    Set = require("montage/core/collections/set"),
 
     //Not needed at all as not used
     // XMLHttpRequest = require("xhr2"),
@@ -23,6 +24,8 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
 
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     DataOperationType = require("montage/data/service/data-operation").DataOperationType,
+    PGClass = require("../model/p-g-class").PGClass,
+
 
     // Require the aws-sdk. This is a dev dependency, so if being used
     // outside of a Lambda execution environment, it must be manually installed.
@@ -44,6 +47,7 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     literal = pgutils.literal,
     escapeString = pgutils.escapeString,
     pgstringify = require('./pgstringify'),
+    parse = require("montage/core/frb/parse"),
     PhrontService;
 
 class Timer {
@@ -269,11 +273,11 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             readOperation.type = DataOperation.Type.Read;
             readOperation.dataDescriptor = objectDescriptor.module.id;
             readOperation.criteria = query.criteria;
-            readOperation.objectExpressions = query.prefetchExpressions;
+            readOperation.data = query.readExpressions;
 
             //Where do we put the "select part" ? The list of properties, default + specific ones asked by developer and
             //eventually collected by the framework through triggers?
-            // - prefetchExpressions is a list like that on the query object.
+            // - readExpressions is a list like that on the query object.
             // - selectBindings s another.
 
 
@@ -303,6 +307,13 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     },
     inlineCriteriaParameters: {
         value: true
+    },
+
+
+    mapOrderingsToRawOrderings: {
+        value: function (orderings, mapping) {
+            throw new Error("mapOrderingsToRawOrderings is not implemented");
+        }
     },
     /*
         as we move into being able to handle the traversal of relationships, we'll need to map that to joins,
@@ -507,12 +518,99 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         value: false
     },
 
+    mapRawReadExpressionToSelectExpression: {
+        value: function (anExpression, aPropertyDescriptor, mapping) {
+            //If anExpression isn't a Property, aPropertyDescriptor should be null/undefined and we'll need to walk anExpression syntactic tree to transform it into valid SQL in select statement.
+
+
+            if(!aPropertyDescriptor && anExpression !== "id") {
+
+
+            /*
+
+                Client side:
+                When we fetch roles, the information related to locale has to be provided, the most generic way would be as an objectExpression that would replace
+
+                Instead of the phront Service fillin the blanks in - mapReadOperationToRawStatement() with:
+                    if (readExpressions) {
+                        rawReadExpressions = new Set(readExpressions.map(expression => mapping.mapObjectPropertyNameToRawPropertyName(expression)));
+                    } else {
+                        rawReadExpressions = new Set(mapping.rawRequisitePropertyNames)
+                    }
+
+                PhrontClientService should build the readExpressions it wants as it's hard to just put a few in readExpressions and expect PhrontService to fill-in the rest? Especially since the UI should drive what we get back. So even if PhrontClientService were to build
+                itself readExpressions as new Set(mapping.rawRequisitePropertyNames), we need to go
+                    from: ["name","description","tags"]
+                    to something like: ["name.fr.CA","description.fr.CA","tags.fr.CA"]
+
+                which are now expressions more complex than just property names, so PhronService is going to need somethingf like
+                    this.mapReadExpressionToRawReadExpression();
+
+                    in which we should really walk the expression and transform into a SQL equivalent. But the decision to use coalesce for this is really custom, so if the first is a property that isLocalizable true, then we can return the Coalesce() structure, or we would need a similar function in the expression already, like:
+
+                    ["name.fr.CA" or "name.fr.*","description.fr.CA or description.fr.*","tags.fr.CA or tags.fr.*"], where it's more natural/less hard coded to implement as a coalesce(), and there's also nothing to know about locale.
+
+
+                So PhrontClientService needs to transform property names to object Expressions. Today, we only transform string to string for criteria.
+                ["name","description","tags"] -> ["name.fr.CA" or "name.fr.*","description.fr.CA or description.fr.*","tags.fr.CA or tags.fr.*"]
+
+
+
+
+                we'll have a mapping for name with a LocalizedStringConverter.
+                LocalizedStringConverter:
+                    convert: create a LocalizedString with rawData["name"]. Could be a string, or an object with some or all the json.
+                                at this point, we know both the role, and the LocalizedString instance we create. So that's where we can keep them tied to each others for when we may need to access the json.
+                    revert: if the value changes, if it's a new string, it has to be transformed as json so it can patch the json server side.
+                            if LocalizedString has json changes mode, noth
+
+                aRole.name.localization
+                    -> aRole.name doesn't have localization property,
+                        -> should create a trigger to end up:
+                            -> fetchObjectProperty(aLocalizedString, "localization")
+                                -> propertyNameQuery.readExpressions = ["localization"];
+                                    -> fetchData: readOperation.data = query.readExpressions;
+
+                                    The problem there is that by the time we get there, we don't know where we'd go to find the table of thaft LocalizedString that can be stored anywhere. So when we have embedded object descriptors, we need to be able to keep track per instance where they were fetched from, so we can go back to get more data as needed. Today we just lose that info when fetched. So we either have to embed that into each instance, use a map somewhere, or create a subclass on the fly so the data is more shared, so LocalizedRoleName. we'd do that like we extend the types we create.
+
+
+                The request coming on would be like:
+                Roles:
+                Criteria: name.locale = "en_GB" which we break down into (name.locale = "en_GB" or name.locale = "en_*"
+
+                We need to generate something like this to return the value matching the user's locale as expressed in the readExpression... which we don't have here...
+
+                1) Get the locale first
+                2) build the cascade logic
+                3) make the string
+
+                SELECT (SELECT row_to_json(_) FROM (SELECT "id",COALESCE("Role"."tags"::jsonb #>> '{en,FR}',"Role"."tags"::jsonb #>> '{en,*}') as "tags", COALESCE("Role"."description"::jsonb #>> '{en,FR}',"Role"."description"::jsonb #>> '{en,*}') as "description",COALESCE("Role"."name"::jsonb #>> '{en,FR}',"Role"."name"::jsonb #>> '{en,*}') as "name") as _) FROM phront."Role"
+
+                -> {"id":"2c68ebd9-4ade-477d-a591-68b99272742a","tags":"[\"event\"]","description":"The person organizing something like an event.","name":"organizer"}
+
+            */
+
+                var syntax = typeof anExpression === "string" ? parse(anExpression) : anExpressions,
+                    rawParameters = null,
+                    rawExpression = this.stringify(syntax, rawParameters, [mapping]);
+
+                return rawExpression;
+
+            } else {
+                return escapeIdentifier(anExpression);
+            }
+
+
+        }
+    },
+
     mapReadOperationToRawStatement: {
         value: function (readOperation, rawDataOperation) {
             //Now we need to transf orm the operation into SQL:
             var objectDescriptor = this.objectDescriptorWithModuleId(readOperation.dataDescriptor),
-                mapping = this.mappingWithType(objectDescriptor),
-                objectExpressions = readOperation.objectExpressions,
+                mapping = this.mappingForType(objectDescriptor),
+                rawDataMappingRules = mapping.rawDataMappingRules,
+                readExpressions = readOperation.data.readExpressions,
                 rawDataPrimaryKeys = mapping.rawDataPrimaryKeys,
                 operationName = readOperation.name,
                 //We start by the mandatory, but the read operation could have
@@ -540,7 +638,6 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                   The rigth part might need to leverage functions or a whole new sub select?
 
                 */
-                readExpressions = readOperation.readExpressions,
                 i, countI, iKey, iValue, iAssignment, iPrimaryKey, iPrimaryKeyValue,
                 iKeyValue,
                 rawCriteria,
@@ -553,13 +650,17 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 rawReadExpressionsIterator,
                 sql,
                 self = this,
-                HAS_DATA_API_UUID_ARRAY_BUG = this.HAS_DATA_API_UUID_ARRAY_BUG;
+                HAS_DATA_API_UUID_ARRAY_BUG = this.HAS_DATA_API_UUID_ARRAY_BUG,
+                rule, propertyName, propertyDescriptor,
+                rawOrderings = readOperation.data.orderings,
+                readLimit = readOperation.data.readLimit,
+                readOffset = readOperation.data.readOffset;
 
 
-            //WARNING If a set of objectExpressions is expressed on the operation for now it will excludes
+            //WARNING If a set of readExpressions is expressed on the operation for now it will excludes
             //the requisites.
-            if (objectExpressions) {
-                rawReadExpressions = new Set(objectExpressions.map(expression => mapping.mapObjectPropertyNameToRawPropertyName(expression)));
+            if (readExpressions) {
+                rawReadExpressions = new Set(readExpressions.map(expression => mapping.mapObjectPropertyNameToRawPropertyName(expression)));
             } else {
                 rawReadExpressions = new Set(mapping.rawRequisitePropertyNames)
             }
@@ -577,14 +678,15 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 rawReadExpressionsArray.push(anExpression);
                 //rawReadExpressionMap.set(anExpression,i);
 
+                rule = rawDataMappingRules.get(anExpression);
+                propertyName = rule ? rule.sourcePath : anExpression;
+                propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyName);
                 if (HAS_DATA_API_UUID_ARRAY_BUG) {
                     /*
                       We need to wrap any toMany holding uuids in an array like this:
                       CAST (\"addressIds\" AS text[])
                     */
-                    var rule = mapping.rawDataMappingRules.get(anExpression),
-                        propertyName = rule ? rule.sourcePath : anExpression,
-                        propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyName);
+
                     //id / primary keys don't have property descriptors
                     if (propertyDescriptor && propertyDescriptor.valueDescriptor && propertyDescriptor.cardinality > 1) {
                         anEscapedExpression = `CAST (${escapeIdentifier(anExpression)} AS text[])`;
@@ -594,9 +696,13 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     }
                 }
                 else {
-                    anEscapedExpression = escapeIdentifier(anExpression);
+                    anEscapedExpression = this.mapRawReadExpressionToSelectExpression(anExpression, propertyDescriptor, mapping);
+
+                    // anEscapedExpression = escapeIdentifier(anExpression);
                 }
-                escapedRawReadExpressionsArray.push(`"${tableName}".${anEscapedExpression}`);
+                //Removes unnecessary table prefixing here
+                //escapedRawReadExpressionsArray.push(`"${tableName}".${anEscapedExpression}`);
+                escapedRawReadExpressionsArray.push(`${anEscapedExpression}`);
 
                 i++;
             }
@@ -613,9 +719,22 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             rawCriteria = this.mapCriteriaToRawCriteria(criteria, mapping);
             condition = rawCriteria ? rawCriteria.expression : undefined;
+
+            if(rawOrderings) {
+                this.mapOrderingsToRawOrderings(rawOrderings, mapping);
+            }
             //     console.log(" new condition: ",condition);
             //condition = this.mapCriteriaToRawStatement(criteria, mapping);
             // console.log(" old condition: ",condition);
+            /*
+            SELECT select_list
+            FROM table_expression
+            WHERE ...
+            ORDER BY sort_expression1 [ASC | DESC] [NULLS { FIRST | LAST }]
+                    [, sort_expression2 [ASC | DESC] [NULLS { FIRST | LAST }] ...]
+            [LIMIT { number | ALL }] [OFFSET number]
+
+            */
 
             sql = `SELECT (SELECT row_to_json(_) FROM (SELECT ${escapedRawReadExpressionsArray.join(",")}) as _) FROM ${schemaName}."${tableName}"`;
             if (condition) {
@@ -627,6 +746,13 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 }
             }
             //sql = `SELECT ${escapedRawReadExpressionsArray.join(",")} FROM ${schemaName}."${tableName}" WHERE (${condition})`;
+
+            if(readLimit) {
+                sql += ` LIMIT ${readLimit}`;
+                if(readOffset) {
+                    sql += ` OFFSET ${readOffset}`;
+                }
+            }
 
             rawDataOperation.sql = sql;
             if (rawCriteria && rawCriteria.parameters) {
@@ -687,6 +813,15 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 //   else if(rawDataOperation.sql.indexOf('"name" ilike ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1 && data.records.length > 0){
                 //       console.log("organization found by name");
                 //   }
+                // if(rawDataOperation.sql.indexOf('"label"') !== -1) {
+                //     console.log(rawDataOperation.sql);
+                //   }
+
+
+                //DEBUG:
+                // if(readOperation.criteria && readOperation.criteria.syntax.type === "has") {
+                //     console.log(rawDataOperation);
+                // }
                 var operation = self.mapHandledReadResponseToOperation(readOperation, err, data/*, record*/);
                 objectDescriptor.dispatchEvent(operation);
             });
@@ -796,7 +931,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             //We have a known dataIdentifier for this object, it's an Update Operation:
             if (dataIdentifier) {
                 operation.type = DataOperation.Type.Update;
-                mapping = this.mappingWithType(objectDescriptor);
+                mapping = this.mappingForType(objectDescriptor);
 
                 //TEMPORARY, we need to send what changed only
                 operation.criteria = Criteria.withExpression("identifier = $identifier", { "identifier": dataIdentifier });
@@ -1043,7 +1178,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
     mapObjectDescriptorRawPropertyToRawType: {
         value: function (objectDescriptor, rawProperty, _mapping, _propertyDescriptor, _rawDataMappingRule) {
-            var mapping = _mapping || (objectDescriptor && this.mappingWithType(objectDescriptor)),
+            var mapping = _mapping || (objectDescriptor && this.mappingForType(objectDescriptor)),
                 propertyDescriptor = _propertyDescriptor,
                 mappingRule,
                 propertyName;
@@ -1060,6 +1195,38 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             }
         }
     },
+
+
+/*
+
+{
+    "Point": {
+        1:`geometry(pointz,${reverter.projection})`,
+        -1:`geometry(pointz,${reverter.projection})`
+
+    }
+}
+
+
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /*
     Mapping dates:
     https://www.postgresql.org/docs/9.5/datatype-datetime.html
@@ -1093,26 +1260,66 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     mapPropertyDescriptorToRawType: {
         value: function (propertyDescriptor, rawDataMappingRule) {
             var propertyDescriptorType = propertyDescriptor.valueType,
-                reverter = rawDataMappingRule.reverter,
+                reverter = rawDataMappingRule ? rawDataMappingRule.reverter : null,
                 //For backward compatibility, propertyDescriptor.valueDescriptor still returns a Promise....
                 //propertyValueDescriptor = propertyDescriptor.valueDescriptor;
                 //So until we fix this, tap into the private instance variable that contains what we want:
                 propertyValueDescriptor = propertyDescriptor._valueDescriptorReference;
 
             if (propertyValueDescriptor) {
-                if (propertyValueDescriptor.name === "Range") {
-                    return "tstzrange";
-                } else if (reverter instanceof RawEmbeddedValueToObjectConverter) {
-                    return "jsonb";
+                if (propertyValueDescriptor.constructor instanceof Range) {
+                    if(propertyDescriptor.valueType === "date") {
+                        return "tstzrange";
+                    }
+                    else if(propertyDescriptor.valueType === "number") {
+                        return "numrange";
+                    } else {
+                        throw new Error("Unable to mapPropertyDescriptorToRawType",propertyDescriptor,rawDataMappingRule);
+                    }
+
+                } else if (reverter && reverter instanceof RawEmbeddedValueToObjectConverter) {
+                    // if(propertyDescriptorType === "array") {
+                    //     return "jsonb[]"
+                    // } else {
+                        return "jsonb";
+                    //}
+                } else if (reverter && reverter instanceof WktToGeometryConverter) {
+                    /*
+                        https://www.pgcasts.com/episodes/geolocations-using-postgis
+
+                        . The geography type can receive up to two arguments.
+
+                        The first argument is an optional type modifier, which can be used to restrict the kinds of shapes and dimensions allowed for the column. Since we are going to be using latitude and longitude coordinates, we can pass point as our type modifier.
+
+                        The second argument is an optional spatial resource identifier, or SRID. If the SRID option is omitted, the geography column will default to a value of 4326, which is the SRID for WGS 84, the World Geodetic System of 1984, and the standard for the Global Positioning System.
+
+                        http://postgis.net/workshops/postgis-intro/geometries.html
+                    */
+                   var valueDescriptor = propertyDescriptor.valueDescriptor,
+                        cardinality = propertyDescriptor.cardinality,
+                        geometryLayout = (reverter.convertingGeometryLayout || "XYZ").substring(2),
+                        arraySuffix = (cardinality === 1) ? "" : "[]";
+
+                        return `geometry(GEOMETRY${geometryLayout},${(reverter.convertingSRID || "4326")})${arraySuffix}`;
+
                 } else if (propertyDescriptor.cardinality === 1) {
                     return "uuid";
-                }
-                else {
+                } else {
                     return "uuid[]";
                 }
             }
             else {
-                if (propertyDescriptor.cardinality === 1) {
+                if (propertyDescriptor.valueType === "range") {
+                    if(propertyDescriptor.collectionValueType === "date") {
+                        return "tstzrange";
+                    }
+                    else if(propertyDescriptor.collectionValueType === "number") {
+                        return "numrange";
+                    } else {
+                        throw new Error("Unable to mapPropertyDescriptorToRawType",propertyDescriptor,rawDataMappingRule);
+                    }
+                }
+                else if (propertyDescriptor.cardinality === 1) {
                     return this.mapPropertyDescriptorTypeToRawType(propertyDescriptorType, propertyValueDescriptor);
                 } else {
                     //We have a cardinality of n. The propertyDescriptor.collectionValueType should tell us if it's a list or a map
@@ -1135,13 +1342,12 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
 
     mapSearchablePropertyDescriptorToRawIndex: {
-        value: function (propertyDescriptor, rawDataMappingRule) {
-            var objectDescriptor = propertyDescriptor.owner,
-                tableName = this.tableForObjectDescriptor(objectDescriptor),
-                rawPropertyName = rawDataMappingRule ? rawDataMappingRule.targetPath : propertyDescriptor.name,
+        value: function (objectDescriptor, propertyDescriptor, rawDataMappingRule, columnName) {
+            var tableName = this.tableForObjectDescriptor(objectDescriptor),
+                rawPropertyName = columnName ? columnName : (rawDataMappingRule ? rawDataMappingRule.targetPath : propertyDescriptor.name),
                 indexType,
                 propertyDescriptorType = propertyDescriptor.valueType,
-                reverter = rawDataMappingRule.reverter,
+                reverter = rawDataMappingRule ? rawDataMappingRule.reverter : null,
                 //For backward compatibility, propertyDescriptor.valueDescriptor still returns a Promise....
                 //propertyValueDescriptor = propertyDescriptor.valueDescriptor;
                 //So until we fix this, tap into the private instance variable that contains what we want:
@@ -1150,7 +1356,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             if (propertyValueDescriptor) {
                 if (propertyValueDescriptor.name === "Range") {
                     indexType = "GIST";
-                } else if (reverter instanceof RawEmbeddedValueToObjectConverter) {
+                } else if (reverter && reverter instanceof RawEmbeddedValueToObjectConverter) {
                     indexType = "GIN";
                 } else if (propertyDescriptor.cardinality === 1) {
                     indexType = "HASH";
@@ -1354,15 +1560,140 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         }
     },
 
+    /*
+
+    SELECT (SELECT row_to_json(_) FROM (SELECT pg_class.oid, pg_class.relname) as _) FROM pg_class
+    JOIN pg_catalog.pg_namespace n ON n.oid = pg_class.relnamespace
+    WHERE pg_class.relkind = 'r' and n.nspname = 'phront'
+
+    returns
+
+    {"oid":"74136","relname":"spatial_ref_sys"}
+    {"oid":"165366","relname":"Object"}
+    {"oid":"165397","relname":"Service"}
+    */
+
+    /**
+     * Adds a mapping to the service for the specified
+     * type.
+     *
+     * Overrides to build the list of types to fetch to get their
+     * OID:
+     *
+     * @param {DataMapping} mapping.  The mapping to use.
+     * @param {ObjectDescriptor} type.  The object type.
+     */
+    addMappingForType: {
+        value: function (mapping, type) {
+            this.super(mapping, type);
+
+            (this._rawTypesToFetch || (this._rawTypesToFetch = [])).push(mapping.rawDataTypeName);
+        }
+    },
+
+    _rawTypesToFetch: {
+        value: null
+    },
+
+
+    /**
+     * Reads Type's OIDs (unique IDs) from PostgreSQL schema.
+     *
+     * @method
+     * @argument {DataOperation} dataOperation - The dataOperation to execute
+  `  * @returns {Promise} - The Promise for the execution of the operation
+     */
+    handleRawTypeOIDRead: {
+        value: function (createOperation) {
+            var data = createOperation.data;
+
+            var rawDataOperation = {},
+                objectDescriptor = this.objectDescriptorWithModuleId(createOperation.dataDescriptor);
+
+            //This adds the right access key, db name. etc... to the RawOperation.
+            this.mapObjectDescriptorToRawOperation(objectDescriptor, rawDataOperation);
+
+
+            var self = this,
+                record = {};
+
+            /*
+                SELECT (SELECT row_to_json(_) FROM (SELECT pg_class.oid, pg_class.relname) as _) FROM pg_class
+                JOIN pg_catalog.pg_namespace n ON n.oid = pg_class.relnamespace
+                WHERE pg_class.relkind = 'r' and n.nspname = 'phront'
+            */
+            rawDataOperation.sql = this._mapCreateOperationToSQL(createOperation, rawDataOperation, record);
+            //console.log(sql);
+            return new Promise(function (resolve, reject) {
+                self._executeStatement(rawDataOperation, function (err, data) {
+                    var operation = self.mapHandledCreateResponseToOperation(createOperation, err, data, record);
+                    resolve(operation);
+                });
+            });
+    }
+    },
+
+
+    /**
+     * Adds child Services to the receiving service.
+     *
+     * Overrides to build the list of types to fetch to get their
+     * OID:
+     *
+     * @param {Array.<DataServices>} childServices. childServices to add.
+     */
+    addChildServices: {
+        value: function (childServices) {
+            this.super(childServices);
+
+            //Now trigger the fetch for oid
+
+        }
+    },
+
+    // _columnSQLForColumnName: {
+    //     value: function(columnName, columnType) {
+
+    //     }
+    // }
+
+    _buildObjectDescriptorColumnAndIndexString : {
+        value: function _buildColumnString(objectDescriptor, columnName, columnType, propertyDescriptor, mappingRule, columnsDone, colunmnStrings, colunmnIndexStrings) {
+            if(!columnsDone.has(columnName)) {
+
+                columnsDone.add(columnName);
+
+                var columnSQL = `  ${escapeIdentifier(columnName)} ${columnType}`;
+                if (columnType === 'text') {columnSQL
+                    columnSQL += ' COLLATE pg_catalog."default"';
+                }
+
+                // if (colunmnStrings.length > 0) {
+                //     columnSQL += ',\n';
+                // }
+                colunmnStrings.push(columnSQL);
+
+
+                var iIndex = this.mapSearchablePropertyDescriptorToRawIndex(objectDescriptor, propertyDescriptor, mappingRule, columnName);
+                if(iIndex) {
+                    // if (colunmnIndexStrings.length) {
+                    //     indexSQL += "\n";
+                    // }
+                    colunmnIndexStrings.push(iIndex);
+                }
+            }
+        }
+    },
+
     //We need a mapping to go from model(schema?)/ObjectDescriptor to schema/table
     mapToRawCreateObjectDescriptorOperation: {
         value: function (dataOperation) {
             var objectDescriptor = dataOperation.data,
-                mapping = objectDescriptor && this.mappingWithType(objectDescriptor),
+                mapping = objectDescriptor && this.mappingForType(objectDescriptor),
                 parentDescriptor,
                 tableName = this.tableForObjectDescriptor(objectDescriptor),
                 propertyDescriptors = Array.from(objectDescriptor.propertyDescriptors),
-                i, countI, iPropertyDescriptor, iObjectRule, iRule, iIndex,
+                i, countI, iPropertyDescriptor, iPropertyDescriptorValueDescriptor, iDescendantDescriptors, iObjectRule, iRule, iIndex,
                 //Hard coded for now, should be derived from a mapping telling us n which databaseName that objectDescriptor is stored
                 databaseName = "postgres",
                 //Hard coded for now, should be derived from a mapping telling us n which schemaName that objectDescriptor is stored
@@ -1386,6 +1717,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 includeResultMetadata = true,
                 columnName,
                 colunmns = new Set(),
+                colunmnStrings = [],
+                colunmnIndexStrings = [],
                 propertyValueDescriptor,
                 columnType,
                 owner = "postgres",
@@ -1439,16 +1772,61 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
 
             for (i = propertyDescriptors.length - 1; (i > -1); i--) {
                 iPropertyDescriptor = propertyDescriptors[i];
+
+                //If iPropertyDescriptor isDerived, it has an expresssion
+                //that make it dynamic based on other properties, it doesn't
+                //need a materialized/concrete storage in a column.
+                if(iPropertyDescriptor.isDerived) continue;
+
+                //.valueDescriptor still returns a promise
+                iPropertyDescriptorValueDescriptor = iPropertyDescriptor._valueDescriptorReference;
+                iDescendantDescriptors = iPropertyDescriptorValueDescriptor ? iPropertyDescriptorValueDescriptor.descendantDescriptors : null;
                 iObjectRule = mapping.objectMappingRules.get(iPropertyDescriptor.name);
-                iRule = iObjectRule && mapping.rawDataMappingRules.get(iObjectRule.sourcePath);
+                iRule = iObjectRule && mapping.rawDataMappingRules.get(iObjectRule.sourcePath),
+                iObjectRuleSourcePathSyntax = iObjectRule.sourcePathSyntax;
+
+                /*
+                    If it's a property points to an object descriptor with descendants,
+                    we need to implement the support for a polymorphic Associations implementation
+                    with the Exclusive Belongs To (AKA Exclusive Arc) strategy.
+
+                    Details at:
+                    https://hashrocket.com/blog/posts/modeling-polymorphic-associations-in-a-relational-database#exclusive-belongs-to-aka-exclusive-arc-
+
+                    many resources about this, another one:
+                    https://www.slideshare.net/billkarwin/practical-object-oriented-models-in-sql/30-Polymorphic_Assocations_Exclusive_ArcsCREATE_TABLE
+
+                    this means creating a column/foreignKEy for each possible destination in descendants
 
 
-                if (iRule) {
-                    columnName = iObjectRule.sourcePath;
+                */
+
+                columnType = this.mapPropertyDescriptorToRawType(iPropertyDescriptor, iRule);
+
+
+                if(iPropertyDescriptorValueDescriptor && iDescendantDescriptors && iObjectRuleSourcePathSyntax && iObjectRuleSourcePathSyntax.type === "record") {
+                    //If cardinality is 1, we need to create a uuid columne, if > 1 a uuid[]
+                    var cardinality = iPropertyDescriptor.cardinality,
+                        rawForeignKeys = Object.keys(iObjectRuleSourcePathSyntax.args),
+                        j, countJ;
+
+                    for(j=0, countJ = rawForeignKeys.length;(j<countJ);j++) {
+                        this._buildObjectDescriptorColumnAndIndexString(objectDescriptor, rawForeignKeys[j], columnType, iPropertyDescriptor, iRule, colunmns, colunmnStrings, colunmnIndexStrings);
+                    }
+
                 } else {
-                    columnName = iPropertyDescriptor.name;
-                }
 
+                    if (iRule) {
+                        //In another place we used the object Rule and therefore it's sourcePath
+                        //Should streamline at some point
+                        columnName = iRule.targetPath;
+                    } else {
+                        columnName = iPropertyDescriptor.name;
+                    }
+
+                    this._buildObjectDescriptorColumnAndIndexString(objectDescriptor, columnName, columnType, iPropertyDescriptor, iRule, colunmns, colunmnStrings, colunmnIndexStrings);
+
+                }
 
                 /*
                     Some many-to-many use the primary key as a way
@@ -1462,69 +1840,40 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                     So as a better check, once we created a column, we track it so if somehow multiple mappings use it,
                     we won't create it multiple times.
                 */
-               if(colunmns.has(columnName)) {
-                continue;
-                }
-                else {
-                    colunmns.add(columnName);
-                }
-            //    if(columnName === "id" && iRule.reverter && iRule.reverter instanceof RawForeignValueToObjectConverter) {
-            //         continue;
-            //    }
+                // if(!colunmns.has(columnName)) {
 
-                columnType = this.mapPropertyDescriptorToRawType(iPropertyDescriptor, iRule);
-                columnSQL += `  `;
-                columnSQL += escapeIdentifier(columnName) + " " + columnType;
+                //     colunmns.add(columnName);
 
-                if (columnType === 'text') {
-                    columnSQL += ' COLLATE pg_catalog."default"';
-                }
 
-                // if(propertyValueDescriptor = iPropertyDescriptor.valueDescriptor) {
-                //   if(iPropertyDescriptor.cardinality === 1) {
-                //     columnType = "uuid";
-                //   }
-                //   else {
-                //     columnType = "uuid[]";
-                //   }
-                //   columnSQL+= columnName + " "+columnType;
+                //     columnSQL += this._buildColumnString(columnName, columnType);
+
+                //     if (i > 0) {
+                //         columnSQL += ',\n';
+                //     }
+
+
+                //     iIndex = this.mapSearchablePropertyDescriptorToRawIndex(iPropertyDescriptor, iRule);
+                //     if(iIndex) {
+                //         if (indexSQL.length) {
+                //             indexSQL += "\n";
+                //         }
+                //         indexSQL += iIndex;
+                //     }
                 // }
-                // else {
-                //   columnType = this.mapPropertyDescriptorTypeToRawType(iPropertyDescriptor.valueType);
-                //   columnSQL+= columnName + " "+columnType;
-                //   if(columnType === 'text') {
-                //     columnSQL += ' COLLATE pg_catalog."default"';
-                //   }
-                // }
-                // if(i<countI-1) {
-                //   columnSQL += ',\n';
-                // }
-                if (i > 0) {
-                    columnSQL += ',\n';
-                }
-
-
-                iIndex = this.mapSearchablePropertyDescriptorToRawIndex(iPropertyDescriptor, iRule);
-                if(iIndex) {
-                    if (indexSQL.length) {
-                        indexSQL += "\n";
-                    }
-                    indexSQL += iIndex;
-                }
 
             }
 
             sql += createTableTemplatePrefix;
 
-            //If we added more to ",\n"
-            if (columnSQL.length > 2) {
-                sql += columnSQL;
+            if (colunmnStrings.length > 0) {
+                sql += ',\n';
+                sql += colunmnStrings.join(',\n');
             }
             sql += createTableTemplateSuffix;
 
             //Now add indexes:
-            if(indexSQL.length) {
-                sql += indexSQL;
+            if(colunmnIndexStrings.length > 0) {
+                sql += colunmnIndexStrings.join('\n');
             }
 
             rawDataOperation.sql = sql;
@@ -1700,7 +2049,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                     recordKeys = Object.keys(record),
                     escapedRecordKeys = recordKeys.map(key => escapeIdentifier(key)),
                     recordKeysValues = Array(recordKeys.length),
-                    mapping = objectDescriptor && self.mappingWithType(objectDescriptor),
+                    mapping = objectDescriptor && self.mappingForType(objectDescriptor),
                     sqlColumns = recordKeys.join(","),
                     i, countI, iKey, iValue, iMappedValue, iRule, iPropertyName, iPropertyDescriptor, iRawType,
                     rawDataPrimaryKeys = mapping.rawDataPrimaryKeys,
@@ -1883,7 +2232,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 mappingPromise,
                 sql,
                 objectDescriptor = this.objectDescriptorWithModuleId(updateOperation.dataDescriptor),
-                mapping = objectDescriptor && self.mappingWithType(objectDescriptor),
+                mapping = objectDescriptor && self.mappingForType(objectDescriptor),
                 criteria = updateOperation.criteria,
                 dataChanges = data,
                 changesIterator,

@@ -31,7 +31,7 @@
     src: url(../assets/fonts/icons/phront-icon.ttf?df1sb9) format("truetype"), url(../assets/fonts/icons/phront-icon.woff?df1sb9) format("woff"), url(../assets/fonts/icons/phront-icon.svg?df1sb9#phront) format("svg");
     font-weight: 400;
     font-style: normal
-} 
+}
 
 [class*=" sharedIcon"],
 [class^=sharedIcon] {

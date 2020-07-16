@@ -1,160 +1,95 @@
 var Object = require("./object").Object;
 
 /**
- * @class Image
+ * @class Event
  * Models https://help.shopify.com/en/api/graphql-admin-api/reference/object/image
  * @extends Object
  */
 
 
  /*
- {
-  "kind": "calendar#event",
-  "etag": etag,
-  "id": string,
-  "status": string,
-  "htmlLink": string,
-  "created": datetime,
-  "updated": datetime,
-  "summary": string,
-  "description": string,
-  "location": string,
-  "colorId": string,
-  "creator": {
-    "id": string,
-    "email": string,
-    "displayName": string,
-    "self": boolean
-  },
-  "organizer": {
-    "id": string,
-    "email": string,
-    "displayName": string,
-    "self": boolean
-  },
-  "start": {
-    "date": date,
-    "dateTime": datetime,
-    "timeZone": string
-  },
-  "end": {
-    "date": date,
-    "dateTime": datetime,
-    "timeZone": string
-  },
-  "endTimeUnspecified": boolean,
-  "recurrence": [
-    string
-  ],
-  "recurringEventId": string,
-  "originalStartTime": {
-    "date": date,
-    "dateTime": datetime,
-    "timeZone": string
-  },
-  "transparency": string,
-  "visibility": string,
-  "iCalUID": string,
-  "sequence": integer,
-  "attendees": [
-    {
-      "id": string,
-      "email": string,
-      "displayName": string,
-      "organizer": boolean,
-      "self": boolean,
-      "resource": boolean,
-      "optional": boolean,
-      "responseStatus": string,
-      "comment": string,
-      "additionalGuests": integer
-    }
-  ],
-  "attendeesOmitted": boolean,
-  "extendedProperties": {
-    "private": {
-      (key): string
-    },
-    "shared": {
-      (key): string
-    }
-  },
-  "hangoutLink": string,
-  "conferenceData": {
-    "createRequest": {
-      "requestId": string,
-      "conferenceSolutionKey": {
-        "type": string
-      },
-      "status": {
-        "statusCode": string
-      }
-    },
-    "entryPoints": [
-      {
-        "entryPointType": string,
-        "uri": string,
-        "label": string,
-        "pin": string,
-        "accessCode": string,
-        "meetingCode": string,
-        "passcode": string,
-        "password": string
-      }
-    ],
-    "conferenceSolution": {
-      "key": {
-        "type": string
-      },
-      "name": string,
-      "iconUri": string
-    },
-    "conferenceId": string,
-    "signature": string,
-    "notes": string,
-    "gadget": {
-    "type": string,
-    "title": string,
-    "link": string,
-    "iconLink": string,
-    "width": integer,
-    "height": integer,
-    "display": string,
-    "preferences": {
-      (key): string
-    }
-  },
-  "anyoneCanAddSelf": boolean,
-  "guestsCanInviteOthers": boolean,
-  "guestsCanModify": boolean,
-  "guestsCanSeeOtherGuests": boolean,
-  "privateCopy": boolean,
-  "locked": boolean,
-  "reminders": {
-    "useDefault": boolean,
-    "overrides": [
-      {
-        "method": string,
-        "minutes": integer
-      }
-    ]
-  },
-  "source": {
-    "url": string,
-    "title": string
-  },
-  "attachments": [
-    {
-      "fileUrl": string,
-      "title": string,
-      "mimeType": string,
-      "iconLink": string,
-      "fileId": string
-    }
-  ]
-}
 
-*/
+    In Apple's EventKit, Location is:
+
+    https://developer.apple.com/documentation/corelocation/cllocation?language=objc
+
+ */
+
+
+/**
+ * Notes: all-day events:
+ *
+ * https://github.com/mozilla-comm/ical.js/issues/353
+ *
+ *  I can't find anything in the RFC about all day events,
+ * but both Outlook and Google are able to determine if an event is all day.
+ * Looking at an ics file with all day events, when the DTSTART and DTEND are both in this format:
+ *
+ * DTSTART;VALUE=DATE:20180316
+ * DTEND;VALUE=DATE:20180317
+ *
+ * the event is 'All Day'
+ *
+ * and if the DTSTART/END are either:
+ *
+ * DTSTART:20180119T173000Z
+ * DTEND:20180119T182000Z
+ *
+ * or
+ *
+ * DTSTART;TZID="(UTC-06:00) Central Time (US & Canada)":20180630T080000
+ * DTEND;TZID="(UTC-06:00) Central Time (US & Canada)":20180630T083000
+ * The event is not all day. Does ical.js give a higher order method to detect all day events?
+ * Is it just a matter of checking that start and end are exactly 24 hours apart,
+ * and are at midnight exactly?
+ *
+ * var dtstart = vevent.getFirstPropertyValue('dtstart');
+ * var dtend = vevent.getFirstPropertyValue('dtend');
+ *
+ * if (dtstart.isDate && dtend.isDate)
+ *      event.isAllDay = true;
+ *
+ * In JS, if no hours/minutes/seconds are speficified, it stays that way:
+ * > new Date(this.year, this.month - 1, this.day).getHours()
+ * < NaN
+ *
+ * ICAL time (CalendarDate in montage has isDate property, we should add that to our Event to avoid confusion).
+ */
+
+
+ /*
+https://icalendar.org/CalDAV-Access-RFC-4791/7-10-caldav-free-busy-query-report.html
+
+free-busy-query REPORT generates a VFREEBUSY component containing free busy information for all the calendar object resources targeted by the request and that have the CALDAV:read-free- busy or DAV:read privilege granted to the current user.
+
+Only VEVENT components without a TRANSP property or with the TRANSP property set to OPAQUE, and VFREEBUSY components SHOULD be considered in generating the free busy time information.
+
+In the case of VEVENT components, the free or busy time type (FBTYPE) of the FREEBUSY properties in the returned VFREEBUSY component SHOULD be derived from the value of the TRANSP and STATUS properties, as outlined in the table below:
+
+   +---------------------------++------------------+
+   |          VEVENT           ||    VFREEBUSY     |
+   +-------------+-------------++------------------+
+   | TRANSP      | STATUS      || FBTYPE           |
+   +=============+=============++==================+
+   |             | CONFIRMED   || BUSY             |
+   |             | (default)   ||                  |
+   | OPAQUE      +-------------++------------------+
+   | (default)   | CANCELLED   || FREE             |
+   |             +-------------++------------------+
+   |             | TENTATIVE   || BUSY-TENTATIVE   |
+   |             +-------------++------------------+
+   |             | x-name      || BUSY or          |
+   |             |             || x-name           |
+   +-------------+-------------++------------------+
+   |             | CONFIRMED   ||                  |
+   | TRANSPARENT | CANCELLED   || FREE             |
+   |             | TENTATIVE   ||                  |
+   |             | x-name      ||                  |
+   +-------------+-------------++------------------+
+Duplicate busy time periods with the same FBTYPE parameter value SHOULD NOT be specified in the returned VFREEBUSY component. Servers SHOULD coalesce consecutive or overlapping busy time periods of the same type. Busy time periods with different FBTYPE parameter values MAY overlap.
+
+
+ */
 
 
 exports.Event = Object.specialize(/** @lends Event.prototype */ {
@@ -165,25 +100,40 @@ exports.Event = Object.specialize(/** @lends Event.prototype */ {
             return this;
         }
     },
+    resource: {
+        value: undefined
+    },
+    resourceType: {
+        value: undefined
+    },
     calendar: {
         value: undefined
     },
-    kind: {
+    scheduledTimeRange: {
         value: undefined
     },
-    etag: {
+    actualTimeRange: {
         value: undefined
     },
-    status: {
+    parent: {
         value: undefined
     },
-    htmlLink: {
+    children: {
         value: undefined
     },
-    created: {
+    isBlocking: {
         value: undefined
     },
-    updated: {
+    participation: {
+        value: undefined
+    },
+    participationRoles: {
+        value: undefined
+    },
+    participationStatus: {
+        value: undefined
+    },
+    eventURL: {
         value: undefined
     },
     summary: {
@@ -198,28 +148,16 @@ exports.Event = Object.specialize(/** @lends Event.prototype */ {
     color: {
         value: undefined
     },
-    creator: {
-        value: undefined
-    },
     organizer: {
         value: undefined
     },
-    timeRange: {
+    isAllDay: {
         value: undefined
     },
-    endTimeUnspecified: {
-        value: undefined
-    },
-    recurrence: {
+    recurrenceRule: {
         value: undefined
     },
     recurringEvent: {
-        value: undefined
-    },
-    originalTimeRange: {
-        value: undefined
-    },
-    transparency: {
         value: undefined
     },
     visibility: {
@@ -231,13 +169,7 @@ exports.Event = Object.specialize(/** @lends Event.prototype */ {
     sequence: {
         value: undefined
     },
-    attendeesOmitted: {
-        value: undefined
-    },
-    extendedProperties: {
-        value: undefined
-    },
-    hangoutLink: {
+    attendees: {
         value: undefined
     },
     conferenceData: {
@@ -264,9 +196,6 @@ exports.Event = Object.specialize(/** @lends Event.prototype */ {
     reminders: {
         value: undefined
     },
-    source: {
-        value: undefined
-    },
     attachments: {
         value: undefined
     },
@@ -275,6 +204,25 @@ exports.Event = Object.specialize(/** @lends Event.prototype */ {
             task: "Task-Proto-task-property",
             name: "Task-Proto-name-property"
         }
+    },
+    _isAllDay: {
+        value: false
+    },
+    isAllDay: {
+        set: function (value) {
+            if (this._isAllDay !== !!value) {
+                this._isAllDay = !!value;
+            }
+        },
+        get: function () {
+            return this._isAllDay;
+        }
     }
+    /*
+    ,
+    isAllDay: {
+        value: false
+    }
+    */
 
 });

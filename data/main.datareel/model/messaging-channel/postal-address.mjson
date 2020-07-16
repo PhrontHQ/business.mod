@@ -1,0 +1,127 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PostalAddress",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "firstName"},
+                {"@": "lastName"},
+                {"@": "phone"},
+                {"@": "company"},
+                {"@": "address1"},
+                {"@": "address2"},
+                {"@": "city"},
+                {"@": "provinceCode"},
+                {"@": "zip"},
+                {"@": "country"},
+                {"@": "location"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/messaging-channel/postal-address.mjson"
+            },
+            "exportName": "PostalAddress",
+            "module": {
+                "%": "data/main.datareel/model/messaging-channel/postal-address"
+            },
+            "object":{"@": "address"},
+            "parent":{"@": "MessagingChannelDescriptor"}
+        }
+    },
+    "address": {
+        "object": "data/main.datareel/model/messaging-channel/postal-address"
+    },
+    "MessagingChannelDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "firstName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "firstName",
+            "valueType": "string"
+        }
+    },
+    "lastName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "lastName",
+            "valueType": "string"
+        }
+    },
+     "phone": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "phone",
+            "valueType": "string"
+        }
+    },
+    "company": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "company",
+            "valueType": "string"
+        }
+    },
+    "address1": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "address1",
+            "valueType": "string"
+       }
+    },
+    "address2": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "address2",
+            "valueType": "string"
+       }
+    },
+    "city": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "city",
+            "valueType": "string"
+       }
+    },
+    "provinceCode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "provinceCode",
+            "valueType": "string"
+       }
+    },
+    "zip": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "zip",
+            "valueType": "string"
+       }
+    },
+    "country": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "country",
+            "valueType": "string"
+       }
+    },
+    "location": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "location",
+            "valueType": "object",
+            "valueDescriptor": {"@": "PointDescriptor"},
+            "isSearchable": true
+        }
+    },
+    "PointDescriptor": {
+        "object": "montage-geo/logic/model/descriptors/point.mjson"
+    }
+
+}

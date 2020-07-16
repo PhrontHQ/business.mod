@@ -2,6 +2,8 @@
  * @module ui/month-view.reel
  */
 var Component = require("montage/ui/component").Component,
+    Range = require("montage/core/range").Range,
+
 MONTHS = [
     "January",
     "February",
@@ -81,7 +83,9 @@ exports.MonthView = Component.specialize(/** @lends MonthView# */ {
         value: function() {
             var currentPeriod = new Date();
             currentPeriod.setDate(1);
+            currentPeriod.setHours(0,0,0,0);
             this._currentPeriod = currentPeriod;
+
             this._updateCalendar();
         }
     },
@@ -115,6 +119,12 @@ exports.MonthView = Component.specialize(/** @lends MonthView# */ {
                 today = new Date(),
                 week,
                 i, j;
+
+            //Set timeRange:
+            var firstDateOfMonth  = new Date(this._currentPeriod);
+            var lastDateOfMonth = new Date(this._currentPeriod.getFullYear(), this._currentPeriod.getMonth()+1, 0);
+            lastDateOfMonth.setHours(23,59,59,999);
+            this.timeRange = new Range(firstDateOfMonth,lastDateOfMonth);
 
             this.daysOfTheWeekContentForRepetition = this.firstDayOfWeek ? [].concat(this.daysOfTheWeek.slice(this.firstDayOfWeek), this.daysOfTheWeek.slice(0, this.firstDayOfWeek)) : this.daysOfTheWeek;
             i = ((this.firstDayOfWeek || 0) + 7 - new Date(year, month, 1).getDay()) % 7;

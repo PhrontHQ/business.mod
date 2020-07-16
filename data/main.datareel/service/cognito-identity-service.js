@@ -14,8 +14,14 @@ var UserIdentityService = require("montage/data/service/user-identity-service").
 /*
     TODO:
 
-    As a RawDataService, CognitoIdentityService should map a CognitoUser
+    - As a RawDataService, CognitoIdentityService should map a CognitoUser
     to a Phront User.
+
+    - Use https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CognitoIdentityServiceProvider.html#adminLinkProviderForUser-property
+
+    to link third party ident and coginito users together.
+
+
 
 */
 

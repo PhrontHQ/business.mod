@@ -1,0 +1,27 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Alarm",
+            "propertyDescriptors": [
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/alarm.mjson"
+            },
+            "exportName": "Alarm",
+            "module": {
+                "%": "data/main.datareel/model/alarm"
+            },
+            "modulePrototype":{"@": "AlarmPrototype"},
+            "object":{"@": "AlarmPrototype"},
+            "parent":{"@": "eventDescriptor"}
+        }
+    },
+    "AlarmPrototype": {
+        "object": "data/main.datareel/model/alarm"
+    },
+    "eventDescriptor": {
+        "object": "data/main.datareel/model/event.mjson"
+    }
+
+}

@@ -24,9 +24,9 @@ exports.PostgresqlJsonbConverter = Converter.specialize( /** @lends PostgresqlJs
      */
     convert: {
         value: function (v) {
-            return (typeof v === "object")
-                ? v
-                : JSON.parse(v);
+            return (typeof v === "string")
+                ? JSON.parse(v)
+                : v;
         }
     },
 

@@ -1,0 +1,79 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "EmploymentPositionStaffing",
+            "propertyDescriptors": [
+                {"@": "employmentType"},
+                {"@": "employmentPosition"},
+                {"@": "employee"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/employment-position-staffing.mjson"
+            },
+            "exportName": "EmploymentPositionStaffing",
+            "module": {
+                "%": "data/main.datareel/model/employment-position-staffing"
+            },
+            "object":{"@": "EmploymentPositionStaffing"},
+            "parent":{"@": "party-party-relationship"}
+        }
+    },
+    "EmploymentPositionStaffing": {
+        "object": "data/main.datareel/model/employment-position-staffing"
+    },
+    "party-party-relationship": {
+        "object": "data/main.datareel/model/party-party-relationship.mjson"
+    },
+    "employmentType": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "employmentType",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "employment_type_descriptor"}
+        }
+    },
+    "employment_type_descriptor": {
+        "object": "data/main.datareel/model/employment-type.mjson"
+    },
+    "employmentPosition": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "employmentPosition",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "staffingHistory",
+            "valueDescriptor": {"@": "employment-position-descriptor"}
+        }
+    },
+    "employment-position-descriptor": {
+        "object": "data/main.datareel/model/employment-position.mjson"
+    },
+    "employee": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "employee",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "employmentHistory",
+            "valueDescriptor": {"@": "person_descriptor"}
+        }
+    },
+    "person_descriptor": {
+        "object": "data/main.datareel/model/person.mjson"
+    },
+    "role": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "role",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "role_descriptor"}
+        }
+    },
+    "role_descriptor": {
+        "object": "data/main.datareel/model/role.mjson"
+    }
+
+}

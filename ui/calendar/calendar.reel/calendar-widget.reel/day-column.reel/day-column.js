@@ -47,23 +47,23 @@ exports.DayColumn = Component.specialize({
     handleDragstart: {
         value: function (event) {
             console.log("DayColumn: handleDragstart",event.dataTransfer.types);
-            /*  
+            /*
                 TaskCategory / Service needs to add a relevant type to dataTransfer.types
                 and the dagged
-                Right now, we can get 
+                Right now, we can get
             */
             var draggedObject = event.dataTransfer.draggedObject,
                 draggedObjectDescriptor = draggedObject.objectDescriptor,
                 shouldAccept = this.taskCategories.has(draggedObject);
-                // shouldAccept = !!(event.dataTransfer.types && 
+                // shouldAccept = !!(event.dataTransfer.types &&
                 // event.dataTransfer.types.indexOf('Files') > -1);
-                
+
                 if (shouldAccept) {
                     event.dataTransfer.dropTargetCandidates.add(this);
                     this._addEventListeners();
                     this.willAcceptDrop = true;
                 }
-    
+
         }
     },
 

@@ -6,57 +6,69 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
+                    "participatingResource": {
+                        "<->": "{personId: personId,resourceId: resourceId}",
+                        "converter": {"@": "participatingResourceForeignKeyConverter"}
+                    },
                     "calendar": {
                         "<->": "calendarId",
                         "converter": {"@": "calendar-converter"}
                     },
-                    "kind": {"<->": "kind"},
-                    "etag": {"<->": "etag"},
-                    "status": {"<->": "status"},
-                    "htmlLink": {"<->": "htmlLink"},
-                    "created": {
-                        "<->": "created",
-                        "converter": {"@": "RFC3339UTCStringToDateConverter"}
+                    "scheduledTimeRange": {
+                        "<->": "scheduledTimeRange",
+                        "converter": {"@": "string-to-range-converter"}
                     },
-                    "updated": {
-                        "<->": "updated",
-                        "converter": {"@": "RFC3339UTCStringToDateConverter"}
+                    "actualTimeRange": {
+                        "<->": "actualTimeRange",
+                        "converter": {"@": "string-to-range-converter"}
+                    },
+                    "parent": {
+                        "<->": "parentId",
+                        "converter": {"@": "parentForeignKeyConverter"}
+                    },
+                    "children": {
+                        "<->": "id",
+                        "converter": {"@": "childrenForeignKeyConverter"}
+                    },
+                    "isBlocking": {"<->": "isBlocking"},
+                    "participation": {"<->": "participation"},
+                    "participationRoles": {
+                        "<->": "participationRoleIds",
+                        "converter": {"@": "participationRolesConverter"}
+                    },
+                    "participationStatus": {"<->": "participationStatus"},
+                    "eventURL": {
+                        "<->": "eventURL",
+                        "converter": {"@": "eventURLConverter"}
                     },
                     "summary": {"<->": "summary"},
                     "description": {"<->": "description"},
-                    "location": {"<->": "location"},
-                    "colorId": {"<->": "colorId"},
+                    "location": {
+                        "<->": "locationId",
+                        "converter": {"@": "location-converter"}
+                    },
+                    "color": {
+                        "<->": "colorId",
+                        "converter": {"@": "color-converter"}
+                   },
                     "creator": {
                         "<->": "creator",
                         "converter": {"@": "event-creator-converter"}
                     },
-                    "organizer": {
-                        "<->": "organizer",
-                        "converter": {"@": "event-organizer-converter"}
-                    },
-                    "timeRange": {
-                        "<->": "timeRange",
-                        "converter": {"@": "string-to-range-converter"}
-                    },
+                    "isAllDay": {"<->": "isAllDay"},
                     "endTimeUnspecified": {"<->": "endTimeUnspecified"},
-                    "recurrence": {"<->": "recurrence"},
+                    "recurrenceRule": {"<->": "recurrenceRule"},
                     "recurringEvent": {"<->": "recurringEventId",
                         "converter": {"@": "recurringEventForeignKeyConverter"}},
                     "originalTimeRange": {
                         "<->": "originalTimeRange",
                         "converter": {"@": "string-to-range-converter"}
                     },
-                    "transparency": {"<->": "transparency"},
                     "visibility": {"<->": "visibility"},
                     "iCalUID": {"<->": "iCalUID"},
                     "sequence": {"<->": "sequence"},
-                    "attendees": {
-                        "<->": "attendees",
-                        "converter": {"@": "event-attendees-converter"}
-                    },
                     "attendeesOmitted": {"<->": "attendeesOmitted"},
                     "extendedProperties": {"<->": "extendedProperties"},
-                    "hangoutLink": {"<->": "hangoutLink"},
                     "conferenceData": {
                         "<->": "conferenceData",
                         "converter": {"@": "event-conferenceData-converter"}
@@ -67,17 +79,25 @@
                     "guestsCanSeeOtherGuests": {"<->": "guestsCanSeeOtherGuests"},
                     "privateCopy": {"<->": "privateCopy"},
                     "locked": {"<->": "locked"},
-                    "reminders": {"<->": "reminders"},
-                    "source": {"<->": "source"},
-                    "attachments": {"<->": "attachments"}
+                    "attachments": {"<->": "attachments"},
+                    "reminders": {
+                        "<->": "reminderIds",
+                        "converter": {"@": "remindersConverter"}
+                    },
+                    "serviceEngagement": {
+                        "<->": "id",
+                        "converter": {"@": "service-engagement-converter"}
+                    }
                }
             },
             "rawDataMapping": {
                 "rules": {
+                    "personId": {"<-": "participatingResource.objectDescriptor == @PersonDescriptor ? participatingResource.primaryKey : null"},
+                    "resourceId": {"<-": "participatingResource.objectDescriptor == @ResourceDescriptor ? participatingResource.primaryKey : null"}
                 }
             },
             "requisitePropertyNames": [
-                "summary","description","location","kind","status","created"
+                "participatingResource","calendar","scheduledTimeRange","actualTimeRange","parent","children","isBlocking","participation","participationRoles","participationStatus","summary","description","location","isAllDay"
             ]
         }
     },
@@ -85,6 +105,55 @@
     "calendar-converter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "PersonForeignKeyMapping": {
+        "prototype": "montage/data/service/raw-data-type-mapping",
+        "properties": {
+            "type": {"@": "PersonDescriptor"},
+            "expression": "personId.defined()"
+        }
+    },
+    "ResourceForeignKeyMapping": {
+        "prototype": "montage/data/service/raw-data-type-mapping",
+        "properties": {
+            "type": {"@": "ResourceDescriptor"},
+            "expression": "resourceId.defined()"
+        }
+    },
+    "participatingResourceForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $",
+            "foreignDescriptorMappings": [{"@": "PersonForeignKeyMapping"},{"@": "ResourceForeignKeyMapping"}]
+        }
+    },
+    "parentForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "childrenForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "parentId == $"
+        }
+    },
+    "participationRolesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }
+    },
+    "eventURLConverter": {
+        "prototype": "montage/core/converter/string-to-URL-converter"
+    },
+    "location-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
         }
     },
 
@@ -92,25 +161,15 @@
         "object": "data/main.datareel/model/event.mjson"
     },
 
+    "PersonDescriptor": {
+        "object": "data/main.datareel/model/person.mjson"
+    },
+
+    "ResourceDescriptor": {
+        "object": "data/main.datareel/model/resource.mjson"
+    },
+
     "event-creator-converter": {
-        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
-        "values": {
-        }
-    },
-
-    "event-organizer-converter": {
-        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
-        "values": {
-        }
-    },
-
-    "event-start-converter": {
-        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
-        "values": {
-        }
-    },
-
-    "event-end-converter": {
         "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
         "values": {
         }
@@ -123,17 +182,8 @@
         }
     },
 
-
     "string-to-range-converter": {
-        "prototype": "data/main.datareel/converter/timestamp-with-timezone-range-string-to-date-range-converter",
-        "values": {
-        }
-    },
-
-    "event-attendees-converter": {
-        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
-        "values": {
-        }
+        "prototype": "../converter/RFC3339UTC-range-string-to-range-converter"
     },
 
     "event-conferenceData-converter": {
@@ -146,5 +196,27 @@
         "prototype": "montage/core/converter/RFC3339UTC-string-to-date-converter",
         "values": {
         }
+    },
+
+    "color-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+    "remindersConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }
+    },
+
+    "service-engagement-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "eventId == $"
+        }
     }
+
 }

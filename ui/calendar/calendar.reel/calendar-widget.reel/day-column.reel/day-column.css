@@ -1,1 +1,40 @@
-.DayColumn{position:relative;z-index:1}.DayColumn:before{display:none;content:"";position:absolute;top:0;left:0;right:0;bottom:0;border:1px dashed currentColor}.DayColumn.willAcceptDrop:before{display:block;animation:blink 1s infinite ease}.DayColumn.acceptDrop:before{display:block;border:1px dashed #0c5688;background-color:rgba(12,86,136,.1)}.DayColumn.is-today{box-shadow:0 0 8px 2px rgba(0,0,0,.3)}.DayView .DayColumn.is-today{box-shadow:none}.DayColumn-events{position:relative;left:.25em;width:calc(100% - .75em)}
+.DayColumn {
+    position: relative;
+    z-index: 1
+}
+
+.DayColumn:before {
+    display: none;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 1px dashed currentColor
+}
+
+.DayColumn.willAcceptDrop:before {
+    display: block;
+    animation: blink 1s infinite ease
+}
+
+.DayColumn.acceptDrop:before {
+    display: block;
+    border: 1px dashed #0c5688;
+    background-color: rgba(12, 86, 136, .1)
+}
+
+.DayColumn.is-today {
+    box-shadow: 0 0 8px 2px rgba(0, 0, 0, .3)
+}
+
+.DayView .DayColumn.is-today {
+    box-shadow: none
+}
+
+.DayColumn-events {
+    position: relative;
+    left: .25em;
+    width: calc(100% - .75em)
+}

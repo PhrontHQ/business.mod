@@ -11,6 +11,10 @@
  * README.md file in the root directory of this source tree.
  */
 
+var Range = require("montage/core/range").Range,
+RFC3339UTCRangeStringToRangeConverter = require("montage/core/converter/RFC3339UTC-range-string-to-range-converter").singleton;
+
+
 const parseInputDatesAsUTC = false;
 
 function escapeElement (elementRepresentation, quoteCharacter) {
@@ -48,7 +52,12 @@ function arrayString (val, type) {
             result += '\\\\x';
             result += iVal.toString('hex');
         } else {
-            result += escapeElement(prepareValue(iVal), toList ? "'" : '"' );
+            if (typeof iVal === 'object' &&toJSONB) {
+                result += prepareValue(iVal);
+            } else {
+                result += escapeElement(prepareValue(iVal), toList ? "'" : '"' );
+            }
+
         }
     }
     result += toJSONB
@@ -84,6 +93,13 @@ var prepareValue = function (val, type, seen) {
             return dateToStringUTC(val);
         } else {
             return dateToString(val);
+        }
+    }
+    if (val instanceof Range) {
+        if(val.begin instanceof Date) {
+            return `'${RFC3339UTCRangeStringToRangeConverter.revert(val)}'::tstzrange`;
+        } else {
+            throw "Range raw conversion not handled for Range with begin:"+val.begin+", end:"+val.end;
         }
     }
     if (Array.isArray(val)) {

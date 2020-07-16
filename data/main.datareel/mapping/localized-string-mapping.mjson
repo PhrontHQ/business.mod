@@ -1,0 +1,34 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "LocalizedStringDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "altText": {"<->": "altText"},
+                    "originalSrc": {"<->": "originalSrc"},
+                    "transformedSrc": {"<->": "transformedSrc"},
+                    "exifMetadata": {"<->": "exifMetadata",
+                        "converter": {"@": "jsonbConverter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "altText","originalSrc","transformedSrc"
+            ]
+        }
+    },
+
+    "LocalizedStringDescriptor": {
+        "object": "data/main.datareel/model/localized-string.mjson"
+    },
+    "jsonbConverter": {
+        "prototype": "../converter/postgresql-jsonb-converter"
+    }
+
+}

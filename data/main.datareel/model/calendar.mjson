@@ -4,15 +4,16 @@
         "values": {
             "name": "Calendar",
             "propertyDescriptors": [
-                {"@": "kind"},
                 {"@": "etag"},
-                {"@": "summary"},
+                {"@": "name"},
                 {"@": "description"},
                 {"@": "location"},
                 {"@": "timeZone"},
                 {"@": "conferenceProperties"},
                 {"@": "events"},
-                {"@": "color"}
+                {"@": "color"},
+                {"@": "owner"},
+                {"@": "serviceEngagements"}
             ],
             "objectDescriptorModule": {
                 "%":"data/main.datareel/model/calendar.mjson"
@@ -32,14 +33,6 @@
     "Object": {
         "object": "data/main.datareel/model/object.mjson"
     },
-    "kind": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "kind",
-            "valueType": "string",
-            "defaultValue": "calendar#calendar"
-        }
-    },
     "etag": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -47,10 +40,10 @@
             "valueType": "string"
         }
     },
-    "summary": {
+    "name": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "summary",
+            "name": "name",
             "valueType": "string"
         }
     },
@@ -72,8 +65,12 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "timeZone",
-            "valueType": "string"
+            "valueType": "object",
+            "valueDescriptor": {"@": "timeZone-descriptor"}
         }
+    },
+    "timeZone-descriptor": {
+        "object": "montage/core/date/time-zone.mjson"
     },
     "conferenceProperties": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -99,9 +96,39 @@
         "values": {
             "name": "color",
             "valueType": "string",
-            "description":"The color of the event. This is an ID referring to an entry in the event section of the colors definition (see the colors endpoint). Optional."
+            "description": "The color used to represent events in the calendar."
         }
+    },
+    "ColorDescriptor": {
+        "object": "data/main.datareel/model/color/color.mjson"
+    },
+    "owner": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "owner",
+            "valueType": "object",
+            "description": "The object owning this calendar",
+            "isSearchable": true,
+            "cardinality": 1,
+            "inversePropertyName": "calendars",
+            "valueDescriptor": {"@": "PartyDescriptor"}
+        }
+    },
+    "PartyDescriptor": {
+        "object": "data/main.datareel/model/party.mjson"
+    },
+    "serviceEngagements": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "serviceEngagements",
+            "valueType": "object",
+            "valueDescriptor": {"@": "ServiceEngagement"},
+            "definition": "events.map{serviceEngagement}",
+            "cardinality": -1,
+            "isSearchable": true
+        }
+    },
+    "ServiceEngagement": {
+        "object": "data/main.datareel/model/service-engagement.mjson"
     }
-
-
 }

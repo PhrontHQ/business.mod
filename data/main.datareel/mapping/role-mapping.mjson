@@ -4,9 +4,40 @@
         "values": {
             "objectDescriptor": {"@": "RoleDescriptor"},
             "rawDataPrimaryKeys":["id"],
+            "RawDataKeyMapping": {
+                "rules": {
+                    "name[$language][$region] or name[$language].*": {
+                        "<-": "name",
+                        "converter": {"@": "coalesceConverter"}
+                    },
+                    "description[$language][$region] or description[$language].*": {
+                        "<->": "description",
+                        "converter": {"@": "coalesceConverter"}
+                    },
+                    "tags[$language][$region] or tags[$language].*": {
+                        "<->": "tags",
+                        "converter": {"@": "coalesceConverter"}
+                    }
+                }
+            },
+            "objectKeyMapping": {
+                "rules": {
+                }
+            },
             "objectMapping": {
                 "rules": {
-                    "id": {"<->": "id"}
+                    "name": {
+                        "<->": "name",
+                        "converter": {"@": "jsonbConverter"}
+                    },
+                    "description": {
+                        "<->": "description",
+                        "converter": {"@": "jsonbConverter"}
+                    },
+                    "tags": {
+                        "<->": "tags",
+                        "converter": {"@": "jsonbConverter"}
+                    }
                 }
             },
             "rawDataMapping": {
@@ -20,6 +51,13 @@
     },
 
     "RoleDescriptor": {
-        "object": "data/model/role.mjson"
+        "object": "data/main.datareel/model/role.mjson"
+    },
+    "jsonbConverter": {
+        "prototype": "../converter/postgresql-jsonb-converter"
+    },
+    "coalesceConverter": {
+        "prototype": "../converter/postgresql-jsonb-converter"
     }
+
 }

@@ -7,16 +7,20 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     Promise = require("montage/core/promise").Promise,
     DataOrdering = require("montage/data/model/data-ordering").DataOrdering,
     DESCENDING = DataOrdering.DESCENDING,
-    evaluate = require("montage/frb/evaluate"),
-    Set = require("montage/collections/set"),
-    Map = require("montage/collections/map"),
+    evaluate = require("montage/core/frb/evaluate"),
+    Set = require("montage/core/collections/set"),
+    Map = require("montage/core/collections/map"),
     MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
     Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     uuid = require("montage/core/uuid"),
+    Phluid = require("./phluid").Phluid,
     WebSocket = require("montage/core/web-socket").WebSocket,
     DataEvent = require("montage/data/model/data-event").DataEvent,
     DeleteRule = require("montage/core/meta/property-descriptor").DeleteRule,
+    Locale = require("montage/core/locale").Locale,
+    PGClass = require("../model/p-g-class").PGClass,
+
     PhrontClientService;
 
 
@@ -80,7 +84,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
     authorizationPolicy: {
         get: function() {
-            return this._authorizationPolicy
+            return this._authorizationPolicy;
         },
         set: function(value) {
             this._authorizationPolicy = value;
@@ -90,7 +94,11 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     handleOpen: {
         value: function (event) {
             console.log("WebSocket opened");
-            this._socketOpenPromiseResolve(true);
+            //Get the RawDataTypeIDs
+            // this.fetchRawDataTypeIds()
+            // .then( function() {
+                this._socketOpenPromiseResolve(true);
+            // });
             //this._socket.send("Echo....");
             //this.dispatchEvent(event, true, false);
         }
@@ -316,7 +324,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         value: function(object, _objectDescriptor) {
             if(object.dataIdentifier) {
                 var objectDescriptor = _objectDescriptor || this.objectDescriptorForObject(object),
-                mapping = this.mappingWithType(objectDescriptor),
+                mapping = this.mappingForType(objectDescriptor),
                 //TODO: properly respect and implement up using what's in rawDataPrimaryKeys
                 //rawDataPrimaryKeys = mapping ? mapping.rawDataPrimaryKeyExpressions : null,
                 objectCriteria;
@@ -349,13 +357,65 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             var objectDescriptor = this.objectDescriptorForObject(object),
                 propertyNameQuery = DataQuery.withTypeAndCriteria(objectDescriptor,this.rawCriteriaForObject(object, objectDescriptor));
 
-            propertyNameQuery.prefetchExpressions = [propertyName];
+            propertyNameQuery.readExpressions = [propertyName];
 
             //console.log(objectDescriptor.name+": fetchObjectProperty "+ " -"+propertyName);
 
             return this.fetchData(propertyNameQuery);
         }
     },
+
+    localizedReadExpressionForPropertyDescriptor: {
+        value: function(propertyDescriptor) {
+            //Need to formalize how we ge the right Locale from the user's stand point. For now, let's use
+            /*
+            Keywords like this overlap with the notation normally used for
+            properties of this. If an object has a this property, you may use
+            the notation .this, this.this, or this['this'].  .this is the
+            normal form.
+            var object = Bindings.defineBindings({
+                "this": 10
+            }, {
+                that: {"<-": ".this"}
+            });
+            expect(object.that).toBe(object["this"]);
+            */
+
+            var language = Locale.systemLocale.language,
+                region = Locale.systemLocale.region;
+            return `${propertyDescriptor.name}[${language}][${region}] || ${propertyDescriptor.name}[${language}][*] || ${propertyDescriptor.name}[en][*]`;
+        }
+    },
+
+    _mapObjectDescriptorReadExpressionToRawReadExpression: {
+        value: function(objectDescriptor, readExpressions,rawReadExpressions) {
+            var i, countI, iExpression, iRule, iPropertyDescriptor,
+            mapping = this.mappingForType(objectDescriptor),
+            rawDataMappingRules = mapping.rawDataMappingRules;
+
+            for(i=0, countI = readExpressions && readExpressions.length;(i<countI);i++) {
+                iExpression = readExpressions[i];
+                rule = rawDataMappingRules.get(iExpression);
+                propertyName = rule ? rule.sourcePath : iExpression;
+                propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyName);
+
+                if(propertyDescriptor && propertyDescriptor.isLocalizable) {
+                    rawReadExpressions.push(this.localizedReadExpressionForPropertyDescriptor(propertyDescriptor));
+
+                } else {
+                    rawReadExpressions.push(iExpression);
+                }
+            }
+            return rawReadExpressions;
+        }
+    },
+
+    _mapObjectDescriptorOrderingsToRawOrderings: {
+        value: function(objectDescriptor, sortderings, rawOrderings) {
+            throw new Error("_mapObjectDescriptorOrderingsToRawOrderings is not implemented");
+        }
+    },
+
 
     //This probably isn't right and should be fetchRawData, but switching creates a strange error.
     fetchData: {
@@ -371,11 +431,15 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             this._socketOpenPromise.then(function() {
                 var objectDescriptor = query.type,
                     criteria = query.criteria,
+                    criteriaWithLocale,
                     parameters = criteria ? criteria.parameters : undefined,
                     rawParameters = parameters,
                     readOperation = new DataOperation(),
+                    rawReadExpressions = [],
+                    rawOrderings,
                     promises,
-                    serializedOperation;
+                    serializedOperation,
+                    localizableProperties = objectDescriptor.localizablePropertyDescriptors;
 
                 /*
                     We need to turn this into a Read Operation. Difficulty is to turn the query's criteria into
@@ -386,8 +450,33 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 */
                 readOperation.type = DataOperation.Type.Read;
                 readOperation.dataDescriptor = objectDescriptor.module.id;
-                readOperation.criteria = query.criteria;
-                readOperation.objectExpressions = query.prefetchExpressions;
+                readOperation.data = {};
+                if(criteria) {
+                    //WIP Adds locale as needed
+                    // if(localizableProperties && localizableProperties.length) {
+                    //     criteria = criteria.and(self.userLocaleCriteria);
+                    // }
+                    readOperation.criteria = criteria;
+                }
+
+                if(query.fetchLimit) {
+                    readOperation.data.readLimit = query.fetchLimit;
+                }
+
+                if(query.sortderings && query.sortderings > 0) {
+                    rawOrderings = [];
+                    self._mapObjectDescriptorOrderingsToRawOrderings(objectDescriptor, query.sortderings,rawOrderings);
+                    readOperation.data.orderings = rawOrderings;
+                }
+
+                /*
+                    for a read operation, we already have criteria, shouldn't data contains the array of
+                    expressions that are expected to be returned?
+                */
+                self._mapObjectDescriptorReadExpressionToRawReadExpression(objectDescriptor, query.readExpressions,rawReadExpressions);
+                if(rawReadExpressions.length) {
+                    readOperation.data.readExpressions = rawReadExpressions;
+                }
 
                 /*
 
@@ -511,7 +600,53 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
     primaryKeyForNewDataObject: {
         value: function (type) {
+            return Phluid.generate(this.mappingForType().rawDataTypeId);
             return uuid.generate();
+        }
+    },
+
+    fetchRawDataTypeIds: {
+        value: function() {
+            //kind == "r" are tables. Needs to bake that as an rawDataTypeExpression
+            //in a PGTable subclass's mapping
+            var criteria = new Criteria().initWithExpression("kind == 'r' && namespace.name = 'phront'");
+            var query = DataQuery.withTypeAndCriteria(PGClass, criteria);
+
+            return this.fetchData(query)
+            .then(function(result) {
+                if(result) {
+                    var i, countI, iTable, iTableName, iOID;
+
+                    for(i=0, countI = result.length;(i<countI); i++) {
+                        iTable = result[i];
+                        iTableName = iTable.name;
+                        iOID = iTable.iOID;
+                    }
+                }
+            });
+
+        }
+    },
+
+    _rawDataTypeIdByObjectDescriptor: {
+        value: undefined
+    },
+
+    rawDataTypeIdByObjectDescriptorPromise: {
+        value: function () {
+            return uuid.generate();
+        }
+    },
+
+    rawDataTypeIdForObjectDescriptor: {
+        value: function (aMapping) {
+            return this.rawDataTypeIdByObjectDescriptor(aMapping.objectDescriptor);
+        }
+    },
+
+    rawDataTypeIdForMapping: {
+        value: function (aMapping) {
+            return this.rawDataTypeIdForObjectDescriptor(aMapping.objectDescriptor);
         }
     },
 
@@ -742,7 +877,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                             return _createTransactionPromise;
                         }, function(error) {
-                            console.error("Error trying to communicate with server");
+                            console.error("Error trying to communicate with server",error);
                             reject(error);
                         });
                     }, function(error) {
@@ -856,7 +991,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             // rollbackTransactionOperation.data = batchedOperations;
                             rollbackTransactionOperation.referrerId = createTransaction.id;
                             rollbackTransactionOperation.data = {
-                                transactionId: transactionId
+                                transactionId: createTransaction.id
                             };
 
                             rollbackTransactionOperationPromise = new Promise(function(resolve, reject) {
@@ -1051,7 +1186,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 propertyIterator = isDeletedObject
                     ? Object.keys(object).values()
                     : dataObjectChanges.keys(),
-                mapping = this.mappingWithType(anObjectDescriptor);
+                mapping = this.mappingForType(anObjectDescriptor);
 
             while(aProperty = propertyIterator.next().value) {
                 aRawProperty = mapping.mapObjectPropertyNameToRawPropertyName(aProperty);
@@ -1238,7 +1373,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             */
 
                 var self = this;
-                    // mapping = this.mappingWithType(objectDescriptor),
+                    // mapping = this.mappingForType(objectDescriptor),
                     // //We make a shallow copy so we can remove properties we don't care about
                     // snapshot = Object.assign({},object.dataIdentifier && this.snapshotForDataIdentifier(object.dataIdentifier)),
                     // dataSnapshot = {},
@@ -1363,7 +1498,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     //             operation = new DataOperation(),
     //             dataIdentifier = this.dataIdentifierForObject(object),
     //             objectDescriptor = this.objectDescriptorForObject(object),
-    //             mapping = this.mappingWithType(objectDescriptor),
+    //             mapping = this.mappingForType(objectDescriptor),
     //             //We make a shallow copy so we can remove properties we don't care about
     //             snapshot = Object.assign({},object.dataIdentifier && this.snapshotForDataIdentifier(object.dataIdentifier)),
     //             dataSnapshot = {},
@@ -1624,14 +1759,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     handleCreatefailed: {
         value: function (operation) {
             var referrerOperation = this._pendingOperationById.get(operation.referrerId),
-            records = operation.data;
+            error = operation.data;
 
-            if(records && records.length > 0) {
-
-                //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
-                this.addRawData(stream, records);
-            }
-            this.rawDataDone(stream);
 
         }
     },

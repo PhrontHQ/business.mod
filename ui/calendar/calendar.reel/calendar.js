@@ -1,6 +1,10 @@
 var AbstractInspector = require("ui/controls/abstract/abstract-inspector").AbstractInspector,
     //RoutingService = require("core/service/routing-service").RoutingService,
-    _ = require("lodash");
+    _ = require("lodash"),
+    Criteria = require("montage/core/criteria").Criteria,
+    ObjectDescriptor = require("montage/core/meta/object-descriptor").ObjectDescriptor,
+    DataQuery = require("montage/data/model/data-query").DataQuery,
+    DataStream = require("montage/data/service/data-stream").DataStream;
 
 exports.Calendar = AbstractInspector.specialize({
     _inspectorTemplateDidLoad: {
@@ -18,11 +22,10 @@ exports.Calendar = AbstractInspector.specialize({
 
         //TODO: this needs to be fetched dynamically as Services
 
-            this.taskCategories = [
-                { name: "Surveillance Médicale Ordinaire - 20mn", value: "volume.scrub", checked: true },
-                { name: "Visite de Reprise - 40mn", value: "volume.snapshot_dataset", checked: true },
-                { name: "Surveillance Médicale Renforcée - 60mn", value: "rsync.copy", checked: true }
-            ];
+
+
+
+
             this.addPathChangeListener('selectedObject', this, '_handleSelectionChange');
         }
     },
@@ -31,10 +34,12 @@ exports.Calendar = AbstractInspector.specialize({
         value: function(value) {
             if (value) {
                 if (value._isNew) {
-                    this.object._newTask = _.cloneDeep(value);
+                    if(this.object)
+                        this.object._newTask = _.cloneDeep(value);
                     //this._routingService.navigate('/calendar/calendar-task/create/' + value.task);
                 } else {
-                    this.object._newTask = null;
+                    if(this.object)
+                        this.object._newTask = null;
                     //this._routingService.navigate('/calendar/calendar-task/_/' + value.id);
                 }
             }
@@ -54,5 +59,22 @@ exports.Calendar = AbstractInspector.specialize({
             //         self.object._firstDayOfWeek = _.get(user, 'attributes.userSettings.firstDayOfWeek', 0);
             //     });
         }
+    },
+
+    _timeRange: {
+        value: null
+    },
+
+    timeRange: {
+        get: function() {
+            return this._timeRange;
+        },
+        set: function(value) {
+            if (this._timeRange !== value) {
+                console.log("timeRange is "+value);
+                this._timeRange = value;
+            }
+        }
     }
+
 });

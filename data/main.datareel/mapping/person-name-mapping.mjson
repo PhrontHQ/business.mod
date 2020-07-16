@@ -1,0 +1,33 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "PersonName"},
+            "objectMapping": {
+                "rules": {
+                    "namePrefix": {"<->": "namePrefix"},
+                    "givenName": {"<->": "givenName"},
+                    "middleName": {"<->": "middleName"},
+                    "familyName": {"<->": "familyName"},
+                    "previousFamilyName": {"<->": "previousFamilyName"},
+                    "nameSuffix": {"<->": "nameSuffix"},
+                    "nickname": {"<->": "nickname"},
+                    "phoneticGivenName": {"<->": "phoneticGivenName"},
+                    "phoneticMiddleName": {"<->": "phoneticMiddleName"},
+                    "phoneticFamilyName": {"<->": "phoneticFamilyName"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "namePrefix","givenName","middleName","familyName","previousFamilyName","nameSuffix","nickname","phoneticGivenName","phoneticMiddleName","phoneticFamilyName"
+            ]
+        }
+    },
+
+    "PersonName": {
+        "object": "data/main.datareel/model/person-name.mjson"
+    }
+}

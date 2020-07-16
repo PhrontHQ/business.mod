@@ -57,5 +57,8 @@ exports.UserIdentity = Target.specialize(/** @lends UserIdentity.prototype */ {
     },
     mfaCode: {
         value: undefined
+    },
+    locale: {
+        value: undefined
     }
 });

@@ -1,0 +1,45 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "CustomerSupplierRelationshipDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "orders": {
+                        "<->":"orderIds",
+                        "converter": {"@": "ordersConverter"}
+                    },
+                    "supplier": {
+                        "<->":"supplierId",
+                        "converter": {"@": "supplierConverter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "supplier","orders"
+            ]
+        }
+    },
+
+    "CustomerSupplierRelationshipDescriptor": {
+        "object": "data/main.datareel/model/customer-supplier-relationship.mjson"
+    },
+    "ordersConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }
+    },
+    "supplierConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    }
+
+}

@@ -1,4 +1,4 @@
-var Component = require("montage/ui/component").Component,
+var TimeRangeView = require("../time-range-view").TimeRangeView,
     Promise = require("montage/core/promise").Promise,
     MONTHS = [
             "January",
@@ -13,13 +13,32 @@ var Component = require("montage/ui/component").Component,
             "October",
             "November",
             "December"
-        ];
+        ],
+        Criteria = require("montage/core/criteria").Criteria,
+        DataQuery = require("montage/data/model/data-query").DataQuery,
+        Calendar = require("data/main.datareel/model/calendar").Calendar,
+        Event = require("data/main.datareel/model/event").Event,
+        Range = require("montage/core/range").Range;
 
 /**
- * @class Day
- * @extends Component
+ * @class DayView
+ * @extends TimeRangeView
  */
-exports.DayView = Component.specialize({
+exports.DayView = TimeRangeView.specialize({
+    _data: {
+        value: false
+    },
+    data: {
+        set: function (value) {
+            if (this._data !== value) {
+                this._data = value;
+            }
+        },
+        get: function () {
+            return this._data;
+        }
+    },
+
     _monthsCache: {
         value: null
     },
@@ -103,6 +122,7 @@ exports.DayView = Component.specialize({
             var today = new Date();
             today.setDate(today.getDate());
             this._today = today;
+
             this._updateCalendar();
         }
     },
@@ -133,12 +153,35 @@ exports.DayView = Component.specialize({
                         (dayDate.getFullYear() === today.getFullYear()) &&
                         (dayDate.getMonth() === today.getMonth())
                 };
+
+            //Set timeRange:
+            var dayStart  = new Date(this._today);
+            dayStart.setHours(0,0,0,0);
+            var dayEnd = new Date(dayStart);
+            dayEnd.setHours(23,59,59,999);
+            this.timeRange = new Range(dayStart,dayEnd);
+
+
             console.error("Needs Mock tasks");
             if(this.application.sectionService) {
                 this.application.sectionService.getTasksScheduleOnDay(displayedDay).then(function(tasks){
                     displayedDay.events = tasks;
                 });
             }
+            // else if(this.application.mainService) {
+            //     //use dayDate
+            //     //Get all events on that day.
+            //     var criteria, query, dataStream, objectDescriptor;
+
+            //     // criteria = new Criteria().initWithExpression("component == $component", {
+            //     //     component: component
+            //     // });
+            //     criteria = null;
+            //     query = DataQuery.withTypeAndCriteria(Event, criteria);
+            //     dataStream = this.application.mainService.fetchData(query).then(function (data) {
+            //         displayedDay.events = data;
+            //     });
+            // }
             else {
                 displayedDay.events = [{
                     name: "A",
@@ -146,8 +189,10 @@ exports.DayView = Component.specialize({
                     minute: 0,
                     second:0,
                     task: {
-                        task: "Task-A"
-                    }
+                        task: "Task-A",
+                        name: "Task-A-name"
+                    },
+                    color: "#bf360c"
                 },
                 {
                     name: "B",
@@ -155,8 +200,10 @@ exports.DayView = Component.specialize({
                     minute: 0,
                     second:0,
                     task: {
-                        task: "Task-B"
-                    }
+                        task: "Task-B",
+                        name: "Task-B-name"
+                    },
+                    color: "#880e4f"
                 },
                 {
                     name: "C",
@@ -164,8 +211,10 @@ exports.DayView = Component.specialize({
                     minute: 0,
                     second:0,
                     task: {
-                        task: "Task-C"
-                    }
+                        task: "Task-C",
+                        name: "Task-C-name"
+                    },
+                    color: "#7b1fa2"
                 },
                 {
                     name: "D",
@@ -173,8 +222,10 @@ exports.DayView = Component.specialize({
                     minute: 0,
                     second:0,
                     task: {
-                        task: "Task-D"
-                    }
+                        task: "Task-D",
+                        name: "Task-D-name"
+                    },
+                    color: "#311b92"
                 },
                 {
                     name: "E",
@@ -182,8 +233,10 @@ exports.DayView = Component.specialize({
                     minute: 0,
                     second:0,
                     task: {
-                        task: "Task-E"
-                    }
+                        task: "Task-E",
+                        name: "Task-E-name"
+                    },
+                    color: "#00695c"
                 }];
             }
             this.displayedDay = displayedDay;

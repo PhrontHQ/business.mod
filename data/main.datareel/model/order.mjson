@@ -86,7 +86,7 @@
         }
     },
     "address_descriptor": {
-        "object": "data/main.datareel/model/address.mjson"
+        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
     },
     "doesBillingAddressMatchShippingAddress": {
         "prototype": "montage/core/meta/property-descriptor",

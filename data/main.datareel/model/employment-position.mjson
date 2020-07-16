@@ -1,0 +1,82 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "EmploymentPosition",
+            "propertyDescriptors": [
+                {"@": "allowedEmploymentTypes"},
+                {"@": "employer"},
+                {"@": "position"},
+                {"@": "staffingHistory"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/employment-position.mjson"
+            },
+            "exportName": "EmploymentPosition",
+            "module": {
+                "%": "data/main.datareel/model/employment-position"
+            },
+            "object":{"@": "employment-position"},
+            "parent":{"@": "party-party-relationship"}
+        }
+    },
+    "employment-position": {
+        "object": "data/main.datareel/model/employment-position"
+    },
+    "party-party-relationship": {
+        "object": "data/main.datareel/model/party-party-relationship.mjson"
+    },
+    "allowedEmploymentTypes": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "allowedEmploymentTypes",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "employment_type_descriptor"},
+            "description": "Will allow the restriction of employmentType in EmploymentPositionStaffing"
+        }
+    },
+    "employment_type_descriptor": {
+        "object": "data/main.datareel/model/employment-type.mjson"
+    },
+    "employer": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "employer",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "employeeRelationships",
+            "valueDescriptor": {"@": "organization_descriptor"}
+        }
+    },
+    "organization_descriptor": {
+        "object": "data/main.datareel/model/organization.mjson"
+    },
+    "position": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "position",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "employerRelationships",
+            "valueDescriptor": {"@": "position_descriptor"}
+        }
+    },
+    "position_descriptor": {
+        "object": "data/main.datareel/model/position.mjson"
+    },
+    "staffingHistory": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "staffingHistory",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "employerRelationships",
+            "valueDescriptor": {"@": "employment_position_staffing_descriptor"}
+        }
+    },
+    "employment_position_staffing_descriptor": {
+        "object": "data/main.datareel/model/employment-position-staffing.mjson"
+    }
+
+}
