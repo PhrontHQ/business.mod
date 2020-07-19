@@ -132,6 +132,8 @@ Montage.defineProperty(LocalizedString.prototype, "locale", {
 
   exports.LocalizedString = LocalizedString;
 
+  /*
+  //Test
   const abc = new LocalizedString('a', 'b');
   var prop;
   abc.localization = {};
@@ -140,4 +142,5 @@ Montage.defineProperty(LocalizedString.prototype, "locale", {
       console.log("for in on abc:",prop,"->",abc[prop]);
   }
   console.log("JSON.stringify(abc):",JSON.stringify(abc));
+  */
 
