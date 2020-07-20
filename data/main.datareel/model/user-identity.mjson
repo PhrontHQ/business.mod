@@ -168,7 +168,7 @@
     "person": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "userIdentities",
+            "name": "person",
             "valueType": "object",
             "cardinality": 1,
             "valueDescriptor": {"@": "personDescriptor"},
