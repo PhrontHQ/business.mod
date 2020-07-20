@@ -20,6 +20,8 @@
                     "phone": {"<->": "phone"},
                     "addresses": {"<->": "addressIds",
                                     "converter": {"@": "addressesConverter"}},
+                    "userIdentities": {"<->": "userIdentityIds",
+                                    "converter": {"@": "userIdentitiesConverter"}},
                     "tags": {"<->": "tags"}
                 }
             },
@@ -47,6 +49,12 @@
     },
 
     "addressesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }
+    },
+    "userIdentitiesConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "$.has(id)"
