@@ -75,6 +75,8 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
     dispatchOperationToConnectionClientId: {
         value: function(operation, connection, clientId) {
 
+            console.log("OperationCoordinator: dispatchOperationToConnectionClientId()",operation, connection, clientId)
+
             //remove _target & _currentTarget as it creates a pbm? and we don't need to send it
             delete operation._currentTarget;
             delete operation._target;
@@ -213,7 +215,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
             //Set the clientId (in API already)
             deserializedOperation.clientId = event.requestContext.connectionId;
 
-            //console.log("handleEvent(...)",deserializedOperation);
+            console.log("OperationCoordinator handleMessage(...)",deserializedOperation);
 
             if(deserializedOperation.type ===  DataOperation.Type.Read) {
                 resultOperationPromise = new Promise(function(resolve,reject) {
