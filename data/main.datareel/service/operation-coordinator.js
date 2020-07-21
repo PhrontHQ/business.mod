@@ -72,6 +72,22 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
         }
     },
 
+    _sendData: {
+        value: function (previousPromise, connection, clientId, data) {
+            console.log("OperationCoordinator: _sendData to connection:", connection, clientId, data);
+            var postToConnectionPromise = connection.postToConnection({
+                ConnectionId: clientId,
+                Data: data
+            }).promise();
+
+            return previousPromise
+                ? previousPromise.then(function() {
+                return postToConnectionPromise;
+                })
+                : postToConnectionPromise;
+            }
+    },
+
     dispatchOperationToConnectionClientId: {
         value: function(operation, connection, clientId) {
 
@@ -86,13 +102,16 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
             var operationDataKBSize = sizeof(operation) / 1024;
             if(operationDataKBSize < this.MAX_PAYLOAD_SIZE) {
                 //console.log("operation size is "+operationDataKBSize);
-                console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #2",operation, connection, clientId);
-                return connection
-                .postToConnection({
-                    ConnectionId: clientId,
-                    Data: this._serializer.serializeObject(operation)
-                })
-                .promise();
+                console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #1");
+
+                return this._sendData(undefined, connection, clientId, this._serializer.serializeObject(operation));
+
+                // return connection
+                // .postToConnection({
+                //     ConnectionId: clientId,
+                //     Data: this._serializer.serializeObject(operation)
+                // })
+                // .promise();
             }
             else {
                 /*
@@ -110,7 +129,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                     operationData = operation.data,
                     integerLengthQuotient = Math.floor(operationData.length / integerSizeQuotient),
                     lengthRemainder = operationData.length % integerSizeQuotient,
-                    i=0, countI = integerSizeQuotient, iChunk, iReadUpdateOperation,
+                    i=0, countI = integerSizeQuotient, iData, iReadUpdateOperation,
                     iPromise = Promise.resolve(true);
                     promises = [],
                     self = this;
@@ -133,24 +152,30 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                             iReadUpdateOperation.type = DataOperation.Type.ReadCompleted;
                         }
 
-                        iPromise = iPromise.then(function() {
-                            console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #2",operation, connection, clientId);
-                            return connection.postToConnection({
-                                ConnectionId: clientId,
-                                Data: self._serializer.serializeObject(iReadUpdateOperation)
-                            }).promise();
-                        })
+                        console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #2");
+                        iPromise = this._sendData(iPromise, connection, clientId, self._serializer.serializeObject(iReadUpdateOperation));
+
+                        // iPromise = iPromise.then(function() {
+                        //     console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #2",operation, connection, clientId);
+                        //     return connection.postToConnection({
+                        //         ConnectionId: clientId,
+                        //         Data: self._serializer.serializeObject(iReadUpdateOperation)
+                        //     }).promise();
+                        //})
                     }
 
                     //Sends the last if some left:
                     if(lengthRemainder || operationData.length) {
-                        iPromise = iPromise.then(function() {
-                            console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #3",operation, connection, clientId);
-                            return connection.postToConnection({
-                                ConnectionId: clientId,
-                                Data: self._serializer.serializeObject(operation)
-                            }).promise()
-                        });
+                        console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #3");
+                        iPromise = this._sendData(iPromise, connection, clientId, self._serializer.serializeObject(operation));
+
+                        // iPromise = iPromise.then(function() {
+                        //     console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #3",operation, connection, clientId);
+                        //     return connection.postToConnection({
+                        //         ConnectionId: clientId,
+                        //         Data: self._serializer.serializeObject(operation)
+                        //     }).promise()
+                        // });
                     }
                     //console.log(">>>>Large ReadOperation split in "+(countI+lengthRemainder)+ " sub operations: operationDataKBSize:"+operationDataKBSize+", integerSizeQuotient:"+integerSizeQuotient+", sizeRemainder:"+sizeRemainder+", operationData.length:"+operationData.length+", integerLengthQuotient:"+integerLengthQuotient+", lengthRemainder:",lengthRemainder );
                     return iPromise;
