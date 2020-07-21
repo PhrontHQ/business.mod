@@ -133,6 +133,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                         }
 
                         iPromise = iPromise.then(function() {
+                            console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #1",operation, connection, clientId)
                             return connection.postToConnection({
                                 ConnectionId: clientId,
                                 Data: self._serializer.serializeObject(iReadUpdateOperation)
@@ -143,6 +144,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                     //Sends the last if some left:
                     if(lengthRemainder || operationData.length) {
                         iPromise = iPromise.then(function() {
+                            console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #2",operation, connection, clientId)
                             return connection.postToConnection({
                                 ConnectionId: clientId,
                                 Data: self._serializer.serializeObject(operation)
