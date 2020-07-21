@@ -83,6 +83,8 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                     Data: data
                 }).promise();
             } catch (e) {
+                console.log("OperationCoordinator: _sendData postToConnection error:", e, connection, clientId, data);
+
                 if (e.statusCode === 410) {
                     console.log(`Found stale connection, should delete ${connectionId}`);
                     // await ddb.delete({ TableName: TABLE_NAME, Key: { connectionId } }).promise();
