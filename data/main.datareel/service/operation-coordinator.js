@@ -75,10 +75,22 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
     _sendData: {
         value: function (previousPromise, connection, clientId, data) {
             console.log("OperationCoordinator: _sendData to connection:", connection, clientId, data);
-            var postToConnectionPromise = connection.postToConnection({
-                ConnectionId: clientId,
-                Data: data
-            }).promise();
+
+            try {
+
+                var postToConnectionPromise = connection.postToConnection({
+                    ConnectionId: clientId,
+                    Data: data
+                }).promise();
+            } catch (e) {
+                if (e.statusCode === 410) {
+                    console.log(`Found stale connection, should delete ${connectionId}`);
+                    // await ddb.delete({ TableName: TABLE_NAME, Key: { connectionId } }).promise();
+                } else {
+                    console.error(e);
+                    throw e;
+                }
+            }
 
             return previousPromise
                 ? previousPromise.then(function() {
