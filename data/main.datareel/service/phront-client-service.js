@@ -42,7 +42,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 if(window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
                     this._socket = new WebSocket("ws://127.0.0.1:7272");
                 } else {
-                    this._socket = new WebSocket("wss://77mq8uupuc.execute-api.us-west-2.amazonaws.com/dev");
+                    //this._socket = new WebSocket("wss://77mq8uupuc.execute-api.us-west-2.amazonaws.com/dev");
+                    this._socket = new WebSocket("wss://ipa4toy2mc.execute-api.us-west-2.amazonaws.com/prod");
+
                 }
 
                 this._socket.addEventListener("open", this);
