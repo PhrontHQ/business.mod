@@ -74,7 +74,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
 
     _sendData: {
         value: function (previousPromise, connection, clientId, data) {
-            console.log("OperationCoordinator: _sendData to connection:", connection, clientId, data);
+            // console.log("OperationCoordinator: _sendData to connection:", connection, clientId, data);
 
             try {
 
@@ -105,7 +105,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
     dispatchOperationToConnectionClientId: {
         value: function(operation, connection, clientId) {
 
-            console.log("OperationCoordinator: dispatchOperationToConnectionClientId()",operation, connection, clientId)
+            // console.log("OperationCoordinator: dispatchOperationToConnectionClientId()",operation, connection, clientId)
 
             //remove _target & _currentTarget as it creates a pbm? and we don't need to send it
             delete operation._currentTarget;
@@ -116,7 +116,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
             var operationDataKBSize = sizeof(operation) / 1024;
             if(operationDataKBSize < this.MAX_PAYLOAD_SIZE) {
                 //console.log("operation size is "+operationDataKBSize);
-                console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #1");
+                // console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #1");
 
                 return this._sendData(undefined, connection, clientId, this._serializer.serializeObject(operation));
 
@@ -166,7 +166,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                             iReadUpdateOperation.type = DataOperation.Type.ReadCompleted;
                         }
 
-                        console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #2");
+                        // console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #2");
                         iPromise = this._sendData(iPromise, connection, clientId, self._serializer.serializeObject(iReadUpdateOperation));
 
                         // iPromise = iPromise.then(function() {
@@ -180,7 +180,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
 
                     //Sends the last if some left:
                     if(lengthRemainder || operationData.length) {
-                        console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #3");
+                        // console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #3");
                         iPromise = this._sendData(iPromise, connection, clientId, self._serializer.serializeObject(operation));
 
                         // iPromise = iPromise.then(function() {
@@ -257,7 +257,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
             //Set the clientId (in API already)
             deserializedOperation.clientId = event.requestContext.connectionId;
 
-            console.log("OperationCoordinator handleMessage(...)",deserializedOperation);
+            // console.log("OperationCoordinator handleMessage(...)",deserializedOperation);
 
             if(deserializedOperation.type ===  DataOperation.Type.Read) {
                 resultOperationPromise = new Promise(function(resolve,reject) {
