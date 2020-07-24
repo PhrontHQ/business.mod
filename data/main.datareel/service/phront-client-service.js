@@ -127,14 +127,19 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 module,
                 isSync = true;
 
-                try {
-                    this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
-                    operation = this._deserializer.deserializeObject();
-                } catch (e) {
-                    //Happens when serverless infra hasn't been used in a while:
-                    //TODO: apptempt at least 1 re-try
-                    //event.data: "{"message": "Internal server error", "connectionId":"HXT_RfBnPHcCIIg=", "requestId":"HXUAmGGZvHcF33A="}"
-                    return console.error("Invalid Operation Serialization:", event.data);
+                if(serializedOperation.indexOf('{"message": "Internal server error"') === 0) {
+                     console.warn(event.data);
+                } else {
+                    try {
+                        this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
+                        operation = this._deserializer.deserializeObject();
+                    } catch (e) {
+                        //Happens when serverless infra hasn't been used in a while:
+                        //TODO: apptempt at least 1 re-try
+                        //event.data: "{"message": "Internal server error", "connectionId":"HXT_RfBnPHcCIIg=", "requestId":"HXUAmGGZvHcF33A="}"
+
+                        return console.error("Invalid Operation Serialization:", event.data);
+                    }
                 }
 
                 if(operation) {
