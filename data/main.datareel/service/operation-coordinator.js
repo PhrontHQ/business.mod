@@ -116,7 +116,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
             var operationDataKBSize = sizeof(operation) / 1024;
             if(operationDataKBSize < this.MAX_PAYLOAD_SIZE) {
                 //console.log("operation size is "+operationDataKBSize);
-                // console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #1");
+                console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #1 operation.referrerId "+operation.referrerId);
 
                 return this._sendData(undefined, connection, clientId, this._serializer.serializeObject(operation));
 
@@ -166,7 +166,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                             iReadUpdateOperation.type = DataOperation.Type.ReadCompleted;
                         }
 
-                        // console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #2");
+                        console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #2 operation.referrerId "+operation.referrerId);
                         iPromise = this._sendData(iPromise, connection, clientId, self._serializer.serializeObject(iReadUpdateOperation));
 
                         // iPromise = iPromise.then(function() {
@@ -180,7 +180,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
 
                     //Sends the last if some left:
                     if(lengthRemainder || operationData.length) {
-                        // console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #3");
+                        console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #3 operation.referrerId "+operation.referrerId);
                         iPromise = this._sendData(iPromise, connection, clientId, self._serializer.serializeObject(operation));
 
                         // iPromise = iPromise.then(function() {
