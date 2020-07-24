@@ -105,7 +105,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
     dispatchOperationToConnectionClientId: {
         value: function(operation, connection, clientId) {
 
-            // console.log("OperationCoordinator: dispatchOperationToConnectionClientId()",operation, connection, clientId)
+            console.log("OperationCoordinator: dispatchOperationToConnectionClientId()",operation, connection, clientId)
 
             //remove _target & _currentTarget as it creates a pbm? and we don't need to send it
             delete operation._currentTarget;
@@ -209,6 +209,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
     handleEvent: {
         value: function(operation) {
             var self = this;
+            console.log("handleEvent:",operation);
             this.dispatchOperationToConnectionClientId(operation,this.gateway,operation.clientId)
             .then(function(values) {
                 //resolve
