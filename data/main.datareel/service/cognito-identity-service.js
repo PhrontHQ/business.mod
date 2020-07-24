@@ -15,11 +15,17 @@ var UserIdentityService = require("montage/data/service/user-identity-service").
     TODO:
 
     - As a RawDataService, CognitoIdentityService should map a CognitoUser
-    to a Phront User.
+    to a Phront Person.
 
     - Use https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CognitoIdentityServiceProvider.html#adminLinkProviderForUser-property
 
     to link third party ident and coginito users together.
+
+    Model Devices: see
+
+    https://www.npmjs.com/package/amazon-cognito-identity-js/v/3.0.16-unstable.61
+    cognitoUser.listDevices
+
 
 
 
@@ -170,54 +176,59 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     self.rawDataDone(stream);
                     self.dispatchUserAuthenticationCompleted(cognitoUser);
                     return;
+                } else if(cognitoUser.isAnonymous) {
+                    self.addRawData(stream, [cognitoUser]);
+                    self.rawDataDone(stream);
+                    self.dispatchUserAuthenticationCompleted(cognitoUser);
+                } else {
+                    /*
+                        Now we need to bring some UI to the user to be able to continue
+                        This is intended to run in a web/service worker at some point, or why not node
+                        so we need an event-driven way to signal that we need to show UI.
+                        Because this is a fetch, the promise is already handled at the DataStream level
+                        The authentication panel needs to provide us some data.
+                        The need to show a UI might be driven by the need to confirm a password,
+                        or some other reason, so it needs to provide enough info for the authentication
+                        panel to do it's job.
+                        Knowing the panel and the identity service may be in different thread, they may not be able to address each others. So we should probably use data operations to do the communication anyway
+                    */
+                    userIdentity = self.objectForTypeRawData(self.userIdentityDescriptor, cognitoUser);
+                    // Rather annoying that objectForTypeRawData does not record a snapshot (when the service is uniquing)
+                    self.recordSnapshot(userIdentity.dataIdentifier, cognitoUser);
+
+                    self._pendingStream = stream;
+
+                    // Keep track of the stream to complete when we get all data
+                    self._fetchStreamByUser.set(cognitoUser, stream);
+
+                    userInputOperation = new DataOperation();
+                    userInputOperation.type = DataOperation.Type.UserAuthentication;
+
+                    // Needs to make that a separate property so this can be the cover that returns ths
+                    // local object as a convenience over doing it with a new dataDescriptorModuleId property
+                    userInputOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+
+                    // This criteria should describe the object for which we need input on with the identifier = ....
+                    // Required when for example requesting an update to a passord
+                    // What does it mean when we have no idea who the user is?
+                    // well, we should have an anonymous user created locally nonetheless,
+                    // or one created with an anonymous user name sent to Cognito?
+                    // But we can't change a user name once created?
+                    userInputOperation.criteria = Criteria.withExpression("identifier = $identifier", {
+                        identifier: self.dataIdentifierForObject(userIdentity)
+                    });
+
+                    //Specifies the properties we need input for
+                    userInputOperation.data = userIdentity;
+                    userInputOperation.requisitePropertyNames = ["username", "password"];
+                    userInputOperation.dataServiceModuleId = module.id;
+                    userInputOperation.authorizationPanelRequireLocation = require.location;
+                    userInputOperation.authorizationPanelModuleId = require.resolve(self.authorizationPanel);
+                    self.userIdentityDescriptor.dispatchEvent(userInputOperation);
+
+                    // Now the fetch will hang, until a saveDataObject picks up this pending stream
+                    // and adds the raw data of an authenticated user to it
                 }
-                /*
-                    Now we need to bring some UI to the user to be able to continue
-                    This is intended to run in a web/service worker at some point, or why not node
-                    so we need an event-driven way to signal that we need to show UI.
-                    Because this is a fetch, the promise is already handled at the DataStream level
-                    The authentication panel needs to provide us some data.
-                    The need to show a UI might be driven by the need to confirm a password,
-                    or some other reason, so it needs to provide enough info for the authentication
-                    panel to do it's job.
-                    Knowing the panel and the identity service may be in different thread, they may not be able to address each others. So we should probably use data operations to do the communication anyway
-                */
-                userIdentity = self.objectForTypeRawData(self.userIdentityDescriptor, cognitoUser);
-                // Rather annoying that objectForTypeRawData does not record a snapshot (when the service is uniquing)
-                self.recordSnapshot(userIdentity.dataIdentifier, cognitoUser);
-
-                self._pendingStream = stream;
-
-                // Keep track of the stream to complete when we get all data
-                self._fetchStreamByUser.set(cognitoUser, stream);
-
-                userInputOperation = new DataOperation();
-                userInputOperation.type = DataOperation.Type.UserAuthentication;
-
-                // Needs to make that a separate property so this can be the cover that returns ths
-                // local object as a convenience over doing it with a new dataDescriptorModuleId property
-                userInputOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
-
-                // This criteria should describe the object for which we need input on with the identifier = ....
-                // Required when for example requesting an update to a passord
-                // What does it mean when we have no idea who the user is?
-                // well, we should have an anonymous user created locally nonetheless,
-                // or one created with an anonymous user name sent to Cognito?
-                // But we can't change a user name once created?
-                userInputOperation.criteria = Criteria.withExpression("identifier = $identifier", {
-                    identifier: self.dataIdentifierForObject(userIdentity)
-                });
-
-                //Specifies the properties we need input for
-                userInputOperation.data = userIdentity;
-                userInputOperation.requisitePropertyNames = ["username", "password"];
-                userInputOperation.dataServiceModuleId = module.id;
-                userInputOperation.authorizationPanelRequireLocation = require.location;
-                userInputOperation.authorizationPanelModuleId = require.resolve(self.authorizationPanel);
-                self.userIdentityDescriptor.dispatchEvent(userInputOperation);
-
-                // Now the fetch will hang, until a saveDataObject picks up this pending stream
-                // and adds the raw data of an authenticated user to it
             })
             .catch(function (err) {
                 self.rawDataError(stream, err);
@@ -289,6 +300,18 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                 Pool: this.userPool
             });
             cognitoUser.id = uuid.generate();
+
+            /*
+                Custom addition for flagging Anonymous users.
+
+                There might be a way using federated identities and Cognito Identity Pool to have
+                a temporary anonymous user, but we could do that ourselfves.
+
+                We may have to therefore create a UserIdenity table to track that,
+                assuming we keep a reference client side. But with Apple going for a 7 days cleanup,
+                we may end up with many orphaned identities.
+            */
+            cognitoUser.isAnonymous = true;
             return cognitoUser;
         }
     },
