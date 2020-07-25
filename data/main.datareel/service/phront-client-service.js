@@ -204,6 +204,11 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             var referrer = operation.referrerId,
             records = operation.data,
             stream = this._thenableByOperationId.get(referrer);
+            // if(operation.type === DataOperation.Type.ReadCompleted) {
+            //     console.log("handleReadcompleted  referrerId: ",operation.referrerId, "records.length: ",records.length);
+            // } else {
+            //     console.log("handleReadupdate  referrerId: ",operation.referrerId, "records.length: ",records.length);
+            // }
             //if(operation.type === DataOperation.Type.ReadUpdate) console.log("handleReadupdate  referrerId: ",referrer);
 
             if(records && records.length > 0) {
@@ -216,7 +221,6 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
     handleReadcompleted: {
         value: function (operation) {
-            //console.log("handleReadcompleted  referrerId: ",operation.referrerId);
             this.handleReadupdate(operation);
             //The read is complete
             var stream = this._thenableByOperationId.get(operation.referrerId);
