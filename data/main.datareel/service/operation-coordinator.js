@@ -76,30 +76,28 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
         value: function (previousPromise, connection, clientId, data) {
             // console.log("OperationCoordinator: _sendData to connection:", connection, clientId, data);
 
-            try {
+            return (previousPromise || Promise.resolve(true))
+                    .then(function() {
+                        try {
 
-                var postToConnectionPromise = connection.postToConnection({
-                    ConnectionId: clientId,
-                    Data: data
-                }).promise();
-            } catch (e) {
-                console.log("OperationCoordinator: _sendData postToConnection error:", e, connection, clientId, data);
+                            return postToConnectionPromise = connection.postToConnection({
+                                ConnectionId: clientId,
+                                Data: data
+                            }).promise();
+                        } catch (e) {
+                            console.log("OperationCoordinator: _sendData postToConnection error:", e, connection, clientId, data);
 
-                if (e.statusCode === 410) {
-                    console.log(`Found stale connection, should delete ${connectionId}`);
-                    // await ddb.delete({ TableName: TABLE_NAME, Key: { connectionId } }).promise();
-                } else {
-                    console.error(e);
-                    throw e;
-                }
-            }
+                            if (e.statusCode === 410) {
+                                console.log(`Found stale connection, should delete connectionId ${clientId}`);
+                                // await ddb.delete({ TableName: TABLE_NAME, Key: { connectionId } }).promise();
+                            } else {
+                                console.error(e);
+                                throw e;
+                            }
+                        }
 
-            return previousPromise
-                ? previousPromise.then(function() {
-                return postToConnectionPromise;
-                })
-                : postToConnectionPromise;
-            }
+                    });
+        }
     },
 
     dispatchOperationToConnectionClientId: {
