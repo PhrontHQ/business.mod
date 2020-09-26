@@ -8,7 +8,11 @@
                 "rules": {
                     "firstEmploymentPosition": {"<->":"firstEmploymentPositionId",
                                     "converter": {"@": "employmentPositionConverter"}},
+                    "firstEmploymentPositionRelationshipRole": {"<->":"firstEmploymentPositionRelationshipRoleId",
+                                    "converter": {"@": "employmentPositionConverter"}},
                     "secondEmploymentPosition": {"<->":"secondEmploymentPositionId",
+                                    "converter": {"@": "employmentPositionConverter"}},
+                    "secondEmploymentPositionRelationshipRole": {"<->":"secondEmploymentPositionRelationshipRoleId",
                                     "converter": {"@": "employmentPositionConverter"}}
                 }
             },
