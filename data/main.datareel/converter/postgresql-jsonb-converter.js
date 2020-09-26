@@ -17,14 +17,14 @@ var Converter = require("montage/core/converter/converter").Converter,
 exports.PostgresqlJsonbConverter = Converter.specialize( /** @lends PostgresqlJsonbConverter# */ {
 
     /**
-     * Converts the specified value to byte format.
+     * Converts the passed JSON string value to an object.
      * @function
-     * @param {Property} v The value to format.
-     * @returns {string} The value converted to byte format.
+     * @param {String} v The value to convert.
+     * @returns {Object} The object parsed.
      */
     convert: {
         value: function (v) {
-            return (typeof v === "string")
+            return (typeof v === "string" && (!this.locales || this.locales.length > 1))
                 ? JSON.parse(v)
                 : v;
         }
