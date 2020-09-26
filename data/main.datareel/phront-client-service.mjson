@@ -27,6 +27,7 @@
                 {"@": "eventPersonMapping"},
                 {"@": "eventAttendeeMapping"},
                 {"@": "personMapping"},
+                {"@": "personNameMapping"},
                 {"@": "orderMapping"},
                 {"@": "orderLineItemMapping"},
                 {"@": "orderTransactionMapping"},
@@ -60,6 +61,7 @@
                 {"@": "postalAddress"},
                 {"@": "image"},
                 {"@": "person"},
+                {"@": "person-name"},
                 {"@": "calendar"},
                 {"@": "event"},
                 {"@": "role"},
@@ -229,6 +231,14 @@
 
     "personMapping": {
         "object": "data/main.datareel/mapping/person-mapping.mjson"
+    },
+
+    "person-name": {
+        "object": "data/main.datareel/model/person-name.mjson"
+    },
+
+    "personNameMapping": {
+        "object": "data/main.datareel/mapping/person-name-mapping.mjson"
     },
 
     "calendar": {

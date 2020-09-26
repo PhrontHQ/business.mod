@@ -22,6 +22,7 @@
                 {"@": "partyMapping"},
                 {"@": "imageMapping"},
                 {"@": "personMapping"},
+                {"@": "personNameMapping"},
                 {"@": "calendar-mapping"},
                 {"@": "event-mapping"},
                 {"@": "role-mapping"},
@@ -60,6 +61,7 @@
                 {"@": "postalAddress"},
                 {"@": "image"},
                 {"@": "person"},
+                {"@": "person-name"},
                 {"@": "event"},
                 {"@": "role"},
                 {"@": "calendar"},
@@ -227,6 +229,14 @@
 
     "personMapping": {
         "object": "data/main.datareel/mapping/person-mapping.mjson"
+    },
+
+    "person-name": {
+        "object": "data/main.datareel/model/person-name.mjson"
+    },
+
+    "personNameMapping": {
+        "object": "data/main.datareel/mapping/person-name-mapping.mjson"
     },
 
     "AuthenticationPolicy": {

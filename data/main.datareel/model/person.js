@@ -20,6 +20,39 @@ var Party = require("./party").Party;
 
 exports.Person = Party.specialize(/** @lends Person.prototype */ {
 
+    /**
+     * name
+     *
+     * An instance of PersonName, an object that encapsulates the components
+     * of a person's name in an extendable, object-oriented manner.
+     * It is used to specify a person's name by providing the components
+     * comprising a full name: given name, middle name, family name, prefix,
+     * suffix, nickname, and phonetic representation.
+     *
+     * @property {PersonName}
+     */
+    name: {
+        value: undefined
+    },
+
+     /**
+     * aliases
+     *
+     * An array of PersonName objects. Individuals may have one
+     * or more valid names, or aliases. This may be the result of
+     * adopting a new name in conjunction with a life event,
+     * such as marriage. For example, the name “Marie Curie”
+     * could have the corresponding alias “Maria Salomea Skłodowska.”
+     * Because each alias represents a separate name, an individual with
+     * one or more aliases would be modeled by a corresponding of number
+     * of PersonName objects, each representing a single alias.
+     *
+     * @property {PersonName[]}
+     */
+    aliases: {
+        value: undefined
+    },
+
     firstName: {
         value: undefined
     },

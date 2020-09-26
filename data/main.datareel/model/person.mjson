@@ -5,6 +5,7 @@
             "name": "Person",
             "propertyDescriptors": [
                 {"@": "name"},
+                {"@": "aliases"},
                 {"@": "images"},
                 {"@": "tags"},
                 {"@": "userIdentities"},
@@ -14,7 +15,8 @@
                 {"@": "lastName"},
                 {"@": "email"},
                 {"@": "phone"},
-                {"@": "addresses"}
+                {"@": "addresses"},
+                {"@": "events"}
            ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/person.mjson"
@@ -56,6 +58,15 @@
     "name_descriptor": {
         "object": "data/main.datareel/model/person-name.mjson"
     },
+    "aliases": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "name_descriptor"}
+        }
+    },
+
     "firstName": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -106,6 +117,18 @@
     },
     "addresses_descriptor": {
         "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
+    },
+    "events": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "events",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "event_descriptor"}
+       }
+    },
+    "event_descriptor": {
+        "object": "data/main.datareel/model/event.mjson"
     },
     "tags": {
         "prototype": "montage/core/meta/property-descriptor",

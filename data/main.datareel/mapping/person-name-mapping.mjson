@@ -11,10 +11,7 @@
                     "familyName": {"<->": "familyName"},
                     "previousFamilyName": {"<->": "previousFamilyName"},
                     "nameSuffix": {"<->": "nameSuffix"},
-                    "nickname": {"<->": "nickname"},
-                    "phoneticGivenName": {"<->": "phoneticGivenName"},
-                    "phoneticMiddleName": {"<->": "phoneticMiddleName"},
-                    "phoneticFamilyName": {"<->": "phoneticFamilyName"}
+                    "nickname": {"<->": "nickname"}
                 }
             },
             "rawDataMapping": {
@@ -22,7 +19,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "namePrefix","givenName","middleName","familyName","previousFamilyName","nameSuffix","nickname","phoneticGivenName","phoneticMiddleName","phoneticFamilyName"
+                "namePrefix","givenName","middleName","familyName","previousFamilyName","nameSuffix","nickname"
             ]
         }
     },

@@ -10,10 +10,7 @@
                 {"@": "familyName"},
                 {"@": "previousFamilyName"},
                 {"@": "nameSuffix"},
-                {"@": "nickname"},
-                {"@": "phoneticGivenName"},
-                {"@": "phoneticMiddleName"},
-                {"@": "phoneticFamilyName"}
+                {"@": "nickname"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/person-name.mjson"
@@ -77,27 +74,6 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "nickname",
-            "valueType": "string"
-        }
-    },
-    "phoneticGivenName": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "phoneticGivenName",
-            "valueType": "string"
-        }
-    },
-    "phoneticMiddleName": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "phoneticMiddleName",
-            "valueType": "string"
-        }
-    },
-    "phoneticFamilyName": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "phoneticFamilyName",
             "valueType": "string"
         }
     }
