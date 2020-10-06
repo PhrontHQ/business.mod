@@ -33,13 +33,23 @@
             }
         },
         "currentMonth": {
-            "prototype": "ui/controls/text.reel",
-            "properties": {
+            "prototype": "montage/ui/text.reel",
+            "values": {
                 "element": {"#": "currentMonth"},
-                "value": "{date, MMM YYYY}"
-            },
-            "bindings": {
-                "args": {"<-": "!!@owner.currentMonth && {date: @owner.currentMonth}"}
+                "value": {
+                    "<-": "@owner.currentMonth",
+                    "converter": {"@": "internationalDateConverter"}
+                }
+            }
+        },
+        "internationalDateConverter": {
+            "prototype": "montage/core/converter/international-date-to-string-formatter",
+            "values": {
+                "options": {
+                    "weekday": "long",
+                    "day": "numeric",
+                    "month": "long"
+                }
             }
         },
         "days": {
