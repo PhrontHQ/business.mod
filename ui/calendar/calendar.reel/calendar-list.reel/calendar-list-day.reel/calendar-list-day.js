@@ -2,6 +2,7 @@
  * @module ui/calendar-list-day.reel
  */
 var Component = require("montage/ui/component").Component,
+    Locale = require("montage/core/locale").Locale,
     monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 /**
@@ -11,6 +12,28 @@ var Component = require("montage/ui/component").Component,
 exports.CalendarListDay = Component.specialize(/** @lends CalendarListDay# */ {
     events: {
         value: null
+    },
+
+    /*
+formatter = Intl.DateTimeFormat(
+    "en-US", {weekday:"long", day: "numeric", month: "long" })
+*/
+
+    _dayDateFormatter: {
+        value: undefined
+    },
+    dayDateFormatter: {
+        get: function() {
+            if(!this._dayDateFormatter) {
+                this._dayDateFormatter = Intl.DateTimeFormat(
+                    Locale.systemLocale.identifier, {
+                        weekday: "long",
+                        day: "numeric",
+                        month: "long"
+                    });
+            }
+            return this._dayDateFormatter;
+        }
     },
 
     _object: {
@@ -25,8 +48,9 @@ exports.CalendarListDay = Component.specialize(/** @lends CalendarListDay# */ {
             if (this._object !== object) {
                 this._object = object;
                 if (object) {
-                    this.fullDate = monthNames[object.month] + " " + object.date;
-                    this._loadTasks();
+                    this.events = object.data;
+                    this.fullDate = this.dayDateFormatter.format(object.dayRange.begin);
+                    //this._loadTasks();
                 }
             }
         }
@@ -53,7 +77,7 @@ exports.CalendarListDay = Component.specialize(/** @lends CalendarListDay# */ {
     _setHasEvents: {
         value: function() {
             if (this.object) {
-                this.object._hasEvents = !!this.displayedEvents.length;
+                this.object._hasEvents = this.displayedEvents && !!this.displayedEvents.length;
             }
         }
     },
@@ -63,7 +87,7 @@ exports.CalendarListDay = Component.specialize(/** @lends CalendarListDay# */ {
             if (isFirstTime) {
                 this.addRangeAtPathChangeListener("displayedEvents", this, "_setHasEvents");
             }
-            this._loadTasks();
+            //this._loadTasks();
         }
     },
 

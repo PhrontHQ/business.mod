@@ -18,6 +18,18 @@ exports.CalendarEvent = Component.specialize(/** @lends Event# */ {
             if (this._object !== value) {
                 this._object = value;
                 this.needsDraw = true;
+
+                if(this._object) {
+                    var event = this._object.event,
+                    organizer = event.participatingParty,
+                    organizerName = organizer.name,
+                    eventChildren = event.children,
+                    firstChildEvent = eventChildren && eventChildren[0],// Could be more than 1, simplify for quick test
+                    participant = firstChildEvent.participatingParty,
+                    participantName = participant.name || (`${participant.firstName} ${participant.lastName}`);
+
+                    this.title =  `${this._object.service.professionalName} - Dr ${organizerName.toString()} / ${participantName.toString()}`;
+                }
             }
         },
         get: function () {
@@ -25,8 +37,33 @@ exports.CalendarEvent = Component.specialize(/** @lends Event# */ {
         }
     },
 
+    title: {
+        value: undefined
+    },
+
+    /*
+
+                "bindings": {
+                "value": {"<-": "evaluate('@owner.object.'+@owner.titleExpression)"}
+            }
+    */
+
+    /*
+
+                var event = this.object.event,
+                organizer = event.participatingParty,
+                organizerName = organizer.name,
+                eventChildren = event.children,
+                firstChildEvent = eventChildren && eventChildren[0],// Could be more than 1, simplify for quick test
+                participant = firstChildEvent.participatingParty,
+                participantName = participant.name || (`${participant.firstName} ${participant.lastName}`);
+
+            return `${this.object.service.professionalName} - Dr ${organizerName.toString()} / ${participantName.toString()}`;
+
+    */
+
     titleExpression: {
-        value: "summary"
+        value: "service.professionalName"
     },
 
     enterDocument: {
@@ -50,7 +87,7 @@ exports.CalendarEvent = Component.specialize(/** @lends Event# */ {
         value: function () {
             this._setPosition();
             //var color = this.object.color || (this.object.calendar && this.object.calendar.color);
-            var color = "red";
+            var color = "#0c5688c2";
             if(color) {
                 //CalendarWidget-event-inner
                 this.element.style.setProperty( "background-color", color );
@@ -78,7 +115,7 @@ exports.CalendarEvent = Component.specialize(/** @lends Event# */ {
 
     handlePress: {
         value: function(event) {
-            this.selectedTask = this.object.task;
+            this.selectedTask = this.object;
         }
     },
 
@@ -124,21 +161,21 @@ exports.CalendarEvent = Component.specialize(/** @lends Event# */ {
 
     _setPosition: {
         value: function() {
-            if(!this.object.isAllDay) {
+            if(!this.object.event.isAllDay) {
                 this._resetStyle();
                 // multiply by height row (3) to get top position
                 // $FIXME - this value (3) shouldn't be hard coded
 
-                this.element.style.top = this._setY(this.object.timeRange.begin.hour, this.object.timeRange.begin.minute) * this._hourHeightValue + this._hourHeightUnit;
+                this.element.style.top = this._setY(this.object.event.scheduledTimeRange.begin.hour, this.object.event.scheduledTimeRange.begin.minute) * this._hourHeightValue + this._hourHeightUnit;
 
-                var duration = this._setHeight(this.object.timeRange.length);
-                console.log("Event duration: "+duration);
+                var duration = this._setHeight(this.object.event.scheduledTimeRange.length);
+                //console.log("Event duration: "+duration);
                 this.element.style.height =  duration * this._hourHeightValue + this._hourHeightUnit;
 
                 // if event has concurrent events
-                if(this.object.concurrentIndex > 0) {
+                if(this.object.event.concurrentIndex > 0) {
                     this.classList.add('event-is-overlayed');
-                    this.element.style.left = (100 / (this.object.concurrentEvents) * this.object.concurrentIndex) + "%";
+                    this.element.style.left = (100 / (this.object.event.concurrentEvents) * this.object.event.concurrentIndex) + "%";
                 }
             }
         }

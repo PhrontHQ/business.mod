@@ -9,7 +9,9 @@ exports.TaskCategory = Component.specialize({
     },
     enterDocument: {
         value: function () {
-            this.classList.add('type-' + this.object.value.replace('.', '_'));
+            if(this.object && this.object.value) {
+                this.classList.add('type-' + this.object.value.replace('.', '_'));
+            }
         }
     },
     prepareForActivationEvents: {

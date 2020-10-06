@@ -1,4 +1,5 @@
 var TimeRangeView = require("../time-range-view").TimeRangeView,
+    CalendarDate = require("montage/core/date/calendar-date").CalendarDate,
     Promise = require("montage/core/promise").Promise,
     MONTHS = [
             "January",
@@ -36,6 +37,22 @@ exports.DayView = TimeRangeView.specialize({
         },
         get: function () {
             return this._data;
+        }
+    },
+
+    _timeRange: {
+        value: null
+    },
+
+    timeRange: {
+        get: function() {
+            return this._timeRange;
+        },
+        set: function(value) {
+            if (!this._timeRange || (this._timeRange && !this._timeRange.equals(value))) {
+                this._timeRange = value;
+                this.data = null;
+            }
         }
     },
 
@@ -155,14 +172,17 @@ exports.DayView = TimeRangeView.specialize({
                 };
 
             //Set timeRange:
-            var dayStart  = new Date(this._today);
-            dayStart.setHours(0,0,0,0);
-            var dayEnd = new Date(dayStart);
-            dayEnd.setHours(23,59,59,999);
-            this.timeRange = new Range(dayStart,dayEnd);
+            // var dayStart  = new Date(this._today);
+            // dayStart.setHours(0,0,0,0);
+            // var dayEnd = new Date(dayStart);
+            // dayEnd.setHours(23,59,59,999);
+            // this.timeRange = new Range(dayStart,dayEnd);
+            this.timeRange = Range.fullDayTimeRangeFromDate(this._today);
+            //this.timeRange = CalendarDate.fullDayTimeRangeFrom(this._today);
 
 
-            console.error("Needs Mock tasks");
+
+            //console.error("Needs Mock tasks");
             if(this.application.sectionService) {
                 this.application.sectionService.getTasksScheduleOnDay(displayedDay).then(function(tasks){
                     displayedDay.events = tasks;

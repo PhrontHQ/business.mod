@@ -30,12 +30,27 @@ exports.CalendarListItem = Component.specialize(/** @lends CalendarListItem# */ 
                     }
                 } else {
                     this.isTextualSchedule = false;
-                    result = this._normalizeValue(this.object.hour) + ':' +
-                        this._normalizeValue(this.object.minute) + ':' +
-                        this._normalizeValue(this.object.second);
+                    var startDate = this.object.event.scheduledTimeRange.begin;
+                    result = this._normalizeValue(startDate.hour) + ':' +
+                        this._normalizeValue(startDate.minute) + ':' +
+                        this._normalizeValue(startDate.second);
                 }
                 return result;
             }
+        }
+    },
+
+    objectTitle: {
+        get: function() {
+            var event = this.object.event,
+                organizer = event.participatingParty,
+                organizerName = organizer.name,
+                eventChildren = event.children,
+                firstChildEvent = eventChildren && eventChildren[0],// Could be more than 1, simplify for quick test
+                participant = firstChildEvent.participatingParty,
+                participantName = participant.name || (`${participant.firstName} ${participant.lastName}`);
+
+            return `${this.object.service.professionalName} - Dr ${organizerName.toString()} / ${participantName.toString()}`;
         }
     },
 
@@ -71,8 +86,11 @@ exports.CalendarListItem = Component.specialize(/** @lends CalendarListItem# */ 
                 }
             });
             if (object) {
-                this.classList.add('type-' + object.task.task.replace('.', '_').toLowerCase());
+                if(object.task && object.task.task) {
+                    this.classList.add('type-' + object.task.task.replace('.', '_').toLowerCase());
+                }
                 this.dispatchOwnPropertyChange("schedule", this.schedule);
+                this.dispatchOwnPropertyChange("objectTitle", this.objectTitle);
             }
         }
     },

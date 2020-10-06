@@ -23,20 +23,20 @@
                 "element": {"#": "type"}
             },
             "bindings": {
-                "object": {"<-": "@owner.object.task"}
+                "object": {"<-": "@owner.object.service"}
             }
         },
         "title": {
-            "prototype": "ui/controls/text.reel",
+            "prototype": "montage/ui/text.reel",
             "properties": {
                 "element": {"#": "title"}
             },
             "bindings": {
-                "value": {"<-": "@owner.object.task.name"}
+                "value": {"<-": "@owner.objectTitle"}
             }
         },
         "time": {
-            "prototype": "ui/controls/text.reel",
+            "prototype": "montage/ui/text.reel",
             "properties": {
                 "element": {"#": "time"}
             },

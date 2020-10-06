@@ -41,8 +41,9 @@
                 "element": {"#": "list"}
             },
             "bindings": {
+                "timeRange": {"<->":"@owner.timeRange"},
                 "taskCategories": {"<-": "@owner.taskCategories"},
-                "days": {"<-": "@calendarWidget.days"},
+                "data": {"<-": "@owner.data"},
                 "selectedTask": {"<->": "@owner.selectedObject"},
                 "selectedDay": {"<->": "@owner.selectedDay"}
             }
