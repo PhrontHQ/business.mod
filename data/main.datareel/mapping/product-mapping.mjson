@@ -6,7 +6,7 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
-                    "title": {"<->": "title"},
+                    "name": {"<->": "title"},
                     "description": {"<->": "description"},
                     "descriptionHtml": {"<->": "descriptionHtml"},
                     "collections": {
@@ -49,7 +49,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "title","description","images","link","productType"
+                "name","description","images","link","productType"
             ]
         }
     },

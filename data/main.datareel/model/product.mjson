@@ -4,7 +4,7 @@
         "values": {
             "name": "Product",
             "propertyDescriptors": [
-                {"@": "title"},
+                {"@": "name"},
                 {"@": "description"},
                 {"@": "descriptionHtml"},
                 {"@": "collections"},
@@ -42,10 +42,10 @@
         "object": "data/main.datareel/model/object.mjson"
     },
 
-    "title": {
+    "name": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "title",
+            "name": "name",
             "valueType": "string"
         }
     },

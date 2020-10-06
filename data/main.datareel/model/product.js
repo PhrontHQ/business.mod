@@ -10,7 +10,7 @@ var Object = require("./object").Object,
 
 exports.Product = Object.specialize(/** @lends Product.prototype */ {
 
-    title: {
+    name: {
         value: undefined
     },
     description: {

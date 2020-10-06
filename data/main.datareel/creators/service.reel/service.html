@@ -31,14 +31,14 @@
                     "isFooterHidden": {"<-": "!@owner.canUserEdit"}
                 }
             },
-        
-            "title": {
+
+            "name": {
                 "prototype": "ui/controls/field-text-input.reel",
                 "values": {
-                    "element": {"#": "title"},
-                    "label": "Title",
-                    "placeholder": "enter Service's title",
-                    "value": {"<->": "@owner.data.title"},
+                    "element": {"#": "name"},
+                    "label": "name",
+                    "placeholder": "enter Service's name",
+                    "value": {"<->": "@owner.data.name"},
                     "readonly": {"<-": "!@owner.canUserEdit"}
                 }
             },
@@ -68,7 +68,7 @@
 <body>
     <div data-montage-id="owner" class="ServiceInspector">
         <div data-montage-id="inspector">
-            <div data-montage-id="title"></div>
+            <div data-montage-id="name"></div>
             <div data-montage-id="description"></div>
             <div data-montage-id="duration"></div>
         </div>
