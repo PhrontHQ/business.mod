@@ -4,6 +4,8 @@
         "values": {
             "name": "Service",
             "propertyDescriptors": [
+                {"@": "professionalName"},
+                {"@": "professionalShortName"},
                 {"@": "preWorkDuration"},
                 {"@": "duration"},
                 {"@": "postWorkDuration"},
@@ -42,6 +44,24 @@
         "object": "data/main.datareel/model/service"
     },
 
+    "professionalName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "professionalName",
+            "valueType": "string",
+            "isLocalizable": true
+        }
+    },
+
+    "professionalShortName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "professionalShortName",
+            "valueType": "string",
+            "isLocalizable": true
+        }
+    },
+
     "preWorkDuration": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -54,8 +74,9 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "duration",
-            "valueType": "number"
-        }
+            "valueType": "number",
+             "description": "The duration of a service in seconds"
+       }
     },
 
     "postWorkDuration": {

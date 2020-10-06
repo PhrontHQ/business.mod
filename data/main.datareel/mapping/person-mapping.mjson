@@ -40,7 +40,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "firstName","lastName","email","phone","addresses"
+                "name","firstName","lastName","email","phone","addresses"
             ]
         }
     },

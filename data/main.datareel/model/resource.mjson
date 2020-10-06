@@ -4,7 +4,8 @@
         "values": {
             "name": "Resource",
             "propertyDescriptors": [
-                {"@": "name"}
+                {"@": "name"},
+                {"@": "events"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/resource.mjson"
@@ -17,7 +18,13 @@
             "parent":{"@": "PartyDescriptor"},
             "userInterfaceDescriptorModules": {
                 "*": {
-                    "%": "./position-ui-descriptor.mjson"
+                    "%": "./resource-ui-descriptor.mjson"
+                },
+                "montage/ui/list-item.reel": {
+                    "%": "./resource-list-item-ui-descriptor.mjson"
+                },
+                "montage/ui/cascading-list.reel": {
+                    "%": "./resource-cascading-list-ui-descriptor.mjson"
                 }
             }
 
@@ -38,6 +45,18 @@
             "valueType": "string",
             "isSearchable": true
         }
+    },
+    "events": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "events",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "event_descriptor"}
+       }
+    },
+    "event_descriptor": {
+        "object": "data/main.datareel/model/event.mjson"
     }
 
 }

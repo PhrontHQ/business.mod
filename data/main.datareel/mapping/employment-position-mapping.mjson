@@ -21,6 +21,14 @@
                     "staffingHistory": {
                         "<->":"id",
                         "converter": {"@": "staffingHistoryConverter"}
+                    },
+                    "firstEmploymentPositionRelationships": {
+                        "<->":"id",
+                        "converter": {"@": "firstEmploymentPositionRelationshipsConverter"}
+                    },
+                    "secondEmploymentPositionRelationships": {
+                        "<->":"id",
+                        "converter": {"@": "secondEmploymentPositionRelationshipsConverter"}
                     }
                 }
             },
@@ -59,6 +67,18 @@
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "employmentPositionId == $"
+        }
+    },
+    "firstEmploymentPositionRelationshipsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "firstEmploymentPositionId == $"
+        }
+    },
+    "secondEmploymentPositionRelationshipsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "secondEmploymentPositionId == $"
         }
     }
 

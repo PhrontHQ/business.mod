@@ -6,14 +6,17 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
-                    "service": {"<->": "serviceId"},
+                    "service": {
+                        "<->": "serviceId",
+                        "converter": {"@": "serviceToOneConverter"}
+                    },
                     "serviceVariant": {
                         "<->": "serviceVariantId",
-                        "converter": {"@": "toOneConverter"}
+                        "converter": {"@": "serviceVariantToOneConverter"}
                     },
                     "event": {
                         "<->": "eventId",
-                        "converter": {"@": "toOneConverter"}
+                        "converter": {"@": "eventToOneConverter"}
                     }
                 }
             },
@@ -31,7 +34,19 @@
         "object": "data/main.datareel/model/service-engagement.mjson"
     },
 
-    "toOneConverter": {
+    "serviceToOneConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "serviceVariantToOneConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "eventToOneConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"

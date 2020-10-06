@@ -52,7 +52,7 @@
     "serviceVariant": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "service",
+            "name": "serviceVariant",
             "valueType": "object",
             "cardinality": 1,
             "valueDescriptor": {"@": "ProductVariantDescriptor"}
@@ -67,7 +67,6 @@
             "name": "event",
             "valueType": "object",
             "cardinality": 1,
-            "inversePropertyName": "serviceEngagement",
             "valueDescriptor": {"@": "eventDescriptor"}
         }
     },

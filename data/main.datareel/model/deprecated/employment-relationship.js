@@ -1,4 +1,4 @@
-var PartyPartyRelationship = require("./party-party-relationship").PartyPartyRelationship;
+var PartyPartyRelationship = require("../party-party-relationship").PartyPartyRelationship;
 /**
  * @class EmploymentRelationship
  * @extends PartyPartyRelationship

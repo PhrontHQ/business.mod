@@ -12,7 +12,7 @@
                 "%": "montage/ui/list.reel"
             },
             "collectionNameExpression": "'Services'",
-            "nameExpression": "title",
+            "nameExpression": "name",
             "descriptionExpression": "description"
         }
     }

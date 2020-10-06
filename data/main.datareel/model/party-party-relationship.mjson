@@ -21,8 +21,5 @@
     },
     "PartyDescriptor": {
         "object": "data/main.datareel/model/party.mjson"
-    },
-    "range_descriptor": {
-        "object": "montage/core/range.mjson"
     }
 }

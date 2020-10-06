@@ -20,7 +20,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "existenceTimeRange", "contactInformation", "calendars"
+                "existenceTimeRange", "contactInformation"
             ]
         }
     },

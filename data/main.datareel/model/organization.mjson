@@ -137,6 +137,7 @@
             "name": "employmentPositions",
             "valueType": "object",
             "cardinality": -1,
+            "inversePropertyName": "employer",
             "valueDescriptor": {"@": "employmentPositionDescriptor"}
        }
     },

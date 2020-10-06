@@ -11,7 +11,7 @@
                 {"@": "userIdentities"},
                 {"@": "employmentHistory"},
                 {"@": "services"},
-                 {"@": "firstName"},
+                {"@": "firstName"},
                 {"@": "lastName"},
                 {"@": "email"},
                 {"@": "phone"},
@@ -61,7 +61,7 @@
     "aliases": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "name",
+            "name": "aliases",
             "cardinality": -1,
             "valueDescriptor": {"@": "name_descriptor"}
         }

@@ -15,6 +15,15 @@ exports.EmploymentPosition = PartyPartyRelationship.specialize(/** @lends Employ
     },
     position: {
         value: undefined
+    },
+    staffingHistory: {
+        value: undefined
+    },
+    firstEmploymentPositionRelationships: {
+        value: undefined
+    },
+    secondEmploymentPositionRelationships: {
+        value: undefined
     }
 
 });

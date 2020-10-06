@@ -7,7 +7,9 @@
                 {"@": "allowedEmploymentTypes"},
                 {"@": "employer"},
                 {"@": "position"},
-                {"@": "staffingHistory"}
+                {"@": "staffingHistory"},
+                {"@": "firstEmploymentPositionRelationships"},
+                {"@": "secondEmploymentPositionRelationships"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/employment-position.mjson"
@@ -45,7 +47,7 @@
             "name": "employer",
             "valueType": "object",
             "cardinality": 1,
-            "inversePropertyName": "employeeRelationships",
+            "inversePropertyName": "employmentPositions",
             "valueDescriptor": {"@": "organization_descriptor"}
         }
     },
@@ -58,7 +60,6 @@
             "name": "position",
             "valueType": "object",
             "cardinality": 1,
-            "inversePropertyName": "employerRelationships",
             "valueDescriptor": {"@": "position_descriptor"}
         }
     },
@@ -71,12 +72,35 @@
             "name": "staffingHistory",
             "valueType": "object",
             "cardinality": -1,
-            "inversePropertyName": "employerRelationships",
+            "inversePropertyName": "employmentPosition",
             "valueDescriptor": {"@": "employment_position_staffing_descriptor"}
         }
     },
     "employment_position_staffing_descriptor": {
         "object": "data/main.datareel/model/employment-position-staffing.mjson"
+    },
+    "firstEmploymentPositionRelationships": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "firstEmploymentPositionRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "firstEmploymentPosition",
+            "valueDescriptor": {"@": "employment_position_relationship_descriptor"}
+        }
+    },
+    "secondEmploymentPositionRelationships": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "secondEmploymentPositionRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "secondEmploymentPosition",
+            "valueDescriptor": {"@": "employment_position_relationship_descriptor"}
+        }
+    },
+    "employment_position_relationship_descriptor": {
+        "object": "data/main.datareel/model/employment-position-relationship.mjson"
     }
 
 }

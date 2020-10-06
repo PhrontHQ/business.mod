@@ -4,60 +4,31 @@
         "values": {
             "objectDescriptor": {"@": "RoleDescriptor"},
             "rawDataPrimaryKeys":["id"],
-            "RawDataKeyMapping": {
-                "rules": {
-                    "name[$language][$region] or name[$language].*": {
-                        "<-": "name",
-                        "converter": {"@": "coalesceConverter"}
-                    },
-                    "description[$language][$region] or description[$language].*": {
-                        "<->": "description",
-                        "converter": {"@": "coalesceConverter"}
-                    },
-                    "tags[$language][$region] or tags[$language].*": {
-                        "<->": "tags",
-                        "converter": {"@": "coalesceConverter"}
-                    }
-                }
-            },
-            "objectKeyMapping": {
-                "rules": {
-                }
-            },
             "objectMapping": {
                 "rules": {
-                    "name": {
-                        "<->": "name",
-                        "converter": {"@": "jsonbConverter"}
+                     "name": {
+                        "<->": "name"
                     },
                     "description": {
-                        "<->": "description",
-                        "converter": {"@": "jsonbConverter"}
+                        "<->": "description"
                     },
                     "tags": {
-                        "<->": "tags",
-                        "converter": {"@": "jsonbConverter"}
+                        "<->": "tags"
                     }
-                }
+               }
             },
             "rawDataMapping": {
                 "rules": {
                 }
             },
             "requisitePropertyNames": [
-                "id"
+                "name", "description", "tags"
             ]
         }
     },
 
     "RoleDescriptor": {
         "object": "data/main.datareel/model/role.mjson"
-    },
-    "jsonbConverter": {
-        "prototype": "../converter/postgresql-jsonb-converter"
-    },
-    "coalesceConverter": {
-        "prototype": "../converter/postgresql-jsonb-converter"
     }
 
 }

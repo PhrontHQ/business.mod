@@ -6,9 +6,15 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
+                    "professionalName": {"<->": "professionalName"},
+                    "professionalShortName": {"<->": "professionalShortName"},
                     "preWorkDuration": {"<->": "preWorkDuration"},
                     "duration": {"<->": "duration"},
-                    "postWorkDuration": {"<->": "postWorkDuration"}
+                    "postWorkDuration": {"<->": "postWorkDuration"},
+                    "providers": {
+                        "<->": "providerIds",
+                        "converter": {"@": "providersForeignKeyConverter"}
+                    }
                 }
             },
             "rawDataMapping": {
@@ -23,5 +29,13 @@
 
     "ServiceObjectDescriptor": {
         "object": "data/main.datareel/model/service.mjson"
+    },
+
+    "providersForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }
     }
+
 }

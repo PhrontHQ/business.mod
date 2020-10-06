@@ -10,13 +10,13 @@ exports.EmploymentPositionRelationship = PartyPartyRelationship.specialize(/** @
     firstEmploymentPosition: {
         value: undefined
     },
-    firstEmploymentPositionRole: {
+    firstEmploymentPositionRelationshipRole: {
         value: undefined
     },
     secondEmploymentPosition: {
         value: undefined
     },
-    secondEmploymentPositionRole: {
+    secondEmploymentPositionRelationshipole: {
         value: undefined
     }
 
