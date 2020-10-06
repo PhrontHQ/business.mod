@@ -1,4 +1,5 @@
-var RawDataService = require("montage/data/service/raw-data-service").RawDataService,
+var DataService = require("montage/data/service/data-service").DataService,
+    RawDataService = require("montage/data/service/raw-data-service").RawDataService,
     Criteria = require("montage/core/criteria").Criteria,
     ObjectDescriptor = require("montage/core/meta/object-descriptor").ObjectDescriptor,
     RawEmbeddedValueToObjectConverter = require("montage/data/converter/raw-embedded-value-to-object-converter").RawEmbeddedValueToObjectConverter,
@@ -48,7 +49,12 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     escapeString = pgutils.escapeString,
     pgstringify = require('./pgstringify'),
     parse = require("montage/core/frb/parse"),
+    DataTrigger = require("./data-trigger").DataTrigger,
     PhrontService;
+
+//Set our DataTrigger custom subclass:
+DataService.prototype.DataTrigger = DataTrigger;
+
 
 class Timer {
     // Automatically starts the timer
@@ -326,10 +332,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     */
 
     mapCriteriaToRawCriteria: {
-        value: function (criteria, mapping) {
+        value: function (criteria, mapping, locales, rawExpressionJoinStatements) {
             var rawCriteria,
                 rawExpression,
-                rawParameters;
+                rawParameters
 
             if (!criteria) return undefined;
 
@@ -346,8 +352,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             }
 
-            rawExpression = this.stringify(criteria.syntax, rawParameters, [mapping]);
-            rawCriteria = new Criteria().initWithExpression(rawExpression, this.inlineCriteriaParameters ? null : rawParameters);
+            rawExpression = this.stringify(criteria.syntax, rawParameters, [mapping], locales, rawExpressionJoinStatements);
+            if(rawExpression && rawExpression.length > 0) {
+                rawCriteria = new Criteria().initWithExpression(rawExpression, this.inlineCriteriaParameters ? null : rawParameters);
+            }
             return rawCriteria;
         }
 
@@ -519,11 +527,12 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     },
 
     mapRawReadExpressionToSelectExpression: {
-        value: function (anExpression, aPropertyDescriptor, mapping) {
+        value: function (anExpression, aPropertyDescriptor, mapping, operationLocales, tableName) {
             //If anExpression isn't a Property, aPropertyDescriptor should be null/undefined and we'll need to walk anExpression syntactic tree to transform it into valid SQL in select statement.
+            var syntax = typeof anExpression === "string" ? parse(anExpression) : anExpression;
 
 
-            if(!aPropertyDescriptor && anExpression !== "id") {
+            if((!aPropertyDescriptor && anExpression !== "id") || !(syntax.type === "property" && syntax.args[1].value === anExpression)) {
 
 
             /*
@@ -597,9 +606,96 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 return rawExpression;
 
             } else {
-                return escapeIdentifier(anExpression);
+                if(operationLocales && operationLocales.length && aPropertyDescriptor && aPropertyDescriptor.isLocalizable) {
+                    var escapedExpression = escapeIdentifier(anExpression),
+                        language,
+                        region;
+
+                    if( operationLocales.length === 1) {
+
+                        /*
+                            WARNING: This is assuming the inlined representation of localized values. If it doesn't work for certain types that json can't represent, like a tstzrange, we might need to use a different construction, or the localized value would be a unique id of the value stored in a different table
+                        */
+                            language = operationLocales[0].language;
+                            region = operationLocales[0].region;
+                        /*
+                            Should build something like:
+                            COALESCE("Role"."tags"::jsonb #>> '{en,FR}', "Role"."tags"::jsonb #>> '{en,*}') as "tags"
+                        */
+                        return `COALESCE("${tableName}".${escapedExpression}::jsonb #>> '{${language},${region}}', "${tableName}".${escapedExpression}::jsonb #>> '{${language},*}', "${tableName}".${escapedExpression}::jsonb #>> '{en,*}') as ${escapedExpression}`;
+
+                    } else {
+                        /*
+                            we should return an json object with only the keys matching
+                            the locales asked, with :
+
+                            jsonb_build_object('fr',column->'fr','en',column->'en')
+                        */
+                        var result = 'jsonb_build_object(',
+                            i, countI;
+                        for(i=0, countI = operationLocales.length;(i<countI);i++) {
+                                language = operationLocales[i].language;
+                                result += `'${language}',"${tableName}".${escapedExpression}::jsonb->'${language}'`
+                                if(i+2 < countI) result += ",";
+                        }
+                        result += `) as "${tableName}".${escapedExpression}`;
+                        return result;
+                    }
+
+                } else {
+                    return `"${tableName}".${escapeIdentifier(anExpression)}`;
+                }
             }
 
+
+        }
+    },
+
+
+    localesFromCriteria: {
+        value: function (criteria) {
+            //First we look for useLocales added by phront client data service
+            //under the DataServiceUserLocales criteria parameters entry:
+            if(criteria && (typeof criteria.parameters === "object")) {
+                if("DataServiceUserLocales" in criteria.parameters) {
+                    return criteria.parameters.DataServiceUserLocales
+                } else {
+                    return null;
+                    /*
+                        No high level clues, which means we'd have to walk
+                        the syntaxtic tree to look for a property expression on
+                        "locales"
+                    */
+                    // console.warn("localesFromCriteria missing crawling syntactic tree to find locales information in criteria: "+JSON.stringify(criteria));
+                }
+            } else {
+                return null;
+            }
+
+        }
+    },
+
+    _criteriaByRemovingDataServiceUserLocalesFromCriteria: {
+        value: function (criteria) {
+            if(criteria.parameters.DataServiceUserLocales) {
+                delete criteria.parameters.DataServiceUserLocales;
+
+                if(criteria.syntax.type === "and") {
+                /*
+                    We remove the "and", the current root of the syntax, and the left side (args[0])
+                    that is the syntax for "locales == $DataServiceUserLocales"
+                */
+                    criteria.syntax = criteria.syntax.args[1];
+                    //Delete the expression as it would be out of sync:
+                    criteria.expression = "";
+                    return criteria;
+                } else {
+                    //If there's only the locale expression, we remove it
+                    // criteria.syntax = null;
+                    return null;
+                }
+
+            }
 
         }
     },
@@ -608,6 +704,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         value: function (readOperation, rawDataOperation) {
             //Now we need to transf orm the operation into SQL:
             var objectDescriptor = this.objectDescriptorWithModuleId(readOperation.dataDescriptor),
+                /*Set*/localizablePropertyNames = objectDescriptor.localizablePropertyNames,
+                operationLocales,
                 mapping = this.mappingForType(objectDescriptor),
                 rawDataMappingRules = mapping.rawDataMappingRules,
                 readExpressions = readOperation.data.readExpressions,
@@ -638,9 +736,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                   The rigth part might need to leverage functions or a whole new sub select?
 
                 */
-                i, countI, iKey, iValue, iAssignment, iPrimaryKey, iPrimaryKeyValue,
+                i, countI, iExpression, iKey, iValue, iAssignment, iPrimaryKey, iPrimaryKeyValue,
                 iKeyValue,
                 rawCriteria,
+                rawExpressionJoinStatements,
                 condition,
                 rawReadExpressionsArray,
                 anExpression,
@@ -656,11 +755,22 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 readLimit = readOperation.data.readLimit,
                 readOffset = readOperation.data.readOffset;
 
+            //Take care of locales
+            if(operationLocales = this.localesFromCriteria(criteria)) {
+                //Now we got what we want, we strip it out to get back to the basic.
+                criteria = this._criteriaByRemovingDataServiceUserLocalesFromCriteria(criteria);
+            }
+
 
             //WARNING If a set of readExpressions is expressed on the operation for now it will excludes
             //the requisites.
             if (readExpressions) {
-                rawReadExpressions = new Set(readExpressions.map(expression => mapping.mapObjectPropertyNameToRawPropertyName(expression)));
+                rawReadExpressions = new Set();
+                for(i=0, countI = readExpressions.length;(i<countI); i++) {
+                    iExpression = readExpressions[i];
+                    rawReadExpressions.add(mapping.mapObjectPropertyNameToRawPropertyName(iExpression));
+                }
+                // rawReadExpressions = new Set(readExpressions.map(expression => mapping.mapObjectPropertyNameToRawPropertyName(expression)));
             } else {
                 rawReadExpressions = new Set(mapping.rawRequisitePropertyNames)
             }
@@ -696,7 +806,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     }
                 }
                 else {
-                    anEscapedExpression = this.mapRawReadExpressionToSelectExpression(anExpression, propertyDescriptor, mapping);
+                    anEscapedExpression = this.mapRawReadExpressionToSelectExpression(anExpression, propertyDescriptor, mapping, operationLocales, tableName);
 
                     // anEscapedExpression = escapeIdentifier(anExpression);
                 }
@@ -717,7 +827,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 WHERE f.did = d.did
             */
 
-            rawCriteria = this.mapCriteriaToRawCriteria(criteria, mapping);
+            rawCriteria = this.mapCriteriaToRawCriteria(criteria, mapping, operationLocales, (rawExpressionJoinStatements = new Set())
+            );
             condition = rawCriteria ? rawCriteria.expression : undefined;
 
             if(rawOrderings) {
@@ -737,6 +848,12 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             */
 
             sql = `SELECT (SELECT row_to_json(_) FROM (SELECT ${escapedRawReadExpressionsArray.join(",")}) as _) FROM ${schemaName}."${tableName}"`;
+
+            //Adding the join expressions if any
+            if(rawExpressionJoinStatements.size) {
+                sql += ` ${rawExpressionJoinStatements.join(" ")}`;
+            }
+
             if (condition) {
                 //Let's try if it doestn't start by a JOIN before going for not containing one at all
                 if(condition.indexOf("JOIN") !== 0) {
@@ -799,7 +916,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             // if(rawDataOperation.sql.indexOf('"name" = ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1) {
             //   console.log(rawDataOperation.sql);
             // }
-            //console.log("executeStatement "+rawDataOperation.sql);
+
+            if(objectDescriptor.name === "ServiceEngagement") {
+                console.log("handleRead: "+rawDataOperation.sql);
+            }
 
             self._executeStatement(rawDataOperation, function (err, data) {
                 //var endTime  = console.timeEnd(readOperation.id);
@@ -817,6 +937,9 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 //     console.log(rawDataOperation.sql);
                 //   }
 
+                if(err) {
+                    console.error("handleRead Error",readOperation,rawDataOperation,err);
+                }
 
                 //DEBUG:
                 // if(readOperation.criteria && readOperation.criteria.syntax.type === "has") {
@@ -1188,8 +1311,9 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             } else {
                 if(!propertyDescriptor) {
                     mappingRule = mapping.rawDataMappingRules.get(rawProperty);
-                    propertyName = mappingRule ? mappingRule .sourcePath : rawProperty;
-                    propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyName);
+                    // propertyName = mappingRule ? mappingRule.sourcePath : rawProperty;
+                    // propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyName);
+                    propertyDescriptor = mapping.propertyDescriptorForRawPropertyName(rawProperty);
                 }
                 return this.mapPropertyDescriptorToRawType(propertyDescriptor, mappingRule);
             }
@@ -1259,26 +1383,31 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
     mapPropertyDescriptorToRawType: {
         value: function (propertyDescriptor, rawDataMappingRule) {
-            var propertyDescriptorType = propertyDescriptor.valueType,
+            var propertyDescriptorValueType = propertyDescriptor.valueType,
                 reverter = rawDataMappingRule ? rawDataMappingRule.reverter : null,
                 //For backward compatibility, propertyDescriptor.valueDescriptor still returns a Promise....
                 //propertyValueDescriptor = propertyDescriptor.valueDescriptor;
                 //So until we fix this, tap into the private instance variable that contains what we want:
                 propertyValueDescriptor = propertyDescriptor._valueDescriptorReference;
 
-            if (propertyValueDescriptor) {
-                if (propertyValueDescriptor.constructor instanceof Range) {
-                    if(propertyDescriptor.valueType === "date") {
+            //No exception to worry about so far
+            if(propertyDescriptor.isLocalizable) {
+                return "jsonb";
+            }
+            else if (propertyValueDescriptor) {
+                if (propertyValueDescriptor.object === Range) {
+
+                    if(propertyDescriptorValueType === "date") {
                         return "tstzrange";
                     }
-                    else if(propertyDescriptor.valueType === "number") {
+                    else if(propertyDescriptorValueType === "number") {
                         return "numrange";
                     } else {
                         throw new Error("Unable to mapPropertyDescriptorToRawType",propertyDescriptor,rawDataMappingRule);
                     }
 
                 } else if (reverter && reverter instanceof RawEmbeddedValueToObjectConverter) {
-                    // if(propertyDescriptorType === "array") {
+                    // if(propertyDescriptorValueType === "array") {
                     //     return "jsonb[]"
                     // } else {
                         return "jsonb";
@@ -1309,7 +1438,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 }
             }
             else {
-                if (propertyDescriptor.valueType === "range") {
+                if (propertyDescriptorValueType === "range") {
                     if(propertyDescriptor.collectionValueType === "date") {
                         return "tstzrange";
                     }
@@ -1320,20 +1449,20 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     }
                 }
                 else if (propertyDescriptor.cardinality === 1) {
-                    return this.mapPropertyDescriptorTypeToRawType(propertyDescriptorType, propertyValueDescriptor);
+                    return this.mapPropertyDescriptorValueTypeToRawType(propertyDescriptorValueType);
                 } else {
                     //We have a cardinality of n. The propertyDescriptor.collectionValueType should tell us if it's a list or a map
-                    //But if we don't have a propertyValueDescriptor and propertyDescriptorType is an array, we don't know what
+                    //But if we don't have a propertyValueDescriptor and propertyDescriptorValueType is an array, we don't know what
                     //kind of type would be in the array...
                     //We also don't know wether these objects should be stored inlined as JSONB for example. A valueDescriptor just
                     //tells what structured object is expected as value in JS, not how it is stored. That is a SQL Mapping's job.
                     //How much of expression data mapping could be leveraged for that?
 
                     //If it's to-many and objets, we go for jsonb
-                    if (propertyDescriptorType === "object") {
+                    if (propertyDescriptorValueType === "object") {
                         return "jsonb";
                     }
-                    else return this.mapPropertyDescriptorTypeToRawType(propertyDescriptorType, propertyValueDescriptor) + "[]";
+                    else return this.mapPropertyDescriptorValueTypeToRawType(propertyDescriptorValueType) + "[]";
                 }
 
             }
@@ -1399,8 +1528,9 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
     */
 
-    mapPropertyDescriptorTypeToRawType: {
-        value: function (propertyDescriptorType, propertyValueDescriptor) {
+    mapPropertyDescriptorValueTypeToRawType: {
+        value: function (propertyDescriptorType) {
+
             if (propertyDescriptorType === "string" || propertyDescriptorType === "URL") {
                 return "text";
             }
@@ -1426,7 +1556,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 //}
             }
             else {
-                console.error("mapPropertyDescriptorTypeToRawType: unable to map " + propertyDescriptorType + " to RawType");
+                console.error("mapPropertyDescriptorToRawType: unable to map " + propertyDescriptorType + " to RawType");
                 return "text";
             }
         }
@@ -1438,7 +1568,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 return "NULL";
             }
             else if (typeof value === "string") {
-                return escapeString(value);
+                return escapeString(value, type);
             }
             else {
                 return prepareValue(value, type);
@@ -2030,7 +2160,16 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 self = this,
                 mappingPromise,
                 record = recordArgument || {},
+                criteria = createOperation.criteria,
+                operationLocales, language, region,
                 sql;
+
+            //Take care of locales
+            if(operationLocales = this.localesFromCriteria(criteria)) {
+                //Now we got what we want, we strip it out to get back to the basic.
+                criteria = this._criteriaByRemovingDataServiceUserLocalesFromCriteria(criteria);
+            }
+
 
             mappingPromise = this._mapObjectToRawData(data, record);
             if (!mappingPromise) {
@@ -2059,10 +2198,29 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 for (i = 0, countI = recordKeys.length; i < countI; i++) {
                     iKey = recordKeys[i];
                     iValue = record[iKey];
+                    iPropertyDescriptor = mapping.propertyDescriptorForRawPropertyName(iKey);
 
                     iRawType = self.mapObjectDescriptorRawPropertyToRawType(objectDescriptor, iKey, mapping);
 
-                    iMappedValue = self.mapPropertyValueToRawTypeExpression(iKey, iValue, iRawType);
+
+                    //In that case we need to produce json to be stored in jsonb
+                    if(iPropertyDescriptor && iPropertyDescriptor.isLocalizable) {
+                        //We need to put the value in the right json structure.
+                        if(operationLocales.length === 1) {
+                            language = operationLocales[0].language;
+                            region = operationLocales[0].region;
+                            iMappedValue = self.mapPropertyValueToRawTypeExpression(iKey, iValue, iRawType);
+                            iMappedValue = `'{"${language}":{"${region}":${iMappedValue}}}'`;
+                        }
+                        else if(operationLocales.length > 1) {
+                            //if more than one locales, then it's a multi-locale structure
+                            //We should already have a json
+                            iMappedValue = self.mapPropertyValueToRawTypeExpression(iKey, iValue, "string");
+                        }
+
+                    } else {
+                        iMappedValue = self.mapPropertyValueToRawTypeExpression(iKey, iValue, iRawType);
+                    }
                     // if(iValue == null || iValue == "") {
                     //   iValue = 'NULL';
                     // }
@@ -2143,6 +2301,9 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 //console.log(sql);
                 return new Promise(function (resolve, reject) {
                     self._executeStatement(rawDataOperation, function (err, data) {
+                        if(err) {
+                            console.error("handleCreate Error",createOperation,rawDataOperation,err);
+                        }
                         var operation = self.mapHandledCreateResponseToOperation(createOperation, err, data, record);
                         resolve(operation);
                     });
@@ -2243,7 +2404,8 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 recordKeys = Object.keys(dataChanges),
                 setRecordKeys = Array(recordKeys.length),
                 sqlColumns = recordKeys.join(","),
-                i, countI, iKey, iKeyEscaped, iValue, iMappedValue, iAssignment, iPrimaryKey, iPrimaryKeyValue,
+                i, countI, iKey, iKeyEscaped, iValue, iMappedValue, iAssignment, iPrimaryKey,
+                iHasAddedValue, iHasRemovedValues, iPrimaryKeyValue,
                 iKeyValue,
                 dataSnapshot = updateOperation.snapshot,
                 dataSnapshotKeys = dataSnapshot ? Object.keys(dataSnapshot) : null,
@@ -2252,14 +2414,14 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
 
 
             //We need to transform the criteria into a SQL equivalent. Hard-coded for a single object for now
-            if (Object.keys(criteria.parameters).length === 1) {
+            //if (Object.keys(criteria.parameters).length === 1) {
                 if (criteria.parameters.hasOwnProperty("identifier")) {
                     condition = `id = '${criteria.parameters.dataIdentifier.primaryKey}'::uuid`;
                 }
                 else if (criteria.parameters.hasOwnProperty("id")) {
                     condition = `id = '${criteria.parameters.id}'::uuid`;
                 }
-            }
+            //}
 
             if (dataSnapshotKeys) {
                 for (i = 0, countI = dataSnapshotKeys.length; i < countI; i++) {
@@ -2301,17 +2463,23 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 iKey = recordKeys[i];
                 iKeyEscaped = escapeIdentifier(iKey);
                 iValue = dataChanges[iKey];
-                if (iValue.hasOwnProperty("addedValues")) {
-                    iMappedValue = this.mapPropertyValueToRawTypeExpression(iKey, iValue.addedValues);
-                    iAssignment = `${iKeyEscaped} = array_append(${iKeyEscaped}, ${iMappedValue})`;
-                }
-                if (iValue.hasOwnProperty("removedValues")) {
-                    iMappedValue = this.mapPropertyValueToRawTypeExpression(iKey, iValue.removedValues);
-                    iAssignment = `${iKeyEscaped} = array_remove(${iKeyEscaped}, ${iMappedValue})`;
+                iRawType = this.mapObjectDescriptorRawPropertyToRawType(objectDescriptor, iKey, mapping);
+
+                if((iHasAddedValue = iValue.hasOwnProperty("addedValues")) || (iHasRemovedValues = iValue.hasOwnProperty("removedValues")) ) {
+
+
+
+                    if (iHasAddedValue) {
+                        iMappedValue = this.mapPropertyValueToRawTypeExpression(iKey, iValue.addedValues, iRawType);
+                        iAssignment = `${iKeyEscaped} = anyarray_concat_uniq(${iKeyEscaped}, ${iMappedValue})`;
+                    }
+                    if (iHasRemovedValues) {
+                        iMappedValue = this.mapPropertyValueToRawTypeExpression(iKey, iValue.removedValues, iRawType);
+                        iAssignment = `${iKeyEscaped} = anyarray_remove(${iKeyEscaped}, ${iMappedValue})`;
+                    }
                 } else if (iValue === null) {
                     iAssignment = `${iKeyEscaped} = NULL`;
                 } else {
-                    iRawType = this.mapObjectDescriptorRawPropertyToRawType(objectDescriptor, iKey, mapping);
 
                     iMappedValue = this.mapPropertyValueToRawTypeExpression(iKey, iValue, iRawType);
                     //iAssignment = `${iKey} = '${iValue}'`;
@@ -2364,6 +2532,9 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 //console.log(sql);
                 return new Promise(function (resolve, reject) {
                     self._executeStatement(rawDataOperation, function (err, data) {
+                        if(err) {
+                            console.error("handleUpdate Error",updateOperation,rawDataOperation,err);
+                        }
                         var operation = self.mapHandledUpdateResponseToOperation(updateOperation, err, data, record);
                         resolve(operation);
                     });
@@ -2586,7 +2757,8 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                         //Should the data be the error?
                         if(!data) {
                             data = {
-                                transactionId: batchOperation.data.transactionId
+                                transactionId: batchOperation.data.transactionId,
+                                sql: rawDataOperation.sql
                             };
                             data.error = err;
                         }

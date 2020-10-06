@@ -38,7 +38,8 @@ function arrayString (val, type) {
                     ? "'["
                     : toList
                     ? "("
-                    :"'{";
+                    :"'{",
+        isUUID = (type === 'uuid[]');
     for (var i = 0, countI=val.length, iVal; i < countI; i++) {
         if (i > 0) {
             result += ',';
@@ -55,7 +56,11 @@ function arrayString (val, type) {
             if (typeof iVal === 'object' &&toJSONB) {
                 result += prepareValue(iVal);
             } else {
-                result += escapeElement(prepareValue(iVal), toList ? "'" : '"' );
+                if(isUUID) {
+                    result += prepareValue(iVal);
+                } else {
+                    result += escapeElement(prepareValue(iVal), toList ? "'" : '"' );
+                }
             }
 
         }
@@ -106,31 +111,31 @@ var prepareValue = function (val, type, seen) {
         return arrayString(val,type);
     }
     if (val === null || typeof val === 'undefined') {
-        return null
+        return null;
     }
     if (typeof val === 'object') {
-        return prepareObject(val, seen)
+        return prepareObject(val, seen, type);
     }
     return val.toString();
 }
 
-function prepareObject (val, seen) {
+function prepareObject (val, seen, type) {
     if (val && typeof val.toPostgres === 'function') {
         seen = seen || []
         if (seen.indexOf(val) !== -1) {
             throw new Error('circular reference detected while preparing "' + val + '" for query')
         }
-        seen.push(val)
+        seen.push(val);
 
-        return prepareValue(val.toPostgres(prepareValue), seen)
+        return prepareValue(val.toPostgres(prepareValue), seen);
     }
-    return JSON.stringify(val)
+    return `'${JSON.stringify(val)}'`;
 }
 
 function pad (number, digits) {
     number = '' + number
     while (number.length < digits) { number = '0' + number }
-    return number
+    return number;
 }
 
 function dateToString (date) {
@@ -192,9 +197,10 @@ function normalizeQueryConfig (config, values, callback) {
     return config
 }
 
-function escapeString(str) {
+function escapeString(str, rawType) {
     let hasBackslash = false;
-    let escaped = "'";
+    let delimiter = rawType === "jsonb" ? '"' : "'";
+    let escaped = delimiter;
     for (let i = 0; i < str.length; i++) {
         const c = str[i];
         if (c === "'") {
@@ -206,7 +212,7 @@ function escapeString(str) {
             escaped += c;
         }
     }
-    escaped += "'";
+    escaped += delimiter;
     if (hasBackslash === true) {
         escaped = 'E' + escaped;
     }

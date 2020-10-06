@@ -1,4 +1,5 @@
-var RawDataService = require("montage/data/service/raw-data-service").RawDataService,
+var DataService = require("montage/data/service/data-service").DataService,
+    RawDataService = require("montage/data/service/raw-data-service").RawDataService,
     Criteria = require("montage/core/criteria").Criteria,
     ObjectDescriptor = require("montage/core/meta/object-descriptor").ObjectDescriptor,
     DataQuery = require("montage/data/model/data-query").DataQuery,
@@ -20,12 +21,14 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     DeleteRule = require("montage/core/meta/property-descriptor").DeleteRule,
     Locale = require("montage/core/locale").Locale,
     PGClass = require("../model/p-g-class").PGClass,
-
+    DataTrigger = require("./data-trigger").DataTrigger,
     PhrontClientService;
 
+//Set our DataTrigger custom subclass:
+DataService.prototype.DataTrigger = DataTrigger;
 
 
-    /**
+/**
 * TODO: Document
 *
 * @class
@@ -169,6 +172,20 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
+    operationReferrer: {
+        value: function(operation) {
+            return this._pendingOperationById.get(operation.referrerId);
+        }
+    },
+
+    registerPendingOperation: {
+        value: function(operation, referrer) {
+            this._pendingOperationById.set(operation.id, operation);
+
+        }
+    },
+
+
     _operationListenerNamesByType: {
         value: new Map()
     },
@@ -211,10 +228,16 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             // }
             //if(operation.type === DataOperation.Type.ReadUpdate) console.log("handleReadupdate  referrerId: ",referrer);
 
-            if(records && records.length > 0) {
+            if(stream) {
+                if(records && records.length > 0) {
+                    //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
+                    this.addRawData(stream, records, operation);
+                } else if(operation.type !== DataOperation.Type.ReadCompleted){
+                    console.log("operation of type:"+operation.type+", has no data");
+                }
 
-                //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
-                this.addRawData(stream, records);
+            } else {
+                console.log("receiving operation of type:"+operation.type+", but can't find a matching stream");
             }
         }
     },
@@ -410,12 +433,12 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 propertyName = rule ? rule.sourcePath : iExpression;
                 propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyName);
 
-                if(propertyDescriptor && propertyDescriptor.isLocalizable) {
-                    rawReadExpressions.push(this.localizedReadExpressionForPropertyDescriptor(propertyDescriptor));
+                // if(propertyDescriptor && propertyDescriptor.isLocalizable) {
+                //     rawReadExpressions.push(this.localizedReadExpressionForPropertyDescriptor(propertyDescriptor));
 
-                } else {
+                // } else {
                     rawReadExpressions.push(iExpression);
-                }
+                //}
             }
             return rawReadExpressions;
         }
@@ -427,10 +450,25 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
+    localesForObject: {
+        value: function(object) {
+            return object.locales || this.userLocales;
+        }
+    },
+
+    localesCriteriaForObject: {
+        value: function(object) {
+            return new Criteria().initWithExpression("locales == $DataServiceUserLocales", {
+                DataServiceUserLocales: this.localesForObject(object)
+            });
+        }
+    },
+
 
     //This probably isn't right and should be fetchRawData, but switching creates a strange error.
     fetchData: {
         value: function (query, stream) {
+
             var self = this;
             stream = stream || new DataStream();
             stream.query = query;
@@ -443,8 +481,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 var objectDescriptor = query.type,
                     criteria = query.criteria,
                     criteriaWithLocale,
-                    parameters = criteria ? criteria.parameters : undefined,
-                    rawParameters = parameters,
+                    parameters,
+                    rawParameters,
                     readOperation = new DataOperation(),
                     rawReadExpressions = [],
                     rawOrderings,
@@ -462,11 +500,48 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 readOperation.type = DataOperation.Type.Read;
                 readOperation.dataDescriptor = objectDescriptor.module.id;
                 readOperation.data = {};
+
+                //Need to add a check to see if criteria may have more spefific instructions for "locale".
+                if(localizableProperties && localizableProperties.size) {
+                    // var a = new Criteria().initWithExpression("locale == $locale", {
+                    //     locale: this.userLocale
+                    // });
+                    // console.log(a.syntax);
+                    // var b = new Criteria().initWithExpression("locale == $.locale", {
+                    //     locale: this.userLocale
+                    // });
+                    // console.log(b.syntax);
+                    // var c = new Criteria().initWithExpression("locale == $", this.userLocale);
+                    // console.log(c.syntax);
+                    // var d = new Criteria().initWithExpression("$key.has(id)", {"key":"123"});
+                    // console.log(d.syntax);
+                    // var e = new Criteria().initWithExpression("$.key.has(id)", {"key":"123"});
+                    // console.log(e.syntax);
+                    //var f = new Criteria().initWithExpression("$.has(id)", "123");
+                    //console.log(JSON.stringify(f.syntax));
+
+                    if(criteria) {
+                        /*
+                            WIP Adds locale as needed. Most common case is that it's left to the framework to qualify what Locale to use.
+
+                            A core principle is that each data object (DO) has a locale property behaving in the following way:
+                            locales has 1 locale value, a locale object.
+                            This is the most common use case. The property’s getter returns the user’s locale.
+                            Fetching an object with a criteria asking for a specific locale will return an object in that locale.
+                            Changing the locale property of an object to another locale instance (singleton in Locale’s case), updates all the values of its localizable properties to the new locale set.
+                            locales has either no value, or “*” equivalent, an “All Locale Locale”
+                            This feches the json structure and returns all the values in all the locales
+                            locales has an array of locale instances.
+                            If locale’s cardinality is > 1 then each localized property would return a json/dictionary of locale->value instead of 1 value.
+                        */
+
+                        criteria = self.userLocalesCriteria.and(criteria);
+                    } else {
+                        criteria = self.userLocalesCriteria;
+                    }
+                }
+
                 if(criteria) {
-                    //WIP Adds locale as needed
-                    // if(localizableProperties && localizableProperties.length) {
-                    //     criteria = criteria.and(self.userLocaleCriteria);
-                    // }
                     readOperation.criteria = criteria;
                 }
 
@@ -496,6 +571,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     SaveChanges is cleaner, but the job is also easier there.
 
                 */
+               parameters = criteria ? criteria.parameters : undefined;
+               rawParameters = parameters;
+
                 if(parameters && typeof criteria.parameters === "object") {
                     var keys = Object.keys(parameters),
                         i, countI, iKey, iValue, iRecord;
@@ -528,6 +606,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 if(!promises) promises = Promise.resolve(true);
                 promises.then(function() {
                     if(criteria) readOperation.criteria.parameters = rawParameters;
+                    //console.log("fetchData operation:",JSON.stringify(readOperation));
                     self._dispatchReadOperation(readOperation, stream);
                     if(criteria) readOperation.criteria.parameters = parameters;
 
@@ -539,7 +618,31 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     },
 
     _processObjectChangesForProperty: {
-        value: function(object, aProperty, aPropertyDescriptor, aRawProperty, aPropertyChanges, operationData, snapshot, dataSnapshot) {
+        value: function(object, aProperty, aPropertyDescriptor, aPropertyChanges, operationData, snapshot, dataSnapshot, rawDataPrimaryKeys, mapping) {
+            var aRawProperty = mapping.mapObjectPropertyToRawProperty(object, aProperty);
+
+            if(this._isAsync(aRawProperty)) {
+                var self = this;
+                return aRawProperty.then(function(aRawProperty) {
+                    return self.__processObjectChangesForProperty(object, aProperty, aPropertyDescriptor, aRawProperty, aPropertyChanges, operationData, snapshot, dataSnapshot, rawDataPrimaryKeys);
+                });
+            } else {
+                return this.__processObjectChangesForProperty(object, aProperty, aPropertyDescriptor, aRawProperty, aPropertyChanges, operationData, snapshot, dataSnapshot, rawDataPrimaryKeys);
+            }
+
+        }
+    },
+
+    __processObjectChangesForProperty: {
+        value: function(object, aProperty, aPropertyDescriptor, aRawProperty, aPropertyChanges, operationData, snapshot, dataSnapshot, rawDataPrimaryKeys) {
+
+            /*
+                We already do that in expression-data-mapping mapObjectPropertyToRawData(), but expression-data-mapping doesn't know about added/removed changes where our _processObjectChangesForProperty does.
+            */
+            if(rawDataPrimaryKeys.indexOf(aRawProperty) !== -1) {
+                return;
+            }
+
             var self = this,
                 aPropertyDeleteRule = aPropertyDescriptor ? aPropertyDescriptor.deleteRule : null;
             // if(aPropertyDescriptor.valueDescriptor) {
@@ -557,23 +660,46 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                     We have a partial view, the backend will need pay attention that we're not re-adding object if it's already there, and should be unique.
                 */
-                addedValues = aPropertyChanges.addedValues;
-                for(i=0, countI=addedValues.length;i<countI;i++) {
-                    iValue = addedValues[i];
-                    addedValues[i] = this.dataIdentifierForObject(iValue).primaryKey;
-                }
+               var valuesIterator, iValue, addedValues, removedValues;
+               if(aPropertyChanges.addedValues) {
 
-                removedValues = aPropertyChanges.removedValues;
-                for(i=0, countI=removedValues.length;i<countI;i++) {
-                    iValue = removedValues[i];
-                    //TODO: Check if the removed value should be itself be deleted
-                    //if(aPropertyDeleteRule === DeleteRule.CASCADE){}
-                    removedValues[i] = this.dataIdentifierForObject(iValue).primaryKey;
+                    /*
+                        Notes:
+                        If dataObject[aProperty] === null, we could treat addedValues as a set, and there might be something going on in tracking/propagating changes that leads to a set being considered as added. Triggers do their best to keep the array created in place, and change it's content rather than replace it, even when a set is done. That in itself is likely the reason we see this.
+
+                        There might not be downsides to deal with it as an add though.
+                    */
+                    valuesIterator = aPropertyChanges.addedValues.values();
+                    while ((iValue = valuesIterator.next().value)) {
+                        (addedValues || (addedValues = [])).push(this.dataIdentifierForObject(iValue).primaryKey);
+                    }
+
+                    /*
+                        After converting to primaryKeys in an array, we make it replace the original set for the same key on aPropertyChanges
+                    */
+                   if(addedValues) {
+                        aPropertyChanges.addedValues = addedValues;
+                   } else {
+                       delete aPropertyChanges.addedValues;
+                   }
+               }
+
+                if(aPropertyChanges.removedValues) {
+                    valuesIterator = aPropertyChanges.removedValues.values();
+                    while ((iValue = valuesIterator.next().value)) {
+                        //TODO: Check if the removed value should be itself be deleted
+                        //if(aPropertyDeleteRule === DeleteRule.CASCADE){}
+                        (removedValues || (removedValues = [])).push(this.dataIdentifierForObject(iValue).primaryKey);
+                    }
+                    if(removedValues) {
+                        aPropertyChanges.removedValues = removedValues;
+                    } else {
+                        delete aPropertyChanges.removedValues;
+                    }
                 }
 
                 //Here we mutated the structure from changesForDataObject. I should be cleared
                 //when saved, but what if save fails and changes happen in-between?
-
                 operationData[aRawProperty] = aPropertyChanges;
             }
             else {
@@ -583,7 +709,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     we need to check post mapping that the rawValue is different from the snapshot
                 */
                 if (this._isAsync(result)) {
-                    return result.then(function () {
+                    return result.then(function (value) {
                         self._setOperationDataSnapshotForProperty(operationData, snapshot, dataSnapshot, aRawProperty );
                     });
                 }
@@ -611,7 +737,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
     primaryKeyForNewDataObject: {
         value: function (type) {
-            return Phluid.generate(this.mappingForType().rawDataTypeId);
+            //return Phluid.generate(this.mappingForType(type).rawDataTypeId);
             return uuid.generate();
         }
     },
@@ -649,9 +775,24 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
+
+    /**
+     * We're going to assign types/ObjectDescriptor a unique rawDataTypeId, 4 bytes value.
+     * We're starting simple with CRC32c derived from
+     *
+     * Montage.getInfoForObject(objectDescriptor).require.getModuleDescriptor(objectDescriptor.module.id).display
+     *
+     * calculated in meomory and later on will store in a table/registry to guarantee unicity across the 2^32 values
+     *
+     * @method
+     * @argument {RawDataService} service
+     * @argument {Array} [types] Types to use instead of the child's types.
+     */
+
     rawDataTypeIdForObjectDescriptor: {
-        value: function (aMapping) {
-            return this.rawDataTypeIdByObjectDescriptor(aMapping.objectDescriptor);
+        value: function (objectDescriptor) {
+            var info = Montage.getInfoForObject(objectDescriptor);
+            return this.rawDataTypeIdByObjectDescriptor(objectDescriptor) /*|| ()*/;
         }
     },
 
@@ -750,6 +891,53 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             }
         }
     },
+
+    _saveDataOperationsForObjects: {
+        value: function(objects, operationType, dataObjectChangesMap, dataOperationsByObject) {
+            var self = this;
+            return new Promise(function(resolve, reject) {
+                var iterator = objects.values(),
+                isUpdateOperationType = operationType === DataOperation.Type.Update,
+                iOperationPromises,
+                iOperationPromise,
+                operations,
+                iObject;
+
+                while(iObject = iterator.next().value) {
+                    iOperationPromise = self._saveDataOperationForObject(iObject, operationType, dataObjectChangesMap, dataOperationsByObject);
+                    (iOperationPromises || (iOperationPromises = [])).push(iOperationPromise);
+                    iOperationPromise.then(function(resolvedOperation) {
+                        /*
+                            NoOps will be handled by iterating on dataObjectChangesMap later on
+                        */
+                        if(resolvedOperation.type !== DataOperation.Type.NoOp) {
+                            (operations || (operations = [])).push(resolvedOperation);
+                        }
+                    }, function(rejectedValue) {
+                        reject(rejectedValue);
+                    });
+                }
+
+                if(iOperationPromises) {
+
+                    Promise.all(iOperationPromises)
+                    .then(function(resolvedOperations) {
+                        /*
+                            resolvedOperations could contains some null if changed objects don't have anything to solve in their own row because it's stored on the other side of a relationship, which is why we keep track of the other array ourselves to avoid looping over again and modify the array after, or send noop operation through the wire for nothing. Cost time an money!
+                        */
+                    resolve(operations);
+                    }, function(rejectedValue) {
+                        reject(rejectedValue);
+                    });
+
+                } else {
+                    resolve(null);
+                }
+
+            });
+        }
+    },
+
 
     saveChanges: {
         value: function () {
@@ -895,7 +1083,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         reject(error);
                     })
                     .then(function(createTransactionResult) {
-                        var iterator;
+                        var iterator, iOperation;
 
                         if(createTransactionResult.type === DataOperation.Type.CreateTransactionFailed) {
                             var error = new Error("CreateTransactionFailed");
@@ -919,49 +1107,85 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         // }
 
                         //We want createdDataObjects operations first:
-                        iterator = createdDataObjects.values();
-                        while(iObject = iterator.next().value) {
-                            batchedOperationPromises.push(self._saveDataOperationForObject(iObject, createOperationType, dataObjectChanges, dataOperationsByObject));
-                        }
+                        batchedOperationPromises.push(self._saveDataOperationsForObjects(createdDataObjects, createOperationType, dataObjectChanges, dataOperationsByObject));
+                        // iterator = createdDataObjects.values();
+                        // while(iObject = iterator.next().value) {
+                        //     batchedOperationPromises.push(self._saveDataOperationForObject(iObject, createOperationType, dataObjectChanges, dataOperationsByObject));
+                        // }
 
                         //Loop over changedDataObjects:
-                        iterator = changedDataObjects.values();
-                        while(iObject = iterator.next().value) {
-                            batchedOperationPromises.push(self._saveDataOperationForObject(iObject, updateOperationType, dataObjectChanges, dataOperationsByObject));
-                        }
+                        batchedOperationPromises.push(self._saveDataOperationsForObjects(changedDataObjects, updateOperationType, dataObjectChanges, dataOperationsByObject));
+                        // iterator = changedDataObjects.values();
+                        // while(iObject = iterator.next().value) {
+                        //     batchedOperationPromises.push(self._saveDataOperationForObject(iObject, updateOperationType, dataObjectChanges, dataOperationsByObject));
+                        // }
 
                         //And complete by deletedDataObjects:
-                        iterator = deletedDataObjects.values();
-                        while(iObject = iterator.next().value) {
-                            batchedOperationPromises.push(self._saveDataOperationForObject(iObject, deleteOperationType, dataObjectChanges, dataOperationsByObject));
-                        }
+                        batchedOperationPromises.push(self._saveDataOperationsForObjects(deletedDataObjects, deleteOperationType, dataObjectChanges, dataOperationsByObject));
+                        // iterator = deletedDataObjects.values();
+                        // while(iObject = iterator.next().value) {
+                        //     batchedOperationPromises.push(self._saveDataOperationForObject(iObject, deleteOperationType, dataObjectChanges, dataOperationsByObject));
+                        // }
 
-                        return Promise.all(batchedOperationPromises);
+                        return Promise.all(batchedOperationPromises)
+                            .then(function(operationsByTypes) {
+                                var result,
+                                    createOperations = operationsByTypes[0],
+                                    updateOperations = operationsByTypes[1],
+                                    deleteOperations = operationsByTypes[2];
+
+                                if(createOperations) {
+                                    result = createOperations;
+                                }
+                                if(!result) {
+                                    if(updateOperations) {
+                                        result = updateOperations;
+                                    }
+                                } else {
+                                    result.push.apply(result,updateOperations);
+                                }
+
+                                if(!result) {
+                                    if(deleteOperations) {
+                                        result = deleteOperations;
+                                    }
+                                } else {
+                                    result.push.apply(result,deleteOperations);
+                                }
+
+                                return result;
+                            });
 
                     }, function(error) {
                         reject(error);
                     })
                     .then(function(batchedOperations) {
-                        //Now proceed to build the batch operation
-                        //We may have some no-op in there as we didn't cacth them...
-                        batchOperation = new DataOperation();
-                        batchOperation.type = DataOperation.Type.Batch;
-                        batchOperation.dataDescriptor = transactionObjecDescriptorModuleIds,
-                        batchOperation.data = {
-                                batchedOperations: batchedOperations,
-                                transactionId: createTransactionCompletedId
-                        };
-                        batchOperation.referrerId = createTransaction.id;
+                        if(batchedOperations) {
+                            //Now proceed to build the batch operation
+                            //We may have some no-op in there as we didn't cacth them...
+                            batchOperation = new DataOperation();
+                            batchOperation.type = DataOperation.Type.Batch;
+                            batchOperation.dataDescriptor = transactionObjecDescriptorModuleIds,
+                            batchOperation.data = {
+                                    batchedOperations: batchedOperations,
+                                    transactionId: createTransactionCompletedId
+                            };
+                            batchOperation.referrerId = createTransaction.id;
 
-                        batchOperationPromise = new Promise(function(resolve, reject) {
-                            batchOperation._promiseResolve = resolve;
-                            batchOperation._promiseReject = reject;
-                        });
-                        self._thenableByOperationId.set(batchOperation.id,batchOperationPromise);
+                            batchOperationPromise = new Promise(function(resolve, reject) {
+                                batchOperation._promiseResolve = resolve;
+                                batchOperation._promiseReject = reject;
+                            });
+                            self._thenableByOperationId.set(batchOperation.id,batchOperationPromise);
 
-                        self._dispatchOperation(batchOperation);
+                            self._dispatchOperation(batchOperation);
 
-                        return batchOperationPromise;
+                            return batchOperationPromise;
+                        } else {
+                            var noOpOperation = new DataOperation();
+                            noOpOperation.type = DataOperation.Type.NoOp;
+                            return Promise.resolve(noOpOperation);
+                        }
                     }, function(error) {
                         reject(error);
                     })
@@ -1015,6 +1239,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                             return rollbackTransactionOperationPromise;
 
+                        } if(batchedOperationResult.type === DataOperation.Type.NoOp) {
+                            return Promise.resolve(batchedOperationResult);
                         } else {
                             console.error("- saveChanges: Unknown batchedOperationResult:",batchedOperationResult);
                             reject(new Error("- saveChanges: Unknown batchedOperationResult:"+JSON.stringify(batchedOperationResult)));
@@ -1037,8 +1263,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                         } else if(transactionOperationResult.type === DataOperation.Type.RollbackTransactionFailed) {
                             console.error("Missing logic for RollbackTransactionFailed");
-                        }
-                        else {
+                        } else if(batchedOperationResult.type === DataOperation.Type.NoOp) {
+                            console.error("NoOp");
+                        } else {
                             console.error("- saveChanges: Unknown transactionOperationResult:",transactionOperationResult);
 
                             reject(new Error("- saveChanges: Unknown transactionOperationResult:"+JSON.stringify(transactionOperationResult)));
@@ -1182,26 +1409,32 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         value: function (object, dataObjectChanges, operationData, snapshot, dataSnapshot, isDeletedObject, objectDescriptor) {
             var aProperty,
                 aRawProperty,
-                snapshotValue,
+                // snapshotValue,
                 anObjectDescriptor = objectDescriptor || this.objectDescriptorForObject(object),
                 aPropertyChanges,
                 aPropertyDescriptor,
                 result,
                 mappingPromise,
                 mappingPromises,
-                //There's a risk here for a deletedObject that it's values have been changed
-                //and therefore wouldn't match what was fetched. We need to test that.
+                /*
+                    There's a risk here for a deletedObject that it's values have been changed and therefore wouldn't match what was fetched. We need to test that.
 
-                //TEST maybe we don't need the isDeletedObject flag as deletedObjects shouldn't have
-                //dataObjectChanges
+                    #TODO TEST maybe we don't need the isDeletedObject flag as deletedObjects shouldn't have ataObjectChanges.
+
+                    But we need to implemement cascade delete.
+                */
                 propertyIterator = isDeletedObject
                     ? Object.keys(object).values()
                     : dataObjectChanges.keys(),
-                mapping = this.mappingForType(anObjectDescriptor);
+                mapping = this.mappingForType(anObjectDescriptor),
+                rawDataPrimaryKeys = mapping.rawDataPrimaryKeys;
 
             while(aProperty = propertyIterator.next().value) {
-                aRawProperty = mapping.mapObjectPropertyNameToRawPropertyName(aProperty);
-                snapshotValue = snapshot[aRawProperty];
+                // aRawProperty = mapping.mapObjectPropertyNameToRawPropertyName(aProperty);
+                //aRawProperty = mapping.mapObjectPropertyToRawProperty(object, aProperty);
+
+
+                // snapshotValue = snapshot[aRawProperty];
                 aPropertyChanges = dataObjectChanges ? dataObjectChanges.get(aProperty) : undefined;
                 aPropertyDescriptor = anObjectDescriptor.propertyDescriptorForName(aProperty);
 
@@ -1213,7 +1446,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     continue;
                 }
 
-                result = this._processObjectChangesForProperty(object, aProperty, aPropertyDescriptor, aRawProperty, aPropertyChanges, operationData, snapshot, dataSnapshot);
+                result = this._processObjectChangesForProperty(object, aProperty, aPropertyDescriptor, aPropertyChanges, operationData, snapshot, dataSnapshot, rawDataPrimaryKeys, mapping);
 
                 if(result && this._isAsync(result)) {
                     (mappingPromises || (mappingPromises = [])).push(result);
@@ -1284,6 +1517,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                                             : DataOperation.Type.Update,
                     isDeletedObject = localOperationType === DataOperation.Type.Delete,
                     operationData = {},
+                    localizableProperties = objectDescriptor.localizablePropertyDescriptors,
+                    objectLocalesCriteria,
+                    criteria,
                     i, iValue, countI;
 
                 operation.target = operation.dataDescriptor = objectDescriptor.module.id;
@@ -1292,12 +1528,24 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                 if(dataIdentifier) {
                     if(!isNewObject) {
-                        operation.criteria = this.rawCriteriaForObject(object, objectDescriptor);
+                        criteria = this.rawCriteriaForObject(object, objectDescriptor);
                     }
                     else {
                         operationData.id = dataIdentifier.primaryKey;
                     }
                 }
+
+                if(localizableProperties && localizableProperties.size) {
+                    var objectLocalesCriteria = this.localesCriteriaForObject(object);
+                    if(criteria) {
+                        criteria = objectLocalesCriteria.and(criteria);
+                    } else {
+                        //Even in a create, we need to know about locales
+                        criteria = objectLocalesCriteria;
+                    }
+                }
+
+                operation.criteria = criteria;
 
                 //Nothing to do, change the operation type and bail out
                 if(!isNewObject && !dataObjectChanges && !isDeletedObject) {
@@ -1323,10 +1571,17 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     .then(function(resolvedOperationData) {
 
                         if(!isDeletedObject && Object.keys(operationData).length === 0) {
-                            //if there are no changes known, it's a no-op: if it's an existing object,
-                            //nothing to do and if it's a new empty object... should it go through??
-                            //Or it's either a CreateCancelled or an UpdateCancelled
+                            /*
+                                if there are no changes known, it's a no-op: if it's an existing object nothing to do and if it's a new empty object... should it go through?? Or it's either a CreateCancelled or an UpdateCancelled.
+
+                                It also can be considered a no-op of a property on an object changes, but it is stored as a foreign key or in an array of foreign keys on the inverse relationship side, in which case, there's nothing to do, as thanks to inverse value propagation, it will become an update operation on the other side.
+                            */
+
                             operation.type = DataOperation.Type.NoOp;
+                            /*
+                                If a property change would turn as a no-op from a raw data stand point, we still need to tell the object layer client of the saveChanges did save it
+                            */
+                            operation.changes = dataObjectChanges;
                         }
                         else {
                             /*
