@@ -13,10 +13,6 @@
                     "contactInformation": {
                         "<->":"contactInformationId",
                         "converter": {"@": "contactInformationConverter"}
-                    },
-                    "calendars": {
-                        "<->": "id",
-                        "converter": {"@": "calendarsConverter"}
                     }
                }
             },
@@ -25,7 +21,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "existenceTimeRange", "contactInformation", "calendars"
+                "existenceTimeRange", "contactInformation"
             ]
         }
     },
@@ -33,18 +29,12 @@
         "object": "data/main.datareel/model/party.mjson"
     },
     "string-to-range-converter": {
-        "prototype": "../converter/RFC3339UTC-range-string-to-range-converter"
+        "prototype": "../converter/RFC3339UTC-range-string-to-calendar-date-range-converter"
     },
     "contactInformationConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
-        }
-    },
-    "calendarsConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
-        "values": {
-            "convertExpression": "ownerId == $"
         }
     }
 
