@@ -6,7 +6,9 @@
             "propertyDescriptors": [
                 {"@": "service"},
                 {"@": "serviceVariant"},
-                {"@": "event"}
+                {"@": "event"},
+                {"@": "participants"},
+                {"@": "name"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/service-engagement.mjson"
@@ -72,6 +74,24 @@
     },
     "eventDescriptor": {
         "object": "./event.mjson"
+    },
+    "participants": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "participants",
+            "valueType": "object",
+            "cardinality": -1,
+            "definition": "[event.participatingParty].concat(event.children.map{participatingParty})"
+        }
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "cardinality": 1,
+            "definition": "service.name+': '+ participants.map{name}.join(', ')"
+        }
     }
 
 }

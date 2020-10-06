@@ -1,0 +1,19 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/user-interface-descriptor",
+        "values": {
+            "inspectorComponentModule": {
+                "%": "data/main.datareel/inspectors/service-engagement.reel"
+            },
+            "creatorInspectorComponentModule": {
+                "%": "data/main.datareel/creators/service-engagement.reel"
+            },
+            "collectionInspectorComponentModule": {
+                "%": "montage/ui/list.reel"
+            },
+            "collectionNameExpression": "'Appointments'",
+            "nameExpression": "name",
+            "descriptionExpression": "description"
+        }
+    }
+}
