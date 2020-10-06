@@ -6,7 +6,7 @@
     "root": {
         "prototype": "montage/data/service/data-service",
         "values": {
-            "name": "EtiamaDataService",
+            "name": "ClientTestDataService",
             "isUniquing": true,
             "childServices": [
                 {"@": "phrontClientDataService"}

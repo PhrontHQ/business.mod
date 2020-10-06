@@ -22,7 +22,7 @@ var Worker = require("tiny-worker"),
     createUpdateDeleteCollectionImage = require("./use-cases/create-update-delete-collection-image").createUpdateDeleteCollectionImage,
     crudPerson = require("./use-cases/crud-person").crudPerson,
     crudEvent = require("./use-cases/crud-event").crudEvent,
-    createEtiamaProServices = require("./use-cases/create-etiama-pro-services").createEtiamaProServices;
+    createProServices = require("./use-cases/create-pro-services").createProServices;
 
 
 
@@ -264,7 +264,7 @@ exports.promise = new Promise(function(resolve,reject) {
 
     // });
 
-    createEtiamaProServices().then(function(passed) {
+    createProServices().then(function(passed) {
         console.log("done!!");
     },function(saveError) {
         console.error(saveError);

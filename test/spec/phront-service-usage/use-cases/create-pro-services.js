@@ -1,85 +1,122 @@
 var mainService = require("phront/test/data/client-main.datareel/main.mjson").montageObject,
-Promise = require("montage/core/promise").Promise,
-Criteria = require("montage/core/criteria").Criteria,
-DataStream = require("montage/data/service/data-stream").DataStream,
-DataQuery = require("montage/data/model/data-query").DataQuery,
-Collection = require("phront/data/main.datareel/model/collection").Collection,
-Image = require("phront/data/main.datareel/model/image").Image,
-Organization = require("phront/data/main.datareel/model/organization").Organization,
-PostalAddress = require("phront/data/main.datareel/model/messaging-channel/postal-address").PostalAddress,
-PhoneNumber = require("phront/data/main.datareel/model/messaging-channel/phone-number").PhoneNumber,
-Service = require("phront/data/main.datareel/model/service").Service,
-ServiceEngagement = require("phront/data/main.datareel/model/service-engagement").ServiceEngagement,
-Position = require("phront/data/main.datareel/model/position").Position,
-EmploymentPosition = require("phront/data/main.datareel/model/employment-position").EmploymentPosition,
-EmploymentPositionStaffing = require("phront/data/main.datareel/model/employment-position-staffing").EmploymentPositionStaffing,
-EmploymentPositionRelationship = require("phront/data/main.datareel/model/employment-position-relationship").EmploymentPositionRelationship,
-EmploymentType = require("phront/data/main.datareel/model/employment-type").EmploymentType,
-Role = require("phront/data/main.datareel/model/role").Role,
-ContactInformation = require("phront/data/main.datareel/model/contact-information").ContactInformation,
-Calendar = require("phront/data/main.datareel/model/calendar").Calendar,
-Event = require("phront/data/main.datareel/model/event").Event,
-Person = require("phront/data/main.datareel/model/person").Person,
-PersonName = require("phront/data/main.datareel/model/person-name").PersonName,
-ProductVariant = require("phront/data/main.datareel/model/product-variant").ProductVariant,
-GeoPosition =  require("montage-geo/logic/model/position").Position,
-GeoPoint =  require("montage-geo/logic/model/point").Point,
-GeoProjection = require("montage-geo/logic/model/projection").Projection,
-B2CCustomerSupplierRelationship = require("phront/data/main.datareel/model/b-2-c-customer-supplier-relationship").B2CCustomerSupplierRelationship,
-B2BCustomerSupplierRelationship = require("phront/data/main.datareel/model/b-2-b-customer-supplier-relationship").B2BCustomerSupplierRelationship,
+    Locale = require("montage/core/locale").Locale,
+    MontageCalendar = require("montage/core/date/calendar").Calendar,
+    Promise = require("montage/core/promise").Promise,
+    Criteria = require("montage/core/criteria").Criteria,
+    DataStream = require("montage/data/service/data-stream").DataStream,
+    DataOperation = require("montage/data/service/data-operation").DataOperation,
+    DataQuery = require("montage/data/model/data-query").DataQuery,
+    Collection = require("phront/data/main.datareel/model/collection").Collection,
+    Image = require("phront/data/main.datareel/model/image").Image,
+    Organization = require("phront/data/main.datareel/model/organization").Organization,
+    PostalAddress = require("phront/data/main.datareel/model/messaging-channel/postal-address").PostalAddress,
+    PhoneNumber = require("phront/data/main.datareel/model/messaging-channel/phone-number").PhoneNumber,
+    Service = require("phront/data/main.datareel/model/service").Service,
+    ServiceEngagement = require("phront/data/main.datareel/model/service-engagement").ServiceEngagement,
+    Position = require("phront/data/main.datareel/model/position").Position,
+    EmploymentPosition = require("phront/data/main.datareel/model/employment-position").EmploymentPosition,
+    EmploymentPositionStaffing = require("phront/data/main.datareel/model/employment-position-staffing").EmploymentPositionStaffing,
+    EmploymentPositionRelationship = require("phront/data/main.datareel/model/employment-position-relationship").EmploymentPositionRelationship,
+    EmploymentType = require("phront/data/main.datareel/model/employment-type").EmploymentType,
+    Role = require("phront/data/main.datareel/model/role").Role,
+    ContactInformation = require("phront/data/main.datareel/model/contact-information").ContactInformation,
+    Calendar = require("phront/data/main.datareel/model/calendar").Calendar,
+    Event = require("phront/data/main.datareel/model/event").Event,
+    Person = require("phront/data/main.datareel/model/person").Person,
+    PersonName = require("phront/data/main.datareel/model/person-name").PersonName,
+    ProductVariant = require("phront/data/main.datareel/model/product-variant").ProductVariant,
+    GeoPosition =  require("montage-geo/logic/model/position").Position,
+    GeoPoint =  require("montage-geo/logic/model/point").Point,
+    GeoProjection = require("montage-geo/logic/model/projection").Projection,
+    B2CCustomerSupplierRelationship = require("phront/data/main.datareel/model/b-2-c-customer-supplier-relationship").B2CCustomerSupplierRelationship,
+    B2BCustomerSupplierRelationship = require("phront/data/main.datareel/model/b-2-b-customer-supplier-relationship").B2BCustomerSupplierRelationship,
 
-defaultProjection = GeoProjection.forSrid("4326"),
-createTestServiceEngagementsForDoctorsAndOrganizationServices = require("./create-etiama-service-engagements").createTestServiceEngagementsForDoctorsAndOrganizationServices;
+    defaultProjection = GeoProjection.forSrid("4326"),
+    createTestServiceEngagementsForDoctorsAndOrganizationServices = require("./create-service-engagements").createTestServiceEngagementsForDoctorsAndOrganizationServices,
+
+    systemCalendar = MontageCalendar.withIdentifier("gregory"),
+
+    //Set default systemLocale that the DataService will pickup
+    systemLocale = Locale.systemLocale = Locale.withIdentifier("fr", {
+        calendar: systemCalendar,
+        numberingSystem: "latn"
+    }),
+    frenchLocale = systemLocale,
+    englishLocale = Locale.withIdentifier("en", {
+        calendar: systemCalendar,
+        numberingSystem: "latn"
+    }),
+    Range = require("montage/core/range").Range;
 
 
 function createFullTimeEmployeeEmploymentType() {
     var cdiEmploymentType = mainService.createDataObject(EmploymentType);
     cdiEmploymentType.name = "Contrat à durée indéterminée";
     return mainService.saveChanges().then(function(operation) {
-        return cdiEmploymentType;
+        if(operation.type !== DataOperation.Type.PerformTransactionCompleted) {
+            return cdiEmploymentType;
+        } else {
+            throw operation.type;
+        }
     });
 }
 
-
+var fullTimeEmployeeEmploymentTypePromise;
 function fullTimeEmployeeEmploymentType() {
 
-    //Loclization not ready, we'll have to re-visit that when it is, or just have diffent ones and specify the countries they're valid in
-    var criteria = new Criteria().initWithExpression("name == $.name", {
-        name: "Contrat à durée indéterminée" //This would be a "Full-time Employee" in the  US.
-    });
-    var query = DataQuery.withTypeAndCriteria(EmploymentType, criteria);
-    var cdiEmploymentType;
+    if(!fullTimeEmployeeEmploymentTypePromise) {
+        fullTimeEmployeeEmploymentTypePromise = new Promise(function(resolve, reject) {
 
-    return mainService.fetchData(query)
-    .then(function(result) {
-        if(!result || result.length === 0) {
-            return createFullTimeEmployeeEmploymentType();
-        } else {
-            return result[0];
-        }
-    }, function(error) {
-            if(error.message.indexOf('"phront.EmploymentType" does not exist') !== -1) {
-                //We need to find a way expose the creation of a object descriptor's storage
-                //to the main data service.
-                var phrontClientService = mainService.childServices[0];
-                return Promise.all([
-                    phrontClientService.createObjectDescriptorStore(phrontClientService.objectDescriptorForType(EmploymentType))
-                ]).then(function() {
-                    return createFullTimeEmployeeEmploymentType();
-                });
-            }
-            else {
-                return Promise.reject(error);
-            }
-    });
+            //Localization not ready, we'll have to re-visit that when it is, or just have diffent ones and specify the countries they're valid in
+            var criteria = new Criteria().initWithExpression("name == $name", {
+                name: "Contrat à durée indéterminée" //This would be a "Full-time Employee" in the  US.
+            });
+            var query = DataQuery.withTypeAndCriteria(EmploymentType, criteria);
+            var cdiEmploymentType;
 
+            mainService.fetchData(query)
+            .then(function(result) {
+                if(!result || result.length === 0) {
+                    createFullTimeEmployeeEmploymentType()
+                    .then(function(result) {
+                        resolve(result);
+                    });
+                } else {
+                    resolve(result[0]);
+                }
+            }, function(error) {
+                    if(error.message.indexOf('"phront.EmploymentType" does not exist') !== -1) {
+                        //We need to find a way expose the creation of a object descriptor's storage
+                        //to the main data service.
+                        var phrontClientService = mainService.childServices[0];
+                        Promise.all([
+                            phrontClientService.createObjectDescriptorStore(phrontClientService.objectDescriptorForType(EmploymentType))
+                        ]).then(function() {
+                            return createFullTimeEmployeeEmploymentType()
+                            .then(function(result) {
+                                resolve(result[0]);
+                            });
+                        });
+                    }
+                    else {
+                        reject(error);
+                    }
+            });
+
+        });
+    }
+    return fullTimeEmployeeEmploymentTypePromise;
 }
-
 
 
 
 function createOccupationalPhysicianRole() {
     var role = mainService.createDataObject(Role);
+
+    //Set the locales property on the role so we know we should expect an object structure.
+    //It might be worth setting the type of this object to be something like a new LoalizationDictionary
+    //rather than just an anonymous object
+    role.locales = [frenchLocale,englishLocale];
 
     role.name = {
         "fr": {
@@ -103,40 +140,59 @@ function createOccupationalPhysicianRole() {
     });
 }
 
+var occupationalPhysicianRolePromise;
 function occupationalPhysicianRole() {
-    /*
-        Role name sample:
-        "{"en":{"*":"organizer","CA":"organizeur"},"fr":{"*":"organisateur","CI":"l’organisateur","PF":"organisateur"}}"
-    */
-   var criteria = new Criteria().initWithExpression("name[$language][$region] == $.name", {
-        name: "Médecin du travail",
-        language: "fr",
-        region: "*"
-    });
-    var query = DataQuery.withTypeAndCriteria(Role, criteria);
 
-    return mainService.fetchData(query)
-    .then(function(result) {
-        if(!result || result.length === 0) {
-            return createOccupationalPhysicianRole();
-        } else {
-            return result[0];
-        }
-    }, function(error) {
-            if(error.message.indexOf('"phront.EmploymentType" does not exist') !== -1) {
-                //We need to find a way expose the creation of a object descriptor's storage
-                //to the main data service.
-                var phrontClientService = mainService.childServices[0];
-                return Promise.all([
-                    phrontClientService.createObjectDescriptorStore(phrontClientService.objectDescriptorForType(Role))
-                ]).then(function() {
-                    return createOccupationalPhysicianRole();
-                });
-            }
-            else {
-                return Promise.reject(error);
-            }
-    });
+    if(!occupationalPhysicianRolePromise) {
+        occupationalPhysicianRolePromise = new Promise(function(resolve, reject) {
+            /*
+                Role name sample:
+                "{"en":{"*":"organizer","CA":"organizeur"},"fr":{"*":"organisateur","CI":"l’organisateur","PF":"organisateur"}}"
+            */
+            // var criteria = new Criteria().initWithExpression("name[$language][$region] == $.name", {
+            //     name: "Médecin du travail",
+            //     language: "fr",
+            //     region: "*"
+            // });
+            //This is a localizable proeprty, the framework takes care of building the rigth criteria
+            //which here is set to fr-FR
+            var criteria = new Criteria().initWithExpression("name == $.name", {
+                name: "Médecin du travail"
+            }),
+                query = DataQuery.withTypeAndCriteria(Role, criteria);
+
+            mainService.fetchData(query)
+            .then(function(result) {
+                if(!result || result.length === 0) {
+                    createOccupationalPhysicianRole()
+                    .then(function(result) {
+                        resolve(result);
+                    });
+                } else {
+                    resolve(result[0]);
+                }
+            }, function(error) {
+                    if(error.message.indexOf('"phront.Role" does not exist') !== -1) {
+                        //We need to find a way expose the creation of a object descriptor's storage
+                        //to the main data service.
+                        var phrontClientService = mainService.childServices[0];
+                        Promise.all([
+                            phrontClientService.createObjectDescriptorStore(phrontClientService.objectDescriptorForType(Role))
+                        ]).then(function() {
+                            return createOccupationalPhysicianRole().then(function(result) {
+                                resolve(result[0]);
+                            });
+                        });
+                    }
+                    else {
+                        reject(error);
+                    }
+            });
+
+        });
+    }
+
+    return occupationalPhysicianRolePromise;
 
 }
 
@@ -145,6 +201,7 @@ https://www.thebalancecareers.com/what-is-a-medical-secretary-526043#medical-sec
 */
 function createMedicalSecretaryRole() {
     var role = mainService.createDataObject(Role);
+    role.locales = [frenchLocale,englishLocale];
 
     role.name = {
         "fr": {
@@ -168,39 +225,125 @@ function createMedicalSecretaryRole() {
     });
 }
 
+var medicalSecretaryRolePromise;
 function medicalSecretaryRole() {
-    //"Secrétaire médicale"
-    var criteria = new Criteria().initWithExpression("name[$language][$region] == $.name", {
-        name: "Secrétaire médicale",
-        language: "fr",
-        region: "*"
-    });
-    var query = DataQuery.withTypeAndCriteria(Role, criteria);
+    if(!medicalSecretaryRolePromise) {
+        medicalSecretaryRolePromise = new Promise(function(resolve, reject) {
 
-    return mainService.fetchData(query)
-    .then(function(result) {
-        if(!result || result.length === 0) {
-            return createMedicalSecretaryRole();
-        } else {
-            return result[0];
-        }
-    }, function(error) {
-            if(error.message.indexOf('"phront.EmploymentType" does not exist') !== -1) {
-                //We need to find a way expose the creation of a object descriptor's storage
-                //to the main data service.
-                var phrontClientService = mainService.childServices[0];
-                return Promise.all([
-                    phrontClientService.createObjectDescriptorStore(phrontClientService.objectDescriptorForType(Role))
-                ]).then(function() {
-                    return createMedicalSecretaryRole();
-                });
-            }
-            else {
-                return Promise.reject(error);
-            }
-    });
+            //"Secrétaire médicale"
+            var criteria = new Criteria().initWithExpression("name == $name", {
+                name: "Secrétaire médicale"
+            });
+            var query = DataQuery.withTypeAndCriteria(Role, criteria);
+
+            mainService.fetchData(query)
+            .then(function(result) {
+                if(!result || result.length === 0) {
+                    createMedicalSecretaryRole()
+                    .then(function(result) {
+                        resolve(result);
+                    });
+
+                } else {
+                    return resolve(result[0]);
+                }
+            }, function(error) {
+                if(error.message.indexOf('"phront.EmploymentType" does not exist') !== -1) {
+                    //We need to find a way expose the creation of a object descriptor's storage
+                    //to the main data service.
+                    var phrontClientService = mainService.childServices[0];
+                    Promise.all([
+                        phrontClientService.createObjectDescriptorStore(phrontClientService.objectDescriptorForType(Role))
+                    ]).then(function() {
+                        createMedicalSecretaryRole()
+                        .then(function(result) {
+                            resolve(result[0]);
+                        });
+
+                    });
+                }
+                else {
+                    return reject(error);
+                }
+            });
+        });
+    }
+    return medicalSecretaryRolePromise;
 
 }
+
+
+function createAssistantRole() {
+    var role = mainService.createDataObject(Role);
+
+    //Set the locales property on the role so we know we should expect an object structure.
+    //It might be worth setting the type of this object to be something like a new LoalizationDictionary
+    //rather than just an anonymous object
+    role.locales = [frenchLocale,englishLocale];
+
+    role.name = {
+        "fr": {
+            "*":"Assistant(e)"
+        },
+        "en": {
+            "*":"Assistant"
+        }
+    };
+
+    return mainService.saveChanges().then(function(operation) {
+        return role;
+    });
+}
+
+var assistantRolePromise;
+function assistantRole() {
+
+    if(!assistantRolePromise) {
+        assistantRolePromise = new Promise(function(resolve, reject) {
+            var criteria = new Criteria().initWithExpression("name == $.name", {
+                name: "Assistant(e)"
+            }),
+                query = DataQuery.withTypeAndCriteria(Role, criteria);
+
+            mainService.fetchData(query)
+            .then(function(result) {
+                if(!result || result.length === 0) {
+                    createAssistantRole()
+                    .then(function(result) {
+                        resolve(result);
+                    });
+                } else {
+                    resolve(result[0]);
+                }
+            }, function(error) {
+                    if(error.message.indexOf('"phront.Role" does not exist') !== -1) {
+                        //We need to find a way expose the creation of a object descriptor's storage
+                        //to the main data service.
+                        var phrontClientService = mainService.childServices[0];
+                        Promise.all([
+                            phrontClientService.createObjectDescriptorStore(phrontClientService.objectDescriptorForType(Role))
+                        ]).then(function() {
+                            return createAssistantRole().then(function(result) {
+                                resolve(result[0]);
+                            });
+                        });
+                    }
+                    else {
+                        reject(error);
+                    }
+            });
+
+        });
+    }
+
+    return assistantRolePromise;
+
+}
+
+function randomEmploymentPositionStaffingStartDate(start, end) {
+    end = new Date();
+    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+  }
 
 
 function createDoctorWithData(data) {
@@ -209,28 +352,31 @@ function createDoctorWithData(data) {
     var objectPromises = [],
         cdiEmploymentTypePromise = fullTimeEmployeeEmploymentType(),
         occupationalPhysicianRolePromise = occupationalPhysicianRole(),
-        medicalSecretaryRolePromise = medicalSecretaryRole();
+        medicalSecretaryRolePromise = medicalSecretaryRole(),
+        assistantRolePromise = assistantRole();
 
         objectPromises.push(cdiEmploymentTypePromise);
         objectPromises.push(occupationalPhysicianRolePromise);
         objectPromises.push(medicalSecretaryRolePromise);
+        objectPromises.push(assistantRolePromise);
 
 
-    Promise.all(objectPromises)
+    return Promise.all(objectPromises)
     .then(function(objectPromisesResolved) {
 
         var cdiEmploymentType = objectPromisesResolved[0],
             occupationalPhysicianRole = objectPromisesResolved[1],
             medicalSecretaryRole = objectPromisesResolved[2],
+            assistantRole = objectPromisesResolved[3],
             organization = data.organization,
             doctor = mainService.createDataObject(Person),
-            doctorName = mainService.createDataObject(PersonName),
+            doctorName = new PersonName(),
             //doctorContactInformation = mainService.createDataObject(ContactInformation),
             doctorPosition = mainService.createDataObject(Position),
             doctorEmploymentPosition = mainService.createDataObject(EmploymentPosition),
             doctorEmploymentPositionStaffing = mainService.createDataObject(EmploymentPositionStaffing),
             doctorSecretary = mainService.createDataObject(Person),
-            doctorSecretaryName = mainService.createDataObject(PersonName),
+            doctorSecretaryName = new PersonName(),
             doctorSecretaryContactInformation = mainService.createDataObject(ContactInformation),
             doctorSecretaryPosition = mainService.createDataObject(Position),
             doctorSecretaryEmploymentPosition = mainService.createDataObject(EmploymentPosition),
@@ -263,9 +409,16 @@ function createDoctorWithData(data) {
         }
 
 
-        doctorEmploymentPositionStaffing.employee = doctor;
-        //Inverse:
         doctor.employmentHistory = [doctorEmploymentPositionStaffing];
+        //Inverse:
+        if(doctorEmploymentPositionStaffing.employee !== doctor) {
+            //doctorEmploymentPositionStaffing.employee = doctor;
+            console.error("Inverse propagation error");
+        }
+
+        var someStartDateEarlyBoundary = new Date();
+        someStartDateEarlyBoundary.setYear(2001);
+        doctorEmploymentPositionStaffing.existenceTimeRange = new Range(randomEmploymentPositionStaffingStartDate(someStartDateEarlyBoundary), null);
 
         //Name
         doctor.name = doctorName;
@@ -275,8 +428,18 @@ function createDoctorWithData(data) {
         //We don't have personal Contact Information for Doctors
         // doctor.contactInformation = doctorContactInformation;
 
+        //Clone the organization.services to assign it to the doctor
+        var organizationServicesClone = organization.services.slice();
         //Add Sistra's services to Doctor's services
-        doctor.services = organization.services.slice();
+        doctor.services = organizationServicesClone;
+        //Check Inverse:
+        for(var s=0, countS = doctor.services.length,sService;(s<countS); s++) {
+            sService = doctor.services[s];
+            if(sService.providers.indexOf(doctor) === -1 ) {
+                //doctorEmploymentPositionStaffing.employee = doctor;
+                console.error("Inverse propagation error");
+            }
+        }
 
 
         //Setup the doctor secretary position
@@ -292,8 +455,13 @@ function createDoctorWithData(data) {
         doctorSecretaryEmploymentPositionStaffing.employmentType = cdiEmploymentType;
         doctorSecretaryEmploymentPositionStaffing.employmentPosition = doctorSecretaryEmploymentPosition;
         doctorSecretaryEmploymentPositionStaffing.employee = doctorSecretary;
+        doctorSecretaryEmploymentPositionStaffing.existenceTimeRange = new Range(randomEmploymentPositionStaffingStartDate(someStartDateEarlyBoundary), null);
+
         //Inverse:
-        doctorSecretary.employmentHistory = [doctorSecretaryEmploymentPositionStaffing];
+        if(! doctorSecretary.employmentHistory ||  doctorSecretary.employmentHistory[0] !== doctorSecretaryEmploymentPositionStaffing) {
+            //doctorSecretary.employmentHistory = [doctorSecretaryEmploymentPositionStaffing];
+            console.error("Inverse propagation error");
+        }
 
         doctorSecretaryEmploymentPositionStaffing.calendars = [doctorSecretaryCalendar];
         //WARNING: check if we still need to also do:
@@ -304,8 +472,8 @@ function createDoctorWithData(data) {
 
         //Name
         doctorSecretary.name = doctorSecretaryName;
-        doctorSecretary.givenName = data.assistantGivenName;
-        doctorSecretary.familyName = data.assistantFamilyName;
+        doctorSecretaryName.givenName = data.assistantGivenName;
+        doctorSecretaryName.familyName = data.assistantFamilyName;
 
         //ContactInformation
         doctorSecretary.contactInformation = doctorSecretaryContactInformation;
@@ -315,8 +483,13 @@ function createDoctorWithData(data) {
 
 
         //setup Doctor and secretary EmploymentPositionRelationship with organization
-        doctorSecretaryEmploymentPositionRelationship.firstEmploymentPosition = doctorEmploymentPosition;
-        doctorSecretaryEmploymentPositionRelationship.secondEmploymentPosition = doctorSecretaryEmploymentPosition;
+        doctorSecretaryEmploymentPositionRelationship.firstEmploymentPosition = doctorSecretaryEmploymentPosition;
+        //Assistant
+        doctorSecretaryEmploymentPositionRelationship.firstEmploymentPositionRelationshipRole = assistantRole;
+
+        doctorSecretaryEmploymentPositionRelationship.secondEmploymentPosition = doctorEmploymentPosition;
+
+
 
         return mainService.saveChanges().then(function(operation) {
             return doctor;
@@ -326,13 +499,17 @@ function createDoctorWithData(data) {
 
 }
 
-function createObjectDescriptorStoreIfMissing(objectDescriptor) {
-    var query = DataQuery.withTypeAndCriteria(objectDescriptor);
+function createObjectDescriptorStoreIfMissing(type) {
+    var objectDescriptor = mainService.objectDescriptorForType(type),
+        query = DataQuery.withTypeAndCriteria(objectDescriptor);
+
+    // console.log("--> Testing if "+objectDescriptor.name+ " table exists");
 
     query.fetchLimit = 1;
 
     return mainService.fetchData(query)
     .then(function (result) {
+        // console.log("<-- "+objectDescriptor.name+ " table exists");
         return true;
     }, function (error) {
         if((error.message.indexOf('"phront.'+query.type.name+'" does not exist') !== -1)) {
@@ -352,10 +529,22 @@ function createObjectDescriptorStoreIfMissing(objectDescriptor) {
 }
 
 
-exports.createEtiamaProServices = function() {
+exports.createProServices = function() {
 
 
-    return Promise.all([createObjectDescriptorStoreIfMissing(Calendar),createObjectDescriptorStoreIfMissing(Event), createObjectDescriptorStoreIfMissing(Position), createObjectDescriptorStoreIfMissing(EmploymentPosition),createObjectDescriptorStoreIfMissing(EmploymentType),createObjectDescriptorStoreIfMissing(EmploymentPositionStaffing),createObjectDescriptorStoreIfMissing(EmploymentPositionRelationship), createObjectDescriptorStoreIfMissing(ContactInformation),createObjectDescriptorStoreIfMissing(B2CCustomerSupplierRelationship),createObjectDescriptorStoreIfMissing(B2BCustomerSupplierRelationship)])
+    return Promise.all([
+        createObjectDescriptorStoreIfMissing(Calendar),
+        createObjectDescriptorStoreIfMissing(Event),
+        createObjectDescriptorStoreIfMissing(Position),
+        createObjectDescriptorStoreIfMissing(EmploymentPosition),
+        createObjectDescriptorStoreIfMissing(EmploymentType),
+        createObjectDescriptorStoreIfMissing(EmploymentPositionStaffing),
+        createObjectDescriptorStoreIfMissing(EmploymentPositionRelationship),
+        createObjectDescriptorStoreIfMissing(ContactInformation),
+        createObjectDescriptorStoreIfMissing(B2CCustomerSupplierRelationship),
+        createObjectDescriptorStoreIfMissing(B2BCustomerSupplierRelationship),
+        createObjectDescriptorStoreIfMissing(ServiceEngagement)
+    ])
     .then(function() {
         //Fetch/create SISTRA
         var organizationCriteria = new Criteria().initWithExpression("name == $.name", {
@@ -444,7 +633,8 @@ exports.createEtiamaProServices = function() {
             var service, variant;
 
             if(result && result.length > 2) {
-                console.log("Sistra provided servicea: ",result);
+                // console.log("Sistra provided services: ",result);
+                return sistraOrganization;
             }
             else {
         /*
@@ -567,9 +757,10 @@ exports.createEtiamaProServices = function() {
                     //Get Sistra enployees who are doctors.
                     var sistraDoctorsCriteriaParameters = {
                         organization: sistraOrganization,
-                        role: occupationalPhysicianRole
+                        role: occupationalPhysicianRole,
+                        timeRange: Range.fullDayTimeRangeFromDate(new Date())
                         },
-                        sistraDoctorsCriteria = new Criteria().initWithExpression("givenName == $.givenName && familyName == $.familyName", sistraDoctorsCriteriaParameters),
+                        sistraDoctorsCriteria = new Criteria().initWithExpression("employmentHistory.employmentPosition.employer == $organization && employmentHistory.employmentPosition.position.role == $role && employmentHistory.existenceTimeRange.overlaps($timeRange)", sistraDoctorsCriteriaParameters),
                         sistraDoctorsQuery = DataQuery.withTypeAndCriteria(Person, sistraDoctorsCriteria);
 
                     //Fetch One Doctor to see if we have them:
@@ -593,6 +784,8 @@ exports.createEtiamaProServices = function() {
                                 };
                             doctorPromises.push(createDoctorWithData(creationData));
 
+                            creationData = {};
+                            creationData.organization = sistraOrganization;
                             creationData.doctorGivenName = "Marion";
                             creationData.doctorFamilyName = "Aufils";
                             creationData.assistantGivenName = "Evalina";
@@ -600,6 +793,8 @@ exports.createEtiamaProServices = function() {
                             creationData.assistantEmail = "evalina.maraetefau@sistra.pf";
                             doctorPromises.push(createDoctorWithData(creationData));
 
+                            creationData = {};
+                            creationData.organization = sistraOrganization;
                             creationData.doctorGivenName = "Claude";
                             creationData.doctorFamilyName = "Paulet";
                             creationData.assistantGivenName = "Virginia";
@@ -607,6 +802,8 @@ exports.createEtiamaProServices = function() {
                             creationData.assistantEmail = "virginia.teissier@sistra.pf";
                             doctorPromises.push(createDoctorWithData(creationData));
 
+                            creationData = {};
+                            creationData.organization = sistraOrganization;
                             creationData.doctorGivenName = "Francine";
                             creationData.doctorFamilyName = "Oval";
                             creationData.assistantGivenName = "Hamoura";
@@ -614,6 +811,8 @@ exports.createEtiamaProServices = function() {
                             creationData.assistantEmail = "hamoura.pae@sistra.pf";
                             doctorPromises.push(createDoctorWithData(creationData));
 
+                            creationData = {};
+                            creationData.organization = sistraOrganization;
                             creationData.doctorGivenName = "Odile";
                             creationData.doctorFamilyName = "Leccia";
                             creationData.assistantGivenName = "Mere";
@@ -636,15 +835,21 @@ exports.createEtiamaProServices = function() {
             console.error(error);
         })
         .then(function(sistraDoctors) {
-
-            return createTestServiceEngagementsForDoctorsAndOrganizationServices(sistraDoctors, sistraOrganization, sistraOrganization.services, startDate)
-            .then(function() {
-                return mainService.saveChanges();
-            });
+            return createTestServiceEngagementsForDoctorsAndOrganizationServices(sistraDoctors, sistraOrganization, sistraOrganization.services, new Date(), [frenchLocale,englishLocale]);
 
         },function(error) {
             console.error(error);
+        })
+        .then(function() {
+            return mainService.saveChanges();
+        })
+        .then(function(completedOperation) {
+            return true;
+        },function(error) {
+            console.error(error);
+            return Promise.reject(error);
         });
+
 
     });
 }

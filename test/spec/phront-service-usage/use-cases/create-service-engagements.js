@@ -25,35 +25,55 @@ ProductVariant = require("phront/data/main.datareel/model/product-variant").Prod
 Position =  require("montage-geo/logic/model/position").Position,
 eventOrganizerRoleInstance,
 eventAttendeeRoleInstance,
-patientRoleInstance;
+patientRoleInstance,
+TimeZone = require("montage/core/date/time-zone").TimeZone;
 
-function createEventRoleWithNameAndTags(name, tags) {
+function createEventRoleWithNameAndTags(name, tags, locales) {
     var role = mainService.createDataObject(Role);
+
+    role.locales = locales;
 
     role.name = name;
     if(tags) role.tags = tags;
 
     return mainService.saveChanges().then(function(operation) {
-        return role;
+        /*
+            When just created, the role's name might be a object if there were more than 1 locale in locales. We don't have yet the logic to reset
+
+            role.locales = [locales[0]];
+
+            Which should internally do what we want without considering it a change at the DataTrigger level. the easiest for now might be to re-fetch it :-(
+        */
+       //return role;
+       return eventRoleWithNameAndTags(name, tags, locales);
     });
 };
 
-function eventWithNameAndTags(name, tags) {
+function eventRoleWithNameAndTags(name, tags, locales) {
     /*
         Role name sample:
         "{"en":{"*":"organizer","CA":"organizeur"},"fr":{"*":"organisateur","CI":"l’organisateur","PF":"organisateur"}}"
     */
-   var criteria = new Criteria().initWithExpression("name[$language][$region] == $.name", {
-        name: name["en"]["*"],
-        language: "en",
-        region: "*"
+
+   var firstLocale = locales[0],
+        localizedNameEntry = name[firstLocale.language],
+        nameValue = localizedNameEntry && (localizedNameEntry[firstLocale.region] || localizedNameEntry["*"]),
+        criteria;
+
+    if(!nameValue) {
+        throw "Can't find an event role without a name";
+    }
+
+    criteria = new Criteria().initWithExpression("name == $.name", {
+        name: nameValue
     });
+
     var query = DataQuery.withTypeAndCriteria(Role, criteria);
 
     return mainService.fetchData(query)
     .then(function(result) {
         if(!result || result.length === 0) {
-            return createEventRoleWithNameAndTags(name, tags);
+            return createEventRoleWithNameAndTags(name, tags, locales);
         } else {
             return result[0];
         }
@@ -65,7 +85,7 @@ function eventWithNameAndTags(name, tags) {
                 return Promise.all([
                     phrontClientService.createObjectDescriptorStore(phrontClientService.objectDescriptorForType(Role))
                 ]).then(function() {
-                    return createOccupationalPhysicianRole();
+                    return createEventRoleWithNameAndTags(name, tags, locales);
                 });
             }
             else {
@@ -75,8 +95,8 @@ function eventWithNameAndTags(name, tags) {
 
 };
 
-function eventOrganizerRole() {
-    return eventWithNameAndTags({
+function eventOrganizerRole(locales) {
+    return eventRoleWithNameAndTags({
         "fr": {
             "*":"Organisateur"
         },
@@ -90,12 +110,12 @@ function eventOrganizerRole() {
         "en": {
             "*":["Appointment","Meeting","Work Session"]
         }
-    }
+    },locales
     );
 };
 
-function eventAttendeeRole() {
-    return eventWithNameAndTags({
+function eventAttendeeRole(locales) {
+    return eventRoleWithNameAndTags({
         "fr": {
             "*":"Participant"
         },
@@ -109,25 +129,25 @@ function eventAttendeeRole() {
         "en": {
             "*":["Appointment","Meeting","Work Session"]
         }
-    }
+    },locales
     );
 };
 
-function patientRole() {
-    return eventWithNameAndTags({
+function patientRole(locales) {
+    return eventRoleWithNameAndTags({
         "fr": {
             "*":"Patient"
         },
         "en": {
             "*":"Patient"
         }
-    }
+    },null, locales
     );
 };
 
 
 
-exports.createTestServiceEngagementsForDoctorsAndOrganizationServices = function createTestServiceEngagementsForDoctorsAndOrganizationServices(doctors, organization, services, startDate) {
+exports.createTestServiceEngagementsForDoctorsAndOrganizationServices = function createTestServiceEngagementsForDoctorsAndOrganizationServices(doctors, organization, services, startDate, locales) {
 
     if(!startDate) {
         startDate = new Date();
@@ -141,10 +161,10 @@ exports.createTestServiceEngagementsForDoctorsAndOrganizationServices = function
         employmentHistoryPrommises.push(mainService.getObjectProperties(iDoctor, "employmentHistory"));
     }
 
-    Promise.all(employmentHistoryPrommises)
+    return Promise.all(employmentHistoryPrommises)
     .then(function() {
 
-        return Promise.all(eventOrganizerRole(), eventAttendeeRole(), patientRole());
+        return Promise.all([eventOrganizerRole(locales), eventAttendeeRole(locales), patientRole(locales)]);
     })
     .then(function(roles) {
         //Cache it:
@@ -160,7 +180,7 @@ exports.createTestServiceEngagementsForDoctorsAndOrganizationServices = function
 
         return Promise.all(variantPromises);
     })
-    .then(function() {
+    .then(function(variants) {
         //Need random persons to create the patients, so we fetch all we have for now
         var personQuery = DataQuery.withTypeAndCriteria(Person);
         return mainService.fetchData(personQuery);
@@ -168,12 +188,12 @@ exports.createTestServiceEngagementsForDoctorsAndOrganizationServices = function
     .then(function (persons) {
         //Make sure we have persons' calendars
         var i, countI, iPerson,
-            calendarPrommises = [];
+            calendarPromises = [];
         for(i=0, countI = persons.length;(i<countI); i++) {
             iPerson = persons[i];
-            calendarPrommises.push(mainService.getObjectProperties(iPerson, "calendars"));
+            calendarPromises.push(mainService.getObjectProperties(iPerson, "calendars"));
         }
-        return Promise.all(variantPromises)
+        return Promise.all(calendarPromises)
         .then(function() {
             return persons;
         });
@@ -209,7 +229,17 @@ exports.createTestServiceEngagementsForDoctorsAndOrganizationServices = function
         }
 
         return true;
+    })
+    .then(function() {
+        return mainService.saveChanges();
+    })
+    .then(function(createCompletedOperation) {
+        return true;
+    },function(error) {
+        console.error(error);
+        return Promise.reject(error);
     });
+
 
 
 };
@@ -225,7 +255,7 @@ function isTahitiWorkDay(currentDay) {
 }
 
 
-function scheduleDoctorAppointments(iDoctor, persons, bookedPersons, services, scheduleTimeRange) {
+function scheduleDoctorAppointments(aDoctor, persons, bookedPersons, services, scheduleTimeRange) {
 
     /*
         Horaires Sistra:
@@ -235,7 +265,7 @@ function scheduleDoctorAppointments(iDoctor, persons, bookedPersons, services, s
     */
     var i=0, countI = 30,
     j, countJ,
-    currentDay = scheduleTimeRange.begin,
+    currentDay = scheduleTimeRange.begin.clone(),
     timeZone = currentDay.timeZone,
     morningOfficeHourBegin = new CalendarDate({ year: 0, month: 0, day: 0,  hour: 7, minute: 0, second: 0, isDate: false, zone: timeZone}),
     morningOfficeHourEnd = new CalendarDate({ year: 0, month: 0, day: 0,  hour: 12, minute: 30, second: 0, isDate: false, zone: timeZone}),
@@ -254,30 +284,35 @@ function scheduleDoctorAppointments(iDoctor, persons, bookedPersons, services, s
 
    while(scheduleTimeRange.contains(currentDay)) {
        //Test if the day match office hours:
-        if(!isTahitiWorkDay(currentDay)) continue;
+        if(isTahitiWorkDay(currentDay)) {
 
-        //Adjust office hours to currentDay:
-        morningOfficeHours.begin.setComponentValues(currentDay.year, currentDay.month-1,currentDay.day);
-        morningOfficeHours.end.setComponentValues(currentDay.year, currentDay.month-1,currentDay.day);
+            //Adjust office hours to currentDay:
+            morningOfficeHours.begin.setComponentValues(currentDay.year, currentDay.month,currentDay.day);
+            morningOfficeHours.end.setComponentValues(currentDay.year, currentDay.month,currentDay.day);
 
-        //Friday
-        if(currentDay.dayOfWeek(CalendarDate.MONDAY) === 5) {
-            fridayAfternoonOfficeHours.begin.setComponentValues(currentDay.year, currentDay.month-1,currentDay.day);
-            fridayAfternoonOfficeHours.end.setComponentValues(currentDay.year, currentDay.month-1,currentDay.day);
-            afternoonOfficeHours = fridayAfternoonOfficeHours;
-        } else {
-            //Monday-Thursday
-            mondayToThursdayAfternoonOfficeHours.begin.setComponentValues(currentDay.year, currentDay.month-1,currentDay.day);
-            mondayToThursdayAfternoonOfficeHours.end.setComponentValues(currentDay.year, currentDay.month-1,currentDay.day);
-            afternoonOfficeHours = mondayToThursdayAfternoonOfficeHours;
+            //Friday
+            if(currentDay.dayOfWeek(CalendarDate.MONDAY) === 5) {
+                fridayAfternoonOfficeHours.begin.setComponentValues(currentDay.year, currentDay.month,currentDay.day);
+                fridayAfternoonOfficeHours.end.setComponentValues(currentDay.year, currentDay.month,currentDay.day);
+                afternoonOfficeHours = fridayAfternoonOfficeHours;
+            } else {
+                //Monday-Thursday
+                mondayToThursdayAfternoonOfficeHours.begin.setComponentValues(currentDay.year, currentDay.month,currentDay.day);
+                mondayToThursdayAfternoonOfficeHours.end.setComponentValues(currentDay.year, currentDay.month,currentDay.day);
+                afternoonOfficeHours = mondayToThursdayAfternoonOfficeHours;
+            }
+
+
+            //We scheduling morning:
+            _scheduleDoctorAppointmentsInOfficeHours(aDoctor, persons, bookedPersons, services, morningOfficeHours)
+
+            //We scheduling afternoon:
+            _scheduleDoctorAppointmentsInOfficeHours(aDoctor, persons, bookedPersons, services, afternoonOfficeHours)
         }
 
+        //Increment the day:
+        currentDay.adjustComponentValues(0, 0, 1);
 
-        //We scheduling morning:
-        _scheduleDoctorAppointmentsInOfficeHours(aDoctor, persons, bookedPersons, services, morningOfficeHours)
-
-        //We scheduling afternoon:
-        _scheduleDoctorAppointmentsInOfficeHours(aDoctor, persons, bookedPersons, services, afternoonOfficeHours)
    }
 
 
@@ -287,6 +322,7 @@ function _scheduleDoctorAppointmentsInOfficeHours(aDoctor, persons, bookedPerson
     var currentEventTimeBegin = officeHoursTimeRange.begin.clone(),
     currentScheduledTimeRangeBegin,
     randomService,
+    randomServiceVariant,
     randomServiceDurationMinutes,
     currentScheduledTimeRangeEnd,
     currentScheduledTimeRange,
@@ -301,16 +337,17 @@ function _scheduleDoctorAppointmentsInOfficeHours(aDoctor, persons, bookedPerson
 
         //We pick a ramdom service
         randomService = services.randomItem();
+        //We pick a random variant, though in these there shpuld be 1
+        randomServiceVariant = randomService.variants.randomItem();
 
-        //We set the end for the duratio of the service:
-        randomServiceDurationMinutes = randomService.duration;
-        currentScheduledTimeRangeEnd = currentScheduledTimeRangeBegin.calendarDateByAdjustingComponentValues(0, 0, 0, 0, randomServiceDurationMinutes, 0, 0);
-
+        //We set the end using the duration of the variant:
+        var duration = randomServiceVariant.duration;
+        currentScheduledTimeRangeEnd = currentScheduledTimeRangeBegin.calendarDateByAdjustingComponentValues(0, 0, 0, 0, 0, duration);
         //We create the range
         currentScheduledTimeRange = new Range(currentScheduledTimeRangeBegin,currentScheduledTimeRangeEnd);
 
         //And verify we can finish before closing hours:
-        if(morningOfficeHours.contains(currentScheduledTimeRange)) {
+        if(officeHoursTimeRange.contains(currentScheduledTimeRange)) {
             /*
                 Then we create a ServiceEngagement:
                     ServiceEngagement:
@@ -321,20 +358,21 @@ function _scheduleDoctorAppointmentsInOfficeHours(aDoctor, persons, bookedPerson
 
             aServiceEngagement = mainService.createDataObject(ServiceEngagement);
             aServiceEngagement.service = randomService;
-            //We pick a random variant, though in these there shpuld be 1
-            aServiceEngagement.serviceVariant = randomService.variants.randomItem();
+            aServiceEngagement.serviceVariant = randomServiceVariant;
+
+
 
             //Now we create the Doctor's event:
             aDoctorEvent = mainService.createDataObject(Event);
-            aDoctorEvent.resource = aDoctor;
+            aDoctorEvent.participatingParty = aDoctor;
             aDoctorEvent.calendar = aDoctor.employmentHistory[0].calendars[0];
             aDoctorEvent.scheduledTimeRange = currentScheduledTimeRange;
 
             //Let's verify that participation is the default aDoctorEvent.participationEmum.Required
-            console.log("aDoctorEvent.participation === aDoctorEvent.participationEmum.Required is ", aDoctorEvent.participation === aDoctorEvent.participationEmum.Required);
-
+            //console.log("aDoctorEvent.participation === Event.participationEmum.Required is ", aDoctorEvent.participation === Event.participationEmum.Required);
+            aDoctorEvent.participation = Event.participationEmum.Required;
             aDoctorEvent.participationRoles = [eventOrganizerRoleInstance];
-            aDoctorEvent.participationStatus === aDoctorEvent.participationStatusEmum.Accepted;
+            aDoctorEvent.participationStatus === Event.participationStatusEmum.Accepted;
 
             //Set the Organizer's event as the one on the serviceEngagement:
             aServiceEngagement.event = aDoctorEvent;
@@ -347,9 +385,12 @@ function _scheduleDoctorAppointmentsInOfficeHours(aDoctor, persons, bookedPerson
             // } while(!bookedPersons.has(randomPerson));
 
 
-            //Now we create the Doctor's event:
+            //Now we create the Patient's event:
             aPatientEvent = mainService.createDataObject(Event);
-            aPatientEvent.resource = randomPerson;
+
+            //Now we linke the Patient's event to the doctor's which is the root/organizer one:
+            aPatientEvent.parent = aDoctorEvent;
+            aPatientEvent.participatingParty = randomPerson;
             if(!randomPerson.calendars || randomPerson.calendars.length === 0) {
                 aPatientCalendar = mainService.createDataObject(Calendar);
                 randomPerson.calendars = [aPatientCalendar];
@@ -366,13 +407,13 @@ function _scheduleDoctorAppointmentsInOfficeHours(aDoctor, persons, bookedPerson
             aPatientEvent.scheduledTimeRange = currentScheduledTimeRange;
 
             //Let's verify that participation is the default aDoctorEvent.participationEmum.Required
-            console.log("aPatientEvent.participation === aPatientEvent.participationEmum.Required is ", aPatientEvent.participation === aPatientEvent.participationEmum.Required);
-
+            //console.log("aPatientEvent.participation === Event.participationEmum.Required is ", aPatientEvent.participation === Event.participationEmum.Required);
+            aPatientEvent.participation = Event.participationEmum.Required;
             aPatientEvent.participationRoles = [
                 eventAttendeeRoleInstance,
                 patientRoleInstance
             ];
-            aPatientEvent.participationStatus === aPatientEvent.participationStatusEmum.Accepted;
+            aPatientEvent.participationStatus = Event.participationStatusEmum.Accepted;
 
             bookedPersons.add(randomPerson);
 
@@ -380,7 +421,7 @@ function _scheduleDoctorAppointmentsInOfficeHours(aDoctor, persons, bookedPerson
 
         currentEventTimeBegin.takeComponentValuesFromCalendarDate(currentScheduledTimeRange.end);
 
-    } while(morningOfficeHours.contains(currentEventTimeBegin))
+    } while(officeHoursTimeRange.contains(currentEventTimeBegin))
 
 
 
