@@ -5,7 +5,7 @@
     "root": {
         "prototype": "montage/core/meta/module-object-descriptor",
         "values": {
-            "name": "RFC3339UTCRangeStringToRangeConverter",
+            "name": "RFC3339UTCRangeStringToCalendarDateRangeConverter",
             "customPrototype": false,
             "parent": {
                 "@": "converter_descriptor"
@@ -14,11 +14,11 @@
             "propertyDescriptorGroups": {},
             "propertyValidationRules": {},
             "objectDescriptorModule": {
-                "%": "core/converter/RFC3339UTC-range-string-to-range-converter.mjson"
+                "%": "core/converter/RFC3339UTC-range-string-to-calendar-date-range-converter.mjson"
             },
-            "exportName": "RFC3339UTCRangeStringToRangeConverter",
+            "exportName": "RFC3339UTCRangeStringToCalendarDateRangeConverter",
             "module": {
-                "%": "core/converter/RFC3339UTC-range-string-to-range-converter"
+                "%": "data/converter/RFC3339UTC-range-string-to-calendar-date-range-converter"
             }
         }
     }
