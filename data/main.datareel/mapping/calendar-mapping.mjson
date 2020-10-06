@@ -18,7 +18,7 @@
                         "converter": {"@": "eventsConverter"}
                     },
                     "owner": {
-                        "<->": "{personId: personId, organizationId: organizationId, employmentPositionStaffingId: employmentPositionStaffingId, resourceId: resourceId}",
+                        "<-": "this",
                         "converter": {"@": "ownerConverter"}
                     },
                     "color": {
@@ -27,12 +27,25 @@
                     }
                 }
             },
+
             "rawDataMapping": {
                 "rules": {
-                    "personId": {"<-": "owner.objectDescriptor == @PersonDescriptor ? owner.primaryKey : null"},
-                    "organizationId": {"<-": "owner.objectDescriptor == @OrganizationDescriptor ? owner.primaryKey : null"},
-                    "employmentPositionStaffingId": {"<-": "owner.objectDescriptor == @EmploymentPositionStaffingDescriptor ? owner.primaryKey : null"},
-                    "resourceId": {"<-": "owner.objectDescriptor == @ResourceDescriptor ? owner.primaryKey : null"}
+                    "personId": {
+                        "<-": "owner",
+                        "reverter": {"@": "ownerConverter"}
+                    },
+                    "resourceId": {
+                        "<-": "owner",
+                        "reverter": {"@": "ownerConverter"}
+                    },
+                    "organizationId": {
+                        "<-": "owner",
+                        "reverter": {"@": "ownerConverter"}
+                    },
+                    "employmentPositionStaffingId": {
+                        "<-": "owner",
+                        "reverter": {"@": "ownerConverter"}
+                    }
                }
             },
             "requisitePropertyNames": [
@@ -64,6 +77,13 @@
         "properties": {
             "type": {"@": "OrganizationDescriptor"},
             "expression": "organizationId.defined()"
+        }
+    },
+    "ownerResourceForeignKeyMapping": {
+        "prototype": "montage/data/service/raw-data-type-mapping",
+        "properties": {
+            "type": {"@": "ResourceDescriptor"},
+            "expression": "resourceId.defined()"
         }
     },
     "ownerEmploymentPositionStaffingForeignKeyMapping": {

@@ -6,9 +6,9 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
-                    "participatingResource": {
-                        "<->": "{personId: personId,resourceId: resourceId}",
-                        "converter": {"@": "participatingResourceForeignKeyConverter"}
+                    "participatingParty": {
+                        "<-": "this",
+                        "converter": {"@": "participatingPartyForeignKeyConverter"}
                     },
                     "calendar": {
                         "<->": "calendarId",
@@ -92,12 +92,18 @@
             },
             "rawDataMapping": {
                 "rules": {
-                    "personId": {"<-": "participatingResource.objectDescriptor == @PersonDescriptor ? participatingResource.primaryKey : null"},
-                    "resourceId": {"<-": "participatingResource.objectDescriptor == @ResourceDescriptor ? participatingResource.primaryKey : null"}
+                    "participatingPersonId": {
+                        "<-": "participatingParty",
+                        "reverter": {"@": "participatingPartyForeignKeyConverter"}
+                    },
+                    "participatingResourceId": {
+                        "<-": "participatingParty",
+                        "reverter": {"@": "participatingPartyForeignKeyConverter"}
+                    }
                 }
             },
             "requisitePropertyNames": [
-                "participatingResource","calendar","scheduledTimeRange","actualTimeRange","parent","children","isBlocking","participation","participationRoles","participationStatus","summary","description","location","isAllDay"
+                "participatingParty","scheduledTimeRange","actualTimeRange","children","isBlocking","participation","participationRoles","participationStatus","summary","description","location","isAllDay"
             ]
         }
     },
@@ -112,17 +118,17 @@
         "prototype": "montage/data/service/raw-data-type-mapping",
         "properties": {
             "type": {"@": "PersonDescriptor"},
-            "expression": "personId.defined()"
+            "expression": "participatingPersonId.defined()"
         }
     },
     "ResourceForeignKeyMapping": {
         "prototype": "montage/data/service/raw-data-type-mapping",
         "properties": {
             "type": {"@": "ResourceDescriptor"},
-            "expression": "resourceId.defined()"
+            "expression": "participatingResourceId.defined()"
         }
     },
-    "participatingResourceForeignKeyConverter": {
+    "participatingPartyForeignKeyConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $",
@@ -183,7 +189,7 @@
     },
 
     "string-to-range-converter": {
-        "prototype": "../converter/RFC3339UTC-range-string-to-range-converter"
+        "prototype": "../converter/RFC3339UTC-range-string-to-calendar-date-range-converter"
     },
 
     "event-conferenceData-converter": {

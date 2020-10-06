@@ -4,7 +4,7 @@
         "values": {
             "name": "Event",
             "propertyDescriptors": [
-                {"@": "participatingResource"},
+                {"@": "participatingParty"},
                 {"@": "calendar"},
                 {"@": "scheduledTimeRange"},
                 {"@": "actualTimeRange"},
@@ -35,7 +35,8 @@
                 {"@": "guestsCanSeeOtherGuests"},
                 {"@": "privateCopy"},
                 {"@": "locked"},
-                {"@": "attachments"}
+                {"@": "attachments"},
+                {"@": "serviceEngagement"}
             ],
             "objectDescriptorModule": {
                 "%":"data/main.datareel/model/event.mjson"
@@ -50,16 +51,22 @@
         }
     },
     "EventPrototype": {
-        "object": "data/main.datareel/model/event"
+        "object": "data/main.datareel/model/event",
+        "values": {
+            "participationEmum": {"=":"@participationEmum"},
+            "participationStatusEmum": {"=":"@participationStatusEmum"}
+        }
     },
     "ObjectDescriptor": {
         "object": "data/main.datareel/model/object.mjson"
     },
-    "participatingResource": {
+    "participatingParty": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "participatingResource",
+            "name": "participatingParty",
             "valueType": "object",
+            "isSearchable": true,
+            "cardinality": 1,
             "description": "The object for which the time is booked. Typically a Person, or a resource like afacility or equipment",
             "valueDescriptor": {"@": "PartyDescriptor"}
         }
@@ -148,7 +155,7 @@
             "valueType": "string",
             "valueDescriptor": {"@": "participationEmum"},
             "defaultValue": {"=": "@participationEmum.Required"},
-            "description": "Rquivalent of iCal's Participation Role'REQ-PARTICIPANT, OPT-PARTICIPANT & NON-PARTICIPANT"
+            "description": "Equivalent of iCal's Participation Role'REQ-PARTICIPANT, OPT-PARTICIPANT & NON-PARTICIPANT"
        }
     },
     "participationRoles": {
@@ -168,12 +175,14 @@
         "prototype": "montage/core/enum",
         "values": {
             "members":[
+                "Proposed",
                 "NeedsAction",
                 "Accepted",
                 "Declined",
                 "TentativelyAccepted",
                 "Delegated",
-                "Proposed"
+                "Checked-in",
+                "Cancelled"
             ]
         }
     },

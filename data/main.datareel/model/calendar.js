@@ -1,5 +1,12 @@
 var Object = require("./object").Object;
 
+/*
+
+Ideally we'd want Phroont's calendar type to specialize Montage's Calendar, but we aso need things in Object... hmmm
+
+MontageCalendar = require("montage/core/date/calendar").Calendar,
+*/
+
 /**
  * @class Calendar
  * Models https://help.shopify.com/en/api/graphql-admin-api/reference/object/image

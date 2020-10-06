@@ -89,6 +89,15 @@ In the case of VEVENT components, the free or busy time type (FBTYPE) of the FRE
 Duplicate busy time periods with the same FBTYPE parameter value SHOULD NOT be specified in the returned VFREEBUSY component. Servers SHOULD coalesce consecutive or overlapping busy time periods of the same type. Busy time periods with different FBTYPE parameter values MAY overlap.
 
 
+Reschedule:
+
+This section specifies additional requirements on the handling of the "PARTSTAT" property parameter when the "SCHEDULE-AGENT" property parameter on the corresponding "ATTENDEE" property is set to the value "SERVER" or is not present.
+
+A reschedule occurs when any "DTSTART", "DTEND", "DURATION", "DUE", "RRULE", "RDATE", or "EXDATE" property changes in a calendar component such that existing recurrence instances are impacted by the changes, as shown in the table below. Servers MUST reset the "PARTSTAT" property parameter value of all "ATTENDEE" properties, except the one that corresponds to the "Organizer", to "NEEDS-ACTION" for each calendar component change that causes any instance to be rescheduled.
+
+
+
+
  */
 
 
@@ -100,7 +109,7 @@ exports.Event = Object.specialize(/** @lends Event.prototype */ {
             return this;
         }
     },
-    resource: {
+    participatingParty: {
         value: undefined
     },
     resourceType: {
