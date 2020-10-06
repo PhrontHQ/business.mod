@@ -25,7 +25,20 @@
                 "element": {"#": "date"}
             },
             "bindings": {
-                "value": {"<-": "@owner.fullDate"}
+                "value": {
+                    "<-": "@owner.object.dayRange.begin",
+                    "converter": {"@": "internationalDateConverter"}
+                }
+            }
+        },
+        "internationalDateConverter": {
+            "prototype": "montage/core/converter/international-date-to-string-formatter",
+            "values": {
+                "options": {
+                    "weekday": "long",
+                    "day": "numeric",
+                    "month": "long"
+                }
             }
         },
         "items": {

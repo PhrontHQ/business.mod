@@ -18,24 +18,6 @@ exports.CalendarListDay = Component.specialize(/** @lends CalendarListDay# */ {
 formatter = Intl.DateTimeFormat(
     "en-US", {weekday:"long", day: "numeric", month: "long" })
 */
-
-    _dayDateFormatter: {
-        value: undefined
-    },
-    dayDateFormatter: {
-        get: function() {
-            if(!this._dayDateFormatter) {
-                this._dayDateFormatter = Intl.DateTimeFormat(
-                    Locale.systemLocale.identifier, {
-                        weekday: "long",
-                        day: "numeric",
-                        month: "long"
-                    });
-            }
-            return this._dayDateFormatter;
-        }
-    },
-
     _object: {
         value: null
     },
@@ -49,7 +31,6 @@ formatter = Intl.DateTimeFormat(
                 this._object = object;
                 if (object) {
                     this.events = object.data;
-                    this.fullDate = this.dayDateFormatter.format(object.dayRange.begin);
                     //this._loadTasks();
                 }
             }
