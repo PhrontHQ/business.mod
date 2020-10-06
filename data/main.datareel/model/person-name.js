@@ -72,7 +72,7 @@ var Montage = require("montage/core/core").Montage,
  * @extends external:Montage
  */
 
-exports.PersonName = Montage.specialize(/** @lends EventPerson.prototype */ {
+var PersonName = exports.PersonName = Montage.specialize(/** @lends EventPerson.prototype */ {
     constructor: {
         value: function PersonName() {
             this.super();
@@ -270,3 +270,6 @@ exports.PersonName = Montage.specialize(/** @lends EventPerson.prototype */ {
         value: undefined
     }
 });
+
+
+PersonName.prototype.valueOf = PersonName.prototype.toString;
