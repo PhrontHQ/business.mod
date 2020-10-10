@@ -1,0 +1,18 @@
+{
+    "root": {
+        "prototype": "./worker",
+        "values": {
+            "name": "MainWorker",
+            "apiGateway": {"@": "aws-api-gateway"},
+            "mainService": {"@": "mainDataService"}
+        }
+    },
+
+    "aws-api-gateway": {
+        "object": "phront/serverless/a-w-s-api-gateway"
+    },
+
+    "mainDataService": {
+        "object": "../data/main.datareel/main.mjson"
+    }
+}
