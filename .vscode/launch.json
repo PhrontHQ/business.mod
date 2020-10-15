@@ -17,9 +17,11 @@
             "type": "node",
             "request": "launch",
             "name": "Launch phront-service-usage",
+            "runtimeVersion": "12.18.4",
             "program": "${workspaceFolder}/test/spec/phront-service-usage/index.js",
             "cwd": "${workspaceFolder}/test/spec/phront-service-usage/",
-            "autoAttachChildProcesses": true,
+            "trace": false,
+            "enableContentValidation": false,
             "skipFiles": [
                 "<node_internals>/**"
             ]
