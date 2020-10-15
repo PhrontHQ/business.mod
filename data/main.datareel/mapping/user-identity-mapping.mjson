@@ -15,6 +15,8 @@
                     "email": {"<->": "email"},
                     "phone": {"<->": "phone_number"},
                     "tags": {"<->": "tags"},
+                    "locale": {"<->": "locale"},
+                    "timeZone": {"<->": "zoneinfo"},
                     "person": {
                         "<->": "id",
                         "converter": {"@": "person-converter"}

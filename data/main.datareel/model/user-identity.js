@@ -60,5 +60,8 @@ exports.UserIdentity = Target.specialize(/** @lends UserIdentity.prototype */ {
     },
     locale: {
         value: undefined
+    },
+    timeZone: {
+        value: undefined
     }
 });

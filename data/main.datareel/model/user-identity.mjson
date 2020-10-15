@@ -20,7 +20,9 @@
                 {"@": "addresses"},
                 {"@": "tags"},
                 {"@": "mfaCode"},
-                {"@": "person"}
+                {"@": "person"},
+                {"@": "locale"},
+                {"@": "timeZone"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/user-identity.mjson"
@@ -177,5 +179,29 @@
     },
     "personDescriptor": {
         "object": "data/main.datareel/model/person.mjson"
+    },
+    "locale": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "locale",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "localeDescriptor"}
+       }
+    },
+    "localeDescriptor": {
+        "object": "montage/core/locale.mjson"
+    },
+    "timeZone": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "timeZone",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "timeZoneDescriptor"}
+       }
+    },
+    "timeZoneDescriptor": {
+        "object": "montage/core/date/time-zone.mjson"
     }
 }
