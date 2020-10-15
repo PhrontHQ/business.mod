@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"},
+                "content": [
+                    {"id": "foo", "value1": 12, "value2": 23},
+                    {"id": "bar", "value1": 34, "value2": 45},
+                    {"id": "baz", "value1": 56, "value2": 67},
+                    {"id": "oof", "value1": 21, "value2": 32},
+                    {"id": "rab", "value1": 43, "value2": 54},
+                    {"id": "zabsdfkjgkl;sdjf;glkjsd;flkjg;lkj;lksjdfg", "value1": 65, "value2": 76}
+                ]
+            }
+        },
+        "controller": {
+            "prototype": "montage/core/range-controller",
+            "bindings": {
+                "content": {"<-": "@owner.content"}
+            }
+        },
+        "table": {
+            "prototype": "foo/ui/controls/table.reel",
+            "properties": {
+                "element": {"#": "table"},
+                "dataController": {"@": "controller"},
+                "columns": [
+                    {
+                        "label": "ID",
+                        "expression": "id"
+                    },
+                    {
+                        "label": "First value",
+                        "expression": "value1"
+                    },
+                    {
+                        "label": "Second value",
+                        "expression": "value2"
+                    },
+                    {
+                        "label": "sum",
+                        "expression": "value1+value2"
+                    }
+                ]
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="Main">
+        <div class="container">
+            <div data-montage-id="table"></div>
+        </div>
+    </div>
+</body>
+</html>

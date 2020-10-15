@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="table-cell.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"},
+                "content": {"@": "content"}
+            }
+        },
+
+        "content": {
+            "prototype": "ui/controls/placeholder.reel",
+            "properties": {
+                "element": {"#": "content"}
+            },
+            "bindings": {
+                "moduleId": {"<-": "@owner.componentModuleId"},
+                "object": {"<-": "@owner.objectContext"},
+                "context": {"<-": "@owner.columnContext"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="TableCell">
+        <div data-montage-id="content" class="TableCell-content"></div>
+    </div>
+</body>
+</html>

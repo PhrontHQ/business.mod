@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="table.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"},
+                "rowRepetition": {"@": "rowRepetition"}
+            },
+            "bindings": {
+                "activeColumn": {"<-": "@headerRepetition.activeIterations.0.object"},
+                "classList.has('Table-reverseSorting')": {"<-": "@owner._reversed"}
+            }
+        },
+        "headerRepetition": {
+            "prototype": "montage/ui/repetition.reel",
+            "properties": {
+                "element": {"#": "headerRepetition"},
+                "isSelectionEnabled": true
+            },
+            "bindings": {
+                "content": {"<-": "@owner.columns"}
+            }
+        },
+        "label": {
+            "prototype": "blue-shark/ui/text.reel",
+            "properties": {
+                "element": {"#": "label"}
+            },
+            "bindings": {
+                "value": {"<-": "@headerRepetition:iteration.object.label"},
+                "classList.has('Table-label-orderBy')": {"<-": "@headerRepetition:iteration.object.expression == @owner._orderBy"}
+            }
+        },
+        "rowRepetition": {
+            "prototype": "montage/ui/repetition.reel",
+            "properties": {
+                "element": {"#": "rowRepetition"},
+                "isSelectionEnabled": true
+            },
+            "bindings": {
+                "contentController": {"<-": "@owner.dataController"}
+            }
+        },
+        "cellRepetition": {
+            "prototype": "montage/ui/repetition.reel",
+            "properties": {
+                "element": {"#": "cellRepetition"}
+            },
+            "bindings": {
+                "content": {"<-": "@owner.columns"}
+            }
+        },
+        "cell": {
+            "prototype": "./table-cell.reel",
+            "properties": {
+                "element": {"#": "cell"},
+                "tableComponent": {"@": "owner"}
+            },
+            "bindings": {
+                "objectContext": {"<-": "@rowRepetition:iteration.object"},
+                "columnContext": {"<-": "@cellRepetition:iteration.object"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <table data-montage-id="owner" class="Table">
+        <thead>
+            <tr data-montage-id="headerRepetition" class="Table-header">
+                <td data-montage-id="label" class="Table-label"></td>
+            </tr>
+        </thead>
+        <tbody data-montage-id="rowRepetition" class="Table-rowRepetition">
+            <tr data-montage-id="cellRepetition" class="Table-row">
+                <td data-montage-id="cell" class="Table-cell"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,43 @@
+.Table-header {
+    cursor: pointer;
+    user-select: none;
+    border-bottom: none;
+}
+
+.Table-rowRepetition {
+    background: rgba(0,0,0,.1);
+    border-top: none;
+}
+
+.Table-row:nth-of-type(even) { background-color: rgba(0,0,0,.1); }
+
+.Table-row.is-pending {
+    pointer-events: none;
+    opacity: .25;
+    background: color(var(--black) a(50%));
+
+}
+
+/* Selected Column */
+
+.Table-label-orderBy { background: var(--blue-darken-1); }
+
+/* arrow icon */
+
+.Table-label-orderBy:before {
+    position: absolute;
+    top: 50%;
+    margin-top: -.25em;
+    right: .5em;
+    content: "";
+    border-left:  .5em solid transparent;
+    border-right: .5em solid transparent;
+    border-top:   .5em solid var(--grey-1);
+}
+
+.Table-reverseSorting .Table-label-orderBy:before {
+    border-left:  .5em solid transparent;
+    border-right: .5em solid transparent;
+    border-bottom:   .5em solid var(--grey-1);
+    border-top: none;
+}

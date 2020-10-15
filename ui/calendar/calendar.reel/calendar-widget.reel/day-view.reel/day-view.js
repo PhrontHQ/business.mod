@@ -1,5 +1,5 @@
 var TimeRangeView = require("../time-range-view").TimeRangeView,
-    CalendarDate = require("montage/core/date/calendar-date").CalendarDate,
+    // CalendarDate = require("montage/core/date/calendar-date").CalendarDate,
     Promise = require("montage/core/promise").Promise,
     MONTHS = [
             "January",

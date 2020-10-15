@@ -1,6 +1,6 @@
 var Component = require("montage/ui/component").Component,
-    PressComposer = require("montage/composer/press-composer").PressComposer,
-    _ = require('lodash');
+    PressComposer = require("montage/composer/press-composer").PressComposer;
+    //_ = require('lodash');
 
 exports.CalendarListItem = Component.specialize(/** @lends CalendarListItem# */ {
     schedule: {
