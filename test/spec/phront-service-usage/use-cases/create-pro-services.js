@@ -343,7 +343,28 @@ function assistantRole() {
 function randomEmploymentPositionStaffingStartDate(start, end) {
     end = new Date();
     return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-  }
+}
+
+
+function fetchPersonWithName(data) {
+    /*
+        DEBUG QUERY
+    */
+    return Promise.resolve(null);
+
+    var expression = "";
+    for(key in data) {
+        if(expression.length) {
+            expression += " && ";
+        }
+        expression += "name."+key+" == $."+ key;
+    }
+
+    var criteria = new Criteria().initWithExpression(expression, data),
+        query = DataQuery.withTypeAndCriteria(Person, criteria);
+
+    return mainService.fetchData(query);
+}
 
 
 function createDoctorWithData(data) {
@@ -353,42 +374,80 @@ function createDoctorWithData(data) {
         cdiEmploymentTypePromise = fullTimeEmployeeEmploymentType(),
         occupationalPhysicianRolePromise = occupationalPhysicianRole(),
         medicalSecretaryRolePromise = medicalSecretaryRole(),
-        assistantRolePromise = assistantRole();
+        assistantRolePromise = assistantRole(),
+        doctorPromise = fetchPersonWithName({
+            givenName: data.doctorGivenName,
+            familyName: data.doctorFamilyName,
+            namePrefix: "Dr."
+        });
+        doctorSecretaryPromise = fetchPersonWithName({
+            givenName: data.assistantGivenName,
+            familyName: data.assistantFamilyName
+        });
 
         objectPromises.push(cdiEmploymentTypePromise);
         objectPromises.push(occupationalPhysicianRolePromise);
         objectPromises.push(medicalSecretaryRolePromise);
         objectPromises.push(assistantRolePromise);
+        objectPromises.push(doctorPromise);
+        objectPromises.push(doctorSecretaryPromise);
 
 
     return Promise.all(objectPromises)
     .then(function(objectPromisesResolved) {
+
+        /*
+            Slight improvement, we make sure the Persons exists, assuming that
+            Position, EmploymentPosition, EmploymentPositionStaffing, Calendar aand ContactInformation are wiped clean before we run this.
+
+            THIS NEEDS TO CHANGE!!
+        */
 
         var cdiEmploymentType = objectPromisesResolved[0],
             occupationalPhysicianRole = objectPromisesResolved[1],
             medicalSecretaryRole = objectPromisesResolved[2],
             assistantRole = objectPromisesResolved[3],
             organization = data.organization,
-            doctor = mainService.createDataObject(Person),
-            doctorName = new PersonName(),
+            doctor = objectPromisesResolved[4],
+            doctorSecretary = objectPromisesResolved[5],
+            doctorName,
             //doctorContactInformation = mainService.createDataObject(ContactInformation),
             doctorPosition = mainService.createDataObject(Position),
             doctorEmploymentPosition = mainService.createDataObject(EmploymentPosition),
             doctorEmploymentPositionStaffing = mainService.createDataObject(EmploymentPositionStaffing),
-            doctorSecretary = mainService.createDataObject(Person),
-            doctorSecretaryName = new PersonName(),
+            doctorSecretary,
             doctorSecretaryContactInformation = mainService.createDataObject(ContactInformation),
             doctorSecretaryPosition = mainService.createDataObject(Position),
             doctorSecretaryEmploymentPosition = mainService.createDataObject(EmploymentPosition),
             doctorSecretaryEmploymentPositionStaffing = mainService.createDataObject(EmploymentPositionStaffing),
             doctorSecretaryEmploymentPositionRelationship = mainService.createDataObject(EmploymentPositionRelationship),
-
             /*
                 We'remissing a check that Calendar Table may exists or not
             */
-           doctorCalendar = mainService.createDataObject(Calendar),
-           doctorSecretaryCalendar = mainService.createDataObject(Calendar);
+           doctorCalendar,
+           doctorSecretaryCalendar;
 
+
+        if(!doctor) {
+            doctor = mainService.createDataObject(Person);
+            doctorName = new PersonName();
+
+            //Name
+            doctor.name = doctorName;
+            doctorName.namePrefix = "Dr.";
+            doctorName.givenName = data.doctorGivenName;
+            doctorName.familyName = data.doctorFamilyName;
+        }
+
+        if(!doctorSecretary) {
+            doctorSecretary = mainService.createDataObject(Person);
+            doctorSecretaryName = new PersonName();
+
+            //Name
+            doctorSecretary.name = doctorSecretaryName;
+            doctorSecretaryName.givenName = data.assistantGivenName;
+            doctorSecretaryName.familyName = data.assistantFamilyName;
+        }
 
         //Setup the doctor position,
         doctorPosition.name = occupationalPhysicianRole.name;
@@ -402,6 +461,7 @@ function createDoctorWithData(data) {
         //and positionEmploymentStaffing
         doctorEmploymentPositionStaffing.employmentType = cdiEmploymentType;
         doctorEmploymentPositionStaffing.employmentPosition = doctorEmploymentPosition;
+        doctorCalendar = mainService.createDataObject(Calendar);
         doctorEmploymentPositionStaffing.calendars = [doctorCalendar];
         //WARNING: check if we still need to also do:
         if(!doctorCalendar.owner || doctorCalendar.owner !== doctorEmploymentPositionStaffing) {
@@ -420,11 +480,6 @@ function createDoctorWithData(data) {
         someStartDateEarlyBoundary.setYear(2001);
         doctorEmploymentPositionStaffing.existenceTimeRange = new Range(randomEmploymentPositionStaffingStartDate(someStartDateEarlyBoundary), null);
 
-        //Name
-        doctor.name = doctorName;
-        doctorName.givenName = data.doctorGivenName;
-        doctorName.familyName = data.doctorFamilyName;
-
         //We don't have personal Contact Information for Doctors
         // doctor.contactInformation = doctorContactInformation;
 
@@ -440,7 +495,6 @@ function createDoctorWithData(data) {
                 console.error("Inverse propagation error");
             }
         }
-
 
         //Setup the doctor secretary position
         doctorSecretaryPosition.name = medicalSecretaryRole.name;
@@ -463,17 +517,12 @@ function createDoctorWithData(data) {
             console.error("Inverse propagation error");
         }
 
+        doctorSecretaryCalendar = mainService.createDataObject(Calendar);
         doctorSecretaryEmploymentPositionStaffing.calendars = [doctorSecretaryCalendar];
         //WARNING: check if we still need to also do:
         if(!doctorSecretaryCalendar.owner || doctorSecretaryCalendar.owner !== doctorSecretaryEmploymentPositionStaffing) {
             doctorSecretaryCalendar.owner = doctorSecretaryEmploymentPositionStaffing;
         }
-
-
-        //Name
-        doctorSecretary.name = doctorSecretaryName;
-        doctorSecretaryName.givenName = data.assistantGivenName;
-        doctorSecretaryName.familyName = data.assistantFamilyName;
 
         //ContactInformation
         doctorSecretary.contactInformation = doctorSecretaryContactInformation;
