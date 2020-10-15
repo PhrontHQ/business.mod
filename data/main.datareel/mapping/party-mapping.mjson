@@ -21,7 +21,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "existenceTimeRange", "contactInformation"
+                "existenceTimeRange"
             ]
         }
     },
@@ -29,7 +29,7 @@
         "object": "data/main.datareel/model/party.mjson"
     },
     "string-to-range-converter": {
-        "prototype": "../converter/RFC3339UTC-range-string-to-calendar-date-range-converter"
+        "prototype": "../converter/RFC3339UTC-range-string-to-date-range-converter"
     },
     "contactInformationConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
