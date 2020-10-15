@@ -932,6 +932,24 @@ typeToToken.forEach(function (token, type) {
     if(typeof module.exports.stringifiers[type] !== "function") {
         module.exports.stringifiers[type] = function (syntax, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements) {
 
+            /*
+                TODO: Needs to finish transforming
+
+                'name.givenName == $.givenName && name.familyName == $.familyName && name.namePrefix == $.namePrefix'
+
+                into
+
+                name @> '{"givenName":"Odile"}' and name @> '{"familyName":"Leccia"} and name @> '{"namePrefix":"Dr."}'
+
+                or name->>'familyName' = 'Leccia'
+
+                select '{"a": {"b":{"c": "foo"}}}'::jsonb->'a'->'b'->'c' = '"foo"'
+                //Note the double quote in '' around foo to make it a jsonb value compatible with the type returned by -> operator
+
+                equal operator will have to adapt and know the column type to answer corretly? Not in the second option
+
+            */
+
             var args = syntax.args,
                 i, countI, result = "",
                 mappedToken = dataService.mapTokenToRawToken(token);
