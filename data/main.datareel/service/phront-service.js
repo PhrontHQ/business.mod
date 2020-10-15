@@ -166,6 +166,79 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 this._mapResponseHandlerByOperationType.set(DataOperationType.delete, this.mapHandledDeleteResponseToOperation);
             }
 
+            // this._registeredConnectionsByIdentifier = new Map();
+        }
+    },
+
+    /***************************************************************************
+     * Serialization
+     */
+
+    deserializeSelf: {
+        value:function (deserializer) {
+            this.super(deserializer);
+            var value = deserializer.getProperty("connectionDescriptor");
+
+            if (value) {
+                this._registerConnections(value);
+            }
+
+        }
+    },
+    _registeredConnectionsByIdentifier: {
+        value: undefined,
+    },
+
+    /**
+     * Called through MainService when consumer has indicated that he has lost interest in the passed DataStream.
+     * This will allow the RawDataService feeding the stream to take appropriate measures.
+     *
+     * @private
+     * @method
+     * @argument {Array} [connectionDescription] - The different known connections to the database
+     *
+     */
+
+    _registerConnections: {
+        value: function(connectionDescriptor) {
+
+            this._registeredConnectionsByIdentifier = connectionDescriptor;
+
+            for(var i=0, connections = Object.keys(connectionDescriptor), countI = connections.length, iConnection;(i<countI); i++) {
+                iConnectionIdentifier = connections[i];
+                iConnection = connectionDescriptor[iConnectionIdentifier];
+
+                Object.defineProperty(iConnection, "identifier", {
+                    value: iConnectionIdentifier,
+                    enumerable: false,
+                    configurable: true,
+                    writable: true
+                });
+
+                //this._registeredConnectionsByIdentifier.set(iConnectionIdentifier,iConnection);
+            }
+        }
+    },
+
+    connectionForIdentifier: {
+        value: function(connectionIdentifier) {
+            return this._registeredConnectionsByIdentifier[connectionIdentifier];
+            //return this._registeredConnectionsByIdentifier.get(connectionIdentifier);
+        }
+    },
+
+    connection: {
+        value: undefined
+    },
+
+     //We need a mapping to go from model(schema?)/ObjectDescriptor to schema/table
+     mapOperationToRawOperationConnection: {
+        value: function (operation, rawDataOperation) {
+            //Use the stage from the operation:
+            //Object.assign(rawDataOperation,this.connectionForIdentifier(operation.context.requestContext.stage));
+            Object.assign(rawDataOperation,this.connection);
+
+            return rawDataOperation;
         }
     },
 
@@ -238,14 +311,61 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     _rdsDataService: {
         get: function () {
             if (!this.__rdsDataService) {
-                this.__rdsDataService = new AWS.RDSDataService({
-                    apiVersion: '2018-08-01',
-                    endpoint: "https://rds-data.us-west-2.amazonaws.com",
-                    region: "us-west-2"
-                });
+                // this.__rdsDataService = new AWS.RDSDataService({
+                //     apiVersion: '2018-08-01',
+                //     endpoint: "https://rds-data.us-west-2.amazonaws.com",
+                //     region: "us-west-2"
+                // });
+                // this.__rdsDataService = new AWS.RDSDataService({
+                //     apiVersion: '2018-08-01'
+                // });
 
             }
             return this.__rdsDataService;
+        }
+    },
+
+    _stage: {
+        value: undefined
+    },
+
+    stage: {
+        get: function() {
+            return this._stage;
+        },
+        set: function(value) {
+            this._stage = value;
+
+            /*
+                The region where the database lives is in the resourceArn, no need to add it on top
+            */
+            this.connection = this.connectionForIdentifier(value);
+            if(this.connection) {
+                var region = this.connection.resourceArn.split(":")[3];
+
+                this.__rdsDataService = new AWS.RDSDataService({
+                    apiVersion: '2018-08-01',
+                    region: region
+                });
+            } else {
+                throw "Could not find a database connection for stage - "+value+" -";
+            }
+        }
+    },
+
+
+    handleConnect: {
+        value: function (connectOperation) {
+            var stage = connectOperation.context.requestContext.stage;
+
+            /*
+                The stage allows us to pick the right Database Connection among the ones we've been told.
+                We only set it once on connect as it's less frequent and it won't change for the duration the lambda will be active.
+            */
+            if(!this.stage) {
+                this.stage = stage;
+            }
+
         }
     },
     /*
@@ -262,55 +382,56 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             }
         },
     */
-    fetchData: {
-        value: function (query, stream) {
-            var self = this,
-                objectDescriptor = this.objectDescriptorForType(query.type),
-                readOperation = new DataOperation();
+    // fetchData: {
+    //     value: function (query, stream) {
+    //         var self = this,
+    //             objectDescriptor = this.objectDescriptorForType(query.type),
+    //             readOperation = new DataOperation();
 
-            stream = stream || new DataStream();
-            stream.query = query;
+    //         stream = stream || new DataStream();
+    //         stream.query = query;
 
-            //We need to turn this into a Read Operation. Difficulty is to turn the query's criteria into
-            //one that doesn't rely on objects. What we need to do before handing an operation over to another context
-            //bieng a worker on the client side or a worker on the server side, is to remove references to live objects.
-            //One way to do this is to replace every object in a criteria's parameters by it's data identifier.
-            //Another is to serialize the criteria.
-            readOperation.type = DataOperation.Type.Read;
-            readOperation.dataDescriptor = objectDescriptor.module.id;
-            readOperation.criteria = query.criteria;
-            readOperation.data = query.readExpressions;
+    //         //We need to turn this into a Read Operation. Difficulty is to turn the query's criteria into
+    //         //one that doesn't rely on objects. What we need to do before handing an operation over to another context
+    //         //bieng a worker on the client side or a worker on the server side, is to remove references to live objects.
+    //         //One way to do this is to replace every object in a criteria's parameters by it's data identifier.
+    //         //Another is to serialize the criteria.
+    //         readOperation.type = DataOperation.Type.Read;
+    //         readOperation.target = objectDescriptor;
+    //         readOperation.criteria = query.criteria;
+    //         readOperation.data = query.readExpressions;
 
-            //Where do we put the "select part" ? The list of properties, default + specific ones asked by developer and
-            //eventually collected by the framework through triggers?
-            // - readExpressions is a list like that on the query object.
-            // - selectBindings s another.
+    //         //Where do we put the "select part" ? The list of properties, default + specific ones asked by developer and
+    //         //eventually collected by the framework through triggers?
+    //         // - readExpressions is a list like that on the query object.
+    //         // - selectBindings s another.
 
 
-            // return new Promise(function(resolve,reject) {
+    //         // return new Promise(function(resolve,reject) {
 
-            self.handleRead(readOperation)
-                .then(function (readUpdatedOperation) {
-                    var records = readUpdatedOperation.data;
+    //         self.handleRead(readOperation)
+    //             .then(function (readUpdatedOperation) {
+    //                 var records = readUpdatedOperation.data;
 
-                    if (records && records.length > 0) {
+    //                 if (records && records.length > 0) {
 
-                        //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
-                        self.addRawData(stream, records, readOperation._rawReadExpressionIndexMap);
-                    }
+    //                     //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
+    //                     self.addRawData(stream, records, readOperation._rawReadExpressionIndexMap);
+    //                 }
 
-                    self.rawDataDone(stream);
+    //                 self.rawDataDone(stream);
 
-                }, function (readFailedOperation) {
-                    console.error(readFailedOperation);
-                    self.rawDataDone(stream);
+    //             }, function (readFailedOperation) {
+    //                 console.error(readFailedOperation);
+    //                 self.rawDataDone(stream);
 
-                });
-            // });
+    //             });
+    //         // });
 
-            return stream;
-        }
-    },
+    //         return stream;
+    //     }
+    // },
+
     inlineCriteriaParameters: {
         value: true
     },
@@ -703,7 +824,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     mapReadOperationToRawStatement: {
         value: function (readOperation, rawDataOperation) {
             //Now we need to transf orm the operation into SQL:
-            var objectDescriptor = this.objectDescriptorWithModuleId(readOperation.dataDescriptor),
+            var objectDescriptor = readOperation.target,
                 /*Set*/localizablePropertyNames = objectDescriptor.localizablePropertyNames,
                 operationLocales,
                 mapping = this.mappingForType(objectDescriptor),
@@ -876,7 +997,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 rawDataOperation.parameters = rawCriteria.parameters;
             }
 
-            //return rawReadExpressionMap;
+            return sql;
         }
     },
 
@@ -897,14 +1018,14 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             //   return this.handleReadObjectDescriptorOperation(readOperation);
             // } else {
             var rawDataOperation = {},
-                objectDescriptor = this.objectDescriptorWithModuleId(readOperation.dataDescriptor),
+                objectDescriptor = readOperation.target,
                 dataChanges = data,
                 changesIterator,
                 aProperty, aValue, addedValues, removedValues, aPropertyDescriptor,
                 self = this;
 
             //This adds the right access key, db name. etc... to the RawOperation.
-            this.mapObjectDescriptorToRawOperation(objectDescriptor, rawDataOperation);
+            this.mapOperationToRawOperationConnection(readOperation, rawDataOperation);
             this.mapReadOperationToRawStatement(readOperation, rawDataOperation);
 
             //return new Promise(function(resolve,reject) {
@@ -917,9 +1038,9 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             //   console.log(rawDataOperation.sql);
             // }
 
-            if(objectDescriptor.name === "ServiceEngagement") {
-                console.log("handleRead: "+rawDataOperation.sql);
-            }
+            // if(objectDescriptor.name === "Event") {
+            //    console.log("handleRead: "+rawDataOperation.sql);
+            // }
 
             self._executeStatement(rawDataOperation, function (err, data) {
                 //var endTime  = console.timeEnd(readOperation.id);
@@ -959,7 +1080,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             var operation = new DataOperation();
 
             operation.referrerId = readOperation.id;
-            operation.dataDescriptor = readOperation.dataDescriptor;
+            operation.target = readOperation.target;
 
             //Carry on the details needed by the coordinator to dispatch back to client
             // operation.connection = readOperation.connection;
@@ -1046,7 +1167,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 mapping,
                 i, countI;
 
-            operation.dataDescriptor = objectDescriptor.module.id;
+            operation.target = objectDescriptor;
 
             //When we have an operation to deal with, we'll know which it is.
             //Here we don't know if this record is a newly created object or one we fetched.
@@ -1140,13 +1261,13 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                                     var updateCompletedOperation = new DataOperation();
                                     updateCompletedOperation.type = DataOperation.Type.UpdateCompleted;
                                     updateCompletedOperation.data = object;
-                                    updateCompletedOperation.dataDescriptor = objectDescriptor.module.id;
+                                    updateCompletedOperation.target = objectDescriptor;
                                     resolve(updateCompletedOperation);
                                 }, function (rawUpdateFailedOperation) {
                                     var updateFailedOperation = new DataOperation();
                                     updateFailedOperation.type = DataOperation.Type.UpdateFailed;
                                     updateFailedOperation.data = object;
-                                    updateFailedOperation.dataDescriptor = objectDescriptor.module.id;
+                                    updateFailedOperation.target = objectDescriptor;
 
                                     reject(updateFailedOperation);
                                 });
@@ -1168,7 +1289,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                             //Record dataIdentifier for object
                             var createCompletedOperation = new DataOperation(),
                                 rawData = createCompletedRawOperation.data,
-                                objectDescriptor = self.objectDescriptorWithModuleId(createCompletedRawOperation.dataDescriptor),
+                                objectDescriptor = createCompletedRawOperation.target,
                                 dataIdentifier = self.dataIdentifierForTypeRawData(objectDescriptor, rawData);
 
                             self.recordSnapshot(dataIdentifier, rawData);
@@ -1214,54 +1335,6 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
         }
     },
-
-    /**
-     * Subclasses should override this method to save a data object when that
-     * object's raw data would be useful to perform the save.
-     *
-     * @method
-     * @argument {Object} record   - An object whose properties hold the raw
-     *                               data of the object to save.
-     * @argument {?} context       - An arbitrary value sent by
-     *                               [saveDataObject()]{@link RawDataService#saveDataObject}.
-     *                               By default this is the object to save.
-     * @returns {external:Promise} - A promise fulfilled when the object's data
-     * has been saved. The promise's fulfillment value is not significant and
-     * will usually be `null`.
-     */
-
-    //In the near future we should be dealing with a DataOperation, which we would then convert
-    //to a RawDataOperation that can be sent to the database for execution.
-    saveRawData: {
-        value: function (record, object) {
-            var rawDataOperation = {},
-                objectDescriptor = this.objectDescriptorForObject(object);
-
-            this.mapObjectDescriptorToRawOperation(objectDescriptor, rawDataOperation);
-
-            //When we have an operation to deal with, we'll know which it is.
-            //Here we don't know if this record is a newly created object or one we fetched
-            if (this.dataIdentifierForObject(object)) {
-                //Update Operation
-
-                //Call
-                phrontService.handleUpdate(iOperation);
-
-            } else {
-                //Temporarary: Create a Raw Data operation that we should receive later.
-                // var operation = new DataOperation();
-                // operation.type = DataOperation.Type.Create;
-                // operation.data = object
-
-                //
-                phrontService.handleCreate(iOperation);
-
-            }
-            return this.nullPromise;
-        }
-    },
-
-
 
     persistObjectDescriptors: {
         value: function (objectDescriptors) {
@@ -1650,43 +1723,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         }
     },
 
-    //We need a mapping to go from model(schema?)/ObjectDescriptor to schema/table
-    databaseForObjectDescriptor: {
-        value: function (objectDescriptor) {
-            //Hard coded for now, should be derived from a mapping telling us n which databaseName that objectDescriptor is stored
-            return "postgres";
-        }
-    },
-
-    schemaForObjectDescriptor: {
-        value: function (objectDescriptor) {
-            //Hard coded for now, should be derived from a mapping telling us n which databaseName that objectDescriptor is stored
-            return "phront";
-        }
-    },
-
     tableForObjectDescriptor: {
         value: function (objectDescriptor) {
             //Hard coded for now, should be derived from a mapping telling us n which databaseName that objectDescriptor is stored
             return objectDescriptor.name;
-        }
-    },
-
-    //We need a mapping to go from model(schema?)/ObjectDescriptor to schema/table
-    mapObjectDescriptorToRawOperation: {
-        value: function (objectDescriptor, rawDataOperation) {
-            //Hard coded for now, should be derived from a mapping telling us n which databaseName that objectDescriptor is stored
-            var databaseName = this.databaseForObjectDescriptor(objectDescriptor),
-                //Hard coded for now, should be derived from a mapping telling us n which schemaName that objectDescriptor is stored
-                schemaName = this.schemaForObjectDescriptor(objectDescriptor),
-
-                dbAuthorization = this.authorizationForDatabaseInSchema(databaseName, schemaName);
-
-            for (var key in dbAuthorization) {
-                rawDataOperation[key] = dbAuthorization[key];
-            }
-
-            return rawDataOperation;
         }
     },
 
@@ -1738,10 +1778,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             var data = createOperation.data;
 
             var rawDataOperation = {},
-                objectDescriptor = this.objectDescriptorWithModuleId(createOperation.dataDescriptor);
+                objectDescriptor = createOperation.target;
 
             //This adds the right access key, db name. etc... to the RawOperation.
-            this.mapObjectDescriptorToRawOperation(objectDescriptor, rawDataOperation);
+            this.mapOperationToRawOperationConnection(createOperation, rawDataOperation);
 
 
             var self = this,
@@ -2036,7 +2076,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
             return new Promise(function (resolve, reject) {
                 self.performCreateObjectDescriptorOperation(rawDataOperation, function (err, data) {
                     var operation = new DataOperation();
-                    operation.dataDescriptor = createOperation.dataDescriptor;
+                    operation.target = createOperation.target;
                     operation.referrerId = createOperation.id;
 
                     if (err) {
@@ -2052,7 +2092,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                         //console.log(data);
                         operation.type = DataOperation.Type.CreateCompleted;
                         //Not sure there's much we can provide as data?
-                        operation.data = operation.dataDescriptor;
+                        operation.data = operation;
 
                         resolve(operation);
                     }
@@ -2182,7 +2222,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                     record.id = uuid.generate();
                 }
 
-                var objectDescriptor = self.objectDescriptorWithModuleId(createOperation.dataDescriptor),
+                var objectDescriptor = createOperation.target,
                     tableName = self.tableForObjectDescriptor(objectDescriptor),
                     schemaName = rawDataOperation.schema,
                     recordKeys = Object.keys(record),
@@ -2263,14 +2303,15 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
             var data = createOperation.data;
 
             if (createOperation.data === createOperation.dataDescriptor) {
-                createOperation.data = this.objectDescriptorWithModuleId(createOperation.dataDescriptor);
+                throw "shouldn't be here";
+                createOperation.data = createOperation.target;
                 return this.handleCreateObjectDescriptorOperation(createOperation);
             } else {
                 var rawDataOperation = {},
-                    objectDescriptor = this.objectDescriptorWithModuleId(createOperation.dataDescriptor);
+                    objectDescriptor = createOperation.target;
 
                 //This adds the right access key, db name. etc... to the RawOperation.
-                this.mapObjectDescriptorToRawOperation(objectDescriptor, rawDataOperation);
+                this.mapOperationToRawOperationConnection(createOperation, rawDataOperation);
 
 
                 var self = this,
@@ -2318,7 +2359,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
             operation.referrerId = createOperation.id;
             operation.clientId = createOperation.clientId;
 
-            operation.dataDescriptor = createOperation.dataDescriptor;
+            operation.target = createOperation.target;
             if (err) {
                 // an error occurred
                 console.log(err, err.stack, rawDataOperation);
@@ -2392,7 +2433,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 self = this,
                 mappingPromise,
                 sql,
-                objectDescriptor = this.objectDescriptorWithModuleId(updateOperation.dataDescriptor),
+                objectDescriptor = updateOperation.target,
                 mapping = objectDescriptor && self.mappingForType(objectDescriptor),
                 criteria = updateOperation.criteria,
                 dataChanges = data,
@@ -2519,12 +2560,12 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                     criteria = updateOperation.criteria,
                     dataChanges = data,
                     changesIterator,
-                    objectDescriptor = this.objectDescriptorWithModuleId(updateOperation.dataDescriptor),
+                    objectDescriptor = updateOperation.target,
                     aProperty, aValue, addedValues, removedValues, aPropertyDescriptor,
                     record = {};
 
                 //This adds the right access key, db name. etc... to the RawOperation.
-                this.mapObjectDescriptorToRawOperation(objectDescriptor, rawDataOperation);
+                this.mapOperationToRawOperationConnection(updateOperation, rawDataOperation);
 
 
 
@@ -2548,7 +2589,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
             var operation = new DataOperation();
             operation.referrerId = updateOperation.id;
             operation.clientId = updateOperation.clientId;
-            operation.dataDescriptor = objectDescriptor.module.id;
+            operation.target = objectDescriptor;
             if (err) {
                 // an error occurred
                 console.log(err, err.stack, rawDataOperation);
@@ -2586,7 +2627,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 sql,
                 criteria = deleteOperation.criteria,
                 dataChanges = data,
-                objectDescriptor = this.objectDescriptorWithModuleId(deleteOperation.dataDescriptor),
+                objectDescriptor = deleteOperation.target,
                 aProperty, aValue, addedValues, removedValues, aPropertyDescriptor,
                 //Now we need to transform the operation into SQL:
                 tableName = this.tableForObjectDescriptor(objectDescriptor),
@@ -2635,12 +2676,12 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 rawDataOperation = {},
                 criteria = deleteOperation.criteria,
                 dataChanges = data,
-                objectDescriptor = this.objectDescriptorWithModuleId(deleteOperation.dataDescriptor),
+                objectDescriptor = deleteOperation.target,
                 aProperty, aValue, addedValues, removedValues, aPropertyDescriptor,
                 record = {};
 
             //This adds the right access key, db name. etc... to the RawOperation.
-            this.mapObjectDescriptorToRawOperation(objectDescriptor, rawDataOperation);
+            this.mapOperationToRawOperationConnection(deleteOperation, rawDataOperation);
 
             rawDataOperation.sql = this._mapDeleteOperationToSQL(deleteOperation, rawDataOperation, record);
             //console.log(sql);
@@ -2658,7 +2699,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
             var operation = new DataOperation();
             operation.referrerId = deleteOperation.id;
             operation.clientId = deleteOperation.clientId;
-            operation.dataDescriptor = objectDescriptor.module.id;
+            operation.target = objectDescriptor;
             if (err) {
                 // an error occurred
                 console.log(err, err.stack, rawDataOperation);
@@ -2681,27 +2722,27 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
             var self = this,
                 rawDataOperation = {},
                 firstObjectDescriptor,
-                //For a transaction, .dataDescriptor holds an array vs a single one.
-                transactionObjectDescriptors = createTransactionOperation.dataDescriptor;
+                //For a transaction, .target holds an array vs a single one.
+                transactionObjectDescriptors = createTransactionOperation.target;
 
             if (!transactionObjectDescriptors || !transactionObjectDescriptors.length) {
                 throw new Error("Phront Service handleCreateTransaction doesn't have ObjectDescriptor info");
             }
 
-            firstObjectDescriptor = this.objectDescriptorWithModuleId(transactionObjectDescriptors[0]);
+            firstObjectDescriptor = transactionObjectDescriptors[0];
 
 
             //This adds the right access key, db name. etc... to the RawOperation.
             //Right now we assume that all ObjectDescriptors in the transaction goes to the same DB
             //If not, it needs to be handled before reaching us with an in-memory transaction,
             //or leveraging some other kind of storage for long-running cases.
-            this.mapObjectDescriptorToRawOperation(firstObjectDescriptor, rawDataOperation);
+            this.mapOperationToRawOperationConnection(createTransactionOperation, rawDataOperation);
 
             return new Promise(function (resolve, reject) {
                 self._rdsDataService.beginTransaction(rawDataOperation, function (err, data) {
                     var operation = new DataOperation();
                     operation.referrerId = createTransactionOperation.id;
-                    operation.dataDescriptor = transactionObjectDescriptors;
+                    operation.target = transactionObjectDescriptors;
                     if (err) {
                         // an error occurred
                         console.log(err, err.stack, rawDataOperation);
@@ -2750,7 +2791,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
 
                         var operation = new DataOperation();
                         operation.referrerId = batchOperation.id;
-                        operation.dataDescriptor = batchOperation.dataDescriptor;
+                        operation.target = batchOperation.target;
                             // an error occurred
                         console.log(err, err.stack, rawDataOperation);
                         operation.type = DataOperation.Type.BatchFailed;
@@ -2809,6 +2850,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 batchedOperations = batchOperation.data.batchedOperations,
                 iOperation, iSQL,
                 batchSQL = "",
+                readOperationType = DataOperation.Type.Read,
                 createOperationType = DataOperation.Type.Create,
                 updateOperationType = DataOperation.Type.Update,
                 deleteOperationType = DataOperation.Type.Delete,
@@ -2818,14 +2860,20 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 rawOperationRecords = [],
                 i, countI, sqlMapPromises = [], iRecord,
                 createdCount = 0,
-                //For a transaction, .dataDescriptor holds an array vs a single one.
-                transactionObjectDescriptors = batchOperation.dataDescriptor;
+                //For a transaction, .target holds an array vs a single one.
+                transactionObjectDescriptors = batchOperation.target;
 
-            if (!transactionObjectDescriptors || !transactionObjectDescriptors.length) {
-                throw new Error("Phront Service handleCreateTransaction doesn't have ObjectDescriptor info");
-            }
+            /*
+                TODO: using firstObjectDescriptor was a workaround for finding which database we should talk to.
+                we need another way anyway
+            */
+            // if (!transactionObjectDescriptors || !transactionObjectDescriptors.length) {
+            //     throw new Error("Phront Service handleCreateTransaction doesn't have ObjectDescriptor info");
+            // }
 
-            firstObjectDescriptor = this.objectDescriptorWithModuleId(transactionObjectDescriptors[0]);
+            // if(transactionObjectDescriptors) {
+            //     firstObjectDescriptor = this.objectDescriptorWithModuleId(transactionObjectDescriptors[0]);
+            // }
 
 
             //This adds the right access key, db name. etc... to the RawOperation.
@@ -2836,13 +2884,17 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 rawDataOperation.transactionId = transactionId;
             }
 
-            this.mapObjectDescriptorToRawOperation(firstObjectDescriptor, rawDataOperation);
+            this.mapOperationToRawOperationConnection(batchOperation, rawDataOperation);
 
             //Now loop on operations and create the matching sql:
             for (i = 0, countI = batchedOperations && batchedOperations.length; (i < countI); i++) {
                 iOperation = batchedOperations[i];
                 iRecord = {};
                 rawOperationRecords[i] = iRecord;
+                // if (iOperation.type === readOperationType) {
+                //     this.handleRead(iOperation);
+                //     // sqlMapPromises.push(Promise.resolve(this.mapReadOperationToRawStatement(iOperation, rawDataOperation)));
+                // } else
                 if (iOperation.type === updateOperationType) {
                     sqlMapPromises.push(this._mapUpdateOperationToSQL(iOperation, rawDataOperation,iRecord ));
                 } else if (iOperation.type === createOperationType) {
@@ -2871,15 +2923,15 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
 
                     for(i=0, startIndex=0, countI = operationSQL.length, lastIndex = countI-1;(i<countI); i++) {
 
-                        if(iBatch.length) {
-                            iBatch += ";\n";
-                        }
                         iStatement = operationSQL[i];
                         if( ((iStatement.length+iBatch.length) > MaxSQLStatementLength) || (i === lastIndex) ) {
 
                             if(i === lastIndex) {
+                                if(iBatch.length) {
+                                    iBatch += ";\n";
+                                }
                                 iBatch += iStatement;
-                                iBatch += ";\n";
+                                iBatch += ";";
                                 endIndex = i;
                             } else {
                                 endIndex = i-1;
@@ -2896,7 +2948,10 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                             iBatch = iStatement;
                             startIndex = i;
                         } else {
-                                iBatch += iStatement;
+                            if(iBatch.length) {
+                                iBatch += ";\n";
+                            }
+                            iBatch += iStatement;
                         }
                     }
 
@@ -2918,7 +2973,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                             // successful response
                             var operation = new DataOperation();
                             operation.referrerId = batchOperation.id;
-                            operation.dataDescriptor = transactionObjectDescriptors;
+                            operation.target = transactionObjectDescriptors;
                             operation.type = DataOperation.Type.BatchCompleted;
 
                             /*
@@ -2997,8 +3052,8 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 rawDataOperation = {},
                 firstObjectDescriptor,
                 transactionId = transactionEndOperation.data.transactionId,
-                //For a transaction, .dataDescriptor holds an array vs a single one.
-                transactionObjectDescriptors = transactionEndOperation.dataDescriptor;
+                //For a transaction, .target holds an array vs a single one.
+                transactionObjectDescriptors = transactionEndOperation.target;
 
             if (!transactionObjectDescriptors || !transactionObjectDescriptors.length) {
                 throw new Error("Phront Service handletransactionEndOperation doesn't have ObjectDescriptor info");
@@ -3015,11 +3070,11 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 rawDataOperation.transactionId = transactionId;
             }
 
-            this.mapObjectDescriptorToRawOperation(firstObjectDescriptor, rawDataOperation);
+            this.mapOperationToRawOperationConnection(transactionEndOperation, rawDataOperation);
 
             //_rdsDataService.commitTransaction & _rdsDataService.rollbackTransaction make sure the param
             //don't have a database nor schema field, so we delete it.
-            //TODO, try to find a way to instruct this.mapObjectDescriptorToRawOperation snot to put them in if we don't want them
+            //TODO, try to find a way to instruct this.mapOperationToRawOperationConnection not to put them in if we don't want them
             delete rawDataOperation.database;
             delete rawDataOperation.schema;
 
@@ -3030,7 +3085,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 self._rdsDataService[method](rawDataOperation, function (err, data) {
                     var operation = new DataOperation();
                     operation.referrerId = transactionEndOperation.id;
-                    operation.dataDescriptor = transactionObjectDescriptors;
+                    operation.target = transactionObjectDescriptors;
                     if (data && transactionId) {
                         data.transactionId = transactionId;
                     }

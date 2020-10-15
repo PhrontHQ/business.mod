@@ -4,9 +4,8 @@
 var Montage = require("montage/core/core").Montage,
 MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
 Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
-DataOperation = require("montage/data/service/data-operation").DataOperation,
-mainService = require("data/main.datareel/main.mjson").montageObject,
-phrontService = mainService.childServices[0],
+// mainService = require("data/main.datareel/main.mjson").montageObject,
+//phrontService = mainService.childServices[0],
 DataOperation = require("montage/data/service/data-operation").DataOperation,
 defaultEventManager = require("montage/core/event/event-manager").defaultEventManager,
 sizeof = require('object-sizeof');
@@ -18,13 +17,24 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
      */
 
     constructor: {
-        value: function OperationCoordinator() {
+        value: function OperationCoordinator(worker) {
             this._serializer = new MontageSerializer().initWithRequire(require);
             this._deserializer = new Deserializer();
 
             this._gatewayClientByClientId = new Map();
 
+            var mainService = worker.mainService;
+            //Do we need to keep a handle on it?
+            this.worker = worker;
+            this.mainService = mainService;
+            this.application = defaultEventManager.application;
+
+            var phrontService = this.mainService.childServices[0];
+
+
             phrontService.operationCoordinator = this;
+            worker.addEventListener(DataOperation.Type.Connect,phrontService,false);
+
             mainService.addEventListener(DataOperation.Type.Read,phrontService,false);
             mainService.addEventListener(DataOperation.Type.Update,phrontService,false);
             mainService.addEventListener(DataOperation.Type.Create,phrontService,false);
@@ -107,16 +117,16 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
 
             //remove _target & _currentTarget as it creates a pbm? and we don't need to send it
             delete operation._currentTarget;
-            delete operation._target;
 
             //We need to assess the size of the data returned.
             //serialize
-            var operationDataKBSize = sizeof(operation) / 1024;
+            var operationSerialization = this._serializer.serializeObject(operation);
+            var operationDataKBSize = sizeof(operationSerialization) / 1024;
             if(operationDataKBSize < this.MAX_PAYLOAD_SIZE) {
                 //console.log("operation size is "+operationDataKBSize);
                 //console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #1 operation.referrerId "+operation.referrerId);
 
-                return this._sendData(undefined, connection, clientId, this._serializer.serializeObject(operation));
+                return this._sendData(undefined, connection, clientId, operationSerialization);
 
                 // return connection
                 // .postToConnection({
@@ -154,7 +164,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
 
                     iReadUpdateOperation = new DataOperation();
                     iReadUpdateOperation.type = DataOperation.Type.ReadUpdate;
-                    iReadUpdateOperation.dataDescriptor = operation.dataDescriptor;
+                    iReadUpdateOperation.target = operation.target;
                     iReadUpdateOperation.criteria = operation.criteria;
                     iReadUpdateOperation.referrerId = operation.referrerId;
 
@@ -241,26 +251,50 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                 module,
                 isSync = true,
                 resultOperationPromise,
-                self = this;
+                self = this,
+                phrontService = this.mainService.childServices[0];
 
             //console.log(serializedOperation);
 
             this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
-            deserializedOperation = this._deserializer.deserializeObject();
+            try {
+                deserializedOperation = this._deserializer.deserializeObject();
+            } catch (ex) {
+                console.error("No deserialization for ",serializedOperation);
+            }
 
-            if(!deserializedOperation.target && deserializedOperation.dataDescriptor) {
-                deserializedOperation.target = mainService.objectDescriptorWithModuleId(deserializedOperation.dataDescriptor);
+            if(deserializedOperation && !deserializedOperation.target && deserializedOperation.dataDescriptor) {
+                deserializedOperation.target = this.mainService.objectDescriptorWithModuleId(deserializedOperation.dataDescriptor);
             }
 
             //Add connection (custom) info the operation:
             // deserializedOperation.connection = gatewayClient;
+
+            /*
+                Sets the whole AWS API Gateway event as the dataOperations's context.
+
+                Reading the stage for example -
+                aDataOperation.context.requestContext.stage
+
+                Can help a DataService address the right resource/database for that stage
+            */
+            deserializedOperation.context = event;
 
             //Set the clientId (in API already)
             deserializedOperation.clientId = event.requestContext.connectionId;
 
             // console.log("OperationCoordinator handleMessage(...)",deserializedOperation);
 
-            if(deserializedOperation.type ===  DataOperation.Type.Read) {
+            return this.handleOperation(deserializedOperation, event, context, callback, gatewayClient);
+        }
+    },
+
+    handleOperation: {
+        value: function(deserializedOperation, event, context, callback, gatewayClient) {
+            var self = this;
+
+            if((deserializedOperation.type ===  DataOperation.Type.Read)
+            || (deserializedOperation.type ===  DataOperation.Type.Connect)) {
                 resultOperationPromise = new Promise(function(resolve,reject) {
                     self._operationPromisesByReferrerId.set(deserializedOperation.id,[resolve,reject]);
                     defaultEventManager.handleEvent(deserializedOperation);

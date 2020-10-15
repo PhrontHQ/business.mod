@@ -206,7 +206,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
 
                     // Needs to make that a separate property so this can be the cover that returns ths
                     // local object as a convenience over doing it with a new dataDescriptorModuleId property
-                    userInputOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                    userInputOperation.target = self.userIdentityDescriptor;
 
                     // This criteria should describe the object for which we need input on with the identifier = ....
                     // Required when for example requesting an update to a passord
@@ -321,7 +321,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
             var dataOperation = new DataOperation();
 
             dataOperation.type = DataOperation.Type.UserAuthenticationCompleted;
-            dataOperation.dataDescriptor = this.userIdentityDescriptor.module.id;
+            dataOperation.target = this.userIdentityDescriptor;
             dataOperation.data = userIdentity;
 
             this.userIdentityDescriptor.dispatchEvent(dataOperation);
@@ -333,7 +333,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
             var dataOperation = new DataOperation();
 
             dataOperation.type = DataOperation.Type.UserAuthenticationFailed;
-            dataOperation.dataDescriptor = this.userIdentityDescriptor.module.id;
+            dataOperation.target = this.userIdentityDescriptor;
             dataOperation.data = userIdentity;
 
             this.userIdentityDescriptor.dispatchEvent(dataOperation);
@@ -427,7 +427,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         if (err.code === "NotAuthorizedException") {
                             var updateOperation = new DataOperation();
                             updateOperation.type = DataOperation.Type.UserAuthenticationFailed;
-                            updateOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                            updateOperation.target = self.userIdentityDescriptor;
                             updateOperation.userMessage = err.message;
                             updateOperation.data = {
                                 "username": undefined,
@@ -442,7 +442,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                                 var validateOperation = new DataOperation();
                                 validateOperation.type = DataOperation.Type.ValidateFailed;
                                 validateOperation.userMessage = "Invalid Verification Code";
-                                validateOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                                validateOperation.target = self.userIdentityDescriptor;
 
                                 /*
                                     this should describe the what the operation applies to
@@ -477,7 +477,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                             dataOperation = new DataOperation();
                             dataOperation.type = DataOperation.Type.ValidateFailed;
                             dataOperation.userMessage = "Invalid MFA Code";
-                            dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                            dataOperation.target = self.userIdentityDescriptor;
                             dataOperation.criteria = new Criteria().initWithExpression("identifier == $", object.dataIdentifier);
                             dataOperation.data = { mfaCode: undefined };
                             reject(dataOperation);
@@ -494,7 +494,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     mfaRequired: function (codeDeliveryDetails) {
                         var updateOperation = new DataOperation();
                         updateOperation.type = DataOperation.Type.Update;
-                        updateOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                        updateOperation.target = self.userIdentityDescriptor;
                         updateOperation.context = {
                             codeDeliveryDetails: codeDeliveryDetails
                         };
@@ -508,9 +508,9 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     newPasswordRequired: function (userAttributes, requiredAttributes) {
                         var updateOperation = new DataOperation();
                         updateOperation.type = DataOperation.Type.Update;
-                        // updateOperation.dataDescriptor = objectDescriptor.module.id;
+                        // updateOperation.target = objectDescriptor;
                         //Hack
-                        updateOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                        updateOperation.target = self.userIdentityDescriptor;
                         //Should be the criteria matching the User
                         //whose password needs to change
                         //updateOperation.criteria = query.criteria;
@@ -586,7 +586,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         } else if (err.code === "InvalidParameterException") {
                             dataOperation = new DataOperation();
                             dataOperation.type = DataOperation.Type.ValidateFailed;
-                            dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                            dataOperation.target = self.userIdentityDescriptor;
                             dataOperation.userMessage = err.message;
                             dataOperation.data = {};
                             if (err.message.indexOf("username") !== -1) {
@@ -620,7 +620,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         } else {
                             dataOperation = new DataOperation();
                             dataOperation.type = DataOperation.Type.Update;
-                            dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                            dataOperation.target = self.userIdentityDescriptor;
                             dataOperation.data = {
                                 accountConfirmationCode: undefined
                             };
@@ -644,7 +644,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         dataOperation = new DataOperation();
                         dataOperation.type = DataOperation.Type.ValidateFailed;
                         dataOperation.userMessage = "Invalid Verification Code";
-                        dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                        dataOperation.target = self.userIdentityDescriptor;
                         dataOperation.criteria = new Criteria().initWithExpression("identifier == $", object.dataIdentifier);
                         dataOperation.data = { accountConfirmationCode: undefined };
                         reject(dataOperation);
@@ -669,7 +669,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     } else {
                         dataOperation = new DataOperation();
                         dataOperation.type = DataOperation.Type.Update;
-                        dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                        dataOperation.target = self.userIdentityDescriptor;
                         dataOperation.data = {
                             "accountConfirmationCode": undefined
                         };
@@ -704,7 +704,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         if (err.code === "InvalidPasswordException") {
                             dataOperation = new DataOperation();
                             dataOperation.type = DataOperation.Type.ValidateFailed;
-                            dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                            dataOperation.target = self.userIdentityDescriptor;
                             dataOperation.userMessage = err.message;
                             dataOperation.data = {
                                 "password": undefined
@@ -713,7 +713,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         } else if (err.code === "NotAuthorizedException") {
                             dataOperation = new DataOperation();
                             dataOperation.type = DataOperation.Type.UserAuthenticationFailed;
-                            dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                            dataOperation.target = self.userIdentityDescriptor;
                             dataOperation.userMessage = err.message;
                             dataOperation.data = {
                                 "username": undefined,
@@ -780,7 +780,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     if (err && err.code === "InvalidParameterException") {
                         dataOperation = new DataOperation();
                         dataOperation.type = DataOperation.Type.ValidateFailed;
-                        dataOperation.dataDescriptor = self.userIdentityDescriptor.module.id;
+                        dataOperation.target = self.userIdentityDescriptor;
                         dataOperation.userMessage = err.message;
                         dataOperation.data = {};
                         dataOperation.data[attributeName] = undefined;

@@ -202,7 +202,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
             iOperation.type = DataOperation.Type.Create;
             iOperation.data = objectDescriptor.module.id;
-            iOperation.dataDescriptor = objectDescriptor.module.id;
+            iOperation.target = objectDescriptor;
 
             var createPromise = new Promise(function(resolve, reject) {
                 iOperation._promiseResolve = resolve;
@@ -354,6 +354,58 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
+/*
+    First shot at batching reads:
+    - Aurora DataAPI doesn't return a result for each select in the bacth, just the firs
+    - handleRead in PhrontService is served by an event now and there's something not square with OperationCoordinator if we use this.handleRead directly - _operationPromisesByReferrerId doesn't have the entry set when it goes through the OperationCoordinator itself. So hanleRead would need to be decoupled.
+    - So our only hope to batch reads is to do an "or" or a in from single values
+    - should we do that transformation in PhrontService, as an implementation detail of a batch of reads, ideally client would batch only reads from the same type knowing wat happens
+    - or should the client make 1 read operation that is an or or in, well a read that involve more? Because each converter think it's doing a fetch, so either way, that promise needs to resolve the individual value matching that criteria of that converter.
+*/
+
+/*
+    _dispatchOperationQueue: {
+        value: []
+    },
+
+    _dispatchOperation: {
+        value: function(operation) {
+            this._pendingOperationById.set(operation.id, operation);
+
+            if(operation.type === DataOperation.Type.Read) {
+                this._dispatchOperationQueue.push(operation);
+
+                if (this._dispatchOperationQueue.length === 1) {
+                    queueMicrotask(() => {
+                        var _operation;
+                        if(this._dispatchOperationQueue.length > 1) {
+                            _operation = new DataOperation();
+                            _operation.type = DataOperation.Type.Batch;
+                            // batchOperation.target= transactionObjecDescriptors,
+                            _operation.data = {
+                                    batchedOperations: this._dispatchOperationQueue
+                            };
+                            this._pendingOperationById.set(_operation.id, _operation);
+                        } else {
+                            _operation = this._dispatchOperationQueue[0];
+                        }
+
+                        var serializedOperation = this._serializer.serializeObject(_operation);
+                        this._socket.send(serializedOperation);
+                        this._dispatchOperationQueue.length = 0;
+
+                    });
+                }
+            } else {
+                var serializedOperation = this._serializer.serializeObject(operation);
+                //console.log("----> send operation "+serializedOperation);
+                this._socket.send(serializedOperation);
+            }
+
+        }
+    },
+    */
+
     rawCriteriaForObject: {
         value: function(object, _objectDescriptor) {
             if(object.dataIdentifier) {
@@ -498,7 +550,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     Another is to serialize the criteria.
                 */
                 readOperation.type = DataOperation.Type.Read;
-                readOperation.dataDescriptor = objectDescriptor.module.id;
+                readOperation.target = objectDescriptor;
                 readOperation.data = {};
 
                 //Need to add a check to see if criteria may have more spefific instructions for "locale".
@@ -981,7 +1033,6 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         createTransaction,
                         createTransactionPromise,
                         transactionObjectDescriptors = new Set(),
-                        transactionObjecDescriptorModuleIds,
                         batchOperation,
                         batchedOperationPromises,
                         dataOperationsByObject = new Map(),
@@ -1055,7 +1106,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     }, function(error) {
                         reject(error);
                     })
-                    .then(function(transactionObjectDescriptors) {
+                    .then(function(_transactionObjectDescriptors) {
                         //Now that all objects are valid we can proceed and kickstart a transaction as it needs to do the round trip
                         //We keep the promise and continue to prepare the work.
                         return self._socketOpenPromise.then(function () {
@@ -1064,7 +1115,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                             createTransaction = new DataOperation();
                             createTransaction.type = DataOperation.Type.CreateTransaction;
-                            createTransaction.dataDescriptor = transactionObjecDescriptorModuleIds = transactionObjectDescriptors.map((objectDescriptor) => {return objectDescriptor.module.id});
+                            createTransaction.target = transactionObjecDescriptors = _transactionObjectDescriptors.map((objectDescriptor) => {return objectDescriptor.module.id});
 
                             _createTransactionPromise = new Promise(function(resolve, reject) {
                                 createTransaction._promiseResolve = resolve;
@@ -1165,7 +1216,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             //We may have some no-op in there as we didn't cacth them...
                             batchOperation = new DataOperation();
                             batchOperation.type = DataOperation.Type.Batch;
-                            batchOperation.dataDescriptor = transactionObjecDescriptorModuleIds,
+                            batchOperation.target = transactionObjecDescriptors,
                             batchOperation.data = {
                                     batchedOperations: batchedOperations,
                                     transactionId: createTransactionCompletedId
@@ -1195,7 +1246,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             //We proceed to commit:
                             performTransactionOperation = new DataOperation();
                             performTransactionOperation.type = DataOperation.Type.PerformTransaction;
-                            performTransactionOperation.dataDescriptor = transactionObjecDescriptorModuleIds,
+                            performTransactionOperation.target = transactionObjecDescriptors,
                             //Not sure we need any data here?
                             //performTransactionOperation.data = batchedOperations;
 
@@ -1221,7 +1272,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                             rollbackTransactionOperation = new DataOperation();
                             rollbackTransactionOperation.type = DataOperation.Type.RollbackTransaction;
-                            rollbackTransactionOperation.dataDescriptor = transactionObjecDescriptorModuleIds,
+                            rollbackTransactionOperation.target = transactionObjecDescriptors,
                             //Not sure we need any data here?
                             // rollbackTransactionOperation.data = batchedOperations;
                             rollbackTransactionOperation.referrerId = createTransaction.id;
@@ -1325,7 +1376,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             };
             while(iObject = iterator.next().value) {
                 iOperation = dataOperationsByObject.get(iObject);
-                iObjectDescriptor = this.objectDescriptorWithModuleId(iOperation.dataDescriptor);
+                iObjectDescriptor = iOperation.target;
                 iDataIdentifier = this.dataIdentifierForTypeRawData(iObjectDescriptor,iOperation.data);
 
                 this.recordSnapshot(iDataIdentifier, iOperation.data);
@@ -1522,7 +1573,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     criteria,
                     i, iValue, countI;
 
-                operation.target = operation.dataDescriptor = objectDescriptor.module.id;
+                operation.target = objectDescriptor;
 
                 operation.type = localOperationType;
 
@@ -1709,7 +1760,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                             if(operation.type === DataOperation.Type.CreateCompleted) {
                                 rawData = operation.data,
-                                objectDescriptor = self.objectDescriptorWithModuleId(operation.dataDescriptor),
+                                objectDescriptor = operation.target,
                                 dataIdentifier = self.dataIdentifierForTypeRawData(objectDescriptor,rawData);
 
                                 //First set what we sent
