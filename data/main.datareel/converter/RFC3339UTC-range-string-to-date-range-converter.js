@@ -3,7 +3,6 @@
  * @requires montage/core/converter/converter
  */
 var Converter = require("montage/core/converter/converter").Converter,
-    CalendarDate = require("montage/core/date/calendar-date").CalendarDate,
     Range = require("montage/core/range").Range,
     PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter = require("./postgresql-ISO8601-date-string-to-date-component-values-callback-converter").PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter,
     singleton;
@@ -73,14 +72,14 @@ var RFC3339UTCRangeStringToDateRangeConverter = exports.RFC3339UTCRangeStringToD
             return v.bounds[0] +
                 (
                     v.begin
-                        ? ((v.begin instanceof CalendarDate)
+                        ? ((typeof v.begin.toJSDate === "function")
                             ? v.begin.toJSDate().toISOString()
                             : v.begin.toISOString())
                         : "-infinity"
                 ) + "," +
                 (
                     v.end
-                        ? ((v.end instanceof CalendarDate)
+                        ? ((typeof v.end.toJSDate === "function")
                             ? v.end.toJSDate().toISOString()
                             : v.end.toISOString())
                         : "infinity"
