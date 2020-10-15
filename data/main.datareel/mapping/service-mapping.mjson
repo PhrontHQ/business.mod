@@ -22,7 +22,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "preWorkDuration","duration","preWorkDuration"
+                "professionalName","professionalShortName","preWorkDuration","duration","preWorkDuration"
             ]
         }
     },
