@@ -85,7 +85,7 @@ describe("PhrontService -Read data from serialized operations", function() {
 
             readOperation = new DataOperation();
             readOperation.type = DataOperation.Type.Read;
-            readOperation.dataDescriptor = objectDescriptor.module.id;
+            readOperation.target = objectDescriptor;
             readOperation.criteria = new Criteria().initWithExpression("id == $", "1f9bd2d1-e120-4214-8ff1-273fd49c3a14");
 
             //Serialize operation
@@ -126,7 +126,7 @@ describe("PhrontService -Read data from serialized operations", function() {
 
         //     readOperation = new DataOperation();
         //     readOperation.type = DataOperation.Type.Read;
-        //     readOperation.dataDescriptor = objectDescriptor.module.id;
+        //     readOperation.target = objectDescriptor;
         //     readOperation.criteria = new Criteria().initWithExpression("id == $", "1f9bd2d1-e120-4214-8ff1-273fd49c3a14");
 
         //     //Serialize operation

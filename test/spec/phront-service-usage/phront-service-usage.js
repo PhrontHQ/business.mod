@@ -81,7 +81,7 @@ exports.promise = new Promise(function(resolve,reject) {
 
                 dataStream.query = serviceQuery;
                 readOperation.type = DataOperation.Type.Read;
-                readOperation.dataDescriptor = serviceDescriptor.module.id;
+                readOperation.target = serviceDescripto;
 
                 phrontClientService._dispatchOperation(readOperation,dataStream);
             */
@@ -99,7 +99,7 @@ exports.promise = new Promise(function(resolve,reject) {
 
             readOperation = new DataOperation();
             readOperation.type = DataOperation.Type.Read;
-            readOperation.dataDescriptor = objectDescriptor.module.id;
+            readOperation.target = objectDescriptor;
             readOperation.criteria = new Criteria().initWithExpression("id == $", "1f9bd2d1-e120-4214-8ff1-273fd49c3a14");
 
             //Serialize operation
@@ -137,7 +137,7 @@ exports.promise = new Promise(function(resolve,reject) {
 
             readOperation = new DataOperation();
             readOperation.type = DataOperation.Type.Read;
-            readOperation.dataDescriptor = objectDescriptor.module.id;
+            readOperation.target = objectDescriptor;
             readOperation.criteria = new Criteria().initWithExpression("id == $", "1f9bd2d1-e120-4214-8ff1-273fd49c3a14");
 
             //Serialize operation
