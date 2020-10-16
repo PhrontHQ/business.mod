@@ -1,0 +1,74 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PersonalRelationship",
+            "propertyDescriptors": [
+                {"@": "firstPerson"},
+                {"@": "firstPersonRelationshipRole"},
+                {"@": "secondPerson"},
+                {"@": "secondPersonRelationshipRole"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/personal-relationship.mjson"
+            },
+            "exportName": "PersonalRelationship",
+            "module": {
+                "%": "data/main.datareel/model/personal-relationship"
+            },
+            "object":{"@": "personal-relationship"},
+            "parent":{"@": "party-party-relationship"}
+        }
+    },
+    "personal-relationship": {
+        "object": "data/main.datareel/model/personal-relationship"
+    },
+    "party-party-relationship": {
+        "object": "data/main.datareel/model/party-party-relationship.mjson"
+    },
+    "firstPerson": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "firstPerson",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "firstPersonRelationships",
+            "valueDescriptor": {"@": "employment_position_descriptor"}
+        }
+    },
+    "employment_position_descriptor": {
+        "object": "data/main.datareel/model/employment-position.mjson"
+    },
+    "firstPersonRelationshipRole": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "firstPersonRelationshipRole",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "role_descriptor"}
+        }
+    },
+    "role_descriptor": {
+        "object": "data/main.datareel/model/role.mjson"
+    },
+    "secondPerson": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "secondPerson",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "secondPersonRelationships",
+            "valueDescriptor": {"@": "employment_position_descriptor"}
+        }
+    },
+    "secondPersonRelationshipRole": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "secondPersonRelationshipRole",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "role_descriptor"}
+       }
+    }
+
+}
