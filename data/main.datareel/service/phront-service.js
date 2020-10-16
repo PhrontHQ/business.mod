@@ -2721,15 +2721,16 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
         value: function (createTransactionOperation) {
             var self = this,
                 rawDataOperation = {},
-                firstObjectDescriptor,
-                //For a transaction, .target holds an array vs a single one.
-                transactionObjectDescriptors = createTransactionOperation.target;
+                // firstObjectDescriptor,
+
+                //For a transaction, .data holds an array of objectdescriptors that will be involved in the trabsaction
+                transactionObjectDescriptors = createTransactionOperation.data;
 
             if (!transactionObjectDescriptors || !transactionObjectDescriptors.length) {
                 throw new Error("Phront Service handleCreateTransaction doesn't have ObjectDescriptor info");
             }
 
-            firstObjectDescriptor = transactionObjectDescriptors[0];
+            // firstObjectDescriptor = transactionObjectDescriptors[0];
 
 
             //This adds the right access key, db name. etc... to the RawOperation.
@@ -2742,7 +2743,9 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 self._rdsDataService.beginTransaction(rawDataOperation, function (err, data) {
                     var operation = new DataOperation();
                     operation.referrerId = createTransactionOperation.id;
-                    operation.target = transactionObjectDescriptors;
+                    //We keep the same
+                    operation.target = createTransactionOperation.target;
+
                     if (err) {
                         // an error occurred
                         console.log(err, err.stack, rawDataOperation);
@@ -2856,7 +2859,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 deleteOperationType = DataOperation.Type.Delete,
                 transactionId = batchOperation.data.transactionId,
                 rawDataOperation = {},
-                firstObjectDescriptor,
+                // firstObjectDescriptor,
                 rawOperationRecords = [],
                 i, countI, sqlMapPromises = [], iRecord,
                 createdCount = 0,
@@ -3050,7 +3053,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
         value: function (transactionEndOperation) {
             var self = this,
                 rawDataOperation = {},
-                firstObjectDescriptor,
+                // firstObjectDescriptor,
                 transactionId = transactionEndOperation.data.transactionId,
                 //For a transaction, .target holds an array vs a single one.
                 transactionObjectDescriptors = transactionEndOperation.target;
@@ -3059,7 +3062,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 throw new Error("Phront Service handletransactionEndOperation doesn't have ObjectDescriptor info");
             }
 
-            firstObjectDescriptor = this.objectDescriptorWithModuleId(transactionObjectDescriptors[0]);
+            // firstObjectDescriptor = this.objectDescriptorWithModuleId(transactionObjectDescriptors[0]);
 
 
             //This adds the right access key, db name. etc... to the RawOperation.

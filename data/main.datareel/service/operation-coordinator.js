@@ -293,6 +293,15 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
         value: function(deserializedOperation, event, context, callback, gatewayClient) {
             var self = this;
 
+            /*
+                Workaround until we get the serialization/deserialization to work with an object passed with a label that is pre-existing and passed to both the serialiaer and deserializer on each side.
+
+                So until then, if target is null, it's meant for the coordinaator, needed for transactions that could contain object descriptors that are handled by different data services and the OperationCoordinator will have to handle that himself first to triage, before distributing to the relevant data services by creating nested transactions with the subset of dataoperations/types they deal with.
+            */
+            if(deserializedOperation.target === null) {
+                deserializedOperation.target = this;
+            }
+
             if((deserializedOperation.type ===  DataOperation.Type.Read)
             || (deserializedOperation.type ===  DataOperation.Type.Connect)) {
                 resultOperationPromise = new Promise(function(resolve,reject) {
