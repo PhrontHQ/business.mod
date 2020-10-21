@@ -1,7 +1,8 @@
 // if(global && typeof global.XMLHttpRequest === undefined) {
 //     global.XMLHttpRequest = require('xhr2');
 // }
-var Montage = require("montage/core/core").Montage,
+var Target = require("montage/core/target").Target,
+
 MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
 Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
 // mainService = require("data/main.datareel/main.mjson").montageObject,
@@ -10,7 +11,7 @@ DataOperation = require("montage/data/service/data-operation").DataOperation,
 defaultEventManager = require("montage/core/event/event-manager").defaultEventManager,
 sizeof = require('object-sizeof');
 
-exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinator.prototype */ {
+exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator.prototype */ {
 
     /***************************************************************************
      * Constructor
@@ -22,6 +23,7 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
             this._deserializer = new Deserializer();
 
             this._gatewayClientByClientId = new Map();
+            this._pendingOperationById = new Map();
 
             var mainService = worker.mainService;
             //Do we need to keep a handle on it?
@@ -40,8 +42,14 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
             mainService.addEventListener(DataOperation.Type.Create,phrontService,false);
             mainService.addEventListener(DataOperation.Type.Delete,phrontService,false);
             mainService.addEventListener(DataOperation.Type.CreateTransaction,phrontService,false);
+            mainService.addEventListener(DataOperation.Type.Batch,phrontService,false);
             mainService.addEventListener(DataOperation.Type.PerformTransaction,phrontService,false);
             mainService.addEventListener(DataOperation.Type.RollbackTransaction,phrontService,false);
+
+            this.addEventListener(DataOperation.Type.CreateTransaction,this,false);
+            this.addEventListener(DataOperation.Type.Batch,this,false);
+            this.addEventListener(DataOperation.Type.PerformTransaction,this,false);
+            this.addEventListener(DataOperation.Type.RollbackTransaction,this,false);
 
             mainService.addEventListener(DataOperation.Type.ReadFailed,this,false);
             mainService.addEventListener(DataOperation.Type.ReadCompleted,this,false);
@@ -53,6 +61,9 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
             mainService.addEventListener(DataOperation.Type.DeleteCompleted,this,false);
             mainService.addEventListener(DataOperation.Type.CreateTransactionFailed,this,false);
             mainService.addEventListener(DataOperation.Type.CreateTransactionCompleted,this,false);
+            mainService.addEventListener(DataOperation.Type.BatchCompleted,this,false);
+            mainService.addEventListener(DataOperation.Type.BatchFailed,this,false);
+            mainService.addEventListener(DataOperation.Type.TransactionUpdated,this,false);
             mainService.addEventListener(DataOperation.Type.PerformTransactionFailed,this,false);
             mainService.addEventListener(DataOperation.Type.PerformTransactionCompleted,this,false);
             mainService.addEventListener(DataOperation.Type.RollbackTransactionFailed,this,false);
@@ -298,12 +309,20 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
 
                 So until then, if target is null, it's meant for the coordinaator, needed for transactions that could contain object descriptors that are handled by different data services and the OperationCoordinator will have to handle that himself first to triage, before distributing to the relevant data services by creating nested transactions with the subset of dataoperations/types they deal with.
             */
-            if(deserializedOperation.target === null) {
+            if(!deserializedOperation.target) {
                 deserializedOperation.target = this;
             }
 
-            if((deserializedOperation.type ===  DataOperation.Type.Read)
-            || (deserializedOperation.type ===  DataOperation.Type.Connect)) {
+            if(
+                (deserializedOperation.type ===  DataOperation.Type.Read) ||
+                (deserializedOperation.type ===  DataOperation.Type.Connect) ||
+                (deserializedOperation.type ===  DataOperation.Type.Create) ||
+                (deserializedOperation.type ===  DataOperation.Type.CreateTransaction) ||
+                (deserializedOperation.type ===  DataOperation.Type.Batch) ||
+                (deserializedOperation.type ===  DataOperation.Type.PerformTransaction) ||
+                (deserializedOperation.type ===  DataOperation.Type.RollbackTransaction) ||
+                (deserializedOperation.type ===  DataOperation.Type.Merge)
+            ) {
                 resultOperationPromise = new Promise(function(resolve,reject) {
                     self._operationPromisesByReferrerId.set(deserializedOperation.id,[resolve,reject]);
                     defaultEventManager.handleEvent(deserializedOperation);
@@ -325,21 +344,21 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
 
                 resultOperationPromise = phrontService.handleDelete(deserializedOperation);
 
-            } else if(deserializedOperation.type ===  DataOperation.Type.CreateTransaction) {
+            // } else if(deserializedOperation.type ===  DataOperation.Type.CreateTransaction) {
 
-                resultOperationPromise = phrontService.handleCreateTransaction(deserializedOperation);
+            //     resultOperationPromise = phrontService.handleCreateTransaction(deserializedOperation);
 
-            } else if(deserializedOperation.type ===  DataOperation.Type.Batch) {
+            // } else if(deserializedOperation.type ===  DataOperation.Type.Batch) {
 
-                resultOperationPromise = phrontService.handleBatch(deserializedOperation);
+            //     resultOperationPromise = phrontService.handleBatch(deserializedOperation);
 
-            } else if(deserializedOperation.type ===  DataOperation.Type.PerformTransaction) {
+            // } else if(deserializedOperation.type ===  DataOperation.Type.PerformTransaction) {
 
-                resultOperationPromise = phrontService.handlePerformTransaction(deserializedOperation);
+            //     resultOperationPromise = phrontService.handlePerformTransaction(deserializedOperation);
 
-            } else if(deserializedOperation.type ===  DataOperation.Type.RollbackTransaction) {
+            // } else if(deserializedOperation.type ===  DataOperation.Type.RollbackTransaction) {
 
-                resultOperationPromise = phrontService.handleRollbackTransaction(deserializedOperation);
+            //     resultOperationPromise = phrontService.handleRollbackTransaction(deserializedOperation);
 
             } else {
                 console.error("OperationCoordinator: not programmed to handle type of operation ",deserializedOperation);
@@ -361,6 +380,259 @@ exports.OperationCoordinator = Montage.specialize(/** @lends OperationCoordinato
                     return self.dispatchOperationToConnectionClientId(operationFailed,gatewayClient,event.requestContext.connectionId);
                     // return self._serializer.serializeObject(operationFailed);
                 });
+            }
+        }
+    },
+
+    handleCreateTransaction: {
+        value: function (createTransactionOperation) {
+            //Need to analyze the array of object descriptors:
+            var objectDescriptorModuleIds = createTransactionOperation.data,
+                i, countI, iObjectDescriptorModuleId, iObjectDescriptor, iObjectDescriptorDataService, iOperation, iObjectDescriptors
+                objectDescriptorByDataService = new Map();
+
+            createTransactionOperation.objectDescriptorByDataService = objectDescriptorByDataService;
+            if(objectDescriptorModuleIds) {
+                for(i=0, countI = objectDescriptorModuleIds.length; (i<countI); i++) {
+                    iObjectDescriptorModuleId = objectDescriptorModuleIds[i];
+
+                    iObjectDescriptor = this.mainService.objectDescriptorWithModuleId(iObjectDescriptorModuleId);
+                    if(!iObjectDescriptor) {
+                        console.warn("Could not find an ObjecDescriptor with moduleId "+iObjectDescriptorModuleId);
+                    } else {
+                        iObjectDescriptorDataService = this.mainService.childServiceForType(iObjectDescriptor);
+                        if(!iObjectDescriptorDataService) {
+                            console.warn("Could not find a DataService for ObjecDescriptor: ",iObjectDescriptor);
+                        } else {
+
+                            iObjectDescriptors = objectDescriptorByDataService.get(iObjectDescriptorDataService);
+                            if(!iObjectDescriptors) {
+                                objectDescriptorByDataService.set(iObjectDescriptorDataService,(iObjectDescriptors = [iObjectDescriptor]));
+                            } else {
+                                iObjectDescriptors.push(iObjectDescriptor);
+                            }
+                        }
+                    }
+                }
+
+
+                this._pendingOperationById.set(createTransactionOperation.id,createTransactionOperation);
+
+                /*
+                    special case, the createTransaction's objectDescriptors are all for the same RawDataService, we re-target
+                */
+                if(objectDescriptorByDataService.size === 1) {
+                    createTransactionOperation.target = iObjectDescriptorDataService;
+
+                    /*
+                        We know who needs it and that the listener implements that method.
+
+                        createTransactionOperation.target.handleCreateTransaction(createTransactionOperation);
+
+                        is a shortcut to
+
+                        defaultEventManager.handleEvent(createTransactionOperation);
+
+                        which itself is a shortcut to
+
+                        createTransactionOperation.target.dispatchEvent(createTransactionOperation);
+                    */
+
+                   createTransactionOperation.target.handleCreateTransaction(createTransactionOperation);
+
+                    /*
+                        The client will get the createtransactioncompleted from the single DataService.
+                        We don't need to stay in the middle.
+                    */
+
+                } else if(objectDescriptorByDataService.size > 1) {
+
+
+                    let nestedCreateTransactionsById,
+                        mapIterator = objectDescriptorByDataService.entries(),
+                        iterationOperation,
+                        mapIteration;
+
+                        createTransactionOperation.nestedCreateTransactionsById = nestedCreateTransactionsById = new Map();
+                        createTransactionOperation.nestedCreateTransactionsFailedOperations = new Set();
+                        createTransactionOperation.nestedCreateTransactionsCompletedOperations = new Set();
+
+                    while ((mapIteration = mapIterator.next().value)) {
+                        iterationOperation = new DataOperation();
+                        iterationOperation.type = DataOperation.Type.CreateTransaction;
+                        iterationOperation.referrerId = createTransactionOperation.id;
+
+                        iterationOperation.target = mapIteration[0];
+                        iterationOperation.data = mapIteration[1];
+
+                        nestedCreateTransactionsById.set(iterationOperation.id,iterationOperation);
+
+                        this._pendingOperationById.set(iterationOperation.id,iterationOperation);
+
+                        /*
+                            iterationOperation.target.handleCreateTransaction(iterationOperation);
+
+                            is a shortcut to
+
+                            defaultEventManager.handleEvent(iterationOperation);
+
+                            which itself is a shortcut to
+
+                            iterationOperation.target.dispatchEvent(iterationOperation);
+                        */
+                        iterationOperation.target.handleCreateTransaction(iterationOperation);
+
+                        /*
+                            We'll also need to know when all of these independent, per-service createTransactions are created.
+                            The operation coordinator listens to operations on mainService where all rawDataServices' operations propagate. So for each createtransactioncompleted operations handled, we need to tally that we received them all, before dispatching ourselves a CreateTransactionCompleted to the client's createTransaction that we initially handled.
+                        */
+
+                    }
+
+                }
+            }
+        }
+    },
+
+    _processCreateTransactionResultOperation: {
+        value: function(createTransactionResultOperation) {
+                //The id of a RawDataService dedicated nested createTransaction
+                var referrerId = createTransactionResultOperation.referrerId,
+                //The RawDataService dedicated nested createTransaction
+                referrer = this._pendingOperationById.get(referrerId),
+                rootCreateTransaction = referrer ? this._pendingOperationById.get(referrer.referrerId) : null;
+
+            return rootCreateTransaction;
+        }
+    },
+
+    handleCreateTransactionFailed: {
+        value: function (createTransactionFailedOperation) {
+            var rootCreateTransaction = this._processCreateTransactionResultOperation(createTransactionFailedOperation);
+
+            rootCreateTransaction.nestedCreateTransactionsFailedOperations.add(createTransactionFailedOperation);
+
+            if(rootCreateTransaction.nestedCreateTransactionsById.size ===
+                (
+                    createTransactionOperation.nestedCreateTransactionsFailedOperations.size +
+                    createTransactionOperation.nestedCreateTransactionsCompletedOperations.size
+                )) {
+                    //Everything is back but some failed.... So we need to send  createTransactionFailed Operation to the client
+
+            }
+        }
+    },
+
+    /*
+
+        wether we had a transaction that was handled by one rawDataService only that we re-targetd to him or we have nested transactions, since we listen for "createTransactions" on mainService, we'll get the bubbling regardless.
+    */
+    handleCreateTransactionCompleted: {
+        value: function (createTransactionCompletedOperation) {
+            var operation,
+                rootCreateTransaction = this._processCreateTransactionResultOperation(createTransactionCompletedOperation);
+
+            if(rootCreateTransaction) {
+                rootCreateTransaction.nestedCreateTransactionsCompletedOperations.add(createTransactionCompletedOperation);
+
+                if(rootCreateTransaction.nestedCreateTransactionsById.size ===
+                    (
+                        createTransactionOperation.nestedCreateTransactionsFailedOperations.size +
+                        createTransactionOperation.nestedCreateTransactionsCompletedOperations.size
+                    )) {
+                    var operation = new DataOperation();
+                    operation.referrerId = rootCreateTransaction.id;
+                    //We keep the same
+                    operation.target = null;
+
+                    if(createTransactionOperation.nestedCreateTransactionsFailedOperations.size === 0) {
+                        //Everything is back and no fail.... So we need to send  createTransactionCompleted Operation to the client
+
+                        operation.type = DataOperation.Type.CreateTransactionCompleted;
+                        operation.data = rootCreateTransaction.data;
+                    } else {
+                        operation.type = DataOperation.Type.CreateTransactionFailed;
+                        operation.data = createTransactionOperation.nestedCreateTransactionsFailedOperations;
+                    }
+                }
+
+            } else {
+                operation = createTransactionCompletedOperation;
+            }
+
+            //To dispatch to client:
+            this.handleEvent(operation);
+
+        }
+    },
+    handleBatch: {
+        value: function (batchOperation) {
+            var rootCreateTransaction =this._pendingOperationById.get(batchOperation.referrerId);
+
+            if(rootCreateTransaction) {
+                if(rootCreateTransaction.nestedCreateTransactionsById) {
+
+                    console.error("Implement OperationCoordinator handleBatch when multiple DataServices are involved");
+
+                } else {
+                    //get the sole DataService involved
+                    var dataService = rootCreateTransaction.objectDescriptorByDataService.keys().next().value;
+
+                    batchOperation.target = dataService;
+
+                    /*
+                        We know who needs it and that the listener implements that method.
+
+                        createTransactionOperation.target.handleCreateTransaction(createTransactionOperation);
+
+                        is a shortcut to
+
+                        defaultEventManager.handleEvent(createTransactionOperation);
+
+                        which itself is a shortcut to
+
+                        createTransactionOperation.target.dispatchEvent(createTransactionOperation);
+                    */
+
+                   batchOperation.target.handleBatch(batchOperation);
+
+                }
+            }
+        }
+    },
+
+    handlePerformTransaction: {
+        value: function (performTransactionOperation) {
+            var rootCreateTransaction =this._pendingOperationById.get(performTransactionOperation.referrerId);
+
+            if(rootCreateTransaction) {
+                if(rootCreateTransaction.nestedCreateTransactionsById) {
+
+                    console.error("Implement OperationCoordinator handlePerformTransaction when multiple DataServices are involved");
+
+                } else {
+                    //get the sole DataService involved
+                    var dataService = rootCreateTransaction.objectDescriptorByDataService.keys().next().value;
+
+                    performTransactionOperation.target = dataService;
+
+                    /*
+                        We know who needs it and that the listener implements that method.
+
+                        createTransactionOperation.target.handleCreateTransaction(createTransactionOperation);
+
+                        is a shortcut to
+
+                        defaultEventManager.handleEvent(createTransactionOperation);
+
+                        which itself is a shortcut to
+
+                        createTransactionOperation.target.dispatchEvent(createTransactionOperation);
+                    */
+
+                   performTransactionOperation.target.handlePerformTransaction(performTransactionOperation);
+
+                }
             }
         }
     }

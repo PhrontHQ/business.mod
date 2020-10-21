@@ -22,6 +22,8 @@ var DataService = require("montage/data/service/data-service").DataService,
     Locale = require("montage/core/locale").Locale,
     PGClass = require("../model/p-g-class").PGClass,
     DataTrigger = require("./data-trigger").DataTrigger,
+    defaultEventManager = require("montage/core/event/event-manager").defaultEventManager,
+
     PhrontClientService;
 
 //Set our DataTrigger custom subclass:
@@ -41,20 +43,6 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
             this.super();
 
-            if( typeof WebSocket !== "undefined") {
-                if(window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
-                    this._socket = new WebSocket("ws://127.0.0.1:7272");
-                } else {
-                    //this._socket = new WebSocket("wss://77mq8uupuc.execute-api.us-west-2.amazonaws.com/dev");
-                    this._socket = new WebSocket("wss://ipa4toy2mc.execute-api.us-west-2.amazonaws.com/prod");
-
-                }
-
-                this._socket.addEventListener("open", this);
-                this._socket.addEventListener("error", this);
-                this._socket.addEventListener("close", this);
-                this._socket.addEventListener("message", this);
-            }
 
 
             this._thenableByOperationId = new Map();
@@ -69,6 +57,73 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             this._deserializer = new Deserializer();
 
             return this;
+        }
+    },
+
+    deserializedFromSerialization: {
+        value: function () {
+            if(!this.connection && this.connectionDescriptor) {
+                if(global.location) {
+                    if(global.location.hostname === "127.0.0.1" || global.location.hostname === "localhost") {
+                        this.connection = this.connectionForIdentifier("dev");
+                    } else {
+                        //Let's try to read the stage from the URL?
+                        for(var i=0, connectionIdentifiers = Object.keys(this.connectionDescriptor), countI = connectionIdentifiers.length, iConnectionIdentifier, iConnection;(i<countI); i++) {
+                            iConnectionIdentifier = connectionIdentifiers[i];
+                            iConnection = this.connectionDescriptor[iConnectionIdentifier];
+
+                            //TOTO: in the URL based on AWS conventions? as a url argument?
+                        }
+
+                        //No environment found, we default to prod
+                        if(!this.connection) {
+                            this.connection = this.connectionForIdentifier("prod");
+                        }
+                                //this._socket = new WebSocket("wss://77mq8uupuc.execute-api.us-west-2.amazonaws.com/dev");
+                        // this._socket = new WebSocket("wss://ipa4toy2mc.execute-api.us-west-2.amazonaws.com/prod");
+                    }
+                } else if(defaultEventManager.application) {
+                    defaultEventManager.application.addEventListener(DataOperation.Type.Connect,this,false);
+                }
+
+            }
+
+            if(this.connection && (typeof WebSocket !== "undefined")) {
+                this._createSocket();
+            }
+
+        }
+    },
+
+    /*
+        TODO: handle switch
+    */
+    _createSocket: {
+        value: function() {
+            this._socket = new WebSocket(this.connection.websocketURL);
+
+            this._socket.addEventListener("open", this);
+            this._socket.addEventListener("error", this);
+            this._socket.addEventListener("close", this);
+            this._socket.addEventListener("message", this);
+
+        }
+    },
+
+    handleConnect: {
+        value: function (connectOperation) {
+            var stage = connectOperation.context.requestContext.stage;
+
+            /*
+                The stage allows us to pick the right Database Connection among the ones we've been told.
+                We only set it once on connect as it's less frequent and it won't change for the duration the lambda will be active.
+            */
+            if(!this.stage) {
+                this.connectionIdentifier = stage;
+            }
+
+            this._createSocket();
+
         }
     },
 
@@ -216,17 +271,17 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
-    handleReadupdate: {
+    handleReadUpdate: {
         value: function (operation) {
             var referrer = operation.referrerId,
             records = operation.data,
             stream = this._thenableByOperationId.get(referrer);
             // if(operation.type === DataOperation.Type.ReadCompleted) {
-            //     console.log("handleReadcompleted  referrerId: ",operation.referrerId, "records.length: ",records.length);
+            //     console.log("handleReadCompleted  referrerId: ",operation.referrerId, "records.length: ",records.length);
             // } else {
-            //     console.log("handleReadupdate  referrerId: ",operation.referrerId, "records.length: ",records.length);
+            //     console.log("handleReadUpdate  referrerId: ",operation.referrerId, "records.length: ",records.length);
             // }
-            //if(operation.type === DataOperation.Type.ReadUpdate) console.log("handleReadupdate  referrerId: ",referrer);
+            //if(operation.type === DataOperation.Type.ReadUpdate) console.log("handleReadUpdate  referrerId: ",referrer);
 
             if(stream) {
                 if(records && records.length > 0) {
@@ -242,20 +297,20 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
-    handleReadcompleted: {
+    handleReadCompleted: {
         value: function (operation) {
-            this.handleReadupdate(operation);
+            this.handleReadUpdate(operation);
             //The read is complete
             var stream = this._thenableByOperationId.get(operation.referrerId);
             this.rawDataDone(stream);
             this._thenableByOperationId.delete(operation.referrerId);
 
-            //console.log("handleReadcompleted -clear _thenableByOperationId- referrerId: ",operation.referrerId);
+            //console.log("handleReadCompleted -clear _thenableByOperationId- referrerId: ",operation.referrerId);
 
         }
     },
 
-    handleReadfailed: {
+    handleReadFailed: {
         value: function (operation) {
             var stream = this._thenableByOperationId.get(operation.referrerId);
             this.rawDataError(stream,operation.data);
@@ -295,14 +350,14 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
-    handleCreatecompleted: {
+    handleCreateCompleted: {
         value: function (operation) {
             this.handleOperationCompleted(operation);
         }
     },
 
 
-    handleUpdatecompleted: {
+    handleUpdateCompleted: {
         value: function (operation) {
             this.handleOperationCompleted(operation);
         }
@@ -855,42 +910,42 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     },
 
 
-    handleCreatetransactioncompleted: {
+    handleCreateTransactionCompleted: {
         value: function (operation) {
             this.handleOperationCompleted(operation);
         }
     },
-    handleCreatetransactionfailed: {
+    handleCreateTransactionFailed: {
         value: function (operation) {
             this.handleOperationFailed(operation);
         }
     },
-    handleBatchcompleted: {
+    handleBatchCompleted: {
         value: function (operation) {
             this.handleOperationCompleted(operation);
         }
     },
-    handleBatchfailed: {
+    handleBatchFailed: {
         value: function (operation) {
             this.handleOperationFailed(operation);
         }
     },
-    handlePerformtransactioncompleted: {
+    handlePerformTransactionCompleted: {
         value: function (operation) {
             this.handleOperationCompleted(operation);
         }
     },
-    handlePerformtransactionfailed: {
+    handlePerformTransactionFailed: {
         value: function (operation) {
             this.handleOperationFailed(operation);
         }
     },
-    handleRollbacktransactioncompleted: {
+    handleRollbackTransactionCompleted: {
         value: function (operation) {
             this.handleOperationCompleted(operation);
         }
     },
-    handleRollbacktransactionfailed: {
+    handleRollbackTransactionFailed: {
         value: function (operation) {
             this.handleOperationFailed(operation);
         }
@@ -1033,6 +1088,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         createTransaction,
                         createTransactionPromise,
                         transactionObjectDescriptors = new Set(),
+                        transactionObjectDescriptorArray,
                         batchOperation,
                         batchedOperationPromises,
                         dataOperationsByObject = new Map(),
@@ -1124,7 +1180,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                                 So until then, if target is null, it's meant for the coordinaator, needed for transactions that could contain object descriptors that are handled by different data services and the OperationCoordinator will have to handle that himself first to triage, before distributing to the relevant data services by creating nested transactions with the subset of dataoperations/types they deal with.
                             */
                             createTransaction.target = null;
-                            createTransaction.data = transactionObjecDescriptors = _transactionObjectDescriptors.map((objectDescriptor) => {return objectDescriptor.module.id});
+                            createTransaction.data = _transactionObjectDescriptors.map((objectDescriptor) => {return objectDescriptor.module.id});
 
                             _createTransactionPromise = new Promise(function(resolve, reject) {
                                 createTransaction._promiseResolve = resolve;
@@ -1225,7 +1281,11 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             //We may have some no-op in there as we didn't cacth them...
                             batchOperation = new DataOperation();
                             batchOperation.type = DataOperation.Type.Batch;
-                            batchOperation.target = transactionObjecDescriptors,
+
+                            //This is to target the OperationCoordinator on the other side
+                            batchOperation.target = null;
+                            //batchOperation.target = (transactionObjectDescriptors.size === 1) ? Array.from(transactionObjectDescriptors)[0] : null;
+                            // batchOperation.target = (transactionObjecDescriptors.length === 1) ? transactionObjecDescriptors[0] : transactionObjecDescriptors;
                             batchOperation.data = {
                                     batchedOperations: batchedOperations,
                                     transactionId: createTransactionCompletedId
@@ -1255,7 +1315,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             //We proceed to commit:
                             performTransactionOperation = new DataOperation();
                             performTransactionOperation.type = DataOperation.Type.PerformTransaction;
-                            performTransactionOperation.target = transactionObjecDescriptors,
+                            performTransactionOperation.target = null,
                             //Not sure we need any data here?
                             //performTransactionOperation.data = batchedOperations;
 
