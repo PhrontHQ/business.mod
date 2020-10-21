@@ -36,7 +36,8 @@
                         "<->": "participationRoleIds",
                         "converter": {"@": "participationRolesConverter"}
                     },
-                    "participationStatus": {"<->": "participationStatus"},
+                    "scheduledParticipationStatus": {"<->": "scheduledParticipationStatus"},
+                    "actualParticipationStatus": {"<->": "actualParticipationStatus"},
                     "eventURL": {
                         "<->": "eventURL",
                         "converter": {"@": "eventURLConverter"}
@@ -103,7 +104,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "participatingParty","scheduledTimeRange","actualTimeRange","children","isBlocking","participation","participationRoles","participationStatus","summary","description","location","isAllDay"
+                "participatingParty","scheduledTimeRange","actualTimeRange","children","isBlocking","participation","participationRoles","scheduledParticipationStatus","actualParticipationStatus", "summary","description","location","isAllDay"
             ]
         }
     },

@@ -11,7 +11,7 @@
                 {"@": "isOrganizer"},
                 {"@": "isResource"},
                 {"@": "isOptional"},
-                {"@": "participationStatus"},
+                {"@": "scheduledParticipationStatus"},
                 {"@": "comment"},
                 {"@": "additionalGuestCount"}
             ],
@@ -99,10 +99,10 @@
             "valueType": "boolean"
         }
     },
-    "participationStatus": {
+    "scheduledParticipationStatus": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "participationStatus",
+            "name": "scheduledParticipationStatus",
             "valueType": "string"
         }
     },

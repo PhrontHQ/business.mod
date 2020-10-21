@@ -139,7 +139,7 @@ exports.Event = Object.specialize(/** @lends Event.prototype */ {
     participationRoles: {
         value: undefined
     },
-    participationStatus: {
+    scheduledParticipationStatus: {
         value: undefined
     },
     eventURL: {

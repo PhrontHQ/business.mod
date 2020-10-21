@@ -13,7 +13,8 @@
                 {"@": "isBlocking"},
                 {"@": "participation"},
                 {"@": "participationRoles"},
-                {"@": "participationStatus"},
+                {"@": "scheduledParticipationStatus"},
+                {"@": "actualParticipationStatus"},
                 {"@": "reminders"},
                 {"@": "eventURL"},
                 {"@": "summary"},
@@ -54,7 +55,8 @@
         "object": "data/main.datareel/model/event",
         "values": {
             "participationEmum": {"=":"@participationEmum"},
-            "participationStatusEmum": {"=":"@participationStatusEmum"}
+            "scheduledParticipationStatusEmum": {"=":"@scheduledParticipationStatusEmum"},
+            "actualParticipationStatusEmum": {"=":"@actualParticipationStatusEmum"}
         }
     },
     "ObjectDescriptor": {
@@ -171,7 +173,7 @@
     "role-descriptor": {
         "object": "data/main.datareel/model/role.mjson"
     },
-    "participationStatusEmum": {
+    "scheduledParticipationStatusEmum": {
         "prototype": "montage/core/enum",
         "values": {
             "members":[
@@ -182,19 +184,43 @@
                 "TentativelyAccepted",
                 "Delegated",
                 "Checked-in",
-                "Cancelled"
+                "Cancelled",
+                "Rescheduled"
             ]
         }
     },
-    "participationStatus": {
+    "scheduledParticipationStatus": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "participationStatus",
+            "name": "scheduledParticipationStatus",
             "valueType": "string",
-            "valueDescriptor": {"@": "participationStatusEmum"},
+            "valueDescriptor": {"@": "scheduledParticipationStatusEmum"},
            "description": "Proposed is to volonteer free time slots that should be picked first preferably. An enum whose values depend on deferent type of events like event (NEEDS-ACTION/ACCEPTED/ DECLINED/TENTATIVELY ACCEPTED/DELEGATED), todo(same as event + COMPLETED/IN-PROCESS), journal (NEEDS-ACTION/ACCEPTED/ DECLINED), alarm?, see https://tools.ietf.org/html/rfc5545#section-3.2.12. We need to add cancelled, which would happen when a root event only"
         }
     },
+    "actualParticipationStatusEmum": {
+        "prototype": "montage/core/enum",
+        "values": {
+            "members":[
+                "Missed",
+                "Checked-in",
+                "Participated",
+                "Delegated",
+                "Cancelled",
+                "Rescheduled"
+            ]
+        }
+    },
+    "actualParticipationStatus": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "actualParticipationStatus",
+            "valueType": "string",
+            "valueDescriptor": {"@": "actualParticipationStatusEmum"},
+           "description": "describes the actual participation status"
+        }
+    },
+
     "reminders": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
