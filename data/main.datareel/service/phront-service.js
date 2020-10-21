@@ -177,58 +177,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     deserializeSelf: {
         value:function (deserializer) {
             this.super(deserializer);
-            var value = deserializer.getProperty("connectionDescriptor");
-
-            if (value) {
-                this._registerConnections(value);
-            }
-
         }
-    },
-    _registeredConnectionsByIdentifier: {
-        value: undefined,
-    },
-
-    /**
-     * Called through MainService when consumer has indicated that he has lost interest in the passed DataStream.
-     * This will allow the RawDataService feeding the stream to take appropriate measures.
-     *
-     * @private
-     * @method
-     * @argument {Array} [connectionDescription] - The different known connections to the database
-     *
-     */
-
-    _registerConnections: {
-        value: function(connectionDescriptor) {
-
-            this._registeredConnectionsByIdentifier = connectionDescriptor;
-
-            for(var i=0, connections = Object.keys(connectionDescriptor), countI = connections.length, iConnection;(i<countI); i++) {
-                iConnectionIdentifier = connections[i];
-                iConnection = connectionDescriptor[iConnectionIdentifier];
-
-                Object.defineProperty(iConnection, "identifier", {
-                    value: iConnectionIdentifier,
-                    enumerable: false,
-                    configurable: true,
-                    writable: true
-                });
-
-                //this._registeredConnectionsByIdentifier.set(iConnectionIdentifier,iConnection);
-            }
-        }
-    },
-
-    connectionForIdentifier: {
-        value: function(connectionIdentifier) {
-            return this._registeredConnectionsByIdentifier[connectionIdentifier];
-            //return this._registeredConnectionsByIdentifier.get(connectionIdentifier);
-        }
-    },
-
-    connection: {
-        value: undefined
     },
 
      //We need a mapping to go from model(schema?)/ObjectDescriptor to schema/table
@@ -325,31 +274,61 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         }
     },
 
-    _stage: {
+    _connection: {
         value: undefined
     },
 
-    stage: {
+    connection: {
         get: function() {
-            return this._stage;
+            return this._connection;
         },
         set: function(value) {
-            this._stage = value;
 
-            /*
-                The region where the database lives is in the resourceArn, no need to add it on top
-            */
-            this.connection = this.connectionForIdentifier(value);
-            if(this.connection) {
-                var region = this.connection.resourceArn.split(":")[3];
+            if(value !== this._connection) {
+                this._connection = value;
 
-                this.__rdsDataService = new AWS.RDSDataService({
-                    apiVersion: '2018-08-01',
-                    region: region
-                });
-            } else {
-                throw "Could not find a database connection for stage - "+value+" -";
+                if(value) {
+                    var region = value.resourceArn.split(":")[3],
+                    profile, owner,
+                    RDSDataServiceOptions =  {
+                        apiVersion: '2018-08-01',
+                        region: region
+                    };
+
+                    if((profile = value.profile)) {
+                        delete value.profile;
+                        Object.defineProperty(value,"profile",{
+                            value: profile,
+                            enumerable: false,
+                            configurable: true,
+                            writable: true
+                        })
+                    }
+
+                    if((owner = value.owner)) {
+                        delete value.owner;
+                        Object.defineProperty(value,"owner",{
+                            value: owner,
+                            enumerable: false,
+                            configurable: true,
+                            writable: true
+                        })
+                    }
+
+
+                    var credentials = new AWS.SharedIniFileCredentials({profile: profile});
+                    //AWS.config.credentials = credentials;
+                    if(credentials) {
+                        RDSDataServiceOptions.credentials = credentials;
+                    }
+
+                    this.__rdsDataService = new AWS.RDSDataService(RDSDataServiceOptions);
+                } else {
+                    throw "Could not find a database connection for stage - "+value+" -";
+                }
+
             }
+
         }
     },
 
@@ -363,7 +342,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 We only set it once on connect as it's less frequent and it won't change for the duration the lambda will be active.
             */
             if(!this.stage) {
-                this.stage = stage;
+                this.connectionIdentifier = stage;
             }
 
         }
@@ -1865,10 +1844,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 propertyDescriptors = Array.from(objectDescriptor.propertyDescriptors),
                 i, countI, iPropertyDescriptor, iPropertyDescriptorValueDescriptor, iDescendantDescriptors, iObjectRule, iRule, iIndex,
                 //Hard coded for now, should be derived from a mapping telling us n which databaseName that objectDescriptor is stored
-                databaseName = "postgres",
+                databaseName = this.connection.database,
                 //Hard coded for now, should be derived from a mapping telling us n which schemaName that objectDescriptor is stored
-                schemaName = "phront",
-                rawDataOperation = this.rawDataOperationForDatabaseSchema(databaseName, schemaName),
+                schemaName = this.connection.schema,
+                rawDataOperation = {},
                 sql = "",
                 indexSQL = "",
                 columnSQL = ',\n',
@@ -1891,8 +1870,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 colunmnIndexStrings = [],
                 propertyValueDescriptor,
                 columnType,
-                owner = "postgres",
-                createTableTemplatePrefix = `CREATE TABLE ${schemaName}."${tableName}"
+                owner = this.connection.owner,
+                createSchema = `CREATE SCHEMA IF NOT EXISTS "${schemaName}";`,
+                createExtensionPgcryptoSchema = `CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA "${schemaName}";   `,
+                createTableTemplatePrefix = `CREATE TABLE "${schemaName}"."${tableName}"
 (
     id uuid NOT NULL DEFAULT phront.gen_random_uuid(),
     CONSTRAINT "${tableName}_pkey" PRIMARY KEY (id)`,
@@ -1905,8 +1886,10 @@ TABLESPACE pg_default;
 
 ALTER TABLE ${schemaName}."${tableName}"
     OWNER to ${owner};
-CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
+CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id);
 `;
+
+            this.mapOperationToRawOperationConnection(dataOperation, rawDataOperation);
 
             // parameters.push({
             //   name:"schema",
@@ -2033,6 +2016,14 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
 
             }
 
+
+            sql += createSchema;
+            /*
+                Creating tables isn't frequent, but we'll need to refactor this so it's one when we programmatically create the database.
+
+                That said, some ObjectDescriptor mappings expect some extensions to be there, like PostGIS, so we'll need to add these dependencies somewhere in teh mapping so we can include them in create extensions here.
+            */
+            sql += createExtensionPgcryptoSchema;
             sql += createTableTemplatePrefix;
 
             if (colunmnStrings.length > 0) {
@@ -2247,10 +2238,13 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                     if(iPropertyDescriptor && iPropertyDescriptor.isLocalizable) {
                         //We need to put the value in the right json structure.
                         if(operationLocales.length === 1) {
-                            language = operationLocales[0].language;
-                            region = operationLocales[0].region;
                             iMappedValue = self.mapPropertyValueToRawTypeExpression(iKey, iValue, iRawType);
-                            iMappedValue = `'{"${language}":{"${region}":${iMappedValue}}}'`;
+                            if(typeof iValue !== "object") {
+                                language = operationLocales[0].language;
+                                region = operationLocales[0].region;
+
+                                iMappedValue = `'{"${language}":{"${region}":${iMappedValue}}}'`;
+                            }
                         }
                         else if(operationLocales.length > 1) {
                             //if more than one locales, then it's a multi-locale structure
@@ -2302,8 +2296,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
         value: function (createOperation) {
             var data = createOperation.data;
 
-            if (createOperation.data === createOperation.dataDescriptor) {
-                throw "shouldn't be here";
+            if (createOperation.data === createOperation.target._montage_metadata.moduleId.removeSuffix(".mjson")) {
                 createOperation.data = createOperation.target;
                 return this.handleCreateObjectDescriptorOperation(createOperation);
             } else {
@@ -2739,7 +2732,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
             //or leveraging some other kind of storage for long-running cases.
             this.mapOperationToRawOperationConnection(createTransactionOperation, rawDataOperation);
 
-            return new Promise(function (resolve, reject) {
+            // return new Promise(function (resolve, reject) {
                 self._rdsDataService.beginTransaction(rawDataOperation, function (err, data) {
                     var operation = new DataOperation();
                     operation.referrerId = createTransactionOperation.id;
@@ -2751,8 +2744,8 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                         console.log(err, err.stack, rawDataOperation);
                         operation.type = DataOperation.Type.CreateTransactionFailed;
                         //Should the data be the error?
-                        operation.data = data;
-                        reject(operation);
+                        operation.data = err;
+                        //reject(operation);
                     }
                     else {
                         // successful response
@@ -2763,11 +2756,14 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                         //What should be the operation's payload ? The Raw Transaction Id?
                         operation.data = data;
 
-                        resolve(operation);
+                        //resolve(operation);
                     }
+
+                    operation.target.dispatchEvent(operation);
+
                 });
 
-            });
+            // });
         }
     },
 
@@ -2910,7 +2906,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                 }
             }
 
-            return Promise.all(sqlMapPromises)
+            /*return */Promise.all(sqlMapPromises)
                 .then(function (operationSQL) {
                     var i, countI, iBatch = "", iStatement,
                     MaxSQLStatementLength = self.MaxSQLStatementLength,
@@ -2976,7 +2972,8 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                             // successful response
                             var operation = new DataOperation();
                             operation.referrerId = batchOperation.id;
-                            operation.target = transactionObjectDescriptors;
+                            //operation.target = transactionObjectDescriptors;
+                            operation.target = batchOperation.target;
                             operation.type = DataOperation.Type.BatchCompleted;
 
                             /*
@@ -3000,11 +2997,14 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                         //}
 
 
+                        operation.target.dispatchEvent(operation);
 
-                        return operation;
+                        //return operation;
 
                     },function(batchFailedOperation) {
-                        return Promise.resolve(batchFailedOperation);
+                        batchFailedOperation.target.dispatchEvent(batchFailedOperation);
+
+                        //return Promise.resolve(batchFailedOperation);
                     });
 
                     /*
@@ -3044,7 +3044,22 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                     */
 
                 }, function (sqlMapError) {
-                    return Promise.reject(sqlMapError);
+                    var operation = new DataOperation();
+                    operation.referrerId = batchOperation.id;
+                    operation.target = batchOperation.target;
+                        // an error occurred
+                    console.log(sqlMapError, sqlMapError.stack, batchOperation);
+                    operation.type = DataOperation.Type.BatchFailed;
+                    //Should the data be the error?
+                    data = {
+                        transactionId: batchOperation.data.transactionId
+                    };
+                    data.error = sqlMapError;
+                    operation.data = data;
+
+                    operation.target.dispatchEvent(operation);
+
+                    //return Promise.reject(sqlMapError);
                 });
         }
     },
@@ -3054,16 +3069,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
             var self = this,
                 rawDataOperation = {},
                 // firstObjectDescriptor,
-                transactionId = transactionEndOperation.data.transactionId,
-                //For a transaction, .target holds an array vs a single one.
-                transactionObjectDescriptors = transactionEndOperation.target;
-
-            if (!transactionObjectDescriptors || !transactionObjectDescriptors.length) {
-                throw new Error("Phront Service handletransactionEndOperation doesn't have ObjectDescriptor info");
-            }
-
-            // firstObjectDescriptor = this.objectDescriptorWithModuleId(transactionObjectDescriptors[0]);
-
+                transactionId = transactionEndOperation.data.transactionId;
 
             //This adds the right access key, db name. etc... to the RawOperation.
             //Right now we assume that all ObjectDescriptors in the transaction goes to the same DB
@@ -3081,14 +3087,14 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
             delete rawDataOperation.database;
             delete rawDataOperation.schema;
 
-            return new Promise(function (resolve, reject) {
+            /* return new Promise(function (resolve, reject) {*/
                 var method = transactionEndOperation.type === DataOperation.Type.PerformTransaction
                     ? "commitTransaction"
                     : "rollbackTransaction";
                 self._rdsDataService[method](rawDataOperation, function (err, data) {
                     var operation = new DataOperation();
                     operation.referrerId = transactionEndOperation.id;
-                    operation.target = transactionObjectDescriptors;
+                    operation.target = transactionEndOperation.target;
                     if (data && transactionId) {
                         data.transactionId = transactionId;
                     }
@@ -3097,8 +3103,8 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                         console.log(err, err.stack, rawDataOperation);
                         operation.type = transactionEndOperation.type === DataOperation.Type.PerformTransaction ? DataOperation.Type.PerformTransactionFailed : DataOperation.Type.RollbackTransactionFailed;
                         //Should the data be the error?
-                        operation.data = data;
-                        resolve(operation);
+                        operation.data = err;
+                        //resolve(operation);
                     }
                     else {
                         // successful response
@@ -3106,23 +3112,26 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${tableName}" (id);
                         //What should be the operation's payload ? The Raw Transaction Id?
                         operation.data = data;
 
-                        resolve(operation);
+                        //resolve(operation);
                     }
+
+                    operation.target.dispatchEvent(operation);
+
                 });
 
-            });
+            /*});*/
         }
     },
 
     handlePerformTransaction: {
         value: function (performTransactionOperation) {
-            return this._handleTransactionEndOperation(performTransactionOperation);
+            /*return */this._handleTransactionEndOperation(performTransactionOperation);
         }
     },
 
     handleRollbackTransaction: {
         value: function (rollbackTransactionOperation) {
-            return this._handleTransactionEndOperation(rollbackTransactionOperation);
+            /*return */this._handleTransactionEndOperation(rollbackTransactionOperation);
         }
     },
 
