@@ -23,7 +23,7 @@
         "object": "data/main.datareel/model/order-transaction"
     },
     "Object": {
-        "object": "data/main.datareel/model/object.mjson"
+        "object": "data/main.datareel/model/data-object.mjson"
     },
     "order": {
         "prototype": "montage/core/meta/property-descriptor",

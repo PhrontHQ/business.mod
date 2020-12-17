@@ -1,9 +1,21 @@
-var Object = require("./object").Object;
+var DataObject = require("./data-object").DataObject;
 
 /**
  * @class Asset
  * Models https://help.shopify.com/en/api/graphql-admin-api/reference/object/image
- * @extends Object
+ * @extends DataObject
+ */
+
+ /*
+    Storing the possibly public URL of an asset served by s3:
+
+    https://stackoverflow.com/questions/44400227/how-to-get-the-url-of-a-file-on-aws-s3-using-aws-sdk
+
+    const getUrlFromBucket=(s3Bucket,fileName)=>{
+    return `https://${s3Bucket.config.params.Bucket}.s3-${s3Bucket.config.region}.amazonaws.com/${fileName}`
+    };
+
+    https://stackoverflow.com/questions/44160422/aws-s3-get-object-using-url
  */
 
 
@@ -67,20 +79,32 @@ https://docs.aws.amazon.com/AmazonS3/latest/dev/VirtualHosting.html#VirtualHosti
 */
 
 
-exports.Asset = Object.specialize(/** @lends Asset.prototype */ {
+exports.Asset = DataObject.specialize(/** @lends Asset.prototype */ {
     constructor: {
         value: function Asset() {
             this.super();
             return this;
         }
     },
-    s3Id: {
+    s3Location: {
         value: undefined
     },
-    altText: {
+    originLocation: {
         value: undefined
     },
-    originalSrc: {
+    description: {
+        value: undefined
+    },
+    s3BucketName: {
+        value: undefined
+    },
+    s3Bucket: {
+        value: undefined
+    },
+    s3ObjectKey: {
+        value: undefined
+    },
+    s3Object: {
         value: undefined
     }
 });

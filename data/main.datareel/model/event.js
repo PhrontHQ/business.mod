@@ -1,9 +1,9 @@
-var Object = require("./object").Object;
+var DataObject = require("./data-object").DataObject;
 
 /**
  * @class Event
  * Models https://help.shopify.com/en/api/graphql-admin-api/reference/object/image
- * @extends Object
+ * @extends DataObject
  */
 
 
@@ -96,12 +96,32 @@ This section specifies additional requirements on the handling of the "PARTSTAT"
 A reschedule occurs when any "DTSTART", "DTEND", "DURATION", "DUE", "RRULE", "RDATE", or "EXDATE" property changes in a calendar component such that existing recurrence instances are impacted by the changes, as shown in the table below. Servers MUST reset the "PARTSTAT" property parameter value of all "ATTENDEE" properties, except the one that corresponds to the "Organizer", to "NEEDS-ACTION" for each calendar component change that causes any instance to be rescheduled.
 
 
+Status, Appointments:
+https://www.hl7.org/fhir/appointment.html
+http://hl7.org/fhir/summary.html
+
+Roles: https://www.hl7.org/fhir/valueset-encounter-participant-type.html
+
+AppointmentStatus:
+https://www.hl7.org/fhir/valueset-appointmentstatus.html
 
 
  */
 
 
-exports.Event = Object.specialize(/** @lends Event.prototype */ {
+/*
+    TODO: the following are aggregate of states amonng all childEvents of the organizer's root one:
+
+    Proposed:	None of the participant(s) have finalized their acceptance of the appointment request, and the start/end time might not be set yet.
+
+    Pending:	Some or all of the participant(s) have not finalized their acceptance of the appointment request.
+
+    Booked:	All participant(s) have been considered and the appointment is confirmed to go ahead at the date/times specified.
+
+*/
+
+
+exports.Event = DataObject.specialize(/** @lends Event.prototype */ {
     constructor: {
         value: function Event() {
             this.super();
@@ -139,7 +159,10 @@ exports.Event = Object.specialize(/** @lends Event.prototype */ {
     participationRoles: {
         value: undefined
     },
-    scheduledParticipationStatus: {
+    participationStatus: {
+        value: undefined
+    },
+    participationStatusLog: {
         value: undefined
     },
     eventURL: {

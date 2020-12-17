@@ -1,0 +1,66 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "PersonalRelationshipDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "firstPerson": {
+                        "<->":"firstPersonId",
+                        "converter": {"@": "firstPersonConverter"}
+                    },
+                    "firstPersonRelationshipRole": {
+                        "<->":"firstPersonRelationshipRoleId",
+                        "converter": {"@": "firstPersonRelationshipRoleConverter"}
+                    },
+                    "secondPerson": {
+                        "<->":"secondPersonId",
+                        "converter": {"@": "secondPersonConverter"}
+                    },
+                    "secondPersonRelationshipRole": {
+                        "<->":"secondPersonRelationshipRoleId",
+                        "converter": {"@": "secondPersonRelationshipRoleConverter"}
+                    }
+
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "firstPerson","secondPerson","firstPersonRelationshipRole"
+            ]
+        }
+    },
+
+    "PersonalRelationshipDescriptor": {
+        "object": "data/main.datareel/model/personal-relationship.mjson"
+    },
+    "firstPersonConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "firstPersonRelationshipRoleConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "secondPersonConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "secondPersonRelationshipRoleConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    }
+
+}

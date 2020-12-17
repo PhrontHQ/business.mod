@@ -1,0 +1,56 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "RespondentQuestionnaireVariableValueDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "respondentQuestionnaire": {
+                        "<->": "respondentQuestionnaireId",
+                        "converter": {"@": "respondentQuestionnaireConverter"}
+                    },
+                    "questionnaireVariable": {
+                        "<->": "questionnaireVariableId",
+                        "converter": {"@": "questionnaireVariableConverter"}
+                    },
+                    "values": {
+                        "<->": "valueIds",
+                        "converter": {"@": "valuesConverter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "respondentQuestionnaire","questionnaireVariable","values"
+            ]
+        }
+    },
+    "RespondentQuestionnaireVariableValueDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-variable-value.mjson"
+    },
+
+    "respondentQuestionnaireConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+    "questionnaireVariableConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+    "valuesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+                "convertExpression": "$.has(id)"
+        }
+    }
+}

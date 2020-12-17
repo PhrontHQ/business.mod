@@ -6,7 +6,9 @@ var PartyPartyRelationship = require("./party-party-relationship").PartyPartyRel
 
 
 exports.EmploymentPositionStaffing = PartyPartyRelationship.specialize(/** @lends EmploymentPositionStaffing.prototype */ {
-
+    title: {
+        value: undefined
+    },
     employmentType: {
         value: undefined
     },

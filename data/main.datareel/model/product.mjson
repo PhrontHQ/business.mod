@@ -18,7 +18,6 @@
                 {"@": "locations"},
                 {"@": "totalInventory"},
                 {"@": "totalVariants"},
-                {"@": "updatedAt"},
                 {"@": "options"},
                 {"@": "orders"},
                 {"@": "tags"}
@@ -39,7 +38,7 @@
     },
 
     "objectDescriptor": {
-        "object": "data/main.datareel/model/object.mjson"
+        "object": "data/main.datareel/model/data-object.mjson"
     },
 
     "name": {
@@ -158,19 +157,12 @@
             "valueType": "number"
         }
     },
-    "updatedAt": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "updatedAt",
-            "valueType": "date"
-        }
-    },
     "locations": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "locations",
             "cardinality": -1,
-            "valueDescriptor": {"@": "address_descriptor"}
+            "valueDescriptor": {"@": "party_address_descriptor"}
         }
     },
     "options": {
@@ -213,8 +205,8 @@
     "variant_descriptor": {
         "object": "data/main.datareel/model/product-variant.mjson"
     },
-    "address_descriptor": {
-        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
+    "party_address_descriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-postal-address.mjson"
     },
     "productOptionDescriptor": {
         "object": "data/main.datareel/model/product-option.mjson"

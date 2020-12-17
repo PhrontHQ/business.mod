@@ -1,0 +1,41 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "DataObjectDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "originId": {"<->": "originId"},
+                    "creationDate": {
+                        "<->": "creationDate",
+                        "converter": {"@": "string-to-date-converter"}
+                    },
+                    "modificationDate": {
+                        "<->": "modificationDate",
+                        "converter": {"@": "string-to-date-converter"}
+                    },
+                    "publicationDate": {
+                        "<->": "publicationDate",
+                        "converter": {"@": "string-to-date-converter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "creationDate","modificationDate"
+            ]
+        }
+    },
+
+    "DataObjectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+
+    "string-to-date-converter": {
+        "prototype": "../converter/ISO-date-string-to-date-converter"
+    }
+}

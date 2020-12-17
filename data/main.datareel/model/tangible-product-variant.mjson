@@ -1,0 +1,55 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "TangibleProductVariant",
+            "propertyDescriptors": [
+                {"@": "product"},
+                {"@": "weight"},
+                {"@": "weightUnit"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/tangible-product-variant.mjson"
+            },
+            "exportName": "TangibleProductVariant",
+            "module": {
+                "%": "data/main.datareel/model/tangible-product-variant"
+            },
+            "object":{"@": "TangibleProductVariant"},
+            "parent":{"@": "ProductVariant"}
+        }
+    },
+    "TangibleProductVariant": {
+        "object": "data/main.datareel/model/tangible-product-variant"
+    },
+    "ProductVariant": {
+        "object": "data/main.datareel/model/product-variant.mjson"
+    },
+    "product": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "product",
+            "cardinality": 1,
+            "inversePropertyName": "variants",
+            "valueDescriptor": {"@": "TangibleProductDescriptor"}
+        }
+    },
+    "weight": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "weight",
+            "valueType": "number"
+        }
+    },
+     "weightUnit": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "weightUnit",
+            "valueType": "string"
+        }
+    },
+    "TangibleProductDescriptor": {
+        "object": "data/main.datareel/model/tangible-product.mjson"
+    }
+
+}

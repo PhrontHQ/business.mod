@@ -1,0 +1,35 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "ContactFormDescriptor"},
+            "objectMapping": {
+                "rules": {
+                    "url": {"<->": "url"},
+                    "formData": {
+                        "<->": "formData",
+                        "converter": {"@": "embedded-value-converter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "url","formData"
+            ]
+        }
+    },
+
+    "ContactFormDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/contact-form.mjson"
+    },
+
+    "embedded-value-converter": {
+        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
+        }
+    }
+
+}

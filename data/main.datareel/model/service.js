@@ -13,16 +13,31 @@ requiredResources: This can be anything from person to tools, to consumable mate
 
 exports.Service = Product.specialize(/** @lends Product.prototype */ {
 
-    preWorkDuration: {
+    professionalName: {
+        value: undefined
+    },
+    professionalShortName: {
+        value: undefined
+    },
+    isEmergencyService: {
+        value: undefined
+    },
+    preparationDuration: {
         value: undefined
     },
     duration: {
         value: undefined
     },
-    postWorkDuration: {
+    recoveryDuration: {
         value: undefined
     },
     requiredResources: {
+        value: undefined
+    },
+    providers: {
+        value: undefined
+    },
+    serviceEngagements: {
         value: undefined
     }
 

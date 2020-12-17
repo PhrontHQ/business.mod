@@ -4,7 +4,6 @@
         "values": {
             "name": "ServiceEngagement",
             "propertyDescriptors": [
-                {"@": "service"},
                 {"@": "serviceVariant"},
                 {"@": "event"},
                 {"@": "participants"},
@@ -37,19 +36,7 @@
         "object": "data/main.datareel/model/service-engagement"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/object.mjson"
-    },
-    "service": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "service",
-            "valueType": "object",
-            "cardinality": 1,
-            "valueDescriptor": {"@": "serviceDescriptor"}
-        }
-    },
-    "serviceDescriptor": {
-        "object": "./service.mjson"
+        "object": "data/main.datareel/model/data-object.mjson"
     },
     "serviceVariant": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -57,11 +44,11 @@
             "name": "serviceVariant",
             "valueType": "object",
             "cardinality": 1,
-            "valueDescriptor": {"@": "ProductVariantDescriptor"}
+            "valueDescriptor": {"@": "ServiceProductVariantDescriptor"}
         }
     },
-    "ProductVariantDescriptor": {
-        "object": "./product-variant.mjson"
+    "ServiceProductVariantDescriptor": {
+        "object": "./service-product-variant.mjson"
     },
     "event": {
         "prototype": "montage/core/meta/property-descriptor",

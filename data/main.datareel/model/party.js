@@ -1,19 +1,40 @@
-var Object = require("./object").Object;
+var DataObject = require("./data-object").DataObject;
 /**
  * @class Party
- * @extends Object
+ * @extends DataObject
  */
 
 
-exports.Party = Object.specialize(/** @lends Party.prototype */ {
+exports.Party = DataObject.specialize(/** @lends Party.prototype */ {
 
     existenceTimeRange: {
         value: undefined
     },
-    contactInformation: {
+    postalAddresses: {
+        value: undefined
+    },
+    emailAddresses: {
+        value: undefined
+    },
+    phoneNumbers: {
+        value: undefined
+    },
+    instantMessageAddresses: {
+        value: undefined
+    },
+    urlAddresses: {
+        value: undefined
+    },
+    contactForms: {
+        value: undefined
+    },
+    socialProfiles: {
         value: undefined
     },
     calendars: {
+        value: undefined
+    },
+    images: {
         value: undefined
     }
 

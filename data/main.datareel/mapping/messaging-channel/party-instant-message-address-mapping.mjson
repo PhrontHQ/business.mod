@@ -1,0 +1,22 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "PartyInstantMessageAddressDescriptor"},
+            "objectMapping": {
+                "rules": {
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+            ]
+        }
+    },
+
+    "PartyInstantMessageAddressDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-instant-message-address.mjson"
+    }
+}

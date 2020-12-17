@@ -1,0 +1,56 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PartyInstantMessageAddress",
+            "propertyDescriptors": [
+                {"@": "party"},
+                {"@": "messagingChannel"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/messaging-channel/party-instant-message-address.mjson"
+            },
+            "exportName": "PartyInstantMessageAddress",
+            "module": {
+                "%": "data/main.datareel/model/messaging-channel/party-instant-message-address"
+            },
+            "modulePrototype":{"@": "PartyInstantMessageAddress"},
+            "object":{"@": "PartyInstantMessageAddress"},
+            "parent":{"@": "PartyMessagingChannelDescriptor"}
+        }
+    },
+    "PartyInstantMessageAddress": {
+        "object": "data/main.datareel/model/messaging-channel/party-instant-message-address"
+    },
+    "PartyMessagingChannelDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-messaging-channel.mjson"
+    },
+
+    "party": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "party",
+            "valueType": "object",
+            "isSearchable": true,
+            "cardinality": 1,
+            "inversePropertyName": "instantMessageAddresses",
+            "valueDescriptor": {"@": "PartyDescriptor"}
+        }
+    },
+    "PartyDescriptor": {
+        "object": "data/main.datareel/model/party.mjson"
+    },
+
+    "messagingChannel": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "messagingChannel",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "InstantMessageAddress"}
+        }
+    },
+    "InstantMessageAddress": {
+        "object": "data/main.datareel/model/messaging-channel/instant-message-address.mjson"
+    }
+}

@@ -372,7 +372,7 @@ function _scheduleDoctorAppointmentsInOfficeHours(aDoctor, persons, bookedPerson
             //console.log("aDoctorEvent.participation === Event.participationEmum.Required is ", aDoctorEvent.participation === Event.participationEmum.Required);
             aDoctorEvent.participation = Event.participationEmum.Required;
             aDoctorEvent.participationRoles = [eventOrganizerRoleInstance];
-            aDoctorEvent.participationStatus === Event.participationStatusEmum.Accepted;
+            aDoctorEvent.participationStatus = Event.participationStatusEmum.Accepted;
 
             //Set the Organizer's event as the one on the serviceEngagement:
             aServiceEngagement.event = aDoctorEvent;

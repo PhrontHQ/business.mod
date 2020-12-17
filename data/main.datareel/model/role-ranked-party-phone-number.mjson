@@ -1,0 +1,64 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "RoleRankedPartyPhoneNumber",
+            "propertyDescriptors": [
+                {"@": "role"},
+                {"@": "ranking"},
+                {"@": "partyPhoneNumber"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/messaging-channel/party-phone-number.mjson"
+            },
+            "exportName": "PartyPhoneNumber",
+            "module": {
+                "%": "data/main.datareel/model/messaging-channel/party-phone-number"
+            },
+            "modulePrototype":{"@": "PartyPhoneNumber"},
+            "object":{"@": "PartyPhoneNumber"},
+            "parent":{"@": "ObjectDescriptor"}
+        }
+    },
+    "RoleRankedPartyPhoneNumber": {
+        "object": "data/main.datareel/model/role-ranked-party-phone-number"
+    },
+    "ObjectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+    "role": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "role",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "role-descriptor"}
+        }
+    },
+    "role-descriptor": {
+        "object": "data/main.datareel/model/role.mjson"
+    },
+
+    "ranking": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "ranking",
+            "valueType": "number"
+        }
+    }
+
+    "partyPhoneNumber": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "partyPhoneNumber",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "PartyPhoneNumberDescriptor"},
+            "isSearchable": true
+        }
+    },
+    "PartyPhoneNumberDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-phone-number.mjson"
+    }
+
+}

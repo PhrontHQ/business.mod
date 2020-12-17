@@ -1,0 +1,72 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Message",
+            "propertyDescriptors": [
+                {"@": "deliveryTimeRange"},
+                {"@": "description"},
+                {"@": "tags"},
+                {"@": "serviceProvider"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/messaging/message.mjson"
+            },
+            "exportName": "MessagingChannel",
+            "module": {
+                "%": "data/main.datareel/model/messaging/message"
+            },
+            "modulePrototype":{"@": "Message"},
+            "object":{"@": "Message"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "Message": {
+        "object": "data/main.datareel/model/messaging/message"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+    "preferredForParties": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "preferredForParties",
+            "valueType": "array",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "PartyDescriptor"},
+            "isSearchable": true
+        }
+    },
+    "PartyDescriptor": {
+        "object": "data/main.datareel/model/party.mjson"
+    },
+    "description": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "description",
+            "isLocalizable": true,
+            "valueType": "string"
+        }
+    },
+    "tags": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "tags",
+            "isLocalizable": true,
+            "cardinality": -1,
+            "valueType": "string"
+        }
+    },
+    "serviceProvider": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "serviceProvider",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "OrganizationDescriptor"}
+        }
+    },
+    "OrganizationDescriptor": {
+        "object": "data/main.datareel/model/organization.mjson"
+    }
+}

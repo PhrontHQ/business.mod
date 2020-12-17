@@ -1,11 +1,11 @@
-var Object = require("./object").Object;
+var DataObject = require("./data-object").DataObject;
 /**
  * @class EmploymentType
- * @extends Object
+ * @extends DataObject
  */
 
 
-exports.EmploymentType = Object.specialize(/** @lends EmploymentType.prototype */ {
+exports.EmploymentType = DataObject.specialize(/** @lends EmploymentType.prototype */ {
 
     name: {
         value: undefined

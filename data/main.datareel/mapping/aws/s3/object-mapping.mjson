@@ -1,0 +1,56 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "Object"},
+            "primaryKeyPropertyDescriptors": [
+                {"@": "Key"}
+            ],
+            "objectMapping": {
+                "rules": {
+                    "key": {"<->": "Key"},
+                    "bucketName": {"<->": "bucketName"},
+                    "contentType": {"<->": "ContentType"},
+                    "contentData": {"<->": "Body"},
+                    "bucket": {
+                        "<->": "bucketName",
+                        "converter": {"@": "bucket-converter"}
+                    },
+                    "modificationDate": {
+                        "<->": "LastModified",
+                        "converter": {"@": "string-to-date-converter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "identifier","contentType","bucket","modificationDate"
+            ]
+        }
+    },
+
+    "Object": {
+        "object": "data/main.datareel/model/aws/s3/object.mjson"
+    },
+    "bucket-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "Bucket == $"
+        }
+    },
+    "string-to-date-converter": {
+        "prototype": "../../../converter/ISO-date-string-to-date-converter"
+    },
+
+    "Key": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "Key",
+            "valueType": "string"
+        }
+    }
+
+}

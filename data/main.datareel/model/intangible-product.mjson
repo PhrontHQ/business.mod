@@ -1,0 +1,55 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "IntangibleProduct",
+            "propertyDescriptors": [
+                 {"@": "variants"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/intangible-product.mjson"
+            },
+            "exportName": "IntangibleProduct",
+            "module": {
+                "%": "data/main.datareel/model/intangible-product"
+            },
+            "object":{"@": "intangible-product"},
+            "parent":{"@": "productObjectDescriptor"},
+            "userInterfaceDescriptorModules": {
+                "*": {
+                    "%": "./intangible-product-ui-descriptor.mjson"
+                },
+                "montage/ui/list-item.reel": {
+                    "%": "./intangible-product-list-item-ui-descriptor.mjson"
+                },
+                "montage/ui/cascading-list.reel": {
+                    "%": "./intangible-product-cascading-list-ui-descriptor.mjson"
+                }
+            }
+
+        }
+    },
+
+    "productObjectDescriptor": {
+        "object": "data/main.datareel/model/product.mjson"
+    },
+
+    "intangible-product": {
+        "object": "data/main.datareel/model/intangible-product"
+    },
+
+    "variants": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "variants",
+            "cardinality": -1,
+            "inversePropertyName": "product",
+            "valueDescriptor": {"@": "variant_descriptor"}
+        }
+    },
+    "variant_descriptor": {
+        "object": "data/main.datareel/model/intangible-product-variant.mjson"
+    }
+
+
+}

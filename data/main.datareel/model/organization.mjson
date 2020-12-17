@@ -6,9 +6,6 @@
             "propertyDescriptors": [
                 {"@": "name"},
                 {"@": "type"},
-                {"@": "email"},
-                {"@": "phone"},
-                {"@": "addresses"},
                 {"@": "parent"},
                 {"@": "suborganizations"},
                 {"@": "tags"},
@@ -66,23 +63,6 @@
             "valueType": "string"
         }
     },
-    "phone": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "phone",
-            "valueType": "string"
-        }
-    },
-    "addresses": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "addresses",
-            "valueType": "array",
-            "cardinality": -1,
-            "valueDescriptor": {"@": "addresses_descriptor"},
-            "isSearchable": true
-       }
-    },
 
     "parent": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -103,11 +83,6 @@
             "valueDescriptor": {"@": "root"}
        }
     },
-
-    "addresses_descriptor": {
-        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
-    },
-
 
     "tags": {
         "prototype": "montage/core/meta/property-descriptor",

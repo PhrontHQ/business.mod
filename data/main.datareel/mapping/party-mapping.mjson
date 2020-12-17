@@ -10,10 +10,19 @@
                         "<->": "existenceTimeRange",
                         "converter": {"@": "string-to-range-converter"}
                     },
-                    "contactInformation": {
-                        "<->":"contactInformationId",
-                        "converter": {"@": "contactInformationConverter"}
+                    "urlAddresses": {
+                        "<->": "urlAddresses"
+                    },
+                    "socialProfiles": {
+                        "<->": "socialProfileIds",
+                        "converter": {"@": "socialProfiles-value-converter"}
+                    },
+                    "images": {
+                        "<->": "imageIds",
+                        "converter": {"@": "imagesConverter"},
+                        "debug":true
                     }
+
                }
             },
             "rawDataMapping": {
@@ -31,10 +40,16 @@
     "string-to-range-converter": {
         "prototype": "../converter/RFC3339UTC-range-string-to-date-range-converter"
     },
-    "contactInformationConverter": {
+    "socialProfiles-value-converter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
+        }
+    },
+    "imagesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
         }
     }
 

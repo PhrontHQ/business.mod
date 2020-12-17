@@ -4,7 +4,13 @@
         "values": {
             "name": "B2CCustomerSupplierRelationship",
             "propertyDescriptors": [
-                {"@": "customer"}
+                {"@": "customer"},
+                {"@": "notes"},
+                {"@": "staffRelationships"},
+                {"@": "responsiblePartyRelationships"},
+                {"@": "customerWantsPhoneReminders"},
+                {"@": "customerWantsEmailReminders"},
+                {"@": "customerWantsSMSReminders"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/b-2-c-customer-supplier-relationship.mjson"
@@ -35,6 +41,63 @@
     },
     "person_descriptor": {
         "object": "data/main.datareel/model/person.mjson"
-    }
+    },
 
+    "notes": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "notes",
+            "valueType": "string"
+        }
+    },
+
+    "staffRelationships": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "staffRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "b2cCustomerRelationships",
+            "valueDescriptor": {"@": "EmploymentPositionStaffingDescriptor"}
+        }
+    },
+    "EmploymentPositionStaffingDescriptor": {
+        "object": "data/main.datareel/model/employment-position-staffing.mjson"
+    },
+
+    "responsiblePartyRelationships": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "responsiblePartyRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "b2cCustomerSupplierRelationship",
+            "valueDescriptor": {"@": "B2CCustomerSupplierResponsiblePartyDescriptor"}
+        }
+    },
+    "B2CCustomerSupplierResponsiblePartyDescriptor": {
+        "object": "data/main.datareel/model/b-2-c-customer-supplier-responsible-party.mjson"
+    },
+
+    "customerWantsPhoneReminders": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "customerWantsPhoneReminders",
+            "valueType": "boolean"
+        }
+    },
+    "customerWantsEmailReminders": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "customerWantsEmailReminders",
+            "valueType": "boolean"
+        }
+    },
+    "customerWantsSMSReminders": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "customerWantsSMSReminders",
+            "valueType": "boolean"
+        }
+    }
 }

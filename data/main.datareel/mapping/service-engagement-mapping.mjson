@@ -6,10 +6,6 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
-                    "service": {
-                        "<->": "serviceId",
-                        "converter": {"@": "serviceToOneConverter"}
-                    },
                     "serviceVariant": {
                         "<->": "serviceVariantId",
                         "converter": {"@": "serviceVariantToOneConverter"}
@@ -25,7 +21,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "service","serviceVariant","event"
+                "serviceVariant","event"
             ]
         }
     },

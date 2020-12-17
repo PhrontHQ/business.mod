@@ -1,8 +1,8 @@
-var Object = require("./object").Object;
+var DataObject = require("./data-object").DataObject;
 
 /**
  * @class OrderTransaction
- * @extends Object
+ * @extends DataObject
  */
 
 
@@ -18,7 +18,7 @@ var kind = [
 ];
 
 
-exports.OrderTransaction = Object.specialize(/** @lends OrderTransaction.prototype */ {
+exports.OrderTransaction = DataObject.specialize(/** @lends OrderTransaction.prototype */ {
 
     order: {
         value: undefined

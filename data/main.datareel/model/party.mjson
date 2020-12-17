@@ -5,8 +5,16 @@
             "name": "Party",
             "propertyDescriptors": [
                 {"@": "existenceTimeRange"},
-                {"@": "contactInformation"},
-                {"@": "calendars"}
+                {"@": "postalAddresses"},
+                {"@": "emailAddresses"},
+                {"@": "phoneNumbers"},
+                {"@": "smsNumbers"},
+                {"@": "instantMessageAddresses"},
+                {"@": "urlAddresses"},
+                {"@": "contactForms"},
+                {"@": "socialProfiles"},
+                {"@": "calendars"},
+                {"@": "images"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/party.mjson"
@@ -23,7 +31,7 @@
         "object": "data/main.datareel/model/party"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/object.mjson"
+        "object": "data/main.datareel/model/data-object.mjson"
     },
     "existenceTimeRange": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -37,16 +45,112 @@
     "range_descriptor": {
         "object": "montage/core/range.mjson"
     },
-    "contactInformation": {
+    "postalAddresses": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "contactInformation",
-            "cardinality": 1,
-            "valueDescriptor": {"@": "contactInformationDescriptor"}
+            "name": "postalAddresses",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "PartyPostalAddressDescriptor"},
+            "inversePropertyName": "party",
+            "isSearchable": true
         }
     },
-    "contactInformationDescriptor": {
-        "object": "data/main.datareel/model/contact-information.mjson"
+    "PartyPostalAddressDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-postal-address.mjson"
+    },
+    "emailAddresses": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "emailAddresses",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "PartyEmailAddressDescriptor"},
+            "inversePropertyName": "party",
+            "isSearchable": true
+        }
+    },
+    "PartyEmailAddressDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-email-address.mjson"
+    },
+    "phoneNumbers": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "phoneNumbers",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "PartyPhoneNumberDescriptor"},
+            "inversePropertyName": "party",
+            "isSearchable": true
+        }
+    },
+    "PartyPhoneNumberDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-phone-number.mjson"
+    },
+
+    "smsNumbers": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "smsNumbers",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "party",
+            "valueDescriptor": {"@": "PartySMSNumberDescriptor"}
+        }
+    },
+    "PartySMSNumberDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-s-m-s-number.mjson"
+    },
+
+    "instantMessageAddresses": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "instantMessageAddresses",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "PartyInstantMessageAddressDescriptor"},
+            "inversePropertyName": "party",
+            "isSearchable": true
+        }
+    },
+    "PartyInstantMessageAddressDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-instant-message-address.mjson"
+    },
+    "contactForms": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "contactForms",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "PartyContactFormDescriptor"},
+            "inversePropertyName": "party",
+            "isSearchable": true
+        }
+    },
+    "urlAddresses": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "urlAddresses",
+            "valueType": "URL",
+            "cardinality": -1,
+            "description": "home pages"
+        }
+    },
+    "PartyContactFormDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-contact-form.mjson"
+    },
+    "socialProfiles": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "socialProfiles",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "SocialProfileFormDescriptor"},
+            "isSearchable": true
+        }
+    },
+    "SocialProfileFormDescriptor": {
+        "object": "data/main.datareel/model/social-profile.mjson"
     },
     "calendars": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -54,11 +158,22 @@
             "name": "calendars",
             "valueType": "object",
             "cardinality": -1,
-            "inversePropertyName": "owner",
             "valueDescriptor": {"@": "calendar_descriptor"}
         }
     },
     "calendar_descriptor": {
         "object": "data/main.datareel/model/calendar.mjson"
+    },
+    "images": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "images",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "image_descriptor"}
+        }
+    },
+    "image_descriptor": {
+        "object": "data/main.datareel/model/image.mjson"
     }
+
 }

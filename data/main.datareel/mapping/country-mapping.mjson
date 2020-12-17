@@ -1,0 +1,45 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "CountryDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "iso3166_1_alpha2Ccode": {"<->": "iso3166_1_alpha2Ccode"},
+                    "iso3166_1_alpha3Ccode": {"<->": "iso3166_1_alpha3Ccode"},
+                    "iso3166_1_numericCode": {"<->": "iso3166_1_numericCode"},
+                    "geometry": {
+                        "<->": "geometry",
+                         "converter": {"@": "geometryConverter"}
+                    },
+                    "officialStateName": {"<->": "officialStateName"},
+                    "name": {"<->": "name"},
+                    "phoneCode": {"<->": "phoneCode"},
+                    "timeZones": {"<->": "timeZones"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "iso3166_1_alpha2Ccode","officialStateName","name","phoneCode"
+            ]
+        }
+    },
+
+    "CountryDescriptor": {
+        "object": "data/main.datareel/model/country.mjson"
+    },
+
+    "geometryConverter": {
+        "prototype": "montage-geo/logic/converter/wkt-to-geometry-converter",
+        "values": {
+            "convertingSRID": "4326",
+            "revertsSRID": true,
+            "convertingGeometryLayout":"XYZ"
+        }
+    }
+
+}

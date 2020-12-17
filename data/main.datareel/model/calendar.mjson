@@ -31,7 +31,7 @@
         "object": "data/main.datareel/model/calendar"
     },
     "Object": {
-        "object": "data/main.datareel/model/object.mjson"
+        "object": "data/main.datareel/model/data-object.mjson"
     },
     "etag": {
         "prototype": "montage/core/meta/property-descriptor",

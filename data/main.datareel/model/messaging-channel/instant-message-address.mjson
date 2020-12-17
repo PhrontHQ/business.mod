@@ -6,8 +6,7 @@
             "name": "InstantMessageAddress",
             "propertyDescriptors": [
                 {"@": "serviceName"},
-                {"@": "userName"},
-                {"@": "provider"}
+                {"@": "userName"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/messaging-channel/instant-message-address.mjson"
@@ -40,18 +39,6 @@
             "name": "userName",
             "valueType": "string"
         }
-    },
-    "provider": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "provider",
-            "valueType": "object",
-            "cardinality": -1,
-            "valueDescriptor": {"@": "OrganizationDescriptor"}
-        }
-    },
-    "OrganizationDescriptor": {
-        "object": "data/main.datareel/model/organization.mjson"
     }
 
 }

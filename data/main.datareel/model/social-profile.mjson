@@ -27,7 +27,7 @@
         "object": "data/main.datareel/model/social-profile"
     },
     "ObjectDescriptor": {
-        "object": "data/main.datareel/model/object.mjson"
+        "object": "data/main.datareel/model/data-object.mjson"
     },
     "serviceName": {
         "prototype": "montage/core/meta/property-descriptor",

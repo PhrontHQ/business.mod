@@ -1,0 +1,93 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PartyMessagingChannel",
+            "propertyDescriptors": [
+                {"@": "party"},
+                {"@": "label"},
+                {"@": "messagingChannel"},
+                {"@": "description"},
+                {"@": "notes"},
+                {"@": "roleRankings"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/messaging-channel/party-messaging-channel.mjson"
+            },
+            "exportName": "PartyMessagingChannel",
+            "module": {
+                "%": "data/main.datareel/model/messaging-channel/party-messaging-channel"
+            },
+            "modulePrototype":{"@": "PartyMessagingChannel"},
+            "object":{"@": "PartyMessagingChannel"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "PartyMessagingChannel": {
+        "object": "data/main.datareel/model/messaging-channel/party-messaging-channel"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+    "party": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "party",
+            "valueType": "object",
+            "isSearchable": true,
+            "cardinality": 1,
+            "valueDescriptor": {"@": "PartyDescriptor"}
+        }
+    },
+    "PartyDescriptor": {
+        "object": "data/main.datareel/model/party.mjson"
+    },
+    "label": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "label",
+            "isLocalizable": true,
+            "valueType": "string"
+       }
+    },
+    "messagingChannel": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "messagingChannel",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "MessagingChannel"}
+        }
+    },
+    "MessagingChannel": {
+        "object": "data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+    },
+    "description": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "description",
+            "cardinality": -1,
+            "valueType": "string"
+        }
+    },
+    "notes": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "notes",
+            "cardinality": -1,
+            "valueType": "string"
+        }
+    },
+    "roleRankings": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "roleRankings",
+            "cardinality": -1,
+            "collectionValueType": "array",
+            "valueDescriptor": {"@": "RoleRankingDescriptor"}
+        }
+    },
+    "RoleRankingDescriptor": {
+        "object": "data/main.datareel/model/role-ranking.mjson"
+    }
+}

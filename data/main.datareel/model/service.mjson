@@ -4,13 +4,7 @@
         "values": {
             "name": "Service",
             "propertyDescriptors": [
-                {"@": "professionalName"},
-                {"@": "professionalShortName"},
-                {"@": "preWorkDuration"},
-                {"@": "duration"},
-                {"@": "postWorkDuration"},
-                {"@": "requiredResources"},
-                {"@": "providers"}
+                {"@": "variants"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/service.mjson"
@@ -44,77 +38,16 @@
         "object": "data/main.datareel/model/service"
     },
 
-    "professionalName": {
+    "variants": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "professionalName",
-            "valueType": "string",
-            "isLocalizable": true
-        }
-    },
-
-    "professionalShortName": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "professionalShortName",
-            "valueType": "string",
-            "isLocalizable": true
-        }
-    },
-
-    "preWorkDuration": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "preWorkDuration",
-            "valueType": "number"
-        }
-    },
-
-    "duration": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "duration",
-            "valueType": "number",
-             "description": "The duration of a service in seconds"
-       }
-    },
-
-    "postWorkDuration": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "postWorkDuration",
-            "valueType": "number"
-        }
-    },
-
-    "requiredResources": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "requiredResources",
+            "name": "variants",
             "cardinality": -1,
-            "valueDescriptor": {"@": "objectDescriptor"}
+            "inversePropertyName": "product",
+            "valueDescriptor": {"@": "variant_descriptor"}
         }
     },
-
-    "objectDescriptor": {
-        "object": "data/main.datareel/model/object.mjson"
-    },
-
-    "providers": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "providers",
-            "valueType": "object",
-            "cardinality": -1,
-            "valueDescriptor": {"@": "personDescriptor"},
-            "inversePropertyName": "services",
-            "description": "Persons prefessionally commpetent to offer this service"
-        }
-    },
-
-    "personDescriptor": {
-        "object": "data/main.datareel/model/person.mjson"
+    "variant_descriptor": {
+        "object": "data/main.datareel/model/service-product-variant.mjson"
     }
-
-
 }

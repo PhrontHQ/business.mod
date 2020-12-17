@@ -34,6 +34,7 @@ function escapeElement (elementRepresentation, quoteCharacter) {
 function arrayString (val, type) {
     var toJSONB = (type === "jsonb"),
         toList = (type === "list"),
+        isTypeCastArray = ( type && type.endsWith("[]") && type.length > 2),
         result = toJSONB
                     ? "'["
                     : toList
@@ -53,13 +54,13 @@ function arrayString (val, type) {
             result += '\\\\x';
             result += iVal.toString('hex');
         } else {
-            if (typeof iVal === 'object' &&toJSONB) {
-                result += prepareValue(iVal);
+            if (typeof iVal === 'object' && toJSONB) {
+                result += prepareValue(iVal, type);
             } else {
                 if(isUUID) {
                     result += prepareValue(iVal);
                 } else {
-                    result += escapeElement(prepareValue(iVal), toList ? "'" : '"' );
+                    result += escapeElement(prepareValue(iVal,type), toList ? "'" : '"' );
                 }
             }
 
@@ -70,6 +71,9 @@ function arrayString (val, type) {
                 : toList
                     ? ")"
                     :"}'";
+    if(isTypeCastArray) {
+        result += `::${type}`;
+    }
     return result;
 }
 
@@ -91,7 +95,11 @@ var prepareValue = function (val, type, seen) {
     if (val instanceof Date) {
         //Hijacking for what we need now as we use timestamp with timezone. Need to be improved to allow other options
         //including original ones.
-        return `'${val.toISOString()}'::timestamptz`;
+        if(type.endsWith("[]")) {
+            return `${val.toISOString()}`;
+        } else {
+            return `'${val.toISOString()}'::timestamptz`;
+        }
 
         //disabled for now
         if (parseInputDatesAsUTC) {
@@ -129,7 +137,11 @@ function prepareObject (val, seen, type) {
 
         return prepareValue(val.toPostgres(prepareValue), seen);
     }
-    return `'${JSON.stringify(val)}'`;
+    if(type === "jsonb") {
+        return  escapeString(JSON.stringify(val), "string");
+    } else {
+        return `'${JSON.stringify(val)}'`;
+    }
 }
 
 function pad (number, digits) {
@@ -199,7 +211,8 @@ function normalizeQueryConfig (config, values, callback) {
 
 function escapeString(str, rawType) {
     let hasBackslash = false;
-    let delimiter = rawType === "jsonb" ? '"' : "'";
+    let isJSONB = rawType === "jsonb";
+    let delimiter = isJSONB ? '' : "'";
     let escaped = delimiter;
     for (let i = 0; i < str.length; i++) {
         const c = str[i];
@@ -216,7 +229,8 @@ function escapeString(str, rawType) {
     if (hasBackslash === true) {
         escaped = 'E' + escaped;
     }
-    return escaped;
+
+    return isJSONB ? JSON.stringify(escaped) : escaped;
 }
 
 module.exports = {

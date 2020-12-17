@@ -122,4 +122,4 @@ exports.LABColor = Color.specialize(/** @lends LABColor.prototype */ {
     }
 });
 
-exports.LAB = Object.specialize(/** @lends Color.prototype */ {
+exports.LAB = DataObject.specialize(/** @lends Color.prototype */ {

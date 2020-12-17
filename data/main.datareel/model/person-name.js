@@ -216,6 +216,16 @@ var PersonName = exports.PersonName = Montage.specialize(/** @lends EventPerson.
         value: undefined
     },
 
+    /**
+     * honorific
+     *
+     *
+     * @property {String}
+     */
+    honorific: {
+        value: undefined
+    },
+
 
     toString: {
         value: function() {

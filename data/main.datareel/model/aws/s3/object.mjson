@@ -1,0 +1,34 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Object",
+            "propertyDescriptors": [
+                {"@": "key"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/aws/s3/object.mjson"
+            },
+            "exportName": "Object",
+            "module": {
+                "%": "data/main.datareel/model/aws/s3/object"
+            },
+            "object":{"@": "Object"},
+            "parent":{"@": "ObjectDescriptor"}
+        }
+    },
+    "Object": {
+        "object": "data/main.datareel/model/aws/s3/object"
+    },
+    "ObjectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+    "key": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "key",
+            "valueType": "string"
+        }
+    }
+
+}

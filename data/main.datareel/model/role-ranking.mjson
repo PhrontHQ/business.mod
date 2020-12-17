@@ -1,0 +1,49 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "RoleRanking",
+            "propertyDescriptors": [
+                {"@": "role"},
+                {"@": "ranking"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/role-ranking.mjson"
+            },
+            "exportName": "RoleRanking",
+            "module": {
+                "%": "data/main.datareel/model/role-ranking"
+            },
+            "modulePrototype":{"@": "RoleRanking"},
+            "object":{"@": "RoleRanking"},
+            "parent":{"@": "ObjectDescriptor"}
+        }
+    },
+    "RoleRanking": {
+        "object": "data/main.datareel/model/role-ranking"
+    },
+    "ObjectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+
+    "role": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "role",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "role-descriptor"}
+        }
+    },
+    "role-descriptor": {
+        "object": "data/main.datareel/model/role.mjson"
+    },
+
+    "ranking": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "ranking",
+            "valueType": "number"
+        }
+    }
+}

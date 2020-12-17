@@ -6,10 +6,13 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
-                    "label": {"<->": "label"},
-                    "preferredForParties": {"<->": "preferredForParties"},
+                   "preferredForParties": {"<->": "preferredForParties"},
                     "description": {"<->": "description"},
-                    "tags": {"<->": "tags"}
+                    "tags": {"<->": "tags"},
+                    "serviceProvider": {
+                        "<->": "serviceProvider",
+                        "converter": {"@": "serviceProviderConverter"}
+                    }
                 }
             },
             "rawDataMapping": {
@@ -17,12 +20,19 @@
                 }
             },
             "requisitePropertyNames": [
-                "label","description","tags"
+                "description","tags","originId","modificationDate"
             ]
         }
     },
 
     "MessagingChannelDescriptor": {
         "object": "data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+    },
+
+    "serviceProviderConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
     }
 }

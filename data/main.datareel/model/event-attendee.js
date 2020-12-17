@@ -3,7 +3,7 @@ var EventPerson = require("./event-person").EventPerson;
 /**
  * @class EventAttendee
  * Models https://help.shopify.com/en/api/graphql-admin-api/reference/object/image
- * @extends Object
+ * @extends DataObject
  */
 
 

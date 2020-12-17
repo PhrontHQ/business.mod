@@ -1,0 +1,145 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "PartyMessagingChannelDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "party": {
+                        "<-": "this",
+                        "converter": {"@": "partyConverter"}
+                    },
+                    "label": {"<->": "label"},
+                    "messagingChannel": {
+                        "<->": "messagingChannelId",
+                         "converter": {"@": "messagingChannelConverter"}
+                    },
+                    "description": {"<->": "description"},
+                    "notes": {"<->": "notes"},
+                    "roleRankings": {
+                        "<->":"roleRankingIds",
+                        "converter": {"@": "roleRankingsConverter"}
+                    }
+
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                    "personId": {
+                        "<-": "party",
+                        "reverter": {"@": "partyConverter"}
+                    },
+                    "resourceId": {
+                        "<-": "party",
+                        "reverter": {"@": "partyConverter"}
+                    },
+                    "organizationId": {
+                        "<-": "party",
+                        "reverter": {"@": "partyConverter"}
+                    },
+                    "employmentPositionStaffingId": {
+                        "<-": "party",
+                        "reverter": {"@": "partyConverter"}
+                    },
+                    "b2cCustomerSupplierRelationshipId": {
+                        "<-": "party",
+                        "reverter": {"@": "partyConverter"}
+                    }
+                }
+            },
+            "requisitePropertyNames": [
+                "party","label","messagingChannel","description","notes"
+            ]
+        }
+    },
+
+    "PartyMessagingChannelDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-messaging-channel.mjson"
+    },
+
+    "personPartyForeignKeyMapping": {
+        "prototype": "montage/data/service/raw-data-type-mapping",
+        "properties": {
+            "type": {"@": "PersonDescriptor"},
+            "expression": "personId.defined()"
+        }
+    },
+    "PersonDescriptor": {
+        "object": "data/main.datareel/model/person.mjson"
+    },
+
+    "organizationPartyForeignKeyMapping": {
+        "prototype": "montage/data/service/raw-data-type-mapping",
+        "properties": {
+            "type": {"@": "OrganizationDescriptor"},
+            "expression": "organizationId.defined()"
+        }
+    },
+    "OrganizationDescriptor": {
+        "object": "data/main.datareel/model/organization.mjson"
+    },
+
+    "resourcePartyForeignKeyMapping": {
+        "prototype": "montage/data/service/raw-data-type-mapping",
+        "properties": {
+            "type": {"@": "ResourceDescriptor"},
+            "expression": "resourceId.defined()"
+        }
+    },
+    "ResourceDescriptor": {
+        "object": "data/main.datareel/model/resource.mjson"
+    },
+
+    "employmentPositionStaffingPartyForeignKeyMapping": {
+        "prototype": "montage/data/service/raw-data-type-mapping",
+        "properties": {
+            "type": {"@": "EmploymentPositionStaffingDescriptor"},
+            "expression": "employmentPositionStaffingId.defined()"
+        }
+    },
+    "EmploymentPositionStaffingDescriptor": {
+        "object": "data/main.datareel/model/employment-position-staffing.mjson"
+    },
+
+    "b2cCustomerSupplierRelationshipDescriptorForeignKeyMapping": {
+        "prototype": "montage/data/service/raw-data-type-mapping",
+        "properties": {
+            "type": {"@": "B2CCustomerSupplierRelationshipDescriptor"},
+            "expression": "b2cCustomerSupplierRelationshipId.defined()"
+        }
+    },
+    "B2CCustomerSupplierRelationshipDescriptor": {
+        "object": "data/main.datareel/model/b-2-c-customer-supplier-relationship.mjson"
+    },
+
+    "partyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $",
+            "foreignDescriptorMappings": [
+                {"@": "personPartyForeignKeyMapping"},
+                {"@": "organizationPartyForeignKeyMapping"},
+                {"@": "resourcePartyForeignKeyMapping"},
+                {"@": "employmentPositionStaffingPartyForeignKeyMapping"},
+                {"@": "b2cCustomerSupplierRelationshipDescriptorForeignKeyMapping"}
+            ]
+        }
+    },
+
+    "messagingChannelConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+    "roleRankingsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }
+    }
+
+
+}

@@ -1,4 +1,4 @@
-var Object = require("./object").Object;
+var DataObject = require("./data-object").DataObject;
 
 /*
 
@@ -10,11 +10,11 @@ MontageCalendar = require("montage/core/date/calendar").Calendar,
 /**
  * @class Calendar
  * Models https://help.shopify.com/en/api/graphql-admin-api/reference/object/image
- * @extends Object
+ * @extends DataObject
  */
 
 
-exports.Calendar = Object.specialize(/** @lends Calendar.prototype */ {
+exports.Calendar = DataObject.specialize(/** @lends Calendar.prototype */ {
     constructor: {
         value: function Calendar() {
             this.super();

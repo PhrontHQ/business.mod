@@ -1,0 +1,91 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ServiceQuestionnaire",
+            "propertyDescriptors": [
+                {"@": "service"},
+                {"@": "questionnaire"},
+                {"@": "rolesRequiredToComplete"},
+                {"@": "rolesOptionalToComplete"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/service-questionnaire.mjson"
+            },
+            "exportName": "ServiceQuestionnaire",
+            "module": {
+                "%": "data/main.datareel/model/service-questionnaire"
+            },
+            "object":{"@": "ServiceQuestionnaire"},
+            "parent":{"@": "ObjectDescriptor"},
+            "userInterfaceDescriptorModules": {
+                "*": {
+                    "%": "./service-ui-descriptor.mjson"
+                },
+                "montage/ui/list-item.reel": {
+                    "%": "./service-list-item-ui-descriptor.mjson"
+                },
+                "montage/ui/cascading-list.reel": {
+                    "%": "./service-cascading-list-ui-descriptor.mjson"
+                }
+            }
+        }
+    },
+
+    "ObjectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+
+    "ServiceQuestionnaire": {
+        "object": "data/main.datareel/model/service-questionnaire"
+    },
+
+    "service": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "service",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "serviceQuestionnaires",
+            "valueDescriptor": {"@": "serviceDescriptor"}
+        }
+    },
+    "serviceDescriptor": {
+        "object": "data/main.datareel/model/service.mjson"
+    },
+
+    "questionnaire": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "questionnaire",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "serviceQuestionnaires",
+            "valueDescriptor": {"@": "serviceDescriptor"}
+        }
+    },
+    "questionnaireDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/questionnaire.mjson"
+    },
+
+    "rolesRequiredToComplete": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "rolesRequiredToComplete",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "roleDescriptor"}
+        }
+    },
+    "rolesOptionalToComplete": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "rolesOptionalToComplete",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "roleDescriptor"}
+        }
+    },
+    "roleDescriptor": {
+        "object": "data/main.datareel/model/role.mjson"
+    }
+
+}

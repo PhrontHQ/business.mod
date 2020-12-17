@@ -1,4 +1,4 @@
-var Object = require("./object").Object,
+var DataObject = require("./data-object").DataObject,
     OrderLineItem = require("./order-line-item").OrderLineItem;
 
 /**
@@ -8,11 +8,22 @@ var Object = require("./object").Object,
 
 
 
-exports.Product = Object.specialize(/** @lends Product.prototype */ {
+exports.Product = DataObject.specialize(/** @lends Product.prototype */ {
 
     name: {
         value: undefined
     },
+
+    /* Backward compatibility */
+    title: {
+        get: function () {
+            return this.name;
+        },
+        set: function (value) {
+            this.name = value;
+        }
+    },
+
     description: {
         value: undefined
     },

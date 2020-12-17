@@ -11,8 +11,6 @@
                 {"@": "selectedOptions"},
                 {"@": "sku"},
                 {"@": "availableForSale"},
-                {"@": "weight"},
-                {"@": "weightUnit"},
                 {"@": "presentmentPrices"}
             ],
             "objectDescriptorModule": {
@@ -30,7 +28,7 @@
         "object": "data/main.datareel/model/product-variant"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/object.mjson"
+        "object": "data/main.datareel/model/data-object.mjson"
     },
     "title": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -85,20 +83,6 @@
             "valueType": "boolean"
         }
     },
-    "weight": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "weight",
-            "valueType": "number"
-        }
-    },
-     "weightUnit": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "weightUnit",
-            "valueType": "string"
-        }
-    },
     "presentmentPrices": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -109,9 +93,6 @@
     },
     "productDescriptor": {
         "object": "data/main.datareel/model/product.mjson"
-    },
-    "ProductVariantPricePair_descriptor": {
-        "object": "data/main.datareel/model/product-variant-price-pair.mjson"
     },
     "image_descriptor": {
         "object": "data/main.datareel/model/image.mjson"

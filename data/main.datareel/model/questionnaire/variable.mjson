@@ -1,0 +1,104 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Variable",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "displayName"},
+                {"@": "type"},
+                {"@": "questionnaires"},
+                {"@": "questions"},
+                {"@": "respondentQuestionnaireVariableValues"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/questionnaire/variable.mjson"
+            },
+            "exportName": "Variable",
+            "module": {
+                "%": "data/main.datareel/model/questionnaire/variable"
+            },
+            "object":{"@": "variable"},
+            "modulePrototype": {"@": "variablePrototype"},
+            "parent":{"@": "objectDescriptor"}
+
+        }
+    },
+    "variable": {
+        "object": "data/main.datareel/model/questionnaire/variable"
+    },
+    "variablePrototype": {
+        "object": "data/main.datareel/model/questionnaire/variable"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "isLocalizable": true,
+            "valueType": "string",
+            "description": "A short, non user-facing name to refer to the variable"
+        }
+    },
+    "displayName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "displayName",
+            "isLocalizable": true,
+            "valueType": "string",
+            "description": "User-facing name of the variable"
+        }
+    },
+    "type": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "type",
+            "valueDescriptor": {"@": "typeDescriptor"}
+        }
+    },
+    "typeDescriptor": {
+        "object": "montage/core/meta/module-object-descriptor.mjson"
+    },
+    "questionnaires": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "questionnaires",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "userContextVariables",
+            "valueDescriptor": {"@": "questionnaireDescriptor"}
+        }
+    },
+    "questionnaireDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/questionnaire.mjson"
+    },
+    "questions": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "questions",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "variables",
+            "valueDescriptor": {"@": "questionDescriptor"}
+        }
+    },
+    "questionDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/question.mjson"
+    },
+    "respondentQuestionnaireVariableValues": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentQuestionnaireVariableValues",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "questionnaireVariable",
+            "valueDescriptor": {"@": "respondentQuestionnaireVariableValuesDescriptor"}
+        }
+    },
+    "respondentQuestionnaireVariableValuesDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-variable-value.mjson"
+    }
+
+}

@@ -1,0 +1,72 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "RespondentQuestionnaireVariableValue",
+            "propertyDescriptors": [
+                {"@": "respondentQuestionnaire"},
+                {"@": "questionnaireVariable"},
+                {"@": "values"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/questionnaire/respondent-questionnaire-variable-value.mjson"
+            },
+            "exportName": "RespondentQuestionnaireVariableValue",
+            "module": {
+                "%": "data/main.datareel/model/questionnaire/respondent-questionnaire-variable-value"
+            },
+            "object": {"@": "respondentQuestionnaireVariableValuePrototype"},
+            "modulePrototype": {"@": "respondentQuestionnaireVariableValuePrototype"},
+            "parent":{"@": "objectDescriptor"}
+
+        }
+    },
+    "respondentQuestionnaireVariableValuePrototype": {
+        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-variable-value"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+
+    "respondentQuestionnaire": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentQuestionnaire",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "respondentQuestionnaireDescriptor"}
+        }
+    },
+    "respondentQuestionnaireDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire.mjson"
+    },
+
+    "questionnaireVariable": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "questionnaireVariable",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "respondentQuestionnaireVariableValues",
+            "valueDescriptor": {"@": "variableDescriptor"}
+        }
+    },
+    "variableDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/variable.mjson"
+    },
+
+    "values": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "values",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "respondentQuestionnaireVariableValues",
+            "valueDescriptor": {"@": "answerDescriptor"}
+        }
+    },
+    "answerDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/answer.mjson"
+    }
+
+}

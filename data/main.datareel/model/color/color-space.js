@@ -1,8 +1,8 @@
-var Object = require("../object").Object;
+var DataObject = require("../data-object").DataObject;
 
 /**
  * @class ColorSpace
- * @extends Object
+ * @extends DataObject
  *
  * TODO: Model API  for parsers from strings, converters?
  * 	ranges per channel, use montage Range: {
@@ -59,7 +59,7 @@ https://github.com/Evercoder/culori/blob/master/src/lab/definition.js
  */
 
 
-exports.ColorSpace = Object.specialize(/** @lends ColorSpace.prototype */ {
+exports.ColorSpace = DataObject.specialize(/** @lends ColorSpace.prototype */ {
 
     name: {
         value: undefined

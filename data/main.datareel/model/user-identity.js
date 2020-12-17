@@ -2,7 +2,7 @@ var Target = require("montage/core/target").Target;
 
 /**
  * @class UserIdentity
- * @extends Object
+ * @extends DataObject
  */
 exports.UserIdentity = Target.specialize(/** @lends UserIdentity.prototype */ {
 

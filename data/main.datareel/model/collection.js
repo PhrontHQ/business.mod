@@ -1,4 +1,4 @@
-var Object = require("./object").Object;
+var DataObject = require("./data-object").DataObject;
 
 /**
  * @class Collection
@@ -7,7 +7,7 @@ var Object = require("./object").Object;
  */
 
 
-exports.Collection = Object.specialize(/** @lends Collection.prototype */ {
+exports.Collection = DataObject.specialize(/** @lends Collection.prototype */ {
 
     title: {
         value: undefined

@@ -4,9 +4,13 @@
         "values": {
             "name": "Asset",
             "propertyDescriptors": [
-                {"@": "s3Id"},
-                {"@": "altText"},
-                {"@": "originalSrc"}
+                {"@": "s3BucketName"},
+                {"@": "s3Bucket"},
+                {"@": "s3ObjectKey"},
+                {"@": "s3Object"},
+                {"@": "description"},
+                {"@": "s3Location"},
+                {"@": "originLocation"}
             ],
             "objectDescriptorModule": {
                 "%":"data/main.datareel/model/asset.mjson"
@@ -24,28 +28,66 @@
         "object": "data/main.datareel/model/asset"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/object.mjson"
+        "object": "data/main.datareel/model/data-object.mjson"
     },
-    "s3Id": {
+    "s3BucketName": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "altText",
+            "name": "s3BucketName",
+            "valueType": "string"
+        }
+    },
+    "s3Bucket": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "s3Bucket",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "BucketDescriptor"}
+       }
+    },
+    "BucketDescriptor": {
+        "object": "data/main.datareel/model/aws/s3/bucket.mjson"
+    },
+
+     "s3ObjectKey": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "s3ObjectKey",
+            "valueType": "string"
+        }
+    },
+    "s3Object": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "s3Object",
+            "valueType": "object",
+            "valueDescriptor": {"@": "S3ObjectDescriptor"}
+        }
+    },
+    "S3ObjectDescriptor": {
+        "object": "data/main.datareel/model/aws/s3/object.mjson"
+    },
+
+    "description": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "description",
             "isLocalizable": true,
             "valueType": "string"
         }
     },
-    "altText": {
+    "s3Location": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "altText",
-            "isLocalizable": true,
-            "valueType": "string"
+            "name": "s3Location",
+            "valueType": "URL"
         }
     },
-    "originalSrc": {
+    "originLocation": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "originalSrc",
+            "name": "originLocation",
             "valueType": "URL"
         }
     }

@@ -13,8 +13,8 @@
                 {"@": "isBlocking"},
                 {"@": "participation"},
                 {"@": "participationRoles"},
-                {"@": "scheduledParticipationStatus"},
-                {"@": "actualParticipationStatus"},
+                {"@": "participationStatus"},
+                {"@": "participationStatusLog"},
                 {"@": "reminders"},
                 {"@": "eventURL"},
                 {"@": "summary"},
@@ -37,7 +37,8 @@
                 {"@": "privateCopy"},
                 {"@": "locked"},
                 {"@": "attachments"},
-                {"@": "serviceEngagement"}
+                {"@": "serviceEngagement"},
+                {"@": "respondentQuestionnaires"}
             ],
             "objectDescriptorModule": {
                 "%":"data/main.datareel/model/event.mjson"
@@ -55,12 +56,11 @@
         "object": "data/main.datareel/model/event",
         "values": {
             "participationEmum": {"=":"@participationEmum"},
-            "scheduledParticipationStatusEmum": {"=":"@scheduledParticipationStatusEmum"},
-            "actualParticipationStatusEmum": {"=":"@actualParticipationStatusEmum"}
+            "participationStatusEmum": {"=":"@participationStatusEmum"}
         }
     },
     "ObjectDescriptor": {
-        "object": "data/main.datareel/model/object.mjson"
+        "object": "data/main.datareel/model/data-object.mjson"
     },
     "participatingParty": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -173,52 +173,62 @@
     "role-descriptor": {
         "object": "data/main.datareel/model/role.mjson"
     },
-    "scheduledParticipationStatusEmum": {
-        "prototype": "montage/core/enum",
-        "values": {
-            "members":[
+
+    "participationStatusKeys": {
+        "value": [
                 "Proposed",
                 "NeedsAction",
                 "Accepted",
                 "Declined",
                 "TentativelyAccepted",
                 "Delegated",
-                "Checked-in",
                 "Cancelled",
-                "Rescheduled"
+                "Waitlisted",
+                "Rescheduled",
+                "Missed",
+                "NoShow",
+                "Arrived",
+                "InvitedIn",
+                "CheckedIn",
+                "InProgress",
+                "Completed",
+                "CheckedOut"
             ]
-        }
     },
-    "scheduledParticipationStatus": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "scheduledParticipationStatus",
-            "valueType": "string",
-            "valueDescriptor": {"@": "scheduledParticipationStatusEmum"},
-           "description": "Proposed is to volonteer free time slots that should be picked first preferably. An enum whose values depend on deferent type of events like event (NEEDS-ACTION/ACCEPTED/ DECLINED/TENTATIVELY ACCEPTED/DELEGATED), todo(same as event + COMPLETED/IN-PROCESS), journal (NEEDS-ACTION/ACCEPTED/ DECLINED), alarm?, see https://tools.ietf.org/html/rfc5545#section-3.2.12. We need to add cancelled, which would happen when a root event only"
-        }
-    },
-    "actualParticipationStatusEmum": {
+    "participationStatusEmum": {
         "prototype": "montage/core/enum",
         "values": {
-            "members":[
-                "Missed",
-                "Checked-in",
-                "Participated",
-                "Delegated",
-                "Cancelled",
-                "Rescheduled"
-            ]
+            "members": {"@": "participationStatusKeys"},
+            "values": {"@": "participationStatusKeys"}
         }
     },
-    "actualParticipationStatus": {
+
+    "participationStatus": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "actualParticipationStatus",
+            "name": "participationStatus",
             "valueType": "string",
-            "valueDescriptor": {"@": "actualParticipationStatusEmum"},
-           "description": "describes the actual participation status"
+            "valueDescriptor": {"@": "participationStatusEmum"},
+           "description": "describes the current actual participation status. 'Proposed' is to volonteer free time slots that should be picked first preferably. An enum whose values depend on deferent type of events like event (NEEDS-ACTION/ACCEPTED/ DECLINED/TENTATIVELY ACCEPTED/DELEGATED), todo(same as event + COMPLETED/IN-PROCESS), journal (NEEDS-ACTION/ACCEPTED/ DECLINED), alarm?, see https://tools.ietf.org/html/rfc5545#section-3.2.12. We need to add cancelled, which would happen when a root event only?"
         }
+    },
+
+    "participationStatusLog": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "participationStatusLog",
+            "keyType": "string",
+            "keyDescriptor": {"@": "participationStatusEmum"},
+            "valueDescriptor": {"@": "DateDescriptor"},
+            "collectionValueType": "map",
+            "cardinality": -1,
+            "isSearchable": true,
+            "description": "stores when actual participation status are met/set"
+        }
+    },
+
+    "DateDescriptor": {
+        "object": "montage/core/date.mjson"
     },
 
     "reminders": {
@@ -261,12 +271,13 @@
         "values": {
             "name": "location",
             "valueType": "object",
-            "valueDescriptor": {"@": "PostalAddressDescriptor"},
+            "valueDescriptor": {"@": "PartyPostalAddressDescriptor"},
+            "inversePropertyName": "hostedEvents",
             "isSearchable": true
         }
     },
-    "PostalAddressDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
+    "PartyPostalAddressDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-postal-address.mjson"
     },
     "color": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -346,7 +357,7 @@
         "values": {
             "name": "attendees",
             "valueType": "array",
-            "definition": "children.map{resource}.filter{.objectDescriptor == @PersonDescriptor}",
+            "definition": "children.map{participatingParty}.filter{.objectDescriptor == @PersonDescriptor}",
             "description": "It's missing the organizer here"
         }
     },
@@ -429,6 +440,17 @@
     },
     "ServiceEngagement": {
         "object": "data/main.datareel/model/service-engagement.mjson"
+    },
+    "respondentQuestionnaires": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentQuestionnaires",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "respondentQuestionnaireDescriptor"}
+        }
+    },
+    "respondentQuestionnaireDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire.mjson"
     }
-
 }

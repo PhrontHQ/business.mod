@@ -1,13 +1,13 @@
-var Object = require("./object").Object;
+var DataObject = require("./data-object").DataObject;
 
 /**
  * @class ProductOption
- * @extends Object
+ * @extends DataObject
  */
 
 
 
-exports.ProductOption = Object.specialize(/** @lends ProductOption.prototype */ {
+exports.ProductOption = DataObject.specialize(/** @lends ProductOption.prototype */ {
 
     name: {
         value: undefined

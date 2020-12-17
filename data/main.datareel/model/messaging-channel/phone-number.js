@@ -3,7 +3,7 @@ var MessagingChannel = require("./messaging-channel").MessagingChannel;
 
 /**
  * @class PhoneNumber
- * @extends Object
+ * @extends DataObject
  * @classdesc Represents a PhoneNumber, in any country.
  *
  * Using https://github.com/paypal/fullstack-phone
@@ -31,6 +31,39 @@ exports.PhoneNumber = MessagingChannel.specialize(/** @lends PhoneNumber.prototy
         value: undefined
     },
     extension: {
+        value: undefined
+    },
+    supportsVoice: {
+        value: undefined
+    },
+    supportsTextMessage: {
+        value: undefined
+    },
+    supportsMultimediaMessage: {
+        value: undefined
+    },
+    supportsiMessage: {
+        value: undefined
+    },
+    supportsRichCommunication: {
+        value: undefined
+    },
+    supportsFax: {
+        value: undefined
+    },
+    isMobile: {
+        value: undefined
+    },
+    supportsVideoConferencing: {
+        value: undefined
+    },
+    supportsPaging: {
+        value: undefined
+    },
+    supportsTextphone: {
+        value: undefined
+    },
+    supportsRealTimeText: {
         value: undefined
     }
 

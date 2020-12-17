@@ -3,7 +3,7 @@ var Asset = require("./asset").Asset;
 /**
  * @class Image
  * Models https://help.shopify.com/en/api/graphql-admin-api/reference/object/image
- * @extends Object
+ * @extends DataObject
  */
 
 

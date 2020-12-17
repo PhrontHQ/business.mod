@@ -27,7 +27,7 @@
         "object": "data/main.datareel/model/contact-information"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/object.mjson"
+        "object": "data/main.datareel/model/data-object.mjson"
     },
     "postalAddresses": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -85,7 +85,7 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "urlAddresses",
-            "valueType": "url",
+            "valueType": "URL",
             "cardinality": -1,
             "description": "home pages"
         }

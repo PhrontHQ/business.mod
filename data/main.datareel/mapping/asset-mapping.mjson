@@ -1,0 +1,51 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "Asset"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "s3Location": {"<->": "s3Location"},
+                    "originLocation": {"<->": "originLocation"},
+                    "description": {"<->": "description"},
+                    "s3BucketName": {"<-": "s3BucketName"},
+                    "s3Bucket": {
+                        "<->": "s3BucketName",
+                        "converter": {"@": "s3BucketForeignKeyConverter"}
+                    },
+                    "s3ObjectKey": {"<-": "s3ObjectKey"},
+                    "s3Object": {
+                        "<->": "{s3BucketName: s3BucketName, s3ObjectKey: s3ObjectKey}",
+                        "converter": {"@": "s3ObjectForeignKeyConverter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                    "s3BucketName": {"<-": "s3BucketName.defined() ? s3BucketName : (s3Bucket.defined() ? s3Bucket.name : null)"},
+                    "s3ObjectKey": {"<-": "s3ObjectKey.defined() ? s3ObjectKey : (s3Object.defined() ? s3Object.key : null)"}
+                }
+            },
+            "requisitePropertyNames": [
+                "s3BucketName","s3ObjectKey","s3Location","originURL","description"
+            ]
+        }
+    },
+
+    "Asset": {
+        "object": "data/main.datareel/model/asset.mjson"
+    },
+    "s3BucketForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "Bucket == $"
+        }
+    },
+    "s3ObjectForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    }
+}

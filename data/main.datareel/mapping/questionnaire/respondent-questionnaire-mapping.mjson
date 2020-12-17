@@ -1,0 +1,87 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "RespondentQuestionnaireDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "respondent": {
+                        "<->": "respondentId",
+                        "converter": {"@": "respondentConverter"}
+                    },
+                    "questionnaire": {
+                        "<->": "questionnaireId",
+                        "converter": {"@": "questionnaireConverter"}
+                    },
+                    "respondentAnswers": {
+                        "<->": "respondentAnswerIds",
+                        "converter": {"@": "respondentAnswersConverter"}
+                    },
+                    "respondentVariableValues": {
+                        "<->": "respondentVariableValueIds",
+                        "converter": {"@": "respondentVariableValuesConverter"}
+                    },
+                    "completionDate": {
+                        "<->": "completionDate",
+                        "converter": {"@": "string-to-date-converter"}
+                    },
+                    "isMandatory": {"<->": "isMandatory"},
+                    "pdfExport": {
+                        "<->": "pdfExportId",
+                        "converter": {"@": "pdfExportConverter"}
+                    },
+                    "notes": {"<->": "notes"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "respondent","questionnaire","respondentAnswers","completionDate", "pdfExport", "notes"
+            ]
+        }
+    },
+    "RespondentQuestionnaireDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire.mjson"
+    },
+
+    "respondentConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "questionnaireConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+    "respondentAnswersConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+                "convertExpression": "$.has(id)"
+        }
+    },
+
+    "respondentVariableValuesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+                "convertExpression": "$.has(id)"
+        }
+    },
+
+    "string-to-date-converter": {
+        "prototype": "../../converter/ISO-date-string-to-date-converter"
+    },
+
+    "pdfExportConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    }
+}

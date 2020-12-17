@@ -93,9 +93,9 @@ describe("Services", function () {
 
         describe("Fetch Services", function () {
 
-            it("Fetch a service by vendor's address city", function () {
-                var servicesCriteria = new Criteria().initWithExpression("vendors.addresses.city == $.city", {
-                    city: "PAPEETE"
+            it("Fetch a service by vendor's address locality", function () {
+                var servicesCriteria = new Criteria().initWithExpression("vendors.addresses.locality == $.locality", {
+                    locality: "PAPEETE"
                 });
 
                 return mainService.fetchData(DataQuery.withTypeAndCriteria(Service,servicesCriteria))

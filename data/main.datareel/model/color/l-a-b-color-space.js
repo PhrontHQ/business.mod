@@ -2,7 +2,7 @@ var ColorSpace = require("./color-space").ColorSpace;
 
 /**
  * @class ColorSpace
- * @extends Object
+ * @extends DataObject
  */
 
  /*

@@ -2,25 +2,39 @@
     "root": {
         "prototype": "montage/data/service/expression-data-mapping",
         "values": {
-            "objectDescriptor": {"@": "AddressDescriptor"},
+            "objectDescriptor": {"@": "PostalAddressDescriptor"},
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
+                    "addressee": {"<->": "addressee"},
                     "name": {"<->": "name"},
                     "firstName": {"<->": "firstName"},
                     "lastName": {"<->": "lastName"},
-                    "phone": {"<->": "phone"},
-                    "company": {"<->": "company"},
-                    "address1": {"<->": "address1"},
-                    "address2": {"<->": "address2"},
-                    "city": {"<->": "city"},
-                    "provinceCode": {"<->": "provinceCode"},
-                    "zip": {"<->": "zip"},
-                    "country": {"<->": "country"},
+                    "phoneNumber": {
+                        "<->": "phoneNumber",
+                        "converter": {"@":"phoneNumberConverter"}
+                    },
+                    "streetAddress": {"<->": "streetAddress"},
+                    "formattedAddressLines": {"<->": "formattedAddressLines"},
+                    "premise": {"<->": "premise"},
+                    "premiseDetails": {"<->": "premiseDetails"},
+                    "thoroughfare": {"<->": "thoroughfare"},
+                    "locality": {"<->": "locality"},
+                    "subLocality": {"<->": "subLocality"},
+                    "administrativeArea": {"<->": "administrativeArea"},
+                    "superAdministrativeArea": {"<->": "superAdministrativeArea"},
+                    "subAdministrativeArea": {"<->": "subAdministrativeArea"},
+                    "primaryPostalCode": {"<->": "primaryPostalCode"},
+                    "secondaryPostalCode": {"<->": "secondaryPostalCode"},
+                    "country": {
+                        "<->": "country",
+                        "converter": {"@":"countryConverter"}
+                    },
                     "location": {
                         "<->": "location",
                          "converter": {"@": "locationConverter"}
-                    }
+                    },
+                    "timeZone": {"<->": "timeZone"}
                 }
             },
             "rawDataMapping": {
@@ -28,19 +42,34 @@
                 }
             },
             "requisitePropertyNames": [
-               "name", "firstName","lastName","phone","company","address1","address2","city","provinceCode","zip","country","location"
+               "addressee", "phoneNumber","formattedAddressLines","premise","streetAddress", "locality","subLocality","administrativeArea","primaryPostalCode","country","location","timeZone"
             ]
         }
     },
 
-    "AddressDescriptor": {
+    "PostalAddressDescriptor": {
         "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
+    },
+
+    "phoneNumberConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+    "countryConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
     },
 
     "locationConverter": {
         "prototype": "montage-geo/logic/converter/wkt-to-geometry-converter",
         "values": {
             "convertingSRID": "4326",
+            "revertsSRID": true,
             "convertingGeometryLayout":"XYZ"
         }
     }

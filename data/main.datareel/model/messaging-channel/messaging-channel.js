@@ -1,8 +1,8 @@
-var Object = require("../object").Object;
+var DataObject = require("../data-object").DataObject;
 
 /**
  * @class MessagingChannel
- * @extends Object
+ * @extends DataObject
  *
  * A way to reach someone:
  *  - a postal address,
@@ -16,7 +16,7 @@ var Object = require("../object").Object;
  */
 
 
-exports.MessagingChannel = Object.specialize(/** @lends MessagingChannel.prototype */ {
+exports.MessagingChannel = DataObject.specialize(/** @lends MessagingChannel.prototype */ {
     constructor: {
         value: function MessagingChannel() {
             this.super();

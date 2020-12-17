@@ -1,8 +1,8 @@
-var Object = require("./object").Object;
+var DataObject = require("./data-object").DataObject;
 
 /**
  * @class Role
- * @extends Object
+ * @extends DataObject
  */
 
  /*
@@ -52,7 +52,7 @@ Work Relations:
 */
 
 
-exports.Role = Object.specialize(/** @lends Role.prototype */ {
+exports.Role = DataObject.specialize(/** @lends Role.prototype */ {
     constructor: {
         value: function Role() {
             this.super();

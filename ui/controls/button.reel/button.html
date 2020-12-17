@@ -5,34 +5,28 @@
     <script type="text/montage-serialization">
     {
         "owner": {
-            "properties": {
-                "element": {"#": "owner"}
-            },
-            "bindings": {
+            "values": {
+                "element": {"#": "owner"},
                 "classList.has('is-processing')": {"<-": "@owner.isProcessing"}
             }
         },
         "buttonLabel": {
             "prototype": "ui/controls/text.reel",
-            "properties": {
-                "element": {"#": "buttonLabel"}
-            },
-            "bindings": {
+            "values": {
+                "element": {"#": "buttonLabel"},
                 "value": {"<-": "@owner.value"}
             }
         },
         "condition": {
             "prototype": "montage/ui/condition.reel",
-            "properties": {
-                "element": {"#": "condition"}
-            },
-            "bindings": {
+            "values": {
+                "element": {"#": "condition"},
                 "condition": {"<-": "@owner.isProcessing"}
             }
         },
         "spinner": {
             "prototype": "ui/controls/spinner.reel",
-            "properties": {
+            "values": {
                 "element": {"#": "spinner"},
                 "isShown": true
             }

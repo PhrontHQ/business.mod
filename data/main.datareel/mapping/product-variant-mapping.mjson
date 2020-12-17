@@ -22,8 +22,6 @@
                         "converter": {"@": "jsonbConverter"}
                     },
                     "sku": {"<->": "sku"},
-                    "weight": {"<->": "weight"},
-                    "weightUnit": {"<->": "weightUnit"},
                     "presentmentPrices": {"<->": "presentmentPrices",
                         "converter": {"@": "jsonbConverter"}
                     }
@@ -34,7 +32,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "title","price","availableForSale","images","selectedOptions","sku","weight","weightUnit","presentmentPrices"
+                "title","price","availableForSale","images","selectedOptions","sku","presentmentPrices"
             ]
         }
     },

@@ -1,15 +1,15 @@
-var Object = require("../object").Object,
+var DataObject = require("../data-object").DataObject,
     ColorSpace = require("./color-space").ColorSpace;
 
 /**
  * @class Color
- * @extends Object
+ * @extends DataObject
  * @classdesc Represents a color (point) in a colorSpace. By default saved in lab colorSpace.
  *
  */
 
 
-exports.Color = Object.specialize(/** @lends Color.prototype */ {
+exports.Color = DataObject.specialize(/** @lends Color.prototype */ {
     constructor: {
         //support a signature like (colorSpace, channel1, channel2, channel3, channel4, name)
         //or (colorSpace, [channel1, channel2, channel3, channel4], name)

@@ -7,7 +7,20 @@
                 "rules": {
                     "countryCode": {"<->": "countryCode"},
                     "nationalNumber": {"<->": "nationalNumber"},
-                    "extension": {"<->": "extension"}
+                    "extension": {"<->": "extension"},
+                    "supportsVoice": {"<->": "supportsVoice"},
+                    "supportsVoiceMessage": {"<->": "supportsVoiceMessage"},
+                    "supportsTextMessage": {"<->": "supportsTextMessage"},
+                    "supportsMultimediaMessage": {"<->": "supportsMultimediaMessage"},
+                    "supportsiMessage": {"<->": "supportsiMessage"},
+                    "supportsRichCommunication": {"<->": "supportsRichCommunication"},
+                    "supportsFax": {"<->": "supportsFax"},
+                    "isMobile": {"<->": "isMobile"},
+                    "supportsVideoConferencing": {"<->": "supportsVideoConferencing"},
+                    "supportsVideoMessage": {"<->": "supportsVideoMessage"},
+                    "supportsPaging": {"<->": "supportsPaging"},
+                    "supportsTextphone": {"<->": "supportsTextphone"},
+                    "supportsRealTimeText": {"<->": "supportsRealTimeText"}
                 }
             },
             "rawDataMapping": {
@@ -15,7 +28,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "countryCode","nationalNumber","extension"
+                "countryCode","nationalNumber","extension","supportsTextMessage"
             ]
         }
     },

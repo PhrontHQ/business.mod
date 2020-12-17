@@ -1,0 +1,24 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "PartyContactFormDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+               }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+            ]
+        }
+    },
+
+    "PartyContactFormDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-contact-form.mjson"
+    }
+
+}

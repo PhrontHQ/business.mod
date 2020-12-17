@@ -1,0 +1,118 @@
+{
+
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Country",
+            "propertyDescriptors": [
+                {"@": "iso3166_1_alpha2Ccode"},
+                {"@": "iso3166_1_alpha3Ccode"},
+                {"@": "iso3166_1_numericCode"},
+                {"@": "geometry"},
+                {"@": "officialStateName"},
+                {"@": "name"},
+                {"@": "phoneCode"},
+                {"@": "timeZones"}
+            ],
+            "objectDescriptorModule": {
+                "%": "logic/model/descriptors/country.mjson"
+            },
+            "exportName": "Country",
+            "module": {
+                "%": "data/main.datareel/model/country"
+            },
+            "object":{"@": "country"},
+            "modulePrototype": {"@": "countryPrototype"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "country": {
+        "object": "data/main.datareel/model/country"
+    },
+    "countryPrototype": {
+        "object": "data/main.datareel/model/country"
+    },
+
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+
+    "iso3166_1_alpha2Ccode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "properties": {
+            "name": "iso3166_1_alpha2Ccode",
+            "valueType": "string",
+            "isSearchable": true
+        }
+    },
+    "iso3166_1_alpha3Ccode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "properties": {
+            "name": "iso3166_1_alpha3Ccode",
+            "valueType": "string",
+            "isSearchable": true
+        }
+    },
+    "iso3166_1_numericCode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "properties": {
+            "name": "iso3166_1_numericCode",
+            "valueType": "number",
+            "isSearchable": true
+        }
+    },
+
+    "geometry": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "properties": {
+            "name": "geometry",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "GeometryDescriptor"},
+            "isSearchable": true
+        }
+    },
+
+    "GeometryDescriptor": {
+        "object": "montage-geo/logic/model/descriptors/geometry.mjson"
+    },
+
+    "officialStateName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "properties": {
+            "name": "officialStateName",
+            "valueType": "string",
+            "isLocalizable": true
+        }
+    },
+
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "properties": {
+            "name": "name",
+            "valueType": "string",
+            "isLocalizable": true
+        }
+    },
+
+    "phoneCode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "properties": {
+            "name": "phoneCode",
+            "valueType": "string"
+        }
+    },
+
+    "timeZones": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "properties": {
+            "name": "timeZones",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "timeZone-descriptor"}
+        }
+    },
+    "timeZone-descriptor": {
+        "object": "montage/core/date/time-zone.mjson"
+    }
+}

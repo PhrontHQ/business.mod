@@ -1,8 +1,8 @@
-var Object = require("./object").Object;
+var DataObject = require("./data-object").DataObject;
 
 /**
  * @class ContactInformation
- * @extends Object
+ * @extends DataObject
  */
 
  /*
@@ -30,7 +30,7 @@ isDefault: Boolean (optional, default: false) Whether this Address is the defaul
 */
 
 
-exports.ContactInformation = Object.specialize(/** @lends ContactInformation.prototype */ {
+exports.ContactInformation = DataObject.specialize(/** @lends ContactInformation.prototype */ {
 
     postalAddresses: {
         value: undefined

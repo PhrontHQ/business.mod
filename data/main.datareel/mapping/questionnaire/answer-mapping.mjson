@@ -1,0 +1,58 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "AnswerDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "type": {"<->": "typeModuleId"},
+                    "name": {"<->": "name"},
+                    "booleanValue": {"<->": "booleanValue"},
+                    "textValue": {"<->": "textValue"},
+                    "integerValue": {"<->": "integerValue"},
+                    "integerRangeValue": {"<->": "integerRangeValue"},
+                    "bigIntegerValue": {"<->": "bigIntegerValue"},
+                    "bigIntegerRangeValue": {"<->": "bigIntegerRangeValue"},
+                    "decimalValue": {"<->": "decimalValue"},
+                    "decimalRangeValue": {"<->": "decimalRangeValue"},
+                    "timeValue": {"<->": "timeValue"},
+                    "timeRangeValue": {"<->": "timeRangeValue"},
+                    "objectValue": {"<->": "objectValue"},
+                    "respondentQuestionnaireAnswers": {
+                        "<->": "id",
+                        "converter": {"@": "respondentQuestionnaireAnswersConverter"}
+                    },
+                    "respondentQuestionnaireVariableValues": {
+                        "<->": "id",
+                        "converter": {"@": "respondentQuestionnaireVariableValuesConverter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "type", "name", "booleanValue", "textValue", "integerValue", "integerRangeValue", "bigIntegerValue", "bigIntegerRangeValue", "decimalValue", "decimalRangeValue", "timeValue", "timeRangeValue", "objectValue"
+            ]
+        }
+    },
+
+    "AnswerDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/answer.mjson"
+    },
+    "respondentQuestionnaireAnswersConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "answerIds.has($)"
+        }
+    },
+    "respondentQuestionnaireVariableValuesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "valueIds.has($)"
+        }
+    }
+
+}

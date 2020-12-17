@@ -32,12 +32,12 @@
             "name": "firstPerson",
             "valueType": "object",
             "cardinality": 1,
-            "inversePropertyName": "firstPersonRelationships",
-            "valueDescriptor": {"@": "employment_position_descriptor"}
+            "inversePropertyName": "firstPersonalRelationships",
+            "valueDescriptor": {"@": "person_descriptor"}
         }
     },
-    "employment_position_descriptor": {
-        "object": "data/main.datareel/model/employment-position.mjson"
+    "person_descriptor": {
+        "object": "data/main.datareel/model/person.mjson"
     },
     "firstPersonRelationshipRole": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -57,8 +57,8 @@
             "name": "secondPerson",
             "valueType": "object",
             "cardinality": 1,
-            "inversePropertyName": "secondPersonRelationships",
-            "valueDescriptor": {"@": "employment_position_descriptor"}
+            "inversePropertyName": "secondPersonalRelationships",
+            "valueDescriptor": {"@": "person_descriptor"}
         }
     },
     "secondPersonRelationshipRole": {

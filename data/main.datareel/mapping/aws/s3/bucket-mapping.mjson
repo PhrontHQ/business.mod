@@ -1,0 +1,37 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "BucketDescriptor"},
+            "primaryKeyPropertyDescriptors": [
+                {"@": "Bucket"}
+            ],
+            "objectMapping": {
+                "rules": {
+                    "name": {"<->": "Bucket"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "name"
+            ]
+        }
+    },
+
+    "BucketDescriptor": {
+        "object": "data/main.datareel/model/aws/s3/bucket.mjson"
+    },
+
+    "Bucket": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "Bucket",
+            "valueType": "string"
+        }
+    }
+
+
+}

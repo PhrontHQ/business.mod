@@ -6,6 +6,31 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
+                    "title": {"<->": "title"},
+                    "postalAddresses": {
+                        "<->": "id",
+                        "converter": {"@": "postalAddresses-value-converter"}
+                    },
+                    "emailAddresses": {
+                        "<->": "id",
+                        "converter": {"@": "emailAddresses-value-converter"}
+                    },
+                    "phoneNumbers": {
+                        "<->": "id",
+                        "converter": {"@": "phoneNumbers-value-converter"}
+                    },
+                    "smsNumbers": {
+                        "<->": "id",
+                        "converter": {"@": "smsNumbers-value-converter"}
+                    },
+                    "instantMessageAddresses": {
+                        "<->": "id",
+                        "converter": {"@": "instantMessageAddresses-value-converter"}
+                    },
+                    "contactForms": {
+                        "<->": "id",
+                        "converter": {"@": "contactForms-value-converter"}
+                    },
                     "calendars": {
                         "<->": "id",
                         "converter": {"@": "calendarsConverter"}
@@ -21,6 +46,10 @@
                     "employee": {
                         "<->":"employeeId",
                         "converter": {"@": "employeeConverter"}
+                    },
+                    "b2cCustomerRelationships": {
+                        "<->": "id",
+                        "converter": {"@": "b2cCustomerRelationshipsConverter"}
                     }
                 }
             },
@@ -29,13 +58,50 @@
                 }
             },
             "requisitePropertyNames": [
-                "employmentType","employmentPosition","employee"
+                "employmentType","employmentPosition","employee","calendars"
             ]
         }
     },
 
     "EmploymentPositionStaffingDescriptor": {
         "object": "data/main.datareel/model/employment-position-staffing.mjson"
+    },
+
+    "postalAddresses-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "employmentPositionStaffingId == $"
+        }
+    },
+    "emailAddresses-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "employmentPositionStaffingId == $"
+        }
+    },
+    "phoneNumbers-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "employmentPositionStaffingId == $"
+        }
+    },
+    "smsNumbers-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "employmentPositionStaffingId == $"
+        }
+    },
+    "instantMessageAddresses-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "employmentPositionStaffingId == $"
+        }
+    },
+    "contactForms-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "employmentPositionStaffingId == $"
+        }
     },
 
     "calendarsConverter": {
@@ -61,6 +127,12 @@
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
+        }
+    },
+    "b2cCustomerRelationshipsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "staffRelationshipIds.has($)"
         }
     }
 

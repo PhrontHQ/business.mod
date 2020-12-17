@@ -1,0 +1,154 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ServiceProductVariant",
+            "propertyDescriptors": [
+                {"@": "product"},
+                {"@": "professionalName"},
+                {"@": "professionalShortName"},
+                {"@": "isEmergencyService"},
+                {"@": "preparationDuration"},
+                {"@": "duration"},
+                {"@": "gapTimeRange"},
+                {"@": "recoveryDuration"},
+                {"@": "requiredResources"},
+                {"@": "providers"},
+                {"@": "serviceEngagements"}
+
+           ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/service-product-variant.mjson"
+            },
+            "exportName": "ServiceProductVariant",
+            "module": {
+                "%": "data/main.datareel/model/service-product-variant"
+            },
+            "object":{"@": "ServiceProductVariant"},
+            "parent":{"@": "ProductVariant"}
+        }
+    },
+    "ServiceProductVariant": {
+        "object": "data/main.datareel/model/service-product-variant"
+    },
+    "ProductVariant": {
+        "object": "data/main.datareel/model/product-variant.mjson"
+    },
+    "product": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "product",
+            "cardinality": 1,
+            "inversePropertyName": "variants",
+            "valueDescriptor": {"@": "ServiceDescriptor"}
+        }
+    },
+    "ServiceDescriptor": {
+        "object": "data/main.datareel/model/service.mjson"
+    },
+        "professionalName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "professionalName",
+            "valueType": "string",
+            "isLocalizable": true
+        }
+    },
+
+    "professionalShortName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "professionalShortName",
+            "valueType": "string",
+            "isLocalizable": true
+        }
+    },
+
+    "isEmergencyService": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "isEmergencyService",
+            "valueType": "boolean",
+            "defaultValue": false
+        }
+    },
+
+    "preparationDuration": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "preparationDuration",
+            "valueType": "number"
+        }
+    },
+
+    "duration": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "duration",
+            "valueType": "number",
+             "description": "The duration of a service in seconds"
+       }
+    },
+
+    "gapTimeRange": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "gapTimeRange",
+            "valueType": "range",
+            "collectionValueType": "number",
+            "description": "gap time during a service in seconds. Begin is relative to the start of the service, and end of the range starts from there, so when scheduling, this needs to be reflected."
+        }
+    },
+
+    "recoveryDuration": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "recoveryDuration",
+            "valueType": "number"
+        }
+    },
+
+    "requiredResources": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "requiredResources",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "ResourceDescriptor"}
+        }
+    },
+
+    "ResourceDescriptor": {
+        "object": "data/main.datareel/model/resource.mjson"
+    },
+
+    "providers": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "providers",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "personDescriptor"},
+            "inversePropertyName": "services",
+            "description": "Persons prefessionally commpetent to offer this service"
+        }
+    },
+
+    "personDescriptor": {
+        "object": "data/main.datareel/model/person.mjson"
+    },
+
+    "serviceEngagements": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "serviceEngagements",
+            "valueType": "object",
+            "valueDescriptor": {"@": "ServiceEngagement"},
+            "cardinality": -1,
+            "inversePropertyName": "service",
+            "isSearchable": true
+        }
+    },
+    "ServiceEngagement": {
+        "object": "data/main.datareel/model/service-engagement.mjson"
+    }
+}

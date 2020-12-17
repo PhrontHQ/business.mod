@@ -6,6 +6,30 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
+                    "postalAddresses": {
+                        "<->": "id",
+                        "converter": {"@": "postalAddresses-value-converter"}
+                    },
+                    "emailAddresses": {
+                        "<->": "id",
+                        "converter": {"@": "emailAddresses-value-converter"}
+                    },
+                    "phoneNumbers": {
+                        "<->": "id",
+                        "converter": {"@": "phoneNumbers-value-converter"}
+                    },
+                    "smsNumbers": {
+                        "<->": "id",
+                        "converter": {"@": "smsNumbers-value-converter"}
+                    },
+                    "instantMessageAddresses": {
+                        "<->": "id",
+                        "converter": {"@": "instantMessageAddresses-value-converter"}
+                    },
+                    "contactForms": {
+                        "<->": "id",
+                        "converter": {"@": "contactForms-value-converter"}
+                    },
                     "calendars": {
                         "<->": "id",
                         "converter": {"@": "calendarsConverter"}
@@ -25,6 +49,43 @@
 
     "ResourceDescriptor": {
         "object": "data/main.datareel/model/resource.mjson"
+    },
+
+    "postalAddresses-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "resourceId == $"
+        }
+    },
+    "emailAddresses-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "resourceId == $"
+        }
+    },
+    "phoneNumbers-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "resourceId == $"
+        }
+    },
+    "smsNumbers-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "resourceId == $"
+        }
+    },
+    "instantMessageAddresses-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "resourceId == $"
+        }
+    },
+    "contactForms-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "resourceId == $"
+        }
     },
 
     "calendarsConverter": {

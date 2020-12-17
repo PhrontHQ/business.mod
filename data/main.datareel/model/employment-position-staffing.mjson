@@ -4,9 +4,12 @@
         "values": {
             "name": "EmploymentPositionStaffing",
             "propertyDescriptors": [
+                {"@": "title"},
                 {"@": "employmentType"},
                 {"@": "employmentPosition"},
-                {"@": "employee"}
+                {"@": "employee"},
+                {"@": "b2cCustomerRelationships"}
+
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/employment-position-staffing.mjson"
@@ -24,6 +27,15 @@
     },
     "party-party-relationship": {
         "object": "data/main.datareel/model/party-party-relationship.mjson"
+    },
+    "title": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "title",
+            "valueType": "string",
+            "cardinality": 1,
+            "isLocalizable": true
+        }
     },
     "employmentType": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -74,6 +86,20 @@
     },
     "role_descriptor": {
         "object": "data/main.datareel/model/role.mjson"
+    },
+    "b2cCustomerRelationships": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "b2cCustomerRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "staffRelationships",
+            "valueDescriptor": {"@": "B2CCustomerSupplierRelationshipDescriptor"}
+        }
+    },
+    "B2CCustomerSupplierRelationshipDescriptor": {
+        "object": "data/main.datareel/model/b-2-c-customer-supplier-relationship.mjson"
     }
+
 
 }

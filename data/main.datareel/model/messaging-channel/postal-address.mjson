@@ -4,18 +4,26 @@
         "values": {
             "name": "PostalAddress",
             "propertyDescriptors": [
+                {"@": "addressee"},
                 {"@": "name"},
                 {"@": "firstName"},
                 {"@": "lastName"},
-                {"@": "phone"},
-                {"@": "company"},
-                {"@": "address1"},
-                {"@": "address2"},
-                {"@": "city"},
-                {"@": "provinceCode"},
-                {"@": "zip"},
+                {"@": "phoneNumber"},
+                {"@": "streetAddress"},
+                {"@": "formattedAddressLines"},
+                {"@": "premise"},
+                {"@": "premiseDetails"},
+                {"@": "thoroughfare"},
+                {"@": "locality"},
+                {"@": "subLocality"},
+                {"@": "administrativeArea"},
+                {"@": "superAdministrativeArea"},
+                {"@": "subAdministrativeArea"},
+                {"@": "primaryPostalCode"},
+                {"@": "secondaryPostalCode"},
                 {"@": "country"},
-                {"@": "location"}
+                {"@": "location"},
+                {"@": "timeZone"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/messaging-channel/postal-address.mjson"
@@ -33,6 +41,13 @@
     },
     "MessagingChannelDescriptor": {
         "object": "data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+    },
+    "addressee": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "addressee",
+            "valueType": "string"
+        }
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -55,52 +70,107 @@
             "valueType": "string"
         }
     },
-     "phone": {
+     "phoneNumber": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "phone",
+            "name": "phoneNumber",
+            "valueType": "object",
+            "valueDescriptor": {"@": "phoneNumberDescriptor"}
+        }
+    },
+    "phoneNumberDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/phone-number.mjson"
+    },
+    "streetAddress": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "streetAddress",
             "valueType": "string"
         }
     },
-    "company": {
+    "formattedAddressLines": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "company",
-            "valueType": "string"
-        }
-    },
-    "address1": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "address1",
+            "name": "formattedAddressLines",
+            "cardinality": -1,
             "valueType": "string"
        }
     },
-    "address2": {
+    "premise": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "address2",
+            "name": "premise",
             "valueType": "string"
        }
     },
-    "city": {
+    "premiseDetails": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "city",
+            "name": "premiseDetails",
             "valueType": "string"
        }
     },
-    "provinceCode": {
+    "thoroughfare": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "provinceCode",
+            "name": "thoroughfare",
             "valueType": "string"
        }
     },
-    "zip": {
+    "locality": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "zip",
+            "name": "locality",
+            "valueType": "string"
+       }
+    },
+    "subLocality": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "subLocality",
+            "valueType": "string",
+            "description": "Additional information associated with the location, typically defined at the city or town level, in a postal address. For example the '12E ARRONDISSEMENT' in Paris."
+       }
+    },
+
+    "administrativeArea": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "administrativeArea",
+            "valueType": "string",
+            "description": "The most common administrative division within a country (e.g., province in Canada, a state in the US or a département in France)"
+       }
+    },
+
+    "superAdministrativeArea": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "superAdministrativeArea",
+            "valueType": "string",
+            "description": "The largest administrative division within a country (e.g., region in France)"
+       }
+    },
+
+    "subAdministrativeArea": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "subAdministrativeArea",
+            "valueType": "string",
+            "description": "The smallest administrative division within a country (e.g., county in Germany or in the US, )"
+       }
+    },
+
+    "primaryPostalCode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "primaryPostalCode",
+            "valueType": "string"
+       }
+    },
+    "secondaryPostalCode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "secondaryPostalCode",
             "valueType": "string"
        }
     },
@@ -108,8 +178,13 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "country",
-            "valueType": "string"
+            "valueType": "object",
+            "valueDescriptor": {"@": "CountryDescriptor"},
+            "isSearchable": true
        }
+    },
+    "CountryDescriptor": {
+        "object": "data/main.datareel/model/country.mjson"
     },
     "location": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -122,6 +197,18 @@
     },
     "PointDescriptor": {
         "object": "montage-geo/logic/model/descriptors/point.mjson"
+    },
+    "timeZone": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "timeZone",
+            "valueType": "object",
+            "valueDescriptor": {"@": "timeZone-descriptor"}
+        }
+    },
+    "timeZone-descriptor": {
+        "object": "montage/core/date/time-zone.mjson"
     }
+
 
 }

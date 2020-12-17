@@ -1,13 +1,13 @@
-var Object = require("./object").Object;
+var DataObject = require("./data-object").DataObject;
 
 /**
  * @class OrderLineItem
- * @extends Object
+ * @extends DataObject
  */
 
 
 
-exports.OrderLineItem = Object.specialize(/** @lends OrderLineItem.prototype */ {
+exports.OrderLineItem = DataObject.specialize(/** @lends OrderLineItem.prototype */ {
 
     name: {
         value: undefined

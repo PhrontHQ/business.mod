@@ -633,11 +633,13 @@ exports.createProServices = function() {
             sistraAddress.name = "SISTRA2";
             //    sistraAddress.firstName = jShopifyAddress.firstName;
             //    sistraAddress.lastName = jShopifyAddress.lastName;
+            throw "Deal with PostalAddress model change";
             sistraAddress.address1 = "Immeuble FARHNAM, à l'angle des rues Clappier et Leboucher";
             sistraAddress.address2 = "B.P. 972";
-            sistraAddress.city = "PAPEETE";
-            //sistraAddress.provinceCode = "";
-            sistraAddress.zip = "98713";
+            sistraAddress.locality = "PAPEETE";
+            //sistraAddress.subLocality = "";
+            sistraAddress.primaryPostalCode = "98713";
+            throw "Need to fecth Country now";
             sistraAddress.country = "TAHITI – POLYNÉSIE FRANÇAISE";
 
             //For geodetic coordinates, X is longitude and Y is latitude

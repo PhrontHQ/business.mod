@@ -2,7 +2,7 @@ var Party = require("./party").Party;
 
 /**
  * @class Resource
- * @extends Object
+ * @extends DataObject
  */
 
 

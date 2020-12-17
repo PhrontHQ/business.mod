@@ -1,7 +1,7 @@
 var Party = require("./party").Party;
 /**
  * @class Person
- * @extends Object
+ * @extends DataObject
  */
 
 
@@ -35,6 +35,21 @@ exports.Person = Party.specialize(/** @lends Person.prototype */ {
         value: undefined
     },
 
+    /**
+     * gender
+     *
+     * A Person's gender. We're going to use
+     * - Male
+     * - Female
+     * - Other
+     * - Undisclosed
+     *
+     * @property {PersonName}
+     */
+    name: {
+        value: undefined
+    },
+
      /**
      * aliases
      *
@@ -50,6 +65,10 @@ exports.Person = Party.specialize(/** @lends Person.prototype */ {
      * @property {PersonName[]}
      */
     aliases: {
+        value: undefined
+    },
+
+    preferredLocales: {
         value: undefined
     },
 

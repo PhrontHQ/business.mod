@@ -6,6 +6,30 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
+                    "postalAddresses": {
+                        "<->": "id",
+                        "converter": {"@": "postalAddresses-value-converter"}
+                    },
+                    "emailAddresses": {
+                        "<->": "id",
+                        "converter": {"@": "emailAddresses-value-converter"}
+                    },
+                    "phoneNumbers": {
+                        "<->": "id",
+                        "converter": {"@": "phoneNumbers-value-converter"}
+                    },
+                    "smsNumbers": {
+                        "<->": "id",
+                        "converter": {"@": "smsNumbers-value-converter"}
+                    },
+                    "instantMessageAddresses": {
+                        "<->": "id",
+                        "converter": {"@": "instantMessageAddresses-value-converter"}
+                    },
+                    "contactForms": {
+                        "<->": "id",
+                        "converter": {"@": "contactForms-value-converter"}
+                    },
                     "calendars": {
                         "<->": "id",
                         "converter": {"@": "calendarsConverter"}
@@ -14,24 +38,60 @@
                         "<->": "name",
                         "converter": {"@": "name-converter"}
                     },
+                    "gender": {
+                        "<->": "genderID",
+                        "converter": {"@": "gender-converter"}
+                    },
                     "aliases": {
                         "<->": "aliases",
                         "converter": {"@": "name-converter"}
                     },
+                    "preferredLocales": {"<->": "preferredLocales"},
                     "employmentHistory": {
                         "<->": "id",
                         "converter": {"@": "employmentHistoryConverter"}
                     },
-                    "services": {"<->": "id",
-                                    "converter": {"@": "servicesConverter"}},
+                    "services": {
+                        "<->": "id",
+                        "converter": {"@": "servicesConverter"}
+                    },
                     "firstName": {"<->": "firstName"},
                     "lastName": {"<->": "lastName"},
                     "email": {"<->": "email"},
                     "phone": {"<->": "phone"},
-                    "addresses": {"<->": "addressIds",
-                                    "converter": {"@": "addressesConverter"}},
-                    "userIdentities": {"<->": "userIdentityIds",
-                                    "converter": {"@": "userIdentitiesConverter"}},
+                    "addresses": {
+                        "<->": "addressIds",
+                        "converter": {"@": "addressesConverter"}
+                    },
+                    "userIdentities": {
+                        "<->": "userIdentityIds",
+                        "converter": {"@": "userIdentitiesConverter"}
+                    },
+                    "events": {
+                        "<->": "id",
+                        "converter": {"@": "eventsConverter"}
+                    },
+                    "questionnaires": {
+                        "<->": "id",
+                        "converter": {"@": "questionnairesConverter"}
+                    },
+                    "supplierRelationships": {
+                        "<->": "id",
+                        "converter": {"@": "supplierRelationshipsConverter"}
+                    },
+                    "customerSupplierResponsibilities": {
+                        "<->": "id",
+                        "converter": {"@": "customerSupplierResponsibilitiesConverter"}
+                    },
+                    "firstPersonalRelationships": {
+                        "<->": "id",
+                        "converter": {"@": "firstPersonalRelationshipsConverter"}
+                    },
+                    "secondPersonalRelationships": {
+                        "<->": "id",
+                        "converter": {"@": "secondPersonalRelationshipsConverter"}
+                    },
+
                     "tags": {"<->": "tags"}
                 }
             },
@@ -40,13 +100,50 @@
                 }
             },
             "requisitePropertyNames": [
-                "name","firstName","lastName","email","phone","addresses"
+                "name","firstName","lastName","email","phone","addresses","modificationDate"
             ]
         }
     },
 
     "PersonDescriptor": {
         "object": "data/main.datareel/model/person.mjson"
+    },
+
+    "postalAddresses-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "personId == $"
+        }
+    },
+    "emailAddresses-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "personId == $"
+        }
+    },
+    "phoneNumbers-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "personId == $"
+        }
+    },
+    "smsNumbers-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "personId == $"
+        }
+    },
+    "instantMessageAddresses-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "personId == $"
+        }
+    },
+    "contactForms-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "personId == $"
+        }
     },
 
     "calendarsConverter": {
@@ -58,6 +155,13 @@
 
     "name-converter": {
         "prototype": "montage/data/converter/raw-embedded-value-to-object-converter"
+    },
+
+    "gender-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
     },
 
     "employmentHistoryConverter": {
@@ -85,6 +189,48 @@
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "$.has(id)"
+        }
+    },
+
+    "eventsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "participatingPersonId == $"
+        }
+    },
+
+    "questionnairesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "respondentId == $"
+        }
+    },
+
+    "supplierRelationshipsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "customerId == $"
+        }
+    },
+
+    "customerSupplierResponsibilitiesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "responsiblePartyId == $"
+        }
+    },
+
+    "firstPersonalRelationshipsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "firstPersonId == $"
+        }
+    },
+
+    "secondPersonalRelationshipsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "secondPersonId == $"
         }
     }
 }

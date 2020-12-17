@@ -10,7 +10,9 @@
                 {"@": "familyName"},
                 {"@": "previousFamilyName"},
                 {"@": "nameSuffix"},
-                {"@": "nickname"}
+                {"@": "nickname"},
+                {"@": "honorific"}
+
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/person-name.mjson"
@@ -76,5 +78,13 @@
             "name": "nickname",
             "valueType": "string"
         }
+    },
+    "honorific": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "honorific",
+            "valueType": "string"
+        }
     }
+
 }

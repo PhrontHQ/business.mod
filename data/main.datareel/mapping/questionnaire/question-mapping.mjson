@@ -1,0 +1,62 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "QuestionDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "text": {"<->": "text"},
+                    "name": {"<->": "name"},
+                    "superQuestion": {
+                        "<->": "superQuestionId",
+                        "converter": {"@": "superQuestionIdForeignKeyConverter"}
+                    },
+                    "subQuestions": {
+                        "<->": "id",
+                        "converter": {"@": "subQuestionIdForeignKeyConverter"}
+                    },
+                    "variables": {
+                        "<->": "variableIds",
+                        "converter": {"@": "variableIdsForeignKeyConverter"}
+                    },
+                    "isOpenEnded": {"<->": "isOpenEnded"},
+                    "notes": {"<->": "notes"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "text","name","isOpenEnded"
+            ]
+        }
+    },
+
+    "QuestionDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/question.mjson"
+    },
+
+    "superQuestionIdForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+    "subQuestionIdForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "superQuestionId == $"
+        }
+    },
+
+    "variableIdsForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }
+    }
+
+}

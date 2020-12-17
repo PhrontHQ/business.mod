@@ -1,0 +1,184 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Answer",
+            "propertyDescriptors": [
+                {"@": "type"},
+                {"@": "name"},
+                {"@": "booleanValue"},
+                {"@": "textValue"},
+                {"@": "integerValue"},
+                {"@": "integerRangeValue"},
+                {"@": "bigIntegerValue"},
+                {"@": "bigIntegerRangeValue"},
+                {"@": "decimalValue"},
+                {"@": "decimalRangeValue"},
+                {"@": "timeValue"},
+                {"@": "timeRangeValue"},
+                {"@": "objectValue"},
+                {"@": "respondentQuestionnaireAnswers"},
+                {"@": "respondentQuestionnaireVariableValues"}
+
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/questionnaire/answer.mjson"
+            },
+            "exportName": "Answer",
+            "module": {
+                "%": "data/main.datareel/model/questionnaire/answer"
+            },
+            "object":{"@": "answer"},
+            "modulePrototype": {"@": "answerPrototype"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "answer": {
+        "object": "data/main.datareel/model/questionnaire/answer"
+    },
+    "answerPrototype": {
+        "object": "data/main.datareel/model/questionnaire/answer"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+    "type": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "type",
+            "valueDescriptor": {"@": "typeDescriptor"}
+        }
+    },
+    "typeDescriptor": {
+        "object": "montage/core/meta/module-object-descriptor.mjson"
+    },
+    "textValue": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "textValue",
+            "isLocalizable": true,
+            "valueType": "string",
+            "description": "The textual answer itself"
+        }
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "isLocalizable": true,
+            "valueType": "string",
+            "description": "A short, non user-facing name to refer to the answer"
+        }
+    },
+    "booleanValue": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "booleanValue",
+            "valueType": "boolean"
+        }
+    },
+    "integerValue": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "integerValue",
+            "valueType": "number",
+            "description": "to be integer in postgresql"
+        }
+    },
+    "integerRangeValue": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "integerRangeValue",
+            "valueType": "number",
+            "description": "to be int4range in postgresql"
+        }
+    },
+    "bigIntegerValue": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "bigIntegerValue",
+            "valueType": "number",
+            "description": "to be integer in postgresql"
+        }
+    },
+    "bigIntegerRangeValue": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "bigIntegerRangeValue",
+            "valueType": "number",
+            "description": "to be int8range in postgresql"
+        }
+    },
+    "decimalValue": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "decimalValue",
+            "valueType": "number",
+            "description": "to be numeric in postgresql"
+        }
+    },
+    "decimalRangeValue": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "decimalRangeValue",
+            "valueType": "number",
+            "description": "to be numrange in postgresql"
+        }
+    },
+    "timeValue": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "timeValue",
+            "valueDescriptor": {"@": "DateDescriptor"}
+        }
+    },
+    "DateDescriptor": {
+        "object": "montage/core/date.mjson"
+    },
+    "timeRangeValue": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "timeRangeValue",
+            "valueType": "range",
+            "collectionValueType": "date",
+            "description": "to be numrange in postgresql"
+        }
+    },
+    "objectValue": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "objectValue",
+            "valueType": "object"
+        }
+    },
+
+    "respondentQuestionnaireAnswers": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentQuestionnaireAnswers",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "respondentQuestionnaireAnswerDescriptor"}
+        }
+    },
+
+    "respondentQuestionnaireAnswerDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-answer.mjson"
+    },
+
+    "respondentQuestionnaireVariableValues": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentQuestionnaireVariableValues",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "respondentQuestionnaireVariableValueDescriptor"}
+        }
+    },
+
+    "respondentQuestionnaireVariableValueDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-variable-value.mjson"
+    }
+
+
+}

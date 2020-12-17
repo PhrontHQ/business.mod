@@ -1,0 +1,71 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PartyPostalAddress",
+            "propertyDescriptors": [
+                {"@": "party"},
+                {"@": "messagingChannel"},
+                {"@": "hostedEvents"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/messaging-channel/party-postal-address.mjson"
+            },
+            "exportName": "PartyPostalAddress",
+            "module": {
+                "%": "data/main.datareel/model/messaging-channel/party-postal-address"
+            },
+            "modulePrototype":{"@": "PartyPostalAddress"},
+            "object":{"@": "PartyPostalAddress"},
+            "parent":{"@": "PartyMessagingChannelDescriptor"}
+        }
+    },
+    "PartyPostalAddress": {
+        "object": "data/main.datareel/model/messaging-channel/party-postal-address"
+    },
+    "PartyMessagingChannelDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-messaging-channel.mjson"
+    },
+
+    "party": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "party",
+            "valueType": "object",
+            "isSearchable": true,
+            "cardinality": 1,
+            "inversePropertyName": "postalAddresses",
+            "valueDescriptor": {"@": "PartyDescriptor"}
+        }
+    },
+    "PartyDescriptor": {
+        "object": "data/main.datareel/model/party.mjson"
+    },
+
+    "messagingChannel": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "messagingChannel",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "PostalAddress"}
+        }
+    },
+    "PostalAddress": {
+        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
+    },
+
+    "hostedEvents": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "hostedEvents",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "location",
+            "valueDescriptor": {"@": "EventDescriptor"}
+        }
+    },
+    "EventDescriptor": {
+        "object": "data/main.datareel/model/event.mjson"
+    }
+}

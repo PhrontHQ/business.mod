@@ -1,0 +1,134 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "RespondentQuestionnaire",
+            "propertyDescriptors": [
+                {"@": "respondent"},
+                {"@": "questionnaire"},
+                {"@": "respondentVariableValues"},
+                {"@": "respondentAnswers"},
+                {"@": "completionDate"},
+                {"@": "isMandatory"},
+                {"@": "pdfExport"},
+                {"@": "notes"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/questionnaire/respondent-questionnaire.mjson"
+            },
+            "exportName": "RespondentQuestionnaire",
+            "module": {
+                "%": "data/main.datareel/model/questionnaire/respondent-questionnaire"
+            },
+            "object": {"@": "questionnairePrototype"},
+            "modulePrototype": {"@": "questionnairePrototype"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "questionnairePrototype": {
+        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+
+    "respondent": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "respondent",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "questionnaires",
+            "valueDescriptor": {"@": "personDescriptor"}
+        }
+    },
+    "personDescriptor": {
+        "object": "data/main.datareel/model/person.mjson"
+    },
+
+    "questionnaire": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "questionnaire",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "respondentQuestionnaires",
+            "valueDescriptor": {"@": "questionnaireDescriptor"}
+        }
+    },
+    "questionnaireDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/questionnaire.mjson"
+    },
+
+    "respondentVariableValues": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentVariableValues",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "respondentQuestionnaire",
+            "valueDescriptor": {"@": "respondentQuestionnaireVariableValueDescriptor"}
+        }
+    },
+    "respondentQuestionnaireVariableValueDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-variable-value.mjson"
+    },
+
+    "respondentAnswers": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentAnswers",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "respondentQuestionnaire",
+            "valueDescriptor": {"@": "respondentQuestionnaireAnswerDescriptor"}
+        }
+    },
+    "respondentQuestionnaireAnswerDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-answer.mjson"
+    },
+
+    "completionDate": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "completionDate",
+            "valueDescriptor": {"@": "DateDescriptor"}
+        }
+    },
+    "DateDescriptor": {
+        "object": "montage/core/date.mjson"
+    },
+
+    "isMandatory": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "isMandatory",
+            "valueType": "boolean",
+            "cardinality": 1
+        }
+    },
+
+    "pdfExport": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "pdfExport",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "AssetDescriptor"}
+        }
+    },
+    "AssetDescriptor": {
+        "object": "data/main.datareel/model/asset.mjson"
+    },
+
+    "notes": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "notes",
+            "isLocalizable": true,
+            "valueType": "string",
+            "description": "Add comments to questions for internal use"
+        }
+    }
+
+}

@@ -1,0 +1,103 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Question",
+            "propertyDescriptors": [
+                {"@": "text"},
+                {"@": "name"},
+                {"@": "superQuestion"},
+                {"@": "subQuestions"},
+                {"@": "variables"},
+                {"@": "isOpenEnded"},
+                {"@": "notes"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/questionnaire/question.mjson"
+            },
+            "exportName": "Question",
+            "module": {
+                "%": "data/main.datareel/model/questionnaire/question"
+            },
+            "object":{"@": "question"},
+            "modulePrototype": {"@": "questionPrototype"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "question": {
+        "object": "data/main.datareel/model/questionnaire/question"
+    },
+    "questionPrototype": {
+        "object": "data/main.datareel/model/questionnaire/question"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+    "text": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "text",
+            "isLocalizable": true,
+            "valueType": "string",
+            "description": "The textual question itself"
+        }
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "isLocalizable": true,
+            "valueType": "string",
+            "description": "A short, non user-facing name to refer to the question"
+        }
+    },
+    "superQuestion": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "superQuestion",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "subQuestions",
+            "valueDescriptor": {"@": "root"}
+        }
+    },
+    "subQuestions": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "subQuestions",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "superQuestion",
+            "valueDescriptor": {"@": "root"}
+        }
+    },
+   "variables": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "variables",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "questions",
+            "valueDescriptor": {"@": "variableDescriptor"}
+        }
+    },
+    "variableDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/variable.mjson"
+    },
+    "isOpenEnded": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "isOpenEnded",
+            "valueType": "boolean"
+        }
+    },
+    "notes": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "notes",
+            "isLocalizable": true,
+            "valueType": "string",
+            "description": "Add comments to questions for internal use"
+        }
+    }
+}

@@ -3,12 +3,12 @@ DataService = require("montage/data/service/data-service").DataService,
 DataEvent = require("montage/data/model/data-event").DataEvent;
 
 /**
- * @class Object
+ * @class DataObject
  * @extends Montage
  */
 
 
- /* 
+ /*
     Need to be able to set creationDate when an instance is created by
     the DataService. Not when the instance is created by the constructor.
 
@@ -19,7 +19,7 @@ DataEvent = require("montage/data/model/data-event").DataEvent;
 */
 
 
-exports.Object = Target.specialize(/** @lends Object.prototype */ {
+exports.DataObject = Target.specialize(/** @lends DataObject.prototype */ {
     constructor: {
         value: function Object() {
             this.super();
@@ -38,12 +38,12 @@ exports.Object = Target.specialize(/** @lends Object.prototype */ {
     },
     publicationDate: {
         value: undefined
-    }  
+    }
 
 },{
 
     /*
-        This class methods are polymorphic, which poses a problem. 
+        This class methods are polymorphic, which poses a problem.
         Object needs to receive create events from Object instances and all instances inheriting from Object.
 
         So it needs to listen to dataService and filter, which is a bit wasteful

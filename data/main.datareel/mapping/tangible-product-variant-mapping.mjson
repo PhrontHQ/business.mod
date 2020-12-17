@@ -1,0 +1,26 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "TangibleProductVariantObjectDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "weight": {"<->": "weight"},
+                    "weightUnit": {"<->": "weightUnit"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "weight","weightUnit"
+            ]
+        }
+    },
+
+    "TangibleProductVariantObjectDescriptor": {
+        "object": "data/main.datareel/model/tangible-product-variant.mjson"
+    }
+}

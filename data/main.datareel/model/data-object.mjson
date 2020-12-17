@@ -2,7 +2,7 @@
     "root": {
         "prototype": "montage/core/meta/module-object-descriptor",
         "values": {
-            "name": "Object",
+            "name": "DataObject",
             "propertyDescriptors": [
                 {"@": "originId"},
                 {"@": "creationDate"},
@@ -10,17 +10,17 @@
                 {"@": "publicationDate"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/object.mjson"
+                "%": "data/main.datareel/model/data-object.mjson"
             },
-            "exportName": "Object",
+            "exportName": "DataObject",
             "module": {
-                "%": "data/main.datareel/model/object"
+                "%": "data/main.datareel/model/data-object"
             },
             "object":{"@": "object"}
         }
     },
     "object": {
-        "object": "data/main.datareel/model/object"
+        "object": "data/main.datareel/model/data-object"
     },
     "originId": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -33,7 +33,7 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "creationDate",
-            "valueType": "date",
+            "valueDescriptor": {"@": "DateDescriptor"},
             "mandatory": true
         }
     },
@@ -41,7 +41,7 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "modificationDate",
-            "valueType": "date",
+            "valueDescriptor": {"@": "DateDescriptor"},
              "mandatory": true
        }
     },
@@ -49,8 +49,11 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "publicationDate",
-            "valueType": "date"
+            "valueDescriptor": {"@": "DateDescriptor"}
         }
+    },
+    "DateDescriptor": {
+        "object": "montage/core/date.mjson"
     }
 
 }

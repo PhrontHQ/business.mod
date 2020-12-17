@@ -51,6 +51,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
             this.addEventListener(DataOperation.Type.PerformTransaction,this,false);
             this.addEventListener(DataOperation.Type.RollbackTransaction,this,false);
 
+            mainService.addEventListener(DataOperation.Type.NoOp,this,false);
             mainService.addEventListener(DataOperation.Type.ReadFailed,this,false);
             mainService.addEventListener(DataOperation.Type.ReadCompleted,this,false);
             mainService.addEventListener(DataOperation.Type.UpdateFailed,this,false);
@@ -95,7 +96,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
     _sendData: {
         value: function (previousPromise, connection, clientId, data) {
-            // console.log("OperationCoordinator: _sendData to connection:", connection, clientId, data);
+            //console.log("OperationCoordinator: _sendData to connection:", connection, clientId, data);
 
             return (previousPromise || Promise.resolve(true))
                     .then(function() {
@@ -317,6 +318,8 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 (deserializedOperation.type ===  DataOperation.Type.Read) ||
                 (deserializedOperation.type ===  DataOperation.Type.Connect) ||
                 (deserializedOperation.type ===  DataOperation.Type.Create) ||
+                (deserializedOperation.type ===  DataOperation.Type.Update) ||
+                (deserializedOperation.type ===  DataOperation.Type.Delete) ||
                 (deserializedOperation.type ===  DataOperation.Type.CreateTransaction) ||
                 (deserializedOperation.type ===  DataOperation.Type.Batch) ||
                 (deserializedOperation.type ===  DataOperation.Type.PerformTransaction) ||
@@ -331,35 +334,6 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 return resultOperationPromise;
                 //resultOperationPromise = phrontService.handleRead(deserializedOperation);
                 //phrontService.handleRead(deserializedOperation);
-
-            } else if(deserializedOperation.type ===  DataOperation.Type.Update) {
-
-                resultOperationPromise = phrontService.handleUpdate(deserializedOperation);
-
-            } else if(deserializedOperation.type ===  DataOperation.Type.Create) {
-
-                resultOperationPromise = phrontService.handleCreate(deserializedOperation);
-
-            } else if(deserializedOperation.type ===  DataOperation.Type.Delete) {
-
-                resultOperationPromise = phrontService.handleDelete(deserializedOperation);
-
-            // } else if(deserializedOperation.type ===  DataOperation.Type.CreateTransaction) {
-
-            //     resultOperationPromise = phrontService.handleCreateTransaction(deserializedOperation);
-
-            // } else if(deserializedOperation.type ===  DataOperation.Type.Batch) {
-
-            //     resultOperationPromise = phrontService.handleBatch(deserializedOperation);
-
-            // } else if(deserializedOperation.type ===  DataOperation.Type.PerformTransaction) {
-
-            //     resultOperationPromise = phrontService.handlePerformTransaction(deserializedOperation);
-
-            // } else if(deserializedOperation.type ===  DataOperation.Type.RollbackTransaction) {
-
-            //     resultOperationPromise = phrontService.handleRollbackTransaction(deserializedOperation);
-
             } else {
                 console.error("OperationCoordinator: not programmed to handle type of operation ",deserializedOperation);
                 resultOperationPromise = Promise.reject(null);
@@ -518,6 +492,16 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                     createTransactionOperation.nestedCreateTransactionsCompletedOperations.size
                 )) {
                     //Everything is back but some failed.... So we need to send  createTransactionFailed Operation to the client
+
+                    var operation = new DataOperation();
+                    operation.referrerId = rootCreateTransaction.id;
+                    //We keep the same
+                    operation.target = null;
+                    operation.type = DataOperation.Type.CreateTransactionFailed;
+                    operation.data = createTransactionOperation.nestedCreateTransactionsFailedOperations;
+
+                //To dispatch to client:
+                this.handleEvent(operation);
 
             }
         }

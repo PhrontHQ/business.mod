@@ -21,7 +21,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "supplier","orders"
+                "supplier"
             ]
         }
     },

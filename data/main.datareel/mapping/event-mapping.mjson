@@ -36,8 +36,12 @@
                         "<->": "participationRoleIds",
                         "converter": {"@": "participationRolesConverter"}
                     },
-                    "scheduledParticipationStatus": {"<->": "scheduledParticipationStatus"},
-                    "actualParticipationStatus": {"<->": "actualParticipationStatus"},
+                    "participationStatus": {"<->": "participationStatus"},
+
+                    "participationStatusLog": {
+                        "<-": "{keys: participationStatusLogKeys, values: participationStatusLogValues}",
+                        "converter": {"@": "participationStatusLogConverter"}
+                    },
                     "eventURL": {
                         "<->": "eventURL",
                         "converter": {"@": "eventURLConverter"}
@@ -88,7 +92,11 @@
                     "serviceEngagement": {
                         "<->": "id",
                         "converter": {"@": "service-engagement-converter"}
-                    }
+                    },
+                    "respondentQuestionnaires": {
+                        "<->": "respondentQuestionnaireIds",
+                        "converter": {"@": "respondentQuestionnairesForeignKeyConverter"}
+                   }
                }
             },
             "rawDataMapping": {
@@ -100,11 +108,19 @@
                     "participatingResourceId": {
                         "<-": "participatingParty",
                         "reverter": {"@": "participatingPartyForeignKeyConverter"}
+                    },
+                    "participationStatusLogKeys": {
+                        "<-": "participationStatusLog.keysArray()"
+                    },
+                    "participationStatusLogValues": {
+                        "<-": "participationStatusLog.valuesArray()",
+                        "reverter": {"@": "participationStatusLogValuesConverter"}
                     }
+
                 }
             },
             "requisitePropertyNames": [
-                "participatingParty","scheduledTimeRange","actualTimeRange","children","isBlocking","participation","participationRoles","scheduledParticipationStatus","actualParticipationStatus", "summary","description","location","isAllDay"
+                "participatingParty","scheduledTimeRange","actualTimeRange","children","isBlocking","participation","participationRoles","participationStatus","participationStatusLog", "summary","description","location","isAllDay"
             ]
         }
     },
@@ -157,6 +173,29 @@
     "eventURLConverter": {
         "prototype": "montage/core/converter/string-to-URL-converter"
     },
+
+    "DateToStringConverter": {
+        "prototype": "../converter/ISO-date-string-to-date-converter"
+    },
+
+    "participationStatusLogValuesConverter": {
+        "prototype": "montage/core/converter/collection-iteration-converter",
+        "values": {
+            "mapConverter": {"@": "DateToStringConverter"}
+        }
+    },
+
+    "participationStatusLogConverter": {
+        "prototype": "montage/core/converter/key-value-array-to-map-converter",
+        "values": {
+            "convertedValueDescriptor": {"@": "MapObjectDescriptor"},
+            "valuesConverter": {"@": "participationStatusLogValuesConverter"}
+        }
+    },
+    "MapObjectDescriptor": {
+        "object": "montage/core/collections/map.mjson"
+    },
+
     "location-converter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
@@ -223,6 +262,13 @@
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "eventId == $"
+        }
+    },
+
+    "respondentQuestionnairesForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+                "convertExpression": "$.has(id)"
         }
     }
 

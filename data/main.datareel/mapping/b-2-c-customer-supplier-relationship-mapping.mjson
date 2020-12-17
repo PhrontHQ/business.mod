@@ -6,8 +6,46 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
-                    "customer": {"<->":"customerId",
-                                    "converter": {"@": "customerConverter"}}
+                    "postalAddresses": {
+                        "<->": "id",
+                        "converter": {"@": "postalAddresses-value-converter"}
+                    },
+                    "emailAddresses": {
+                        "<->": "id",
+                        "converter": {"@": "emailAddresses-value-converter"}
+                    },
+                    "phoneNumbers": {
+                        "<->": "id",
+                        "converter": {"@": "phoneNumbers-value-converter"}
+                    },
+                    "smsNumbers": {
+                        "<->": "id",
+                        "converter": {"@": "smsNumbers-value-converter"}
+                    },
+                    "instantMessageAddresses": {
+                        "<->": "id",
+                        "converter": {"@": "instantMessageAddresses-value-converter"}
+                    },
+                    "contactForms": {
+                        "<->": "id",
+                        "converter": {"@": "contactForms-value-converter"}
+                    },
+                    "customer": {
+                        "<->":"customerId",
+                        "converter": {"@": "customerConverter"}
+                    },
+                    "notes": {"<->": "notes"},
+                    "staffRelationships": {
+                        "<->":"staffRelationshipIds",
+                        "converter": {"@": "staffRelationshipsConverter"}
+                    },
+                    "responsiblePartyRelationships": {
+                        "<->":"id",
+                        "converter": {"@": "responsiblePartyRelationshipsConverter"}
+                    },
+                    "customerWantsPhoneReminders": {"<->": "customerWantsPhoneReminders"},
+                    "customerWantsEmailReminders": {"<->": "customerWantsEmailReminders"},
+                    "customerWantsSMSReminders": {"<->": "customerWantsSMSReminders"}
                 }
             },
             "rawDataMapping": {
@@ -23,10 +61,60 @@
     "B2CCustomerSupplierRelationshipDescriptor": {
         "object": "data/main.datareel/model/b-2-c-customer-supplier-relationship.mjson"
     },
+
+    "postalAddresses-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "b2cCustomerSupplierRelationshipId == $"
+        }
+    },
+    "emailAddresses-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "b2cCustomerSupplierRelationshipId == $"
+        }
+    },
+    "phoneNumbers-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "b2cCustomerSupplierRelationshipId == $"
+        }
+    },
+    "smsNumbers-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "b2cCustomerSupplierRelationshipId == $"
+        }
+    },
+    "instantMessageAddresses-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "b2cCustomerSupplierRelationshipId == $"
+        }
+    },
+    "contactForms-value-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "b2cCustomerSupplierRelationshipId == $"
+        }
+    },
+
     "customerConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
+        }
+    },
+    "staffRelationshipsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }
+    },
+    "responsiblePartyRelationshipsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "b2cCustomerSupplierRelationshipId = $"
         }
     }
 

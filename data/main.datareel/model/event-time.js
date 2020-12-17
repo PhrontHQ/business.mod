@@ -3,7 +3,7 @@ var Target = require("montage/core/target").Target;
 /**
  * @class EventTime
  * Models https://help.shopify.com/en/api/graphql-admin-api/reference/object/image
- * @extends Object
+ * @extends DataObject
  */
 
 

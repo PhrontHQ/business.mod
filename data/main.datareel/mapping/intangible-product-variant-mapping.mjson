@@ -1,0 +1,24 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "IntangibleProductVariantObjectDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "weight","weightUnit"
+            ]
+        }
+    },
+
+    "IntangibleProductVariantObjectDescriptor": {
+        "object": "data/main.datareel/model/intangible-product-variant.mjson"
+    }
+}

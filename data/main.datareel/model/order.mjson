@@ -29,7 +29,7 @@
         "object": "data/main.datareel/model/order"
     },
     "Object": {
-        "object": "data/main.datareel/model/object.mjson"
+        "object": "data/main.datareel/model/data-object.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",

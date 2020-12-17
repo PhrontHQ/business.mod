@@ -1,0 +1,64 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "RespondentQuestionnaireAnswerDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "respondentQuestionnaire": {
+                        "<->": "respondentQuestionnaireId",
+                        "converter": {"@": "respondentQuestionnaireConverter"}
+                    },
+                    "questionnaireQuestion": {
+                        "<->": "questionnaireQuestionId",
+                        "converter": {"@": "questionnaireQuestionConverter"}
+                    },
+                    "answers": {
+                        "<->": "answerIds",
+                        "converter": {"@": "answersConverter"}
+                    },
+                    "completionDate": {
+                        "<->": "completionDate",
+                        "converter": {"@": "string-to-date-converter"}
+                    },
+                    "respondentNotes": {"<->": "respondentNotes"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "respondentQuestionnaire","questionnaireQuestion","answers","completionDate", "respondentNotes"
+            ]
+        }
+    },
+    "RespondentQuestionnaireAnswerDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-answer.mjson"
+    },
+
+    "respondentQuestionnaireConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "questionnaireQuestionConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+    "answersConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+                "convertExpression": "$.has(id)"
+        }
+    },
+
+    "string-to-date-converter": {
+        "prototype": "../../converter/ISO-date-string-to-date-converter"
+    }
+}

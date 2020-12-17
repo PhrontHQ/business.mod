@@ -1,11 +1,11 @@
-var Object = require("./object").Object;
+var DataObject = require("./data-object").DataObject;
 /**
  * @class ServiceEngagement
- * @extends Object
+ * @extends DataObject
  */
 
 
-exports.ServiceEngagement = Object.specialize(/** @lends ServiceEngagement.prototype */ {
+exports.ServiceEngagement = DataObject.specialize(/** @lends ServiceEngagement.prototype */ {
     service: {
         value: undefined
     },

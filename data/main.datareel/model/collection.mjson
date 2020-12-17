@@ -58,7 +58,7 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "image",
-            "valueType": "string",
+            "valueType": "object",
             "cardinality": 1,
             "isLocalizable": true,
             "valueDescriptor": {"@": "Image_descriptor"}
@@ -102,7 +102,7 @@
     },
 
     "objectDescriptor": {
-        "object": "data/main.datareel/model/object.mjson"
+        "object": "data/main.datareel/model/data-object.mjson"
     }
 
 

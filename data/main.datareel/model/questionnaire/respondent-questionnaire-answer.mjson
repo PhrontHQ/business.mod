@@ -1,0 +1,94 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "RespondentQuestionnaireAnswer",
+            "propertyDescriptors": [
+                {"@": "respondentQuestionnaire"},
+                {"@": "questionnaireQuestion"},
+                {"@": "answers"},
+                {"@": "completionDate"},
+                {"@": "respondentNotes"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/questionnaire/respondent-questionnaire-answer.mjson"
+            },
+            "exportName": "RespondentQuestionnaireAnswer",
+            "module": {
+                "%": "data/main.datareel/model/questionnaire/respondent-questionnaire-answer"
+            },
+            "object": {"@": "respondentQuestionnaireAnswerPrototype"},
+            "modulePrototype": {"@": "respondentQuestionnaireAnswerPrototype"},
+            "parent":{"@": "objectDescriptor"}
+
+        }
+    },
+    "respondentQuestionnaireAnswerPrototype": {
+        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-answer"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+
+    "respondentQuestionnaire": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentQuestionnaire",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "respondentAnswers",
+            "valueDescriptor": {"@": "respondentQuestionnaireDescriptor"}
+        }
+    },
+    "respondentQuestionnaireDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire.mjson"
+    },
+
+    "questionnaireQuestion": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "questionnaireQuestion",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "respondentQuestionnaireAnswers",
+            "valueDescriptor": {"@": "questionnaireQuestionDescriptor"}
+        }
+    },
+    "questionnaireQuestionDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/questionnaire-question.mjson"
+    },
+
+    "answers": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "answers",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "answerDescriptor"}
+        }
+    },
+    "answerDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/answer.mjson"
+    },
+
+    "completionDate": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "completionDate",
+            "valueDescriptor": {"@": "DateDescriptor"}
+        }
+    },
+    "DateDescriptor": {
+        "object": "montage/core/date.mjson"
+    },
+
+    "respondentNotes": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentNotes",
+            "isLocalizable": true,
+            "valueType": "string"
+        }
+    }
+
+}

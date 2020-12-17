@@ -1,8 +1,8 @@
-var Object = require("./object").Object;
+var DataObject = require("./data-object").DataObject;
 
 /**
  * @class SocialProfile
- * @extends Object
+ * @extends DataObject
  *
  * A way to reach someone:
  *  - a postal address,
@@ -16,7 +16,7 @@ var Object = require("./object").Object;
  */
 
 
-exports.SocialProfile = Object.specialize(/** @lends SocialProfile.prototype */ {
+exports.SocialProfile = DataObject.specialize(/** @lends SocialProfile.prototype */ {
     constructor: {
         value: function SocialProfile() {
             this.super();

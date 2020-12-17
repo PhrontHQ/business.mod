@@ -1,10 +1,10 @@
-var Object = require("./object").Object,
+var DataObject = require("./data-object").DataObject,
     Enum = require("montage/core/enum").Enum;
 
 
 /**
  * @class Order
- * @extends Object
+ * @extends DataObject
  *
  * Modeled after https://shopify.dev/docs/admin-api/graphql/reference/object/order
  */
@@ -29,7 +29,7 @@ var Object = require("./object").Object,
 
 exports.OrderCancellationReason = new Enum().initWithMembersAndValues(orderCancellationReasons,orderCancellationReasons);
 
-exports.Order = Object.specialize(/** @lends Order.prototype */ {
+exports.Order = DataObject.specialize(/** @lends Order.prototype */ {
 
     name: {
         value: undefined

@@ -1,0 +1,56 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PartyPhoneNumber",
+            "propertyDescriptors": [
+                {"@": "party"},
+                {"@": "messagingChannel"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/messaging-channel/party-phone-number.mjson"
+            },
+            "exportName": "PartyPhoneNumber",
+            "module": {
+                "%": "data/main.datareel/model/messaging-channel/party-phone-number"
+            },
+            "modulePrototype":{"@": "PartyPhoneNumber"},
+            "object":{"@": "PartyPhoneNumber"},
+            "parent":{"@": "PartyMessagingChannelDescriptor"}
+        }
+    },
+    "PartyPhoneNumber": {
+        "object": "data/main.datareel/model/messaging-channel/party-phone-number"
+    },
+    "PartyMessagingChannelDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-messaging-channel.mjson"
+    },
+
+    "party": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "party",
+            "valueType": "object",
+            "isSearchable": true,
+            "cardinality": 1,
+            "inversePropertyName": "phoneNumbers",
+            "valueDescriptor": {"@": "PartyDescriptor"}
+        }
+    },
+    "PartyDescriptor": {
+        "object": "data/main.datareel/model/party.mjson"
+    },
+
+    "messagingChannel": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "messagingChannel",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "PhoneNumber"}
+        }
+    },
+    "PhoneNumber": {
+        "object": "data/main.datareel/model/messaging-channel/phone-number.mjson"
+    }
+}

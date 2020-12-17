@@ -172,6 +172,9 @@ module.exports = {
                 if((propertyName === "id" || (propertyDescriptor && propertyDescriptor.cardinality === 1)) && Array.isArray(scope)) {
                     propertyName = `ARRAY[${propertyName}]`;
                 }
+                // if((propertyName === "id" || (propertyDescriptor && propertyDescriptor.cardinality === 1))) {
+                //     propertyName = `ARRAY[${propertyName}]`;
+                // }
             }
             else {
                 throw new Error("pgstringify.js: unhandled syntax in has functionStringifiers syntax: "+JSON.stringify(syntax)+"objectDescriptor: "+dataMapping.objectDescriptor.name);
@@ -752,11 +755,15 @@ module.exports = {
 
         not: function (syntax, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements) {
             if (syntax.args[0].type === "equals") {
-                return (
-                    dataService.stringify(syntax.args[0].args[0], scope, dataMappings, locales, rawExpressionJoinStatements, {type: "equals"}) +
-                    " != " +
-                    dataService.stringify(syntax.args[0].args[1], scope, dataMappings, locales, rawExpressionJoinStatements, {type: "equals"})
-                );
+                var left = dataService.stringify(syntax.args[0].args[0], scope, dataMappings, locales, rawExpressionJoinStatements, {type: "equals"}),
+                    right = dataService.stringify(syntax.args[0].args[1], scope, dataMappings, locales, rawExpressionJoinStatements, {type: "equals"});
+
+                if(right === "null") {
+                    return `${left} is not NULL`;
+                } else {
+                    return `${left} != ${right}`;
+                }
+
             } else {
                 return '!' + dataService.stringify(syntax.args[0], scope, dataMappings, locales, rawExpressionJoinStatements, syntax)
             }
@@ -911,14 +918,29 @@ module.exports = {
         "||": function() {
             return "or";
         },
-        "==": function() {
-            return "=";
+        "==": function(value) {
+            if(arguments.length === 1 && (value === null || value === undefined)) {
+                return "is";
+            } else {
+                return "=";
+            }
         }
+        /*
+        ,
+        "!=": function(value) {
+            if(arguments.length === 1 && (value === null || value === undefined)) {
+                return "is not";
+            } else {
+                return "!=";
+            }
+        }
+        */
     },
 
-    mapTokenToRawToken: function(token) {
-        if(this.tokenMappers[token]) {
-            return this.tokenMappers[token](token);
+    mapTokenToRawTokenForValue: function(token, value) {
+        var tokenMapper = this.tokenMappers[token];
+        if(tokenMapper) {
+            return tokenMapper(value);
         } else {
             return token;
         }
@@ -951,13 +973,13 @@ typeToToken.forEach(function (token, type) {
             */
 
             var args = syntax.args,
-                i, countI, result = "",
-                mappedToken = dataService.mapTokenToRawToken(token);
+                i, countI, iValue, result = "";
+                //mappedToken = dataService.mapTokenToRawToken(token);
             for(i = 0, countI = args.length;i<countI;i++) {
                 if(i > 0) {
                     result += " ";
-                    result += mappedToken;
-                    result += " ";
+                    // result += mappedToken;
+                    // result += " ";
                 }
 
                 //clears before each a side of an operator, we reset the dataMappings array:
@@ -965,8 +987,15 @@ typeToToken.forEach(function (token, type) {
                     dataMappings.splice(1,dataMappings.length-1);
                 }
 
-                result += dataService.stringify(args[i],scope, dataMappings, locales, rawExpressionJoinStatements, syntax);
+                iValue = dataService.stringify(args[i],scope, dataMappings, locales, rawExpressionJoinStatements, syntax);
+                //result += iValue
 
+                if(i > 0) {
+                    result += dataService.mapTokenToRawTokenForValue(token,result);
+                    result += " ";
+                }
+
+                result += iValue
             }
 
             return result.trim();

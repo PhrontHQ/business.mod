@@ -1,0 +1,93 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "QuestionnaireDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "name": {"<->": "name"},
+                    "title": {"<->": "title"},
+                    "headerVisual": {
+                        "<->": "headerVisualId",
+                        "converter": {"@": "imageConverter"}
+                    },
+                    "description": {"<->": "description"},
+                    "questions": {
+                        "<->": "id",
+                        "converter": {"@": "questionsConverter"}
+                    },
+                    "userContextVariables": {
+                        "<->": "userContextVariableIds",
+                        "converter": {"@": "userContextVariablesForeignKeyConverter"}
+                    },
+                    "referrerQuestionnaire": {
+                        "<->": "referrerQuestionnaireId",
+                        "converter": {"@": "referrerQuestionnaireConverter"}
+                    },
+                    "followUpQuestionnaires": {
+                        "<->": "id",
+                        "converter": {"@": "followUpQuestionnairesConverter"}
+                    },
+                    "respondentQuestionnaires": {
+                        "<->": "id",
+                        "converter": {"@": "respondentQuestionnairesConverter"}
+                    }
+
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "name", "title", "description","questions","userContextVariables","referrerQuestionnaire","respondentQuestionnaires"
+            ]
+        }
+    },
+    "imageConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+    "questionsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "questionnaireId == $"
+        }
+    },
+
+    "QuestionnaireDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/questionnaire.mjson"
+    },
+
+    "userContextVariablesForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+                "convertExpression": "$.has(id)"
+        }
+    },
+
+    "referrerQuestionnaireConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+    "followUpQuestionnairesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "referrerQuestionnaireId == $"
+        }
+    },
+
+    "respondentQuestionnairesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "questionnaireId == $"
+        }
+    }
+
+}

@@ -1,0 +1,145 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Questionnaire",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "title"},
+                {"@": "headerVisual"},
+                {"@": "description"},
+                {"@": "questions"},
+                {"@": "userContextVariables"},
+                {"@": "referrerQuestionnaire"},
+                {"@": "followUpQuestionnaires"},
+                {"@": "respondentQuestionnaires"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/questionnaire/questionnaire.mjson"
+            },
+            "exportName": "Questionnaire",
+            "module": {
+                "%": "data/main.datareel/model/questionnaire/questionnaire"
+            },
+            "object":{"@": "questionnaire"},
+            "modulePrototype": {"@": "questionnairePrototype"},
+            "parent":{"@": "objectDescriptor"}
+
+        }
+    },
+    "questionnaire": {
+        "object": "data/main.datareel/model/questionnaire/questionnaire"
+    },
+    "questionnairePrototype": {
+        "object": "data/main.datareel/model/questionnaire/questionnaire"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "isLocalizable": true,
+            "valueType": "string",
+            "description": "The name given internally"
+        }
+    },
+    "title": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "title",
+            "isLocalizable": true,
+            "valueType": "string",
+            "description": "The title presented to people filling the questionnaire"
+        }
+    },
+
+    "headerVisual": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "headerVisual",
+            "valueType": "object",
+            "cardinality": 1,
+            "isLocalizable": true,
+            "valueDescriptor": {"@": "Image_descriptor"}
+        }
+    },
+    "Image_descriptor": {
+        "object": "data/main.datareel/model/image.mjson"
+    },
+
+    "description": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "description",
+            "isLocalizable": true,
+            "valueType": "string",
+            "description": "User-facing explanation about what the questionnaire is about"
+
+        }
+    },
+    "questions": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "questions",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "questionnaire",
+            "valueDescriptor": {"@": "questionnaireQuestionDescriptor"}
+        }
+    },
+    "questionnaireQuestionDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/questionnaire-question.mjson"
+    },
+    "userContextVariables": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "userContextVariables",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "questionnaires",
+            "valueDescriptor": {"@": "variableDescriptor"}
+        }
+    },
+    "variableDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/variable.mjson"
+    },
+
+    "referrerQuestionnaire": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "referrerQuestionnaire",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "followUpQuestionnaires",
+            "valueDescriptor": {"@": "root"}
+        }
+    },
+
+    "followUpQuestionnaires": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "followUpQuestionnaires",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "referrerQuestionnaire",
+            "valueDescriptor": {"@": "root"}
+        }
+    },
+
+    "respondentQuestionnaires": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentQuestionnaires",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "questionnaire",
+            "valueDescriptor": {"@": "respondentQuestionnairesDescriptor"}
+       }
+    },
+    "respondentQuestionnairesDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire.mjson"
+    }
+
+}

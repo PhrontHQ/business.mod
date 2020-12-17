@@ -21,13 +21,16 @@ var DataService = require("montage/data/service/data-service").DataService,
     DeleteRule = require("montage/core/meta/property-descriptor").DeleteRule,
     Locale = require("montage/core/locale").Locale,
     PGClass = require("../model/p-g-class").PGClass,
-    DataTrigger = require("./data-trigger").DataTrigger,
+    //DataTrigger = require("./data-trigger").DataTrigger,
     defaultEventManager = require("montage/core/event/event-manager").defaultEventManager,
-
+    ExpressionDataMapping = require("montage/data/service/expression-data-mapping").ExpressionDataMapping,
+    ISODateStringToDateConverter = require("data/main.datareel/converter/ISO-date-string-to-date-converter").ISODateStringToDateConverter,
+    RawEmbeddedValueToObjectConverter = require("montage/data/converter/raw-embedded-value-to-object-converter").RawEmbeddedValueToObjectConverter,
+    currentEnvironment = require("montage/core/environment").currentEnvironment,
     PhrontClientService;
 
 //Set our DataTrigger custom subclass:
-DataService.prototype.DataTrigger = DataTrigger;
+//DataService.prototype.DataTrigger = DataTrigger;
 
 
 /**
@@ -42,8 +45,6 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             var self = this;
 
             this.super();
-
-
 
             this._thenableByOperationId = new Map();
             this._pendingOperationById = new Map();
@@ -64,8 +65,14 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         value: function () {
             if(!this.connection && this.connectionDescriptor) {
                 if(global.location) {
-                    if(global.location.hostname === "127.0.0.1" || global.location.hostname === "localhost") {
-                        this.connection = this.connectionForIdentifier("dev");
+                    if(global.location.hostname === "127.0.0.1" || global.location.hostname === "localhost" || global.location.hostname.endsWith(".local") ) {
+                        var connection = this.connectionForIdentifier("dev"),
+                            websocketURL = new URL(connection.websocketURL);
+                        if(global.location.hostname === "localhost" && currentEnvironment.isAndroidDevice && websocketURL.hostname.endsWith(".local")) {
+                            websocketURL.hostname = "localhost";
+                            connection.websocketURL = websocketURL.toString();
+                        }
+                        this.connection = connection;
                     } else {
                         //Let's try to read the stage from the URL?
                         for(var i=0, connectionIdentifiers = Object.keys(this.connectionDescriptor), countI = connectionIdentifiers.length, iConnectionIdentifier, iConnection;(i<countI); i++) {
@@ -113,6 +120,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     handleConnect: {
         value: function (connectOperation) {
             var stage = connectOperation.context.requestContext.stage;
+
+            currentEnvironment.stage = stage;
+            console.log("client ip address:"+connectOperation.context.requestContext.identity.sourceIp);
 
             /*
                 The stage allows us to pick the right Database Connection among the ones we've been told.
@@ -302,9 +312,12 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             this.handleReadUpdate(operation);
             //The read is complete
             var stream = this._thenableByOperationId.get(operation.referrerId);
-            this.rawDataDone(stream);
-            this._thenableByOperationId.delete(operation.referrerId);
-
+            if(stream) {
+                this.rawDataDone(stream);
+                this._thenableByOperationId.delete(operation.referrerId);
+            } else {
+                console.log("receiving operation of type:"+operation.type+", but can't find a matching stream");
+            }
             //console.log("handleReadCompleted -clear _thenableByOperationId- referrerId: ",operation.referrerId);
 
         }
@@ -404,6 +417,15 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         value: function(operation) {
             this._pendingOperationById.set(operation.id, operation);
             var serializedOperation = this._serializer.serializeObject(operation);
+
+            // if(operation.type === "batch") {
+            //     var deserializer = new Deserializer();
+            //     deserializer.init(serializedOperation, require, undefined, module, true);
+            //     var deserializedOperation = deserializer.deserializeObject();
+
+            //     console.log(deserializedOperation);
+
+            // }
             //console.log("----> send operation "+serializedOperation);
             this._socket.send(serializedOperation);
         }
@@ -496,13 +518,42 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     fetchObjectProperty: {
         value: function (object, propertyName) {
             var objectDescriptor = this.objectDescriptorForObject(object),
-                propertyNameQuery = DataQuery.withTypeAndCriteria(objectDescriptor,this.rawCriteriaForObject(object, objectDescriptor));
+                propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyName),
+                valueDescriptor = propertyDescriptor && propertyDescriptor.valueDescriptor;
 
-            propertyNameQuery.readExpressions = [propertyName];
+            // console.log(objectDescriptor.name+": fetchObjectProperty "+ " -"+propertyName);
 
-            //console.log(objectDescriptor.name+": fetchObjectProperty "+ " -"+propertyName);
+            if(!Promise.is(valueDescriptor)) {
+                valueDescriptor = Promise.resolve(valueDescriptor);
+            }
 
-            return this.fetchData(propertyNameQuery);
+            return valueDescriptor.then( (valueDescriptor) => {
+                var mapping = objectDescriptor && this.mappingForType(objectDescriptor),
+                    objectRule = mapping && mapping.objectMappingRules.get(propertyName),
+                    objectRuleConverter = objectRule && objectRule.converter;
+
+
+
+                /*
+                    if we can get the value from the type's storage itself:
+                */
+                if(
+                    !valueDescriptor ||
+                    ( valueDescriptor && !objectRuleConverter ) /*for Date for example*/ ||
+                    ( valueDescriptor && objectRuleConverter && objectRuleConverter instanceof RawEmbeddedValueToObjectConverter)
+                ) {
+                    var propertyNameQuery = DataQuery.withTypeAndCriteria(objectDescriptor,this.rawCriteriaForObject(object, objectDescriptor));
+
+                    propertyNameQuery.readExpressions = [propertyName];
+
+                    console.log(objectDescriptor.name+": fetchObjectProperty "+ " -"+propertyName);
+
+                    return this.fetchData(propertyNameQuery);
+
+                } else {
+                    return this._fetchObjectPropertyWithPropertyDescriptor(object, propertyName, propertyDescriptor);
+                }
+            });
         }
     },
 
@@ -560,6 +611,26 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     localesForObject: {
         value: function(object) {
             return object.locales || this.userLocales;
+        }
+    },
+
+    _sharedCriteriaByLocales: {
+        value: new Map()
+    },
+
+
+    sharedLocalesCriteriaForObject: {
+        value: function(object) {
+            var locales = this.localesForObject(object),
+                sharedCriteriaForLocale = this._sharedCriteriaByLocales.get(locales);
+
+            if(!sharedCriteriaForLocale) {
+                this._sharedCriteriaByLocales.set(locales,(sharedCriteriaForLocale = new Criteria().initWithExpression("locales == $DataServiceUserLocales", {
+                    DataServiceUserLocales: locales
+                })));
+            }
+
+            return sharedCriteriaForLocale;
         }
     },
 
@@ -690,21 +761,23 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     for(i=0, countI = keys.length;(i < countI); i++) {
                         iKey  = keys[i];
                         iValue = parameters[iKey];
-                        if(iValue.dataIdentifier) {
-
-                            /*
-                                this isn't working because it's causing triggers to fetch properties we don't have
-                                and somehow fails, but it's wastefull. Going back to just put primary key there.
-                            */
-                            // iRecord = {};
-                            // rawParameters[iKey] = iRecord;
-                            // (promises || (promises = [])).push(
-                            //     self._mapObjectToRawData(iValue, iRecord)
-                            // );
-                            rawParameters[iKey] = iValue.dataIdentifier.primaryKey;
-
+                        if(!iValue) {
+                            throw "fetchData: criteria with no value for parameter key "+iKey;
                         } else {
-                            rawParameters[iKey] = iValue;
+                            if(iValue.dataIdentifier) {
+                                /*
+                                    this isn't working because it's causing triggers to fetch properties we don't have
+                                    and somehow fails, but it's wastefull. Going back to just put primary key there.
+                                */
+                                // iRecord = {};
+                                // rawParameters[iKey] = iRecord;
+                                // (promises || (promises = [])).push(
+                                //     self._mapObjectToRawData(iValue, iRecord)
+                                // );
+                                rawParameters[iKey] = iValue.dataIdentifier.primaryKey;
+                            } else {
+                                rawParameters[iKey] = iValue;
+                            }
                         }
 
                     }
@@ -718,129 +791,137 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     if(criteria) readOperation.criteria.parameters = parameters;
 
                 });
+            })
+            .catch(function(error) {
+                stream.dataError(error);
             });
 
           return stream;
         }
     },
 
-    _processObjectChangesForProperty: {
-        value: function(object, aProperty, aPropertyDescriptor, aPropertyChanges, operationData, snapshot, dataSnapshot, rawDataPrimaryKeys, mapping) {
-            var aRawProperty = mapping.mapObjectPropertyToRawProperty(object, aProperty);
+    // _processObjectChangesForProperty: {
+    //     value: function(object, aProperty, aPropertyDescriptor, aPropertyChanges, operationData, snapshot, dataSnapshot, rawDataPrimaryKeys, mapping) {
+    //         var aRawProperty = mapping.mapObjectPropertyToRawProperty(object, aProperty);
 
-            if(this._isAsync(aRawProperty)) {
-                var self = this;
-                return aRawProperty.then(function(aRawProperty) {
-                    return self.__processObjectChangesForProperty(object, aProperty, aPropertyDescriptor, aRawProperty, aPropertyChanges, operationData, snapshot, dataSnapshot, rawDataPrimaryKeys);
-                });
-            } else {
-                return this.__processObjectChangesForProperty(object, aProperty, aPropertyDescriptor, aRawProperty, aPropertyChanges, operationData, snapshot, dataSnapshot, rawDataPrimaryKeys);
-            }
+    //         if(this._isAsync(aRawProperty)) {
+    //             var self = this;
+    //             return aRawProperty.then(function(aRawProperty) {
+    //                 return self.__processObjectChangesForProperty(object, aProperty, aPropertyDescriptor, aRawProperty, aPropertyChanges, operationData, snapshot, dataSnapshot, rawDataPrimaryKeys);
+    //             });
+    //         } else {
+    //             return this.__processObjectChangesForProperty(object, aProperty, aPropertyDescriptor, aRawProperty, aPropertyChanges, operationData, snapshot, dataSnapshot, rawDataPrimaryKeys);
+    //         }
 
-        }
-    },
+    //     }
+    // },
 
     __processObjectChangesForProperty: {
-        value: function(object, aProperty, aPropertyDescriptor, aRawProperty, aPropertyChanges, operationData, snapshot, dataSnapshot, rawDataPrimaryKeys) {
+        value: function(object, aProperty, aPropertyDescriptor, aPropertyChanges, operationData, lastReadSnapshot, rawDataSnapshot, rawDataPrimaryKeys, mapping) {
 
             /*
                 We already do that in expression-data-mapping mapObjectPropertyToRawData(), but expression-data-mapping doesn't know about added/removed changes where our _processObjectChangesForProperty does.
             */
-            if(rawDataPrimaryKeys.indexOf(aRawProperty) !== -1) {
-                return;
-            }
+            // if(rawDataPrimaryKeys && rawDataPrimaryKeys.indexOf(aRawProperty) !== -1) {
+            //     return;
+            // }
 
             var self = this,
                 aPropertyDeleteRule = aPropertyDescriptor ? aPropertyDescriptor.deleteRule : null;
-            // if(aPropertyDescriptor.valueDescriptor) {
-            //     console.log("It's an object, identifier is: ",this.dataIdentifierForObject(aValue));
-            // }
 
-            //A collection with "addedValues" / "removedValues" keys
+            /*
+                A collection with "addedValues" / "removedValues" keys
+                Which for now we only handle for Arrays.
+
+                The recent addition of a DataObject property that can be a Map, we may have to re-visit that. It would be better to handle incremental changes to a map than sending all keys and all values are we doing for now
+            */
             if(aPropertyChanges && (aPropertyChanges.hasOwnProperty("addedValues") ||  aPropertyChanges.hasOwnProperty("removedValues"))) {
                 if(!(aPropertyDescriptor.cardinality>1)) {
                     throw new Error("added/removed values for property without a to-many cardinality");
                 }
-                /*
-                    Until we get more sophisticated and we can leverage
-                    the full serialization, we turn objects into their primaryKey
+            //     /*
+            //         Until we get more sophisticated and we can leverage
+            //         the full serialization, we turn objects into their primaryKey
 
-                    We have a partial view, the backend will need pay attention that we're not re-adding object if it's already there, and should be unique.
-                */
-               var valuesIterator, iValue, addedValues, removedValues;
-               if(aPropertyChanges.addedValues) {
+            //         We have a partial view, the backend will need pay attention that we're not re-adding object if it's already there, and should be unique.
+            //     */
+            //    var valuesIterator, iValue, addedValues, removedValues;
+            //    if(aPropertyChanges.addedValues) {
 
-                    /*
-                        Notes:
-                        If dataObject[aProperty] === null, we could treat addedValues as a set, and there might be something going on in tracking/propagating changes that leads to a set being considered as added. Triggers do their best to keep the array created in place, and change it's content rather than replace it, even when a set is done. That in itself is likely the reason we see this.
+            //         /*
+            //             Notes:
+            //             If dataObject[aProperty] === null, we could treat addedValues as a set, and there might be something going on in tracking/propagating changes that leads to a set being considered as added. Triggers do their best to keep the array created in place, and change it's content rather than replace it, even when a set is done. That in itself is likely the reason we see this.
 
-                        There might not be downsides to deal with it as an add though.
-                    */
-                    valuesIterator = aPropertyChanges.addedValues.values();
-                    while ((iValue = valuesIterator.next().value)) {
-                        (addedValues || (addedValues = [])).push(this.dataIdentifierForObject(iValue).primaryKey);
-                    }
+            //             There might not be downsides to deal with it as an add though.
+            //         */
+            //         valuesIterator = aPropertyChanges.addedValues.values();
+            //         while ((iValue = valuesIterator.next().value)) {
+            //             (addedValues || (addedValues = [])).push(this.dataIdentifierForObject(iValue).primaryKey);
+            //         }
 
-                    /*
-                        After converting to primaryKeys in an array, we make it replace the original set for the same key on aPropertyChanges
-                    */
-                   if(addedValues) {
-                        aPropertyChanges.addedValues = addedValues;
-                   } else {
-                       delete aPropertyChanges.addedValues;
-                   }
-               }
+            //         /*
+            //             After converting to primaryKeys in an array, we make it replace the original set for the same key on aPropertyChanges
+            //         */
+            //        if(addedValues) {
+            //             aPropertyChanges.addedValues = addedValues;
+            //        } else {
+            //            delete aPropertyChanges.addedValues;
+            //        }
+            //    }
 
-                if(aPropertyChanges.removedValues) {
-                    valuesIterator = aPropertyChanges.removedValues.values();
-                    while ((iValue = valuesIterator.next().value)) {
-                        //TODO: Check if the removed value should be itself be deleted
-                        //if(aPropertyDeleteRule === DeleteRule.CASCADE){}
-                        (removedValues || (removedValues = [])).push(this.dataIdentifierForObject(iValue).primaryKey);
-                    }
-                    if(removedValues) {
-                        aPropertyChanges.removedValues = removedValues;
-                    } else {
-                        delete aPropertyChanges.removedValues;
-                    }
-                }
+            //     if(aPropertyChanges.removedValues) {
+            //         valuesIterator = aPropertyChanges.removedValues.values();
+            //         while ((iValue = valuesIterator.next().value)) {
+            //             //TODO: Check if the removed value should be itself be deleted
+            //             //if(aPropertyDeleteRule === DeleteRule.CASCADE){}
+            //             (removedValues || (removedValues = [])).push(this.dataIdentifierForObject(iValue).primaryKey);
+            //         }
+            //         if(removedValues) {
+            //             aPropertyChanges.removedValues = removedValues;
+            //         } else {
+            //             delete aPropertyChanges.removedValues;
+            //         }
+            //     }
 
-                //Here we mutated the structure from changesForDataObject. I should be cleared
-                //when saved, but what if save fails and changes happen in-between?
-                operationData[aRawProperty] = aPropertyChanges;
+            //     //Here we mutated the structure from changesForDataObject. I should be cleared
+            //     //when saved, but what if save fails and changes happen in-between?
+            //     operationData[aRawProperty] = aPropertyChanges;
+
+                return this._mapObjectPropertyToRawData(object, aProperty, operationData, undefined/*context*/, aPropertyChanges.addedValues, aPropertyChanges.removedValues, lastReadSnapshot, rawDataSnapshot);
+
             }
             else {
-                result = this._mapObjectPropertyToRawData(object, aProperty, operationData);
+                return this._mapObjectPropertyToRawData(object, aProperty, operationData, undefined/*context*/,undefined, undefined, lastReadSnapshot, rawDataSnapshot);
 
                 /*
                     we need to check post mapping that the rawValue is different from the snapshot
                 */
-                if (this._isAsync(result)) {
-                    return result.then(function (value) {
-                        self._setOperationDataSnapshotForProperty(operationData, snapshot, dataSnapshot, aRawProperty );
-                    });
-                }
-                else {
-                    self._setOperationDataSnapshotForProperty(operationData, snapshot, dataSnapshot, aRawProperty );
-                }
+                // if (this._isAsync(result)) {
+                //     return result.then(function (value) {
+                //         self._setOperationDataSnapshotForProperty(operationData, snapshot, dataSnapshot, aRawProperty );
+                //     });
+                // }
+                // else {
+                //     self._setOperationDataSnapshotForProperty(operationData, snapshot, dataSnapshot, aRawProperty );
+                // }
             }
         }
     },
 
-    _setOperationDataSnapshotForProperty: {
-        value: function(operationData, snapshot, dataSnapshot, aRawProperty ) {
-            if(snapshot.hasOwnProperty(aRawProperty)) {
-                if(snapshot[aRawProperty] === operationData[aRawProperty]) {
-                    delete operationData[aRawProperty];
-                    delete snapshot[aRawProperty];
-                }
-                else {
-                    dataSnapshot[aRawProperty] = snapshot[aRawProperty];
-                }
-            }
+    // _setOperationDataSnapshotForProperty: {
+    //     value: function(operationData, snapshot, dataSnapshot, aRawProperty ) {
+    //         if(snapshot.hasOwnProperty(aRawProperty)) {
+    //             if(snapshot[aRawProperty] === operationData[aRawProperty]) {
+    //                 delete operationData[aRawProperty];
+    //                 delete snapshot[aRawProperty];
+    //             }
+    //             else {
+    //                 dataSnapshot[aRawProperty] = snapshot[aRawProperty];
+    //             }
+    //         }
 
-        }
-    },
+    //     }
+    // },
 
     primaryKeyForNewDataObject: {
         value: function (type) {
@@ -969,6 +1050,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 if(objectInvalidityStates.size != 0) {
                     invalidityStates.set(object,objectInvalidityStates);
                 }
+                return objectInvalidityStates;
             });
         }
     },
@@ -1044,6 +1126,40 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             });
         }
     },
+
+    _pendingTransactions: {
+        value: undefined
+    },
+    addPendingTransaction: {
+        value: function(aCreateTransactionOperation) {
+            (this._pendingTransactions || (this._pendingTransactions = [])).push(aCreateTransactionOperation);
+        }
+    },
+    deletePendingTransaction: {
+        value: function(aCreateTransactionOperation) {
+            if(this._pendingTransactions) {
+                this._pendingTransactions.delete(aCreateTransactionOperation);
+            }
+        }
+    },
+
+    isObjectCreated: {
+        value: function(object) {
+            var pendingTransactions = this._pendingTransactions;
+
+            if(pendingTransactions && pendingTransactions.length) {
+                for(var i=0, countI = pendingTransactions.length; (i < countI); i++ ) {
+                    if(pendingTransactions[i].createdDataObjects.has(object)) {
+                        return true;
+                    }
+                }
+                return false;
+            } else {
+                return false;
+            }
+        }
+    },
+
 
 
     saveChanges: {
@@ -1125,7 +1241,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         resolve(operation);
                     }
 
-                    //we assess object's validity:
+                    //we assess createdDataObjects's validity:
                     self._evaluateObjectsValidity(createdDataObjects,createdDataObjectInvalidity, validityEvaluationPromises, transactionObjectDescriptors);
 
                     //then changedDataObjects.
@@ -1188,14 +1304,25 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             });
                             self._thenableByOperationId.set(createTransaction.id,_createTransactionPromise);
 
+
+                            //Bookeeping for client side:
+                            createTransaction.createdDataObjects = createdDataObjects;
+                            createTransaction.changedDataObjects = changedDataObjects;
+                            createTransaction.deletedDataObjects = deletedDataObjects;
+                            createTransaction.dataObjectChanges = dataObjectChanges;
+
+                            self.addPendingTransaction(createTransaction);
+
                             self._dispatchOperation(createTransaction);
 
                             return _createTransactionPromise;
                         }, function(error) {
                             console.error("Error trying to communicate with server",error);
+                            self.deletePendingTransaction(createTransaction);
                             reject(error);
                         });
                     }, function(error) {
+                        self.deletePendingTransaction(createTransaction);
                         reject(error);
                     })
                     .then(function(createTransactionResult) {
@@ -1204,6 +1331,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         if(createTransactionResult.type === DataOperation.Type.CreateTransactionFailed) {
                             var error = new Error("CreateTransactionFailed");
                             error.details = createTransactionResult;
+                            self.deletePendingTransaction(createTransaction);
                             return reject(error);
                         }
 
@@ -1273,10 +1401,54 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             });
 
                     }, function(error) {
+                        self.deletePendingTransaction(createTransaction);
                         reject(error);
                     })
                     .then(function(batchedOperations) {
                         if(batchedOperations) {
+/*
+                            var batchedOperationsPromises = [], maxBatchSize = 10,
+                                i, countI, iBatch;
+
+
+                            for(i=0; (i<batchedOperations.length); i++ ) {
+
+                                if(maxBatchSize > batchedOperations.length) {
+                                    iBatch = batchedOperations;
+                                } else {
+                                    iBatch = batchedOperations.splice(i, maxBatchSize);
+                                }
+
+                                //Now proceed to build the batch operation
+                                //We may have some no-op in there as we didn't cacth them...
+                                batchOperation = new DataOperation();
+                                batchOperation.type = DataOperation.Type.Batch;
+
+                                //This is to target the OperationCoordinator on the other side
+                                batchOperation.target = null;
+                                //batchOperation.target = (transactionObjectDescriptors.size === 1) ? Array.from(transactionObjectDescriptors)[0] : null;
+                                // batchOperation.target = (transactionObjecDescriptors.length === 1) ? transactionObjecDescriptors[0] : transactionObjecDescriptors;
+                                batchOperation.data = {
+                                        batchedOperations: iBatch,
+                                        transactionId: createTransactionCompletedId
+                                };
+                                batchOperation.referrerId = createTransaction.id;
+
+                                batchOperationPromise = new Promise(function(resolve, reject) {
+                                    batchOperation._promiseResolve = resolve;
+                                    batchOperation._promiseReject = reject;
+                                });
+                                self._thenableByOperationId.set(batchOperation.id,batchOperationPromise);
+
+                                batchedOperationsPromises.push(batchOperationPromise);
+                                self._dispatchOperation(batchOperation);
+
+                            }
+                            return Promise.all(batchedOperationsPromises);
+
+                            */
+
+
                             //Now proceed to build the batch operation
                             //We may have some no-op in there as we didn't cacth them...
                             batchOperation = new DataOperation();
@@ -1301,12 +1473,15 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             self._dispatchOperation(batchOperation);
 
                             return batchOperationPromise;
+
                         } else {
                             var noOpOperation = new DataOperation();
                             noOpOperation.type = DataOperation.Type.NoOp;
+                            self.deletePendingTransaction(createTransaction);
                             return Promise.resolve(noOpOperation);
                         }
                     }, function(error) {
+                        self.deletePendingTransaction(createTransaction);
                         reject(error);
                     })
                     .then(function(batchedOperationResult) {
@@ -1341,7 +1516,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                             rollbackTransactionOperation = new DataOperation();
                             rollbackTransactionOperation.type = DataOperation.Type.RollbackTransaction;
-                            rollbackTransactionOperation.target = transactionObjecDescriptors,
+                            rollbackTransactionOperation.target = createTransaction.target,
                             //Not sure we need any data here?
                             // rollbackTransactionOperation.data = batchedOperations;
                             rollbackTransactionOperation.referrerId = createTransaction.id;
@@ -1363,9 +1538,11 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             return Promise.resolve(batchedOperationResult);
                         } else {
                             console.error("- saveChanges: Unknown batchedOperationResult:",batchedOperationResult);
+                            self.deletePendingTransaction(createTransaction);
                             reject(new Error("- saveChanges: Unknown batchedOperationResult:"+JSON.stringify(batchedOperationResult)));
                         }
                     }, function(error) {
+                        self.deletePendingTransaction(createTransaction);
                         reject(error);
                     })
                     .then(function(transactionOperationResult) {
@@ -1383,22 +1560,26 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                         } else if(transactionOperationResult.type === DataOperation.Type.RollbackTransactionFailed) {
                             console.error("Missing logic for RollbackTransactionFailed");
-                        } else if(batchedOperationResult.type === DataOperation.Type.NoOp) {
+                        } else if(transactionOperationResult.type === DataOperation.Type.NoOp) {
                             console.error("NoOp");
                         } else {
                             console.error("- saveChanges: Unknown transactionOperationResult:",transactionOperationResult);
 
+                            self.deletePendingTransaction(createTransaction);
                             reject(new Error("- saveChanges: Unknown transactionOperationResult:"+JSON.stringify(transactionOperationResult)));
                         }
 
+                        self.deletePendingTransaction(createTransaction);
                         resolve(transactionOperationResult);
 
                     }, function(error) {
+                        self.deletePendingTransaction(createTransaction);
                         reject(error);
                     });
 
                 }
                 catch (error) {
+                    self.deletePendingTransaction(createTransaction);
                     reject(error);
                 }
             });
@@ -1566,7 +1747,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     continue;
                 }
 
-                result = this._processObjectChangesForProperty(object, aProperty, aPropertyDescriptor, aPropertyChanges, operationData, snapshot, dataSnapshot, rawDataPrimaryKeys, mapping);
+                result = this.__processObjectChangesForProperty(object, aProperty, aPropertyDescriptor, aPropertyChanges, operationData, snapshot, dataSnapshot, rawDataPrimaryKeys, mapping);
 
                 if(result && this._isAsync(result)) {
                     (mappingPromises || (mappingPromises = [])).push(result);
@@ -1629,7 +1810,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     propertyIterator,
                     isNewObject = operationType
                         ? operationType === DataOperation.Type.Create
-                        : self.rootService.createdDataObjects.has(object),
+                        : self.rootService.isObjectCreated(object),
                     localOperationType = operationType
                                         ? operationType
                                         : isNewObject
@@ -1638,7 +1819,6 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     isDeletedObject = localOperationType === DataOperation.Type.Delete,
                     operationData = {},
                     localizableProperties = objectDescriptor.localizablePropertyDescriptors,
-                    objectLocalesCriteria,
                     criteria,
                     i, iValue, countI;
 
@@ -1656,12 +1836,12 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 }
 
                 if(localizableProperties && localizableProperties.size) {
-                    var objectLocalesCriteria = this.localesCriteriaForObject(object);
                     if(criteria) {
-                        criteria = objectLocalesCriteria.and(criteria);
+                        criteria = this.localesCriteriaForObject(object).and(criteria);
                     } else {
                         //Even in a create, we need to know about locales
-                        criteria = objectLocalesCriteria;
+                        // criteria = this.sharedLocalesCriteriaForObject(object);
+                        criteria = this.localesCriteriaForObject(object);
                     }
                 }
 
@@ -1767,7 +1947,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     // dataObjectChanges = this.rootService.changesForDataObject(object),
                     // changesIterator,
                     // aProperty, aRawProperty,
-                    // isNewObject = self.rootService.createdDataObjects.has(object),
+                    // isNewObject = self.rootService.isObjectCreated(object),
                     // operationData = {},
                     // mappingPromise,
                     // mappingPromises,
@@ -1892,7 +2072,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     //             dataObjectChanges = this.rootService.changesForDataObject(object),
     //             changesIterator,
     //             aProperty, aRawProperty,
-    //             isNewObject = self.rootService.createdDataObjects.has(object),
+    //             isNewObject = self.rootService.isObjectCreated(object),
     //             operationData = {},
     //             mappingPromise,
     //             mappingPromises,
@@ -2069,7 +2249,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     //             var self = this,
     //                 updates = this.rawDataUpdatesFromObjectSnapshot(record, object),
     //                 snapshot = this.snapshotForDataIdentifier(object.dataIdentifier),
-    //                 isNewObject = self.rootService.createdDataObjects.has(object),
+    //                 isNewObject = self.rootService.isObjectCreated(object),
     //                 objectDescriptor = this.objectDescriptorForObject(object);
 
     //             if(Object.keys(updates.changes).length > 0) {
@@ -2171,7 +2351,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         value: function (object) {
 
         }
-    },
+    }
 
 
 

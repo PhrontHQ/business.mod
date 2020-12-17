@@ -5,8 +5,9 @@
             "name": "Person",
             "propertyDescriptors": [
                 {"@": "name"},
+                {"@": "gender"},
                 {"@": "aliases"},
-                {"@": "images"},
+                {"@": "preferredLocales"},
                 {"@": "tags"},
                 {"@": "userIdentities"},
                 {"@": "employmentHistory"},
@@ -16,7 +17,12 @@
                 {"@": "email"},
                 {"@": "phone"},
                 {"@": "addresses"},
-                {"@": "events"}
+                {"@": "events"},
+                {"@": "questionnaires"},
+                {"@": "supplierRelationships"},
+                {"@": "customerSupplierResponsibilities"},
+                {"@": "firstPersonalRelationships"},
+                {"@": "secondPersonalRelationships"}
            ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/person.mjson"
@@ -58,12 +64,33 @@
     "name_descriptor": {
         "object": "data/main.datareel/model/person-name.mjson"
     },
+    "gender": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "gender",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "gender_descriptor"}
+        }
+    },
+    "gender_descriptor": {
+        "object": "data/main.datareel/model/gender.mjson"
+    },
+
     "aliases": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "aliases",
             "cardinality": -1,
             "valueDescriptor": {"@": "name_descriptor"}
+        }
+    },
+
+    "preferredLocales": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "preferredLocales",
+            "cardinality": -1,
+            "valueType": "array"
         }
     },
 
@@ -95,17 +122,6 @@
             "valueType": "string"
         }
     },
-    "images": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "images",
-            "cardinality": -1,
-            "valueDescriptor": {"@": "image_descriptor"}
-        }
-    },
-    "image_descriptor": {
-        "object": "data/main.datareel/model/image.mjson"
-    },
     "addresses": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -130,6 +146,21 @@
     "event_descriptor": {
         "object": "data/main.datareel/model/event.mjson"
     },
+
+    "questionnaires": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "questionnaires",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "respondent",
+            "valueDescriptor": {"@": "respondentQuestionnairesDescriptor"}
+       }
+    },
+    "respondentQuestionnairesDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire.mjson"
+    },
+
     "tags": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -178,8 +209,60 @@
 
     "serviceDescriptor": {
         "object": "data/main.datareel/model/service.mjson"
+    },
+
+    "supplierRelationships": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "supplierRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "customer",
+            "valueDescriptor": {"@": "B2CCustomerSupplierRelationshipDescriptor"}
+       }
+    },
+    "B2CCustomerSupplierRelationshipDescriptor": {
+        "object": "data/main.datareel/model/b-2-c-customer-supplier-relationship.mjson"
+    },
+
+
+    "customerSupplierResponsibilities": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "customerSupplierResponsibilities",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "responsibleParty",
+            "valueDescriptor": {"@": "B2CCustomerSupplierResponsiblePartyDescriptor"}
+       }
+    },
+    "B2CCustomerSupplierResponsiblePartyDescriptor": {
+        "object": "data/main.datareel/model/b-2-c-customer-supplier-responsible-party.mjson"
+    },
+
+    "firstPersonalRelationships": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "firstPersonalRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "firstPerson",
+            "valueDescriptor": {"@": "PersonalRelationshipDescriptor"}
+       }
+    },
+    "PersonalRelationshipDescriptor": {
+        "object": "data/main.datareel/model/personal-relationship.mjson"
+    },
+
+    "secondPersonalRelationships": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "secondPersonalRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "secondPerson",
+            "valueDescriptor": {"@": "PersonalRelationshipDescriptor"}
+       }
     }
-
-
 
 }

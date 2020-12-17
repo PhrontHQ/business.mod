@@ -1,0 +1,36 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Gender",
+            "propertyDescriptors": [
+                {"@": "name"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/gender.mjson"
+            },
+            "exportName": "Gender",
+            "module": {
+                "%": "data/main.datareel/model/gender"
+            },
+            "modulePrototype":{"@": "Gender"},
+            "object":{"@": "Gender"},
+            "parent":{"@": "ObjectObjectDescriptor"}
+        }
+    },
+    "Gender": {
+        "object": "data/main.datareel/model/gender"
+    },
+    "ObjectObjectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "isLocalizable": true,
+            "valueType": "string"
+        }
+    }
+
+}

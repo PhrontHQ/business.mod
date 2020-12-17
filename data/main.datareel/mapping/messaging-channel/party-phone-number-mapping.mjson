@@ -1,0 +1,23 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "PartyPhoneNumber"},
+            "objectMapping": {
+                "rules": {
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+            ]
+        }
+    },
+
+    "PartyPhoneNumber": {
+        "object": "data/main.datareel/model/messaging-channel/party-phone-number.mjson"
+    }
+
+}

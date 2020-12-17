@@ -1,0 +1,138 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "QuestionnaireQuestion",
+            "propertyDescriptors": [
+                {"@": "questionnaire"},
+                {"@": "question"},
+                {"@": "questionnairePosition"},
+                {"@": "questionnaireLabel"},
+                {"@": "displayLogicExpression"},
+                {"@": "maximumNumberOfAnswer"},
+                {"@": "possibleAnswers"},
+                {"@": "respondentQuestionnaireAnswers"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/questionnaire/questionnaire-question.mjson"
+            },
+            "exportName": "QuestionnaireQuestion",
+            "module": {
+                "%": "data/main.datareel/model/questionnaire/questionnaire-question"
+            },
+            "object":{"@": "questionnaireQuestion"},
+            "modulePrototype": {"@": "questionnairePrototype"},
+            "parent":{"@": "objectDescriptor"}
+
+        }
+    },
+    "questionnaireQuestion": {
+        "object": "data/main.datareel/model/questionnaire/questionnaire-question"
+    },
+    "questionnairePrototype": {
+        "object": "data/main.datareel/model/questionnaire/questionnaire-question"
+    },
+    "objectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+
+    "questionnaire": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "questionnaire",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "questions",
+            "valueDescriptor": {"@": "questionnaireDescriptor"}
+        }
+    },
+    "questionnaireDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/questionnaire.mjson"
+    },
+
+    "question": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "question",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "questionDescriptor"}
+        }
+    },
+    "questionDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/question.mjson"
+    },
+
+    "questionnairePosition": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "questionnairePosition",
+            "valueType": "number"
+        }
+    },
+    "questionnaireLabel": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "questionnaireLabel",
+            "isLocalizable": true,
+            "valueType": "string"
+        }
+    },
+    "displayLogicExpression": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "displayLogicExpression",
+            "valueType": "string"
+        }
+    },
+
+    "maximumNumberOfAnswer": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "maximumNumberOfAnswer",
+            "defaultValue": 1,
+            "valueType": "number"
+        }
+    },
+
+    "possibleAnswers": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "possibleAnswers",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "answerDescriptor"}
+        }
+    },
+
+    "answerDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/answer.mjson"
+    },
+
+    "respondentQuestionnaireAnswers": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentQuestionnaireAnswers",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "questionnaireQuestion",
+            "valueDescriptor": {"@": "respondentQuestionnaireAnswerDescriptor"}
+        }
+    },
+
+    "respondentQuestionnaireAnswerDescriptor": {
+        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-answer.mjson"
+    },
+
+    "notes": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "notes",
+            "isLocalizable": true,
+            "valueType": "string",
+            "description": "Add comments to questions for internal use"
+        }
+    }
+
+
+}

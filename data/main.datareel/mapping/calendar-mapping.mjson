@@ -53,6 +53,10 @@
             ]
         }
     },
+    "CalendarDescriptor": {
+        "object": "data/main.datareel/model/calendar.mjson"
+    },
+
     "eventsConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
@@ -72,6 +76,10 @@
             "expression": "personId.defined()"
         }
     },
+    "PersonDescriptor": {
+        "object": "data/main.datareel/model/person.mjson"
+    },
+
     "ownerOrganizationForeignKeyMapping": {
         "prototype": "montage/data/service/raw-data-type-mapping",
         "properties": {
@@ -79,6 +87,10 @@
             "expression": "organizationId.defined()"
         }
     },
+    "OrganizationDescriptor": {
+        "object": "data/main.datareel/model/organization.mjson"
+    },
+
     "ownerResourceForeignKeyMapping": {
         "prototype": "montage/data/service/raw-data-type-mapping",
         "properties": {
@@ -86,6 +98,10 @@
             "expression": "resourceId.defined()"
         }
     },
+    "ResourceDescriptor": {
+        "object": "data/main.datareel/model/resource.mjson"
+    },
+
     "ownerEmploymentPositionStaffingForeignKeyMapping": {
         "prototype": "montage/data/service/raw-data-type-mapping",
         "properties": {
@@ -93,27 +109,21 @@
             "expression": "employmentPositionStaffingId.defined()"
         }
     },
+    "EmploymentPositionStaffingDescriptor": {
+        "object": "data/main.datareel/model/employment-position-staffing.mjson"
+    },
+
     "ownerConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $",
-            "foreignDescriptorMappings": [{"@": "ownerPersonForeignKeyMapping"},{"@": "ownerOrganizationForeignKeyMapping"},{"@": "ownerEmploymentPositionStaffingForeignKeyMapping"}]
+            "foreignDescriptorMappings": [
+                {"@": "ownerPersonForeignKeyMapping"},
+                {"@": "ownerOrganizationForeignKeyMapping"},
+                {"@": "ownerResourceForeignKeyMapping"},
+                {"@": "ownerEmploymentPositionStaffingForeignKeyMapping"}
+            ]
         }
-    },
-    "CalendarDescriptor": {
-        "object": "data/main.datareel/model/calendar.mjson"
-    },
-    "PersonDescriptor": {
-        "object": "data/main.datareel/model/person.mjson"
-    },
-    "OrganizationDescriptor": {
-        "object": "data/main.datareel/model/organization.mjson"
-    },
-    "EmploymentPositionStaffingDescriptor": {
-        "object": "data/main.datareel/model/employment-position-staffing.mjson"
-    },
-    "ResourceDescriptor": {
-        "object": "data/main.datareel/model/resource.mjson"
     }
 
 }

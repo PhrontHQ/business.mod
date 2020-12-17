@@ -1,0 +1,34 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "PartyPostalAddressDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                     "hostedEvents": {
+                        "<->": "id",
+                         "converter": {"@": "hostedEventsConverter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+               }
+            },
+            "requisitePropertyNames": [
+            ]
+        }
+    },
+
+    "PartyPostalAddressDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-postal-address.mjson"
+    },
+
+    "hostedEventsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "locationId == $"
+        }
+    }
+}

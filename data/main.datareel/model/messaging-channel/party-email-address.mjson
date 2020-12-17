@@ -1,0 +1,56 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PartyEmailAddress",
+            "propertyDescriptors": [
+                {"@": "party"},
+                {"@": "messagingChannel"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/messaging-channel/party-email-address.mjson"
+            },
+            "exportName": "PartyEmailAddress",
+            "module": {
+                "%": "data/main.datareel/model/messaging-channel/party-email-address"
+            },
+            "modulePrototype":{"@": "PartyEmailAddress"},
+            "object":{"@": "PartyEmailAddress"},
+            "parent":{"@": "PartyMessagingChannelDescriptor"}
+        }
+    },
+    "PartyEmailAddress": {
+        "object": "data/main.datareel/model/messaging-channel/party-email-address"
+    },
+    "PartyMessagingChannelDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-messaging-channel.mjson"
+    },
+
+    "party": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "party",
+            "valueType": "object",
+            "isSearchable": true,
+            "cardinality": 1,
+            "inversePropertyName": "emailAddresses",
+            "valueDescriptor": {"@": "PartyDescriptor"}
+        }
+    },
+    "PartyDescriptor": {
+        "object": "data/main.datareel/model/party.mjson"
+    },
+
+    "messagingChannel": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "messagingChannel",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "EmailAddress"}
+        }
+    },
+    "EmailAddress": {
+        "object": "data/main.datareel/model/messaging-channel/email-address.mjson"
+    }
+}

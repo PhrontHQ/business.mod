@@ -3,7 +3,7 @@ var Montage = require("montage").Montage;
 /**
  * @class EventPerson
  * Models https://help.shopify.com/en/api/graphql-admin-api/reference/object/image
- * @extends Object
+ * @extends DataObject
  */
 
 

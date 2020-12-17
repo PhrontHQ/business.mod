@@ -23,21 +23,29 @@
                         "converter": {"@": "variantsConverter"},
                         "debug":true
                     },
-                    "options": {
-                        "<->": "options",
-                        "converter": {"@": "optionsConverter"}
-                    },
-                    "orders": {
-                        "<->": "orderIds",
-                        "converter": {"@": "ordersForeignKeyConverter"}
-                    },
                     "link": {"<->": "link"},
                     "productType": {"<->": "productType"},
+                    "unitCost": {"<->": "unitCost"},
                     "notes": {"<->": "notes"},
                     "vendors": {
                         "<->": "vendorIds",
                         "converter": {"@": "vendorsForeignKeyConverter"},
                         "debug":true
+                    },
+                    "locations": {
+                        "<->": "vendorIds",
+                        "converter": {"@": "locationsForeignKeyConverter"},
+                        "debug":true
+                    },
+                    "totalInventory": {"<->": "totalInventory"},
+                    "totalVariants": {"<->": "totalVariants"},
+                    "options": {
+                        "<->": "optionIds",
+                        "converter": {"@": "optionsConverter"}
+                    },
+                    "orders": {
+                        "<->": "orderIds",
+                        "converter": {"@": "ordersForeignKeyConverter"}
                     },
                     "tags": {
                         "<->": "tags"

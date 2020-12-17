@@ -18,7 +18,7 @@ var MontageDataTriggerModule = require("montage/data/service/data-trigger"),
  *
  * @private
  * @class
- * @extends Object
+ * @extends DataObject
  */
 DataTrigger = exports.DataTrigger = function () {};
 DataTrigger.prototype = new MontageDataTrigger();
@@ -57,23 +57,6 @@ Object.defineProperties(DataTrigger.prototype, /** @lends DataTrigger.prototype 
             status = this._getValueStatus(object);
             this._setValueStatus(object, null);
 
-
-            //We're not changing inheritance at runtime, no need to wolk the tree everytime...
-            if(!setter) {
-                // Search the prototype chain for a setter for this trigger's
-                // property, starting just after the trigger prototype that caused
-                // this method to be called.
-                prototype = Object.getPrototypeOf(this._objectPrototype);
-                while (prototype) {
-                    descriptor = Object.getOwnPropertyDescriptor(prototype, this._propertyName);
-                    getter = descriptor && descriptor.get;
-                    setter = getter && descriptor.set;
-                    writable = !descriptor || setter || descriptor.writable;
-                    prototype = writable && !setter && Object.getPrototypeOf(prototype);
-                }
-                this._valueSetter = setter;
-            }
-
             initialValue = this._getValue(object);
             //If Array / to-Many
             isToMany = this.propertyDescriptor.cardinality !== 1;
@@ -86,7 +69,7 @@ Object.defineProperties(DataTrigger.prototype, /** @lends DataTrigger.prototype 
             if (setter) {
                 setter.call(object, value);
                 //currentValue = value;
-            } else if (writable) {
+            } else if (this._isPropertyWritable) {
 
                 if (isToMany && isArray && value) {
                     object[this._privatePropertyName].splice.apply(initialValue, [0, Infinity].concat(value));

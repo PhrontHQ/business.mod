@@ -2,7 +2,7 @@
     "root": {
         "prototype": "montage/data/service/expression-data-mapping",
         "values": {
-            "objectDescriptor": {"@": "InstantMessageAddressDescriptor"},
+            "objectDescriptor": {"@": "EmailAddressDescriptor"},
             "objectMapping": {
                 "rules": {
                     "email": {"<->": "email"}
@@ -18,7 +18,7 @@
         }
     },
 
-    "InstantMessageAddressDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/instant-message-address.mjson"
+    "EmailAddressDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/email-address.mjson"
     }
 }

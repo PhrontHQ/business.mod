@@ -1,0 +1,68 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "ServiceQuestionnaireObjectDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "service": {
+                        "<->": "serviceId",
+                        "converter": {"@": "serviceForeignKeyConverter"}
+                    },
+                    "questionnaire": {
+                        "<->": "questionnaireId",
+                        "converter": {"@": "questionnaireForeignKeyConverter"}
+                    },
+                    "rolesRequiredToComplete": {
+                        "<->": "roleIdsRequiredToComplete",
+                        "converter": {"@": "rolesRequiredToCompleteForeignKeyConverter"}
+                    },
+                    "rolesOptionalToComplete": {
+                        "<->": "roleIdsOptionalToComplete",
+                        "converter": {"@": "rolesOptionalToCompleteForeignKeyConverter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "professionalName","professionalShortName","preparationDuration","duration","preparationDuration"
+            ]
+        }
+    },
+
+    "ServiceQuestionnaireObjectDescriptor": {
+        "object": "data/main.datareel/model/service-questionnaire.mjson"
+    },
+
+    "serviceForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+    "questionnaireForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+    "rolesRequiredToCompleteForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }
+    },
+
+    "rolesOptionalToCompleteForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }
+    }
+}

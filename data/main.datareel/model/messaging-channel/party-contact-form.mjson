@@ -1,0 +1,56 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PartyContactForm",
+            "propertyDescriptors": [
+                {"@": "party"},
+                {"@": "messagingChannel"}
+            ],
+            "objectDescriptorModule": {
+                "%":"data/main.datareel/model/messaging-channel/party-contact-form.mjson"
+            },
+            "exportName": "PartyContactForm",
+            "module": {
+                "%": "data/main.datareel/model/messaging-channel/party-contact-form"
+            },
+            "modulePrototype":{"@": "PartyContactForm"},
+            "object":{"@": "PartyContactForm"},
+            "parent":{"@": "PartyMessagingChannelDescriptor"}
+        }
+    },
+    "PartyContactForm": {
+        "object": "data/main.datareel/model/messaging-channel/party-contact-form"
+    },
+    "PartyMessagingChannelDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-messaging-channel.mjson"
+    },
+
+    "party": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "party",
+            "valueType": "object",
+            "isSearchable": true,
+            "cardinality": 1,
+            "inversePropertyName": "contactForms",
+            "valueDescriptor": {"@": "PartyDescriptor"}
+        }
+    },
+    "PartyDescriptor": {
+        "object": "data/main.datareel/model/party.mjson"
+    },
+
+    "messagingChannel": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "messagingChannel",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "ContactForm"}
+        }
+    },
+    "ContactForm": {
+        "object": "data/main.datareel/model/messaging-channel/contact-form.mjson"
+    }
+}

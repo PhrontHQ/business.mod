@@ -1,0 +1,52 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "TangibleProduct",
+            "propertyDescriptors": [
+                 {"@": "variants"}
+           ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/tangible-product.mjson"
+            },
+            "exportName": "TangibleProduct",
+            "module": {
+                "%": "data/main.datareel/model/tangible-product"
+            },
+            "object":{"@": "tangible-product"},
+            "parent":{"@": "productObjectDescriptor"},
+            "userInterfaceDescriptorModules": {
+                "*": {
+                    "%": "./tangible-product-ui-descriptor.mjson"
+                },
+                "montage/ui/list-item.reel": {
+                    "%": "./tangible-product-list-item-ui-descriptor.mjson"
+                },
+                "montage/ui/cascading-list.reel": {
+                    "%": "./tangible-product-cascading-list-ui-descriptor.mjson"
+                }
+            }
+
+        }
+    },
+
+    "productObjectDescriptor": {
+        "object": "data/main.datareel/model/product.mjson"
+    },
+
+    "tangible-product": {
+        "object": "data/main.datareel/model/tangible-product"
+    },
+    "variants": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "variants",
+            "cardinality": -1,
+            "inversePropertyName": "product",
+            "valueDescriptor": {"@": "variant_descriptor"}
+        }
+    },
+    "variant_descriptor": {
+        "object": "data/main.datareel/model/tangible-product-variant.mjson"
+    }
+}
