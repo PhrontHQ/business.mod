@@ -2,7 +2,8 @@ const Worker = require("./worker").Worker,
     defaultEventManager = require("montage/core/event/event-manager").defaultEventManager;
 
     DataOperation = require("montage/data/service/data-operation").DataOperation,
-    OperationCoordinator = require("../data/main.datareel/service/operation-coordinator").OperationCoordinator;
+    OperationCoordinator = require("../data/main.datareel/service/operation-coordinator").OperationCoordinator,
+    currentEnvironment = require("montage/core/environment").currentEnvironment;
 
 
 /**
@@ -39,6 +40,59 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
         }
     },
 
+    /**
+     * Parse HTTP accept-language header of the user browser.
+     *
+     * @param {string} acceptLanguageHeader The string of accept-language header
+     * @return {Array} Array of language-quality pairs
+     */
+    parsedAcceptLanguageHeader: {
+        value: function(acceptLanguageHeader, languageOnly) {
+            var pairs = acceptLanguageHeader.split(','),
+                result = [];
+
+            for (var i=0, countI = pairs.length, pair; (i<countI); i++) {
+                pair = pairs[i].split(';');
+                if (pair.length == 1) {
+                    languageOnly
+                        ? result.push( pair[0] )
+                        : result.push( [pair[0], '1'] );
+                }
+                else {
+                    languageOnly
+                        ? result.push( pair[0] )
+                        : result.push( [pair[0], pair[1].split('=')[1] ] );
+                }
+            }
+            return result;
+        }
+    },
+
+    setEnvironemntFromEvent: {
+        value: function(event) {
+            console.log("setEnvironemntFromEvent: ",event);
+            var stage = event.requestContext.stage,
+                acceptLanguage = event.headers["Accept-Language"]||event.headers["accept-language"],
+                userAgent = event.headers["User-Agent"] || event.headers["user-agent"],
+                userIp = event.requestContext.identity.sourceIp;
+
+                /*
+                    "Accept-Language": "en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7",
+                    or
+                    'Accept-Language: en;q=0.8,es;q=0.6,fr;q=0.4'
+                */
+                languages = this.parsedAcceptLanguageHeader(acceptLanguage,true);
+
+
+            currentEnvironment.stage = stage;
+            currentEnvironment.userAgent = userAgent;
+            currentEnvironment.languages = languages;
+            currentEnvironment.userAgentIPAddress = userIp;
+            currentEnvironment.clientId = event.requestContext.connectionId;
+
+        }
+    },
+
     handleConnect: {
         value: function(event, context, cb) {
             var connectOperation = new DataOperation();
@@ -53,6 +107,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             //Set the clientId (in API already)
             connectOperation.clientId = event.requestContext.connectionId;
 
+            this.setEnvironemntFromEvent(event);
             this.operationCoordinator.handleOperation(connectOperation, event, context, cb, this.apiGateway);
 
             cb(null, {
@@ -65,6 +120,8 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
     /* default implementation is just echo */
     handleMessage: {
         value: async function(event, context, cb) {
+
+            this.setEnvironemntFromEvent(event);
             await this.operationCoordinator.handleMessage(event, context, cb, this.apiGateway);
 
             cb(null, {
