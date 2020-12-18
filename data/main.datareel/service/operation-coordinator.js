@@ -35,7 +35,6 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
 
             phrontService.operationCoordinator = this;
-            worker.addEventListener(DataOperation.Type.Connect,phrontService,false);
 
             mainService.addEventListener(DataOperation.Type.Read,phrontService,false);
             mainService.addEventListener(DataOperation.Type.Update,phrontService,false);
@@ -240,6 +239,14 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
             });
         }
     },
+
+    //Todo: send the client a "connected" operation that could contain it's IP address and languages
+    // handleConnect: {
+    //     value: function (connectOperation) {
+
+    //     }
+    // },
+
     /*
 
         var serializedHandledOperation = await operationCoordinator.handleMessage(event, context, cb, client);

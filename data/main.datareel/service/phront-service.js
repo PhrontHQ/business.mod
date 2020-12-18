@@ -266,14 +266,26 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     _rdsDataService: {
         get: function () {
             if (!this.__rdsDataService) {
-                // this.__rdsDataService = new AWS.RDSDataService({
-                //     apiVersion: '2018-08-01',
-                //     endpoint: "https://rds-data.us-west-2.amazonaws.com",
-                //     region: "us-west-2"
-                // });
-                // this.__rdsDataService = new AWS.RDSDataService({
-                //     apiVersion: '2018-08-01'
-                // });
+                var connection = this.connection;
+
+                if(connection) {
+                    var region = connection.resourceArn.split(":")[3],
+                    RDSDataServiceOptions =  {
+                        apiVersion: '2018-08-01',
+                        region: region
+                    };
+
+                    var credentials = new AWS.SharedIniFileCredentials({profile: connection.profile});
+                    //AWS.config.credentials = credentials;
+                    if(credentials) {
+                        RDSDataServiceOptions.credentials = credentials;
+                    }
+
+                    this.__rdsDataService = new AWS.RDSDataService(RDSDataServiceOptions);
+                } else {
+                    throw "Could not find a database connection for stage - "+this.currentEnvironment.stage+" -";
+                }
+
 
             }
             return this.__rdsDataService;
@@ -286,6 +298,9 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
     connection: {
         get: function() {
+            if(!this._connection) {
+                this.connection = this.connectionForIdentifier(this.currentEnvironment.stage);
+            }
             return this._connection;
         },
         set: function(value) {
@@ -320,17 +335,6 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                             writable: true
                         })
                     }
-
-
-                    var credentials = new AWS.SharedIniFileCredentials({profile: profile});
-                    //AWS.config.credentials = credentials;
-                    if(credentials) {
-                        RDSDataServiceOptions.credentials = credentials;
-                    }
-
-                    this.__rdsDataService = new AWS.RDSDataService(RDSDataServiceOptions);
-                } else {
-                    throw "Could not find a database connection for stage - "+value+" -";
                 }
 
             }
@@ -339,20 +343,6 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     },
 
 
-    handleConnect: {
-        value: function (connectOperation) {
-            var stage = connectOperation.context.requestContext.stage;
-
-            /*
-                The stage allows us to pick the right Database Connection among the ones we've been told.
-                We only set it once on connect as it's less frequent and it won't change for the duration the lambda will be active.
-            */
-            if(!this.stage) {
-                this.connectionIdentifier = stage;
-            }
-
-        }
-    },
     /*
         _googleDataService: {
             value: undefined
