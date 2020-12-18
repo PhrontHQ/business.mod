@@ -68,12 +68,18 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
         }
     },
 
-    setEnvironemntFromEvent: {
+    /**
+     * Only the event from connect has headers informations
+     *
+     * @class DataWorker
+     * @extends Worker
+     */
+    setEnvironmentFromEvent: {
         value: function(event) {
             console.log("setEnvironemntFromEvent: ",event);
             var stage = event.requestContext.stage,
-                acceptLanguage = event.headers["Accept-Language"]||event.headers["accept-language"],
-                userAgent = event.headers["User-Agent"] || event.headers["user-agent"],
+                acceptLanguage = event.headers && event.headers["Accept-Language"]||event.headers["accept-language"],
+                userAgent = (event.headers && (event.headers["User-Agent"] || event.headers["user-agent"])) || event.requestContext.identity.userAgent,
                 userIp = event.requestContext.identity.sourceIp;
 
                 /*
@@ -81,12 +87,14 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                     or
                     'Accept-Language: en;q=0.8,es;q=0.6,fr;q=0.4'
                 */
-                languages = this.parsedAcceptLanguageHeader(acceptLanguage,true);
+                languages = acceptLanguage ? this.parsedAcceptLanguageHeader(acceptLanguage,true) : null;
 
 
             currentEnvironment.stage = stage;
             currentEnvironment.userAgent = userAgent;
-            currentEnvironment.languages = languages;
+            if(languages) {
+                currentEnvironment.languages = languages;
+            }
             currentEnvironment.userAgentIPAddress = userIp;
             currentEnvironment.clientId = event.requestContext.connectionId;
 
@@ -107,7 +115,19 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             //Set the clientId (in API already)
             connectOperation.clientId = event.requestContext.connectionId;
 
-            this.setEnvironemntFromEvent(event);
+            this.setEnvironmentFromEvent(event);
+
+            /*
+                Only the event from connect has headers informations, the only moment when we can get accept-language
+                So we need to catch it and store it as we create the connection in the DB.
+
+                We'll have to start being able to create full-fledge DO for that. If we move saveChanges to DataService,
+                we should be able to use the main service directly? Then the operations created should just be dispatched locally,
+                by whom?
+
+                That's what shpould probably happen client side as well, where the opertions are dispatched locally and the caught by an object that just push them on the WebSocket.
+            */
+
             this.operationCoordinator.handleOperation(connectOperation, event, context, cb, this.apiGateway);
 
             cb(null, {
@@ -121,7 +141,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
     handleMessage: {
         value: async function(event, context, cb) {
 
-            this.setEnvironemntFromEvent(event);
+            this.setEnvironmentFromEvent(event);
             await this.operationCoordinator.handleMessage(event, context, cb, this.apiGateway);
 
             cb(null, {
