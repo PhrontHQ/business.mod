@@ -276,10 +276,11 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     };
 
                     var credentials = new AWS.SharedIniFileCredentials({profile: connection.profile});
+                    console.log("credentials:",credentials, "connection.profile:",connection.profile);
                     //AWS.config.credentials = credentials;
-                    if(credentials) {
-                        RDSDataServiceOptions.credentials = credentials;
-                    }
+                    // if(credentials) {
+                    //     RDSDataServiceOptions.credentials = credentials;
+                    // }
 
                     this.__rdsDataService = new AWS.RDSDataService(RDSDataServiceOptions);
                 } else {
