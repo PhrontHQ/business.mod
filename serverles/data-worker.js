@@ -78,7 +78,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
         value: function(event) {
             console.log("setEnvironemntFromEvent: ",event);
             var stage = event.requestContext.stage,
-                acceptLanguage = event.headers && event.headers["Accept-Language"]||event.headers["accept-language"],
+                acceptLanguage = (event.headers && (event.headers["Accept-Language"]||event.headers["accept-language"])),
                 userAgent = (event.headers && (event.headers["User-Agent"] || event.headers["user-agent"])) || event.requestContext.identity.userAgent,
                 userIp = event.requestContext.identity.sourceIp;
 
