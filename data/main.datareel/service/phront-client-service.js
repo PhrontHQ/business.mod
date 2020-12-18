@@ -64,30 +64,39 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     deserializedFromSerialization: {
         value: function () {
             if(!this.connection && this.connectionDescriptor) {
+                var stage = currentEnvironment.stage,
+                        connection, websocketURL;
+
                 if(global.location) {
-                    if(global.location.hostname === "127.0.0.1" || global.location.hostname === "localhost" || global.location.hostname.endsWith(".local") ) {
-                        var connection = this.connectionForIdentifier("dev"),
-                            websocketURL = new URL(connection.websocketURL);
+                    if(stage === "dev" || global.location.hostname === "127.0.0.1" || global.location.hostname === "localhost" || global.location.hostname.endsWith(".local") ) {
+                        connection = this.connectionForIdentifier(stage);
+                        websocketURL = new URL(connection.websocketURL);
+
                         if(global.location.hostname === "localhost" && currentEnvironment.isAndroidDevice && websocketURL.hostname.endsWith(".local")) {
                             websocketURL.hostname = "localhost";
                             connection.websocketURL = websocketURL.toString();
                         }
                         this.connection = connection;
                     } else {
-                        //Let's try to read the stage from the URL?
-                        for(var i=0, connectionIdentifiers = Object.keys(this.connectionDescriptor), countI = connectionIdentifiers.length, iConnectionIdentifier, iConnection;(i<countI); i++) {
-                            iConnectionIdentifier = connectionIdentifiers[i];
-                            iConnection = this.connectionDescriptor[iConnectionIdentifier];
 
-                            //TOTO: in the URL based on AWS conventions? as a url argument?
+                        if(!stage) {
+                            stage = "prod";
                         }
 
-                        //No environment found, we default to prod
+                        connection = this.connectionForIdentifier(stage);
+
+                        // //Let's try to read the stage from the URL?
+                        // for(var i=0, connectionIdentifiers = Object.keys(this.connectionDescriptor), countI = connectionIdentifiers.length, iConnectionIdentifier, iConnection;(i<countI); i++) {
+                        //     iConnectionIdentifier = connectionIdentifiers[i];
+                        //     iConnection = this.connectionDescriptor[iConnectionIdentifier];
+
+                        //     //TOTO: in the URL based on AWS conventions? as a url argument?
+                        // }
+
                         if(!this.connection) {
-                            this.connection = this.connectionForIdentifier("prod");
+                            this.connection = connection;
                         }
-                                //this._socket = new WebSocket("wss://77mq8uupuc.execute-api.us-west-2.amazonaws.com/dev");
-                        // this._socket = new WebSocket("wss://ipa4toy2mc.execute-api.us-west-2.amazonaws.com/prod");
+
                     }
                 } else if(defaultEventManager.application) {
                     defaultEventManager.application.addEventListener(DataOperation.Type.Connect,this,false);
