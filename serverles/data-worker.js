@@ -5,6 +5,15 @@ const Worker = require("./worker").Worker,
     OperationCoordinator = require("../data/main.datareel/service/operation-coordinator").OperationCoordinator,
     currentEnvironment = require("montage/core/environment").currentEnvironment;
 
+const successfullResponse = {
+        statusCode: 200,
+        body: 'Success'
+    };
+
+const failedResponse = (statusCode, error) => ({
+        statusCode,
+        body: error
+    });
 
 /**
  * A Worker is any object that can handle messages from a serverless function
@@ -102,7 +111,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
     },
 
     handleConnect: {
-        value: function(event, context, cb) {
+        value: function(event, context, callback) {
             var connectOperation = new DataOperation();
 
             connectOperation.type = DataOperation.Type.Connect;
@@ -128,26 +137,35 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                 That's what shpould probably happen client side as well, where the opertions are dispatched locally and the caught by an object that just push them on the WebSocket.
             */
 
-            this.operationCoordinator.handleOperation(connectOperation, event, context, cb, this.apiGateway);
+           this.operationCoordinator.handleOperation(connectOperation, event, context, callback, this.apiGateway)
+           .then(() => {
+               console.log("DataWorker -handleConnect: operationCoordinator.handleOperation() done");
+               callback(null, {
+                   statusCode: 200,
+                   body: 'Connected.'
+               });
+           }).catch((err) => {
+                console.log(err)
+                callback(failedResponse(500, JSON.stringify(err)))
+           });
 
-            cb(null, {
-                statusCode: 200,
-                body: 'Connected.'
-            });
         }
     },
 
     /* default implementation is just echo */
     handleMessage: {
-        value: async function(event, context, cb) {
+        value: function(event, context, callback) {
 
             this.setEnvironmentFromEvent(event);
-            await this.operationCoordinator.handleMessage(event, context, cb, this.apiGateway);
-
-            cb(null, {
-              statusCode: 200,
-              body: 'Sent.'
+            this.operationCoordinator.handleMessage(event, context, callback, this.apiGateway)
+            .then(() => {
+                callback(null, successfullResponse)
+            })
+            .catch((err) => {
+                console.log(err)
+                callback(failedResponse(500, JSON.stringify(err)))
             });
+
         }
     }
 

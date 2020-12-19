@@ -49,10 +49,10 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             this._thenableByOperationId = new Map();
             this._pendingOperationById = new Map();
 
-            this._socketOpenPromise = new Promise(function(resolve, reject) {
-                self._socketOpenPromiseResolve = resolve;
-                self._socketOpenPromiseReject = reject;
-            });
+            // this._socketOpenPromise = new Promise(function(resolve, reject) {
+            //     self._socketOpenPromiseResolve = resolve;
+            //     self._socketOpenPromiseReject = reject;
+            // });
 
             this._serializer = new MontageSerializer().initWithRequire(require);
             this._deserializer = new Deserializer();
@@ -61,53 +61,107 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
-    deserializedFromSerialization: {
-        value: function () {
-            if(!this.connection && this.connectionDescriptor) {
-                var stage = currentEnvironment.stage,
-                        connection, websocketURL;
+
+    __socketOpenPromise: {
+        value: undefined
+    },
+
+    _socketOpenPromise: {
+        get: function() {
+            if(!this.__socketOpenPromise) {
+                var self = this;
+                this.__socketOpenPromise = new Promise(function(resolve, reject) {
+                    self._socketOpenPromiseResolve = resolve;
+                    self._socketOpenPromiseReject = reject;
+
+                    self._createSocket();
+
+                });
+            }
+            return this.__socketOpenPromise;
+        }
+    },
+
+    // deserializedFromSerialization: {
+    //     value: function () {
+    //         if(!this.connection && this.connectionDescriptor) {
+    //             var stage = currentEnvironment.stage,
+    //                     connection, websocketURL;
+
+    //             if(global.location) {
+    //                 if(stage === "dev" || global.location.hostname === "127.0.0.1" || global.location.hostname === "localhost" || global.location.hostname.endsWith(".local") ) {
+    //                     connection = this.connectionForIdentifier(stage);
+    //                     websocketURL = new URL(connection.websocketURL);
+
+    //                     if(global.location.hostname === "localhost" && currentEnvironment.isAndroidDevice && websocketURL.hostname.endsWith(".local")) {
+    //                         websocketURL.hostname = "localhost";
+    //                         connection.websocketURL = websocketURL.toString();
+    //                     }
+    //                     this.connection = connection;
+    //                 } else {
+
+    //                     if(!stage) {
+    //                         stage = "prod";
+    //                     }
+
+    //                     connection = this.connectionForIdentifier(stage);
+
+    //                     // //Let's try to read the stage from the URL?
+    //                     // for(var i=0, connectionIdentifiers = Object.keys(this.connectionDescriptor), countI = connectionIdentifiers.length, iConnectionIdentifier, iConnection;(i<countI); i++) {
+    //                     //     iConnectionIdentifier = connectionIdentifiers[i];
+    //                     //     iConnection = this.connectionDescriptor[iConnectionIdentifier];
+
+    //                     //     //TOTO: in the URL based on AWS conventions? as a url argument?
+    //                     // }
+
+    //                     if(!this.connection) {
+    //                         this.connection = connection;
+    //                     }
+
+    //                 }
+    //             } else if(defaultEventManager.application) {
+    //                 defaultEventManager.application.addEventListener(DataOperation.Type.Connect,this,false);
+    //             }
+
+    //         }
+
+    //         if(this.connection && (typeof WebSocket !== "undefined")) {
+    //             this._createSocket();
+    //         }
+
+    //     }
+    // },
+
+
+    /*
+     * The current DataConnection object used to connect to data source
+     *
+     * @type {DataConnection}
+     */
+    _connection: {
+        value: undefined
+    },
+
+    connection: {
+        get: function() {
+            if(!this._connection) {
+                var stage = currentEnvironment.stage || "prod",
+                    connection = this.connectionForIdentifier(stage),
+                        websocketURL;
 
                 if(global.location) {
                     if(stage === "dev" || global.location.hostname === "127.0.0.1" || global.location.hostname === "localhost" || global.location.hostname.endsWith(".local") ) {
-                        connection = this.connectionForIdentifier(stage);
                         websocketURL = new URL(connection.websocketURL);
 
                         if(global.location.hostname === "localhost" && currentEnvironment.isAndroidDevice && websocketURL.hostname.endsWith(".local")) {
                             websocketURL.hostname = "localhost";
                             connection.websocketURL = websocketURL.toString();
                         }
-                        this.connection = connection;
-                    } else {
-
-                        if(!stage) {
-                            stage = "prod";
-                        }
-
-                        connection = this.connectionForIdentifier(stage);
-
-                        // //Let's try to read the stage from the URL?
-                        // for(var i=0, connectionIdentifiers = Object.keys(this.connectionDescriptor), countI = connectionIdentifiers.length, iConnectionIdentifier, iConnection;(i<countI); i++) {
-                        //     iConnectionIdentifier = connectionIdentifiers[i];
-                        //     iConnection = this.connectionDescriptor[iConnectionIdentifier];
-
-                        //     //TOTO: in the URL based on AWS conventions? as a url argument?
-                        // }
-
-                        if(!this.connection) {
-                            this.connection = connection;
-                        }
-
                     }
-                } else if(defaultEventManager.application) {
-                    defaultEventManager.application.addEventListener(DataOperation.Type.Connect,this,false);
                 }
-
+                this._connection = connection;
             }
-
-            if(this.connection && (typeof WebSocket !== "undefined")) {
-                this._createSocket();
-            }
-
+            return this._connection;
         }
     },
 
@@ -126,25 +180,25 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
-    handleConnect: {
-        value: function (connectOperation) {
-            var stage = connectOperation.context.requestContext.stage;
+    // handleConnect: {
+    //     value: function (connectOperation) {
+    //         var stage = connectOperation.context.requestContext.stage;
 
-            currentEnvironment.stage = stage;
-            console.log("client ip address:"+connectOperation.context.requestContext.identity.sourceIp);
+    //         currentEnvironment.stage = stage;
+    //         console.log("client ip address:"+connectOperation.context.requestContext.identity.sourceIp);
 
-            /*
-                The stage allows us to pick the right Database Connection among the ones we've been told.
-                We only set it once on connect as it's less frequent and it won't change for the duration the lambda will be active.
-            */
-            if(!this.stage) {
-                this.connectionIdentifier = stage;
-            }
+    //         /*
+    //             The stage allows us to pick the right Database Connection among the ones we've been told.
+    //             We only set it once on connect as it's less frequent and it won't change for the duration the lambda will be active.
+    //         */
+    //         if(!this.stage) {
+    //             this.connectionIdentifier = stage;
+    //         }
 
-            this._createSocket();
+    //         this._createSocket();
 
-        }
-    },
+    //     }
+    // },
 
     // authorizationServices: {
     //     value: ["data/main.datareel/service/cognito-authorization-service"]

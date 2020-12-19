@@ -336,6 +336,11 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 resultOperationPromise = new Promise(function(resolve,reject) {
                     self._operationPromisesByReferrerId.set(deserializedOperation.id,[resolve,reject]);
                     defaultEventManager.handleEvent(deserializedOperation);
+
+                    //If Connect, we can't really return anything to the client, so we resolve now:
+                    if(deserializedOperation.type ===  DataOperation.Type.Connect) {
+                        resolve(true);
+                    }
                 });
 
                 return resultOperationPromise;
