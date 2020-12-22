@@ -2629,6 +2629,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                     var operation = new DataOperation();
                     operation.target = createOperation.target;
                     operation.referrerId = createOperation.id;
+                    operation.clientId = createOperation.clientId;
 
                     if (err) {
                         // an error occurred
@@ -3319,8 +3320,10 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                 self._rdsDataService.beginTransaction(rawDataOperation, function (err, data) {
                     var operation = new DataOperation();
                     operation.referrerId = createTransactionOperation.id;
+                    operation.clientId = createTransactionOperation.clientId;
                     //We keep the same
                     operation.target = createTransactionOperation.target;
+
 
                     if (err) {
                         // an error occurred
@@ -3558,6 +3561,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                             // successful response
                             var operation = new DataOperation();
                             operation.referrerId = batchOperation.id;
+                            operation.clientId = batchOperation.clientId;
                             //operation.target = transactionObjectDescriptors;
                             operation.target = batchOperation.target;
                             operation.type = DataOperation.Type.BatchCompleted;
@@ -3632,6 +3636,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                 }, function (sqlMapError) {
                     var operation = new DataOperation();
                     operation.referrerId = batchOperation.id;
+                    operation.clientId = batchOperation.clientId;
                     operation.target = batchOperation.target;
                         // an error occurred
                     console.log(sqlMapError, sqlMapError.stack, batchOperation);
@@ -3680,6 +3685,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                 self._rdsDataService[method](rawDataOperation, function (err, data) {
                     var operation = new DataOperation();
                     operation.referrerId = transactionEndOperation.id;
+                    operation.clientId = transactionEndOperation.clientId;
                     operation.target = transactionEndOperation.target;
                     if (data && transactionId) {
                         data.transactionId = transactionId;
