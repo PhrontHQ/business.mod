@@ -172,6 +172,17 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             this._columnNamesByObjectDescriptor = new Map();
             this._schemaDescriptorByObjectDescriptor = new Map();
 
+            var mainService = DataService.mainService;
+            mainService.addEventListener(DataOperation.Type.Read,this,false);
+            mainService.addEventListener(DataOperation.Type.Update,this,false);
+            mainService.addEventListener(DataOperation.Type.Create,this,false);
+            mainService.addEventListener(DataOperation.Type.Delete,this,false);
+            mainService.addEventListener(DataOperation.Type.CreateTransaction,this,false);
+            mainService.addEventListener(DataOperation.Type.Batch,this,false);
+            mainService.addEventListener(DataOperation.Type.PerformTransaction,this,false);
+            mainService.addEventListener(DataOperation.Type.RollbackTransaction,this,false);
+
+
             // this._registeredConnectionsByIdentifier = new Map();
         }
     },
@@ -2882,6 +2893,16 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
      */
     handleCreate: {
         value: function (createOperation) {
+
+            /*
+                Surprise... On the "client" side, I've introduced DataEvents and there's one of type "create" which is used by listeners to set a creationDate on all objects.
+
+                Because DataEvent.create === DataOperation DataOperationType.create as strings, we end up here and we shouldn't be. Growth problem to deal with later.
+            */
+           if(!(createOperation instanceof DataOperation)) {
+               return;
+           }
+
             var data = createOperation.data;
 
             if (createOperation.data === createOperation.target._montage_metadata.moduleId.removeSuffix(".mjson")) {
