@@ -175,7 +175,7 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
     handleMessage: {
         value: function (event) {
             var serializedOperation;
-            console.log("received socket message ",event);
+            //console.log("received socket message ",event);
                 serializedOperation = event.data;
                 //console.log("<---- receive operation "+serializedOperation);
 
@@ -235,7 +235,7 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
             this._socketOpenPromise.then(() => {
                 var serializedOperation = this._serializer.serializeObject(operation);
 
-                console.log("----> send operation "+serializedOperation);
+                //console.log("----> send operation "+serializedOperation);
 
                 // if(operation.type === "batch") {
                 //     var deserializer = new Deserializer();
