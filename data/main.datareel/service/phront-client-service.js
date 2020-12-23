@@ -23,8 +23,6 @@ var DataService = require("montage/data/service/data-service").DataService,
     PGClass = require("../model/p-g-class").PGClass,
     //DataTrigger = require("./data-trigger").DataTrigger,
     defaultEventManager = require("montage/core/event/event-manager").defaultEventManager,
-    ExpressionDataMapping = require("montage/data/service/expression-data-mapping").ExpressionDataMapping,
-    ISODateStringToDateConverter = require("data/main.datareel/converter/ISO-date-string-to-date-converter").ISODateStringToDateConverter,
     RawEmbeddedValueToObjectConverter = require("montage/data/converter/raw-embedded-value-to-object-converter").RawEmbeddedValueToObjectConverter,
     currentEnvironment = require("montage/core/environment").currentEnvironment,
     PhrontClientService;
@@ -49,21 +47,43 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             this._thenableByOperationId = new Map();
             this._pendingOperationById = new Map();
 
-            // this._socketOpenPromise = new Promise(function(resolve, reject) {
-            //     self._socketOpenPromiseResolve = resolve;
-            //     self._socketOpenPromiseReject = reject;
-            // });
+            // this._serializer = new MontageSerializer().initWithRequire(require);
+            // this._deserializer = new Deserializer();
 
-            this._serializer = new MontageSerializer().initWithRequire(require);
-            this._deserializer = new Deserializer();
+            this.addOwnPropertyChangeListener("mainService", this);
 
             return this;
         }
     },
 
+    handleMainServiceChange: {
+        value: function (mainService) {
+            //That only happens once
+            if(mainService) {
+                mainService.addEventListener(DataOperation.Type.NoOp,this,false);
+                mainService.addEventListener(DataOperation.Type.ReadFailed,this,false);
+                mainService.addEventListener(DataOperation.Type.ReadCompleted,this,false);
+                mainService.addEventListener(DataOperation.Type.UpdateFailed,this,false);
+                mainService.addEventListener(DataOperation.Type.UpdateCompleted,this,false);
+                mainService.addEventListener(DataOperation.Type.CreateFailed,this,false);
+                mainService.addEventListener(DataOperation.Type.CreateCompleted,this,false);
+                mainService.addEventListener(DataOperation.Type.DeleteFailed,this,false);
+                mainService.addEventListener(DataOperation.Type.DeleteCompleted,this,false);
+                mainService.addEventListener(DataOperation.Type.CreateTransactionFailed,this,false);
+                mainService.addEventListener(DataOperation.Type.CreateTransactionCompleted,this,false);
+                mainService.addEventListener(DataOperation.Type.BatchCompleted,this,false);
+                mainService.addEventListener(DataOperation.Type.BatchFailed,this,false);
+                mainService.addEventListener(DataOperation.Type.TransactionUpdated,this,false);
+                mainService.addEventListener(DataOperation.Type.PerformTransactionFailed,this,false);
+                mainService.addEventListener(DataOperation.Type.PerformTransactionCompleted,this,false);
+                mainService.addEventListener(DataOperation.Type.RollbackTransactionFailed,this,false);
+                mainService.addEventListener(DataOperation.Type.RollbackTransactionCompleted,this,false);
+                }
+        }
+    },
 
     __socketOpenPromise: {
-        value: undefined
+        value: Promise.resolve(true)
     },
 
     _socketOpenPromise: {
@@ -246,7 +266,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     handleMessage: {
         value: function (event) {
             var serializedOperation;
-            //console.log("received socket message ",event);
+            console.log("received socket message ",event);
                 serializedOperation = event.data;
                 //console.log("<---- receive operation "+serializedOperation);
 
@@ -310,6 +330,12 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         value: function(operation, referrer) {
             this._pendingOperationById.set(operation.id, operation);
 
+        }
+    },
+
+    unregisterOperationReferrer: {
+        value: function(operation) {
+            this._pendingOperationById.delete(operation.referrerId);
         }
     },
 
@@ -399,6 +425,19 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             var referrerOperation = this._pendingOperationById.get(operation.referrerId);
 
             /*
+                Right now, we listen for the types we care about, on the mainService, so we're receiving it all,
+                even those from other data services / types we don' care about, like the PlummingIntakeDataService.
+
+                One solution is to, when we register the types in the data service, to test if it handles operations, and if it does, the add all listeners. But that's a lot of work which will slows down starting time. A better solution would be to do like what we do with Components, where we find all possibly interested based on DOM structure, and tell them to prepare for a first delivery of that type of event. We could do the same as we know which RawDataService handle what ObjectDescriptor, which would give the RawDataService the ability to addListener() right when it's about to be needed.
+
+                Another solution could involve different "pools" of objects/stack, but we'd lose the universal bus.
+
+            */
+            if(!referrerOperation) {
+                return;
+            }
+
+            /*
                 After creation we need to do this:                   self.rootService.registerUniqueObjectWithDataIdentifier(object, dataIdentifier);
 
                 The referrerOperation could get hold of object, but it doesn't right now.
@@ -441,8 +480,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
 
     handleClose: {
-        value: function () {
-            console.log("WebSocket closed");
+        value: function (event) {
+            console.log("WebSocket closed with message:",event);
             this._failedConnections++;
             if (this._failedConnections > 5) {
                 // The token we're trying to use is probably invalid, force
@@ -479,18 +518,21 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     _dispatchOperation: {
         value: function(operation) {
             this._pendingOperationById.set(operation.id, operation);
-            var serializedOperation = this._serializer.serializeObject(operation);
 
-            // if(operation.type === "batch") {
-            //     var deserializer = new Deserializer();
-            //     deserializer.init(serializedOperation, require, undefined, module, true);
-            //     var deserializedOperation = deserializer.deserializeObject();
+            defaultEventManager.handleEvent(operation);
 
-            //     console.log(deserializedOperation);
+            // var serializedOperation = this._serializer.serializeObject(operation);
 
-            // }
-            //console.log("----> send operation "+serializedOperation);
-            this._socket.send(serializedOperation);
+            // // if(operation.type === "batch") {
+            // //     var deserializer = new Deserializer();
+            // //     deserializer.init(serializedOperation, require, undefined, module, true);
+            // //     var deserializedOperation = deserializer.deserializeObject();
+
+            // //     console.log(deserializedOperation);
+
+            // // }
+            // console.log("----> send operation "+serializedOperation);
+            // this._socket.send(serializedOperation);
         }
     },
 
@@ -1352,13 +1394,13 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             createTransaction.type = DataOperation.Type.CreateTransaction;
 
                             /*
-                                createTransaction.target = null;
+                                createTransaction.target = DataService.mainService;
 
                                 Workaround until we get the serialization/deserialization to work with an object passed with a label that is pre-existing and passed to both the serialiaer and deserializer on each side.
 
                                 So until then, if target is null, it's meant for the coordinaator, needed for transactions that could contain object descriptors that are handled by different data services and the OperationCoordinator will have to handle that himself first to triage, before distributing to the relevant data services by creating nested transactions with the subset of dataoperations/types they deal with.
                             */
-                            createTransaction.target = null;
+                            createTransaction.target = DataService.mainService;
                             createTransaction.data = _transactionObjectDescriptors.map((objectDescriptor) => {return objectDescriptor.module.id});
 
                             _createTransactionPromise = new Promise(function(resolve, reject) {
@@ -1436,6 +1478,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                         return Promise.all(batchedOperationPromises)
                             .then(function(operationsByTypes) {
+                                console.log("PhrontClientService: saveChanges - operations created");
                                 var result,
                                     createOperations = operationsByTypes[0],
                                     updateOperations = operationsByTypes[1],
@@ -1488,7 +1531,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                                 batchOperation.type = DataOperation.Type.Batch;
 
                                 //This is to target the OperationCoordinator on the other side
-                                batchOperation.target = null;
+                                batchOperation.target = DataService.mainService;
                                 //batchOperation.target = (transactionObjectDescriptors.size === 1) ? Array.from(transactionObjectDescriptors)[0] : null;
                                 // batchOperation.target = (transactionObjecDescriptors.length === 1) ? transactionObjecDescriptors[0] : transactionObjecDescriptors;
                                 batchOperation.data = {
@@ -1518,7 +1561,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             batchOperation.type = DataOperation.Type.Batch;
 
                             //This is to target the OperationCoordinator on the other side
-                            batchOperation.target = null;
+                            batchOperation.target = DataService.mainService;
                             //batchOperation.target = (transactionObjectDescriptors.size === 1) ? Array.from(transactionObjectDescriptors)[0] : null;
                             // batchOperation.target = (transactionObjecDescriptors.length === 1) ? transactionObjecDescriptors[0] : transactionObjecDescriptors;
                             batchOperation.data = {
@@ -1553,7 +1596,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             //We proceed to commit:
                             performTransactionOperation = new DataOperation();
                             performTransactionOperation.type = DataOperation.Type.PerformTransaction;
-                            performTransactionOperation.target = null,
+                            performTransactionOperation.target = DataService.mainService;
                             //Not sure we need any data here?
                             //performTransactionOperation.data = batchedOperations;
 
