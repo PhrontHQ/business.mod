@@ -9,6 +9,7 @@ Deserializer = require("montage/core/serialization/deserializer/montage-deserial
 //phrontService = mainService.childServices[0],
 DataOperation = require("montage/data/service/data-operation").DataOperation,
 defaultEventManager = require("montage/core/event/event-manager").defaultEventManager,
+currentEnvironment = require("montage/core/environment").currentEnvironment,
 sizeof = require('object-sizeof');
 
 exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator.prototype */ {
@@ -36,14 +37,14 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
             phrontService.operationCoordinator = this;
 
-            mainService.addEventListener(DataOperation.Type.Read,phrontService,false);
-            mainService.addEventListener(DataOperation.Type.Update,phrontService,false);
-            mainService.addEventListener(DataOperation.Type.Create,phrontService,false);
-            mainService.addEventListener(DataOperation.Type.Delete,phrontService,false);
-            mainService.addEventListener(DataOperation.Type.CreateTransaction,phrontService,false);
-            mainService.addEventListener(DataOperation.Type.Batch,phrontService,false);
-            mainService.addEventListener(DataOperation.Type.PerformTransaction,phrontService,false);
-            mainService.addEventListener(DataOperation.Type.RollbackTransaction,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.Read,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.Update,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.Create,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.Delete,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.CreateTransaction,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.Batch,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.PerformTransaction,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.RollbackTransaction,phrontService,false);
 
             this.addEventListener(DataOperation.Type.CreateTransaction,this,false);
             this.addEventListener(DataOperation.Type.Batch,this,false);
@@ -227,16 +228,22 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
     handleEvent: {
         value: function(operation) {
-            var self = this;
-            //console.log("handleEvent:",operation);
-            this.dispatchOperationToConnectionClientId(operation,this.gateway,operation.clientId)
-            .then(function(values) {
-                //resolve
-                self._operationPromisesByReferrerId.get(operation.referrerId)[0]();
-            },function(error) {
-                //reject
-                self._operationPromisesByReferrerId.get(operation.referrerId)[1]();
-            });
+
+            /*
+                We're now receiving PhrontService event/operations that are response to operations initiated locally, so until we sort out more carefully who answer what, we're going to make sure we filter operations that don't have a clientId, and to be even more careful, if there's a clientId, to compare it to the one in environemnt, which is re-set everytime we receive a call from the APIGateway
+            */
+            if(operation.clientId) {
+                var self = this;
+                //console.log("handleEvent:",operation);
+                this.dispatchOperationToConnectionClientId(operation,this.gateway,operation.clientId)
+                .then(function(values) {
+                    //resolve
+                    self._operationPromisesByReferrerId.get(operation.referrerId)[0]();
+                },function(error) {
+                    //reject
+                    self._operationPromisesByReferrerId.get(operation.referrerId)[1](error);
+                });
+            }
         }
     },
 
@@ -508,6 +515,9 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                     var operation = new DataOperation();
                     operation.referrerId = rootCreateTransaction.id;
                     //We keep the same
+                    /*
+                        WARNING - it's ok as we handle it ourselves, but that  a null target would throw an exception if handled by the
+                    */
                     operation.target = null;
                     operation.type = DataOperation.Type.CreateTransactionFailed;
                     operation.data = createTransactionOperation.nestedCreateTransactionsFailedOperations;
@@ -539,6 +549,9 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                     var operation = new DataOperation();
                     operation.referrerId = rootCreateTransaction.id;
                     //We keep the same
+                    /*
+                        WARNING - it's ok as we handle it ourselves, but that  a null target would throw an exception if handled by the
+                    */
                     operation.target = null;
 
                     if(createTransactionOperation.nestedCreateTransactionsFailedOperations.size === 0) {
