@@ -611,7 +611,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             var dataIdentifier = this.dataIdentifierForObject(object);
 
             if(dataIdentifier) {
-                return Criteria.withExpression("identifier = $identifier", {"identifier":dataIdentifier});
+                return Criteria.withExpression("identifier == $identifier", {"identifier":dataIdentifier});
             } else {
                 //It's a new object and we don't have a uuid?, we can't create a criteria for it
                 return null;

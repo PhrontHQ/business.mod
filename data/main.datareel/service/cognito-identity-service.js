@@ -214,7 +214,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     // well, we should have an anonymous user created locally nonetheless,
                     // or one created with an anonymous user name sent to Cognito?
                     // But we can't change a user name once created?
-                    userInputOperation.criteria = Criteria.withExpression("identifier = $identifier", {
+                    userInputOperation.criteria = Criteria.withExpression("identifier == $identifier", {
                         identifier: self.dataIdentifierForObject(userIdentity)
                     });
 

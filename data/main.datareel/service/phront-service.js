@@ -500,7 +500,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                 //There are 2 arguments, one is a property name, and the other the parameter.
                 //Let's look for the parameter.
-                //The first 2 look for a parsed expression  like "id = $id"
+                //The first 2 look for a parsed expression  like "id == $id"
                 if(args[1].type === "property" && args[1].args[0].type === "parameters") {
                     value = criteria.parameters[args[1].args[1].value];
                     propertyName = args[0].args[1].value;
@@ -509,7 +509,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     value = criteria.parameters[args[0].args[1].value];
                     propertyName = args[1].args[1].value;
                 }
-                //This one looks for parsed expression like "id = $""
+                //This one looks for parsed expression like "id == $""
                 else if(args[1].type === "parameters") {
                     propertyName = args[0].args[1].value;
                     value = criteria.parameters;
@@ -1239,7 +1239,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 mapping = this.mappingForType(objectDescriptor);
 
                 //TEMPORARY, we need to send what changed only
-                operation.criteria = Criteria.withExpression("identifier = $identifier", { "identifier": dataIdentifier });
+                operation.criteria = Criteria.withExpression("identifier == $identifier", { "identifier": dataIdentifier });
                 operation.data = operationData;
 
                 dataObjectChanges = this.changesForDataObject(object);
