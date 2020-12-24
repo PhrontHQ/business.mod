@@ -114,7 +114,7 @@
     "responsiblePartyRelationshipsConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
-            "convertExpression": "b2cCustomerSupplierRelationshipId = $"
+            "convertExpression": "b2cCustomerSupplierRelationshipId == $"
         }
     }
 
