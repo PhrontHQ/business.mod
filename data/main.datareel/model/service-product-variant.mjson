@@ -46,7 +46,7 @@
     "ServiceDescriptor": {
         "object": "data/main.datareel/model/service.mjson"
     },
-        "professionalName": {
+    "professionalName": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "professionalName",
