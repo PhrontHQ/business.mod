@@ -63,6 +63,8 @@ var RFC3339UTCRangeStringToDateRangeConverter = exports.RFC3339UTCRangeStringToD
      */
     revert: {
         value: function (v) {
+
+            if(!v) return v;
             //Wish we could just called toString() on v,
             //but it's missing the abillity to cutomize the
             //stringify of begin/end
