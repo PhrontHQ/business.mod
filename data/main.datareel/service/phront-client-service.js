@@ -1444,7 +1444,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                         return Promise.all(batchedOperationPromises)
                             .then(function(operationsByTypes) {
-                                console.log("PhrontClientService: saveChanges - operations created");
+                                // console.log("PhrontClientService: saveChanges - operations created");
                                 var result,
                                     createOperations = operationsByTypes[0],
                                     updateOperations = operationsByTypes[1],
@@ -1537,7 +1537,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                         //createTransactionCompletedId = createTransactionResult.data.transactionId;
                         createTransactionCompletedId = createTransactionResult.id;
-                        console.log("PhrontClientService saveChanges: createTransactionCompletedId is "+createTransactionCompletedId);
+                        // console.log("PhrontClientService saveChanges: createTransactionCompletedId is "+createTransactionCompletedId);
 
                         if(transactionOperations) {
 /*
