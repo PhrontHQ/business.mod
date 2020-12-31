@@ -821,19 +821,17 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     },
 
     mapReadOperationToRawStatement: {
-        value: function (readOperation, rawDataOperation) {
+        value: function (readOperation, /*object*/rawDataOperation, /*Set*/rawReadExpressions) {
             //Now we need to transf orm the operation into SQL:
             var objectDescriptor = readOperation.target,
-                /*Set*/localizablePropertyNames = objectDescriptor.localizablePropertyNames,
                 operationLocales,
                 mapping = this.mappingForType(objectDescriptor),
                 rawDataMappingRules = mapping.rawDataMappingRules,
                 readExpressions = readOperation.data.readExpressions,
+                // readExpressionsCount = (readExpressions && readExpressions.length) || 0,
                 rawDataPrimaryKeys = mapping.rawDataPrimaryKeys,
-                operationName = readOperation.name,
                 //We start by the mandatory, but the read operation could have
                 //further information about what to retur, including new constructs based on expressions.
-                rawReadExpressions,//Set
                 tableName = this.tableForObjectDescriptor(objectDescriptor),
                 criteria = readOperation.criteria,
                 schemaName = rawDataOperation.schema,
@@ -856,7 +854,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                   The rigth part might need to leverage functions or a whole new sub select?
 
                 */
-                i, countI, iExpression, iRawPropertyName, iKey, iValue, iAssignment, iPrimaryKey, iPrimaryKeyValue,
+                i, countI, iExpression, iRawPropertyName, iKey, iValue, iObjectRule, iAssignment, iPrimaryKey, iPrimaryKeyValue, iValueSchemaDescriptor, iValueDescriptorReference, iRawDataMappingRules, iRawDataMappingRulesIterator, iRawDataMappingRule, iIsInlineReadExpression,
                 iKeyValue,
                 rawCriteria,
                 rawExpressionJoinStatements,
@@ -884,70 +882,83 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             //WARNING If a set of readExpressions is expressed on the operation for now it will excludes
             //the requisites.
-            if (readExpressions) {
-                //console.log("read "+objectDescriptor.name+": "+JSON.stringify(readExpressions));
-                rawReadExpressions = new Set();
-                for(i=0, countI = readExpressions.length;(i<countI); i++) {
-                    iExpression = readExpressions[i];
-                    iRawPropertyName = mapping.mapObjectPropertyNameToRawPropertyName(iExpression);
-                    if(iRawPropertyName) {
-                        rawReadExpressions.add(iRawPropertyName);
-                    } else {
+            if(!rawReadExpressions) {
+                if (readExpressions) {
+                    // if(objectDescriptor.name === "Service") {
+                    //     console.log("handleRead for "+objectDescriptor.name+" with readExpressions: "+JSON.stringify(readExpressions));
+                    // }
+
+
+
+
+                    rawReadExpressions = new Set();
+                    for(i=0, countI = readExpressions.length;(i<countI); i++) {
+                        iExpression = readExpressions[i];
+                        iRawPropertyName = mapping.mapObjectPropertyNameToRawPropertyName(iExpression);
+                        iObjectRule = mapping.objectMappingRules.get(iExpression);
+                        iRawDataMappingRules = mapping.rawDataMappingRulesForObjectProperty(iExpression);
+                        iRawDataMappingRulesIterator = iRawDataMappingRules && iRawDataMappingRules.values();
+                        iValueDescriptorReference = iObjectRule && iObjectRule.propertyDescriptor._valueDescriptorReference;
+
+                        if(iValueDescriptorReference) {
+                            iValueSchemaDescriptor = this.schemaDescriptorForObjectDescriptor(iValueDescriptorReference);
+                        }
+
+                        iIsInlineReadExpression = (
+                            !iObjectRule ||
+                            !iValueSchemaDescriptor ||
+                            !iObjectRule.converter ||
+                            (
+                                iObjectRule.converter &&
+                                (
+                                    iObjectRule.converter instanceof RawEmbeddedValueToObjectConverter || iObjectRule.converter instanceof KeyValueArrayToMapConverter
+                                )
+                            )
+                        );
+                        //For foreign keys, we're still going to return them as we do know to ease evolution.
+                        // if(iRawPropertyName) {
+                        //     rawReadExpressions.add(iRawPropertyName);
+                        // }
+
                         /*
-                            11/18/2020
-                            We need to build up support for more than inline properties. A read expression that is a relationship is asking to fetch another type objects that's associated with the source.
-                            We're already using:
-                                    objectCriteria = new Criteria().initWithExpression("id == $id", {id: object.dataIdentifier.primaryKey});
-                            on the client side to do so, id here is on the table fetched, for gettin more inline values.
+                            Evolved version that take into account there could be more than one raw property for one object property.
 
-                            From an sql stand point, unless we build a composite result, which can be realtively simple with each rows containg to-one from left to right separated by chatacter like ":", but would likely lead to duplicate cells if there were to many involved, the simplest way to resolve to-many or to-one relationships is to make multiple queries. So should we do that here, amd allow complex readExpressions sent by the client? Or should the client take that on?
-
-                            When we do dataService.getObjectProperties(), it is, meant to be that. And it gets turned into as many fetchObjectProperties as needed and as much queries, (until we group for the same fetchObjectProperties required for an array of similar objects.). The API is not called getObjectExpressions(). BUT - that is exactly what we do in bindings. And we need to find an efficient way to solve that.
-
-                            When a DataComponent combines it's type and criteria, we should already know by leveraging defineBinding(), what properties/relations asre going to be epected through the entire graph. Starting from the root type of the DataComponent, we can analyze all the propertie needed on that across all bindings used in that component, and hopefully nested components, as we can trace the properties up to the root DataComponent. Once we know all that, which is client-side, it has to be passed on to be efficently executed, from the backend.
-
-                            At which point, the root query gets it's initial result via read update, but if we don't build client-side queries for the rest, by hand, then data will arrive, as readupdate operation, giving us criteria so we know what obects they belong to. But operations have been "raw" data so far. So pushing the equivallent of a fetchObjectProperty, the data would be the raw data of the content of that relationship, the target, the object descriptor, but what tells us which object it needs to be attached to?
-                                - the criteria could be the inverse from type fetched to the object on which we want that array to end-up on?
-                                - we don't do anythinn, as we are now capable of finding these objects in memory if someone asks them?
-                                - should move to return a seriaalization of fullly-formed objects instead of exchanging rawData? because then we can directly assign values on the right objects leveraging
-                                      "a":  {
-                                            data: "dataIdentifierValue",
-                                            "values": {
-                                                prop1: ["@b","@f","@cc"]
-                                            }
-
-                            11/19/2020
-                            If we handle read expressions as subqueries, we're going to create here as many new read operations as needed, and it might make sense to send them to other workers from inside to create parallelism?
-                            In any case, these read operations would have:
-                                - as referrer this initial read that triggered them in cascade.
-                                - do we need to keep track of "source" + property it will need to be mapped to? If it's a derived read, the root read onthe client side should still have info about what to do with it, but for a pure push, it would have no idea.
-                                - for a push to happen, a client would have first stated what it cares about, and that's because we know that, that we would push something to it. So the backend responds to an addEventListener(someInstance/ObjectDescriptor, "property-change", {criteria in options}
-                                and when something passes through that match that, we tell them. Let's say an object want to know if one of it's proeprty changes, then if the target is an instance client side, it could still have a criteria that qualifies the list of properties changes, or expressions, that the listener is interested in. These expressions apply to the event sent or the object itself?
-                                server side, this would have to add an additional criteria for that object's primary key + whatever else was there. Lots of work there to finalize the design, but the point is, no data operation should show up that isn't ecpected. It's more turning the current steps we have for fetching an object property we have today but get disconstructed when that single request is complete, and kind of leaving something there, where instead of looking up a promise associated with the query, we dispatch the read update arriving and based on what was registered, it should find it's way to the listeners that will put things where they belong to. Which means that between the listener's listening instructions registered and the content of the read-update, we have enough to get it done. I think the operation is just on the type itself, and the listener's has the state to funnel it in the right place in the object graph. DataTriggers have all of it, as they are essemtially object's property controllers. So if a dataTrigger where to call addEventListener("property-change"), then that first step should trigger an inital read to acquire the first value, whatever comes next would be happenig triggered by someone else.
-
-
-
-                            The matching readupdate would be sent back to the client as they come, where they will be mapped, except that today, the mapped objects are added to the main stream of the propery query, but sub-fetches are meant to fill data object proprties/arrays, and we don't have streams for that. So unless the client keep driving the queries as it does now with fetchObject properties and we have a a logic flow in olace to handle what comes back, if we want to do real push, which we needs to do for:
-                                            - preemptve fetching for increased performance
-                                            - true collaboration where parallel users see each others updates. By definition that means adding objects to a local graph that were not asked for or expected.
-
-                            From a data operation stand point, only when the intial read operation -plus- all derived readupdate have been sent to the client, send a read-completed referring the inital one. We could return a bunch as batches as well. At which point teh initial query is fulfilled along wuth the whole subgraph that was requested with it.
-
-
+                            Wether we return it to the client so it can later on ask us for it, or we directly build the read operation to get it, we need the fofeign keys anyway.
                         */
-                       var objectRule = mapping.objectMappingRules.get(iExpression);
-                       if(rawDataPrimaryKeys.indexOf(objectRule.sourcePath) === -1) {
-                            console.warn("Read expression \""+iExpression+"\" is most likely a relationship which isn't supported yet.");
-                       }
+                        while((iRawDataMappingRule = iRawDataMappingRulesIterator.next().value)) {
+                            if(iIsInlineReadExpression) {
+                                rawReadExpressions.add(iRawDataMappingRule.targetPath);
+                            }
+                            // else {
+                            //     //We need to buil the criteria for the readOperation on iValueDescriptorReference / iValueSchemaDescriptor
+                            //     if(readExpressionsCount === 1) {
+
+                            //     }
+
+                            // }
+                        }
+                        /*
+                            If we have a value descriptor with a schema that's not embedded, then we're going to create a new read operation to fetch it, so we keep it in readExpressions for further processing, otherwise it's an internal property and we remove it.
+                        */
+
+                        // if(iIsInlineReadExpression)  {
+                        //         readExpressions.splice(i,1);
+                        //         i--;
+                        //         countI--;
+                        // }
+
                     }
+
+                    // if(readExpressions.length && objectDescriptor.name === "Service") console.warn(objectDescriptor.name+" Read expressions \""+JSON.stringify(readExpressions)+"\" left are most likely a relationship which isn't supported yet.");
+
+                    // rawReadExpressions = new Set(readExpressions.map(expression => mapping.mapObjectPropertyNameToRawPropertyName(expression)));
+                } else {
+                    //Here we want to return all internal states
+                    //rawReadExpressions = new Set(mapping.rawRequisitePropertyNames);
+                    // rawReadExpressions = new Set(mapping.rawDataMappingRules.keys());
+                    rawReadExpressions = new Set(this.columnNamesForObjectDescriptor(objectDescriptor));
+                    //If we have some toOne where we host the foreignKey, we have to make sure we include them so relationships can be resolved by the client side in the future, until we can just resolve readExpressions that are relationships.
                 }
-                // rawReadExpressions = new Set(readExpressions.map(expression => mapping.mapObjectPropertyNameToRawPropertyName(expression)));
-            } else {
-                //Here we want to return all internal states
-                //rawReadExpressions = new Set(mapping.rawRequisitePropertyNames);
-                // rawReadExpressions = new Set(mapping.rawDataMappingRules.keys());
-                rawReadExpressions = new Set(this.columnNamesForObjectDescriptor(objectDescriptor));
-                //If we have some toOne where we host the foreignKey, we have to make sure we include them so relationships can be resolved by the client side in the future, until we can just resolve readExpressions that are relationships.
             }
 
             //Adds the primaryKeys to the columns fetched
@@ -1062,10 +1073,64 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         value: 0
     },
 
+    /*
+
+        Notes about dealing with advanced readExpressions
+
+        if(iObjectRule && iValueSchemaDescriptor && !(iObjectRule.converter && (iObjectRule.converter instanceof RawEmbeddedValueToObjectConverter)))  {}
+
+        11/18/2020
+        We need to build up support for more than inline properties. A read expression that is a relationship is asking to fetch another type objects that's associated with the source.
+        We're already using:
+                objectCriteria = new Criteria().initWithExpression("id == $id", {id: object.dataIdentifier.primaryKey});
+        on the client side to do so, id here is on the table fetched, for gettin more inline values.
+
+        From an sql stand point, unless we build a composite result, which can be relatively simple with each rows containg to-one from left to right separated by chatacter like ":", but would likely lead to duplicate cells if there were to many involved, the simplest way to resolve to-many or to-one relationships is to make multiple queries. So should we do that here, amd allow complex readExpressions sent by the client? Or should the client take that on?
+
+        When we do dataService.getObjectProperties(), it is, meant to be that. And it gets turned into as many fetchObjectProperties as needed and as much queries, (until we group for the same fetchObjectProperties required for an array of similar objects.). The API is not called getObjectExpressions(). BUT - that is exactly what we do in bindings. And we need to find an efficient way to solve that.
+
+        When a DataComponent combines it's type and criteria, we should already know by leveraging defineBinding(), what properties/relations are going to be epected through the entire graph. Starting from the root type of the DataComponent, we can analyze all the propertie needed on that across all bindings used in that component, and hopefully nested components, as we can trace the properties up to the root DataComponent. Once we know all that, which is client-side, it has to be passed on to be efficently executed, from the backend.
+
+        At which point, the root query gets it's initial result via read update, but if we don't build client-side queries for the rest, by hand, then data will arrive, as readupdate operation, giving us criteria so we know what obects they belong to. But operations have been "raw" data so far. So pushing the equivallent of a fetchObjectProperty, the data would be the raw data of the content of that relationship, the target, the object descriptor, but what tells us which object it needs to be attached to?
+            - the criteria could be the inverse from type fetched to the object on which we want that array to end-up on?
+            - we don't do anythinn, as we are now capable of finding these objects in memory if someone asks them?
+            - should move to return a seriaalization of fullly-formed objects instead of exchanging rawData? because then we can directly assign values on the right objects leveraging
+                    "a":  {
+                        data: "dataIdentifierValue",
+                        "values": {
+                            prop1: ["@b","@f","@cc"]
+                        }
+
+        11/19/2020
+        If we handle read expressions as subqueries, we're going to create here as many new read operations as needed, and it might make sense to send them to other workers from inside to create parallelism?
+        In any case, these read operations would have:
+            - as referrer this initial read that triggered them in cascade.
+            - do we need to keep track of "source" + property it will need to be mapped to? If it's a derived read, the root read onthe client side should still have info about what to do with it, but for a pure push, it would have no idea.
+            - for a push to happen, a client would have first stated what it cares about, and that's because we know that, that we would push something to it. So the backend responds to an addEventListener(someInstance/ObjectDescriptor, "property-change", {criteria in options}
+            and when something passes through that match that, we tell them. Let's say an object want to know if one of it's proeprty changes, then if the target is an instance client side, it could still have a criteria that qualifies the list of properties changes, or expressions, that the listener is interested in. These expressions apply to the event sent or the object itself?
+            server side, this would have to add an additional criteria for that object's primary key + whatever else was there. Lots of work there to finalize the design, but the point is, no data operation should show up that isn't expected. It's more turning the current steps we have for fetching an object property we have today but get disconstructed when that single request is complete, and kind of leaving something there, where instead of looking up a promise associated with the query, we dispatch the read update arriving and based on what was registered, it should find it's way to the listeners that will put things where they belong to. Which means that between the listener's listening instructions registered and the content of the read-update, we have enough to get it done. I think the operation is just on the type itself, and the listener's has the state to funnel it in the right place in the object graph. DataTriggers have all of it, as they are essemtially object's property controllers. So if a dataTrigger where to call addEventListener("property-change"), then that first step should trigger an inital read to acquire the first value, whatever comes next would be happenig triggered by someone else.
+
+
+
+        The matching readUpdate would be sent back to the client as they come, where they will be mapped, except that today, the mapped objects are added to the main stream of the propery query, but sub-fetches are meant to fill data object proprties/arrays, and we don't have streams for that. So unless the client keep driving the queries as it does now with fetchObject properties and we have a a logic flow in olace to handle what comes back, if we want to do real push, which we needs to do for:
+                        - preemptve fetching for increased performance
+                        - true collaboration where parallel users see each others updates. By definition that means adding objects to a local graph that were not asked for or expected.
+
+        From a data operation stand point, only when the intial read operation -plus- all derived readupdate have been sent to the client, send a read-completed referring the inital one. We could return a bunch as batches as well. At which point teh initial query is fulfilled along with the whole subgraph that was requested with it.
+
+        12/26:
+
+        We should be using converters to create a query that has all the logic to use their expressions. But. Converters are meant to go from Raw Data to Object and vice-versa. When we get here, we're squarely in RawData plane, we don't have objects, though we could, but that would be a waste of energy and resources. We still should use the converter's expressions as they're telling us what to join on.
+
+        So we need a mapObjectDescriptorRawDataReadExpressionToReadOperation
+
+
+    */
+
     handleRead: {
         value: function (readOperation) {
             var data = readOperation.data,
-                rawReadExpressionMap;
+                rawReadExpressionMap,
 
             //console.log("PhrontService: handleRead readOperation.id: ",readOperation.id)
             //No implementation/formalization yet to read the schema and retrieve ObjectDescriptors
@@ -1074,70 +1139,459 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             // if(data instanceof ObjectDescriptor) {
             //   return this.handleReadObjectDescriptorOperation(readOperation);
             // } else {
-            var rawDataOperation = {},
+                rawDataOperation = {},
+                iRawDataOperation,
+                iReadOperation,
+                iReadOperationExecutionPromise,
+                iPreviousReadOperationExecutionPromise,
                 objectDescriptor = readOperation.target,
+                mapping = this.mappingForType(objectDescriptor),
+                readExpressions = readOperation.data.readExpressions,
+                readExpressionsCount = (readExpressions && readExpressions.length) || 0,
+                rawDataPrimaryKeys = mapping.rawDataPrimaryKeys,
+                criteria = readOperation.criteria,
+                criteriaSyntax,
+                criteriaQualifiedProperties = criteria && criteria.qualifiedProperties,
+                rawReadExpressions,
                 dataChanges = data,
                 changesIterator,
                 aProperty, aValue, addedValues, removedValues, aPropertyDescriptor,
-                self = this;
+                self = this,
+                isReadOperationForSingleObject = false,
+                readOperationExecutionPromises,
+                readOperationExecutedCount = 0,
+                readOperations = [readOperation],
+                firstPromise,
+                readOperationsCount;
+
+            //fast eliminating test to get started
+            if(criteriaQualifiedProperties && (rawDataPrimaryKeys.length === criteriaQualifiedProperties.length)) {
+                isReadOperationForSingleObject = rawDataPrimaryKeys.every((aPrimaryKeyProperty) => {
+                    return (criteriaQualifiedProperties.indexOf(aPrimaryKeyProperty) !== -1);
+                });
+            }
+
+            if (readExpressions) {
+                let i, countI, iExpression, iRawPropertyName, iKey, iValue, iObjectRule, iPropertyDescriptor, iAssignment, iPrimaryKey, iPrimaryKeyValue, iValueSchemaDescriptor, iValueDescriptorReference, iValueDescriptorReferenceMapping, iInversePropertyObjectRule, iInversePropertyObjectRuleConverter, iRawDataMappingRules, iRawDataMappingRulesIterator, iRawDataMappingRule, iIsInlineReadExpression, iReadOperation, iSourceJoinKey, iDestinationJoinKey, iInversePropertyDescriptor, iObjectRuleConverter,
+                userLocaleCriteria, iReadOperationCriteria;
+
+                if(criteria && criteria.parameters.DataServiceUserLocales) {
+                    userLocaleCriteria = new Criteria().initWithExpression("locales == $DataServiceUserLocales", {
+                        DataServiceUserLocales: criteria.parameters.DataServiceUserLocales
+                    });
+                }
+
+                /*
+                    if there's only one readExpression for a relationship and the criteria is about one object only —it's only ualifiedProperties is "id"/primaryKey, then we can safely execute one query only and shift the object descriptor to the destination.
+
+                    If the join for that readExpression relationship is the id, we can get the fetch right away, but for others, we'll need to add a join to the expression.
+
+                    We should be able to re-use some logic from the converter, if we replace the scope by the foreignKey itself and not the value
+                */
+                // if(objectDescriptor.name === "Service") {
+                //     console.log("handleRead for "+objectDescriptor.name+" with readExpressions: "+JSON.stringify(readExpressions));
+                // }
+                rawReadExpressions = new Set();
+                for(i=0, countI = readExpressions.length;(i<countI); i++) {
+                    iExpression = readExpressions[i];
+                    iRawPropertyName = mapping.mapObjectPropertyNameToRawPropertyName(iExpression);
+                    iObjectRule = mapping.objectMappingRules.get(iExpression);
+                    iObjectRuleConverter = iObjectRule && iObjectRule.converter;
+                    iPropertyDescriptor = iObjectRule && iObjectRule.propertyDescriptor;
+                    iRawDataMappingRules = mapping.rawDataMappingRulesForObjectProperty(iExpression);
+                    iRawDataMappingRulesIterator = iRawDataMappingRules && iRawDataMappingRules.values();
+                    iValueDescriptorReference = iObjectRule && iObjectRule.propertyDescriptor._valueDescriptorReference,
+                    iValueDescriptorReferenceMapping = iValueDescriptorReference && this.mappingForType(iValueDescriptorReference);
+
+                    if(iValueDescriptorReference) {
+                        iValueSchemaDescriptor = this.schemaDescriptorForObjectDescriptor(iValueDescriptorReference);
+                    }
+
+                    iIsInlineReadExpression = (
+                        !iObjectRule ||
+                        !iValueSchemaDescriptor ||
+                        !iObjectRuleConverter ||
+                        (
+                            iObjectRuleConverter &&
+                            (
+                                iObjectRuleConverter instanceof RawEmbeddedValueToObjectConverter ||
+                                iObjectRuleConverter instanceof KeyValueArrayToMapConverter
+                            )
+                        )
+                    );
+
+
+
+                    if((!iRawDataMappingRules || iRawDataMappingRules.size === 0)) {
+                        if(isReadOperationForSingleObject && !iIsInlineReadExpression) {
+                            /*
+                                we find our primaryKey on the other side, we can just use the converter since we have the primary key value:
+                            */
+                            iReadOperationCriteria = iObjectRuleConverter.convertCriteriaForValue(criteria.parameters.id);
+
+                        } else {
+                            /*
+                                This is the case where we have an arbitrary criteria on objectDescriptor. The best we can do might be to combine that criteria with the criteria to fetch iExpression, which will return all possibles, make sure we add the foreign key if it's not id in rawReadExpressions, and once we've pushed the results client side, since the foreignKey converter now look in memory first, it will find  what it needs.
+
+                                Our stringification to SQL has been coded so far to work with object-level semantics. So we're going to stick to that for now.
+
+                            */
+
+                            iSourceJoinKey = iObjectRule.sourcePath;
+                            //    iConverterExpression = iObjectRuleConverter && iObjectRuleConverter.convertExpression;
+                            //    iConverterSyntax = iObjectRuleConverter && iObjectRuleConverter.convertSyntax;
+                            if(rawDataPrimaryKeys.indexOf(iSourceJoinKey) === -1) {
+                                /* we host the foreign key, we add it to rawReadExpressions so the client can stich things together, or issue a new fetch as needed */
+                                rawReadExpressions.add(iSourceJoinKey);
+                            }
+
+
+                            iInversePropertyDescriptor = iValueDescriptorReference.propertyDescriptorForName(iPropertyDescriptor.inversePropertyName);
+
+                            if(iInversePropertyDescriptor) {
+                               /*
+                                    we need to start with iInversePropertyDescriptor.name and combine the left side(s) of readOperation.criteria with it. If a left side is a toOne or inline property it means
+
+                                    ${iInversePropertyoDescriptor.name}.someToOneProperty {operator} -right side-
+
+                                    and if it's a to-many:
+
+                                    ${iInversePropertyoDescriptor.name}{someToOneProperty {operator} -right side-}
+
+                                    We need a property iterator on frb syntax...
+
+                                    We basically need to do something simmila to EOF
+
+                                    qualifierMigratedFromEntityRelationshipPath
+                               */
+                                if(criteria) {
+                                    //console.log("ReadExpression:"+ objectDescriptor.name + "-" + iPropertyDescriptor.name+"Implementation missing to support prefetching relationship read expressions combined with arbitrary criteria");
+                                    if(iInversePropertyDescriptor.cardinality === 1) {
+
+                                    } else {
+
+                                    }
+
+
+                                    if(iReadOperationCriteria) {
+
+                                        if(!iIsInlineReadExpression && !iReadOperation) {
+
+                                            iReadOperation = new DataOperation();
+                                            iReadOperation.type = DataOperation.Type.Read;
+                                            iReadOperation.target = iValueDescriptorReference;
+                                            iReadOperation.data = {};
+                                            readOperations.push(iReadOperation);
+
+                                        }
+                                    }
+
+                                }
+
+                            } else {
+                               /*
+                                TODO: If it's missing, we can proabably create it with the mapping info we have on eiher side.
+                                remove the else and test first and once created proceed;
+                               */
+                                //console.error("Can't fulfill fetching read expression '"+iExpression+"'. No inverse property descriptor was found for '"+objectDescriptor.name+"', '"+iExpression+"' with inversePropertyName '"+iPropertyDescriptor.inversePropertyName+"'");
+                                iReadOperation = null;
+                            }
+
+                        }
+
+                    } else {
+                        while((iRawDataMappingRule = iRawDataMappingRulesIterator.next().value)) {
+
+                            //if(iIsInlineReadExpression) {
+                            //We want foreign keys as well regardless so client can at least re-issue a query
+                            rawReadExpressions.add(iRawDataMappingRule.targetPath);
+                            //}
+                            /*
+                                for now, we're only going to support getting relationships of one object.
+
+                                In the future we'll need to add a second phase following a general fetch, where we'll have to parse the json results and do for each rawData what we're doing here, trying to be smart about grouping the fetch of the same readExpression for different instances with an in/or, as long as we can tell them apart when we get them back.
+                            */
+                            if(!iIsInlineReadExpression && criteria) {
+                                /*
+                                    If we have a value descriptor with a schema that's not embedded, then we're going to create a new read operation to fetch it, so we keep it in readExpressions for further processing, otherwise it's an internal property and we remove it.
+                                */
+
+                                //We need to buil the criteria for the readOperation on iValueDescriptorReference / iValueSchemaDescriptor
+
+                                                                /*
+                                    We start with readOperatio criteria being
+
+                                    _expression:'id == $id'
+                                    _parameters:{id: 'cb3383a0-6bb5-45bb-9ed9-437d6a8c4dfa'}
+
+                                    We need to create a criteria tha goes back from iValueDescriptorReference to objectDescriptor.
+
+                                    The mapping expression and eventual converters contains the property involved:
+
+                                    for example, Service has:
+                                    "variants": {
+                                        "<->": "variantIds",
+                                        "converter": {"@": "variantsConverter"},
+                                        "debug":true
+                                    },
+
+                                    and variantsConverter has:
+                                        "convertExpression": "$.has(id)"
+                                */
+                                /*
+                                    Simplified first pass to support key == value
+                                */
+                               criteriaSyntax = criteria.syntax;
+                               if(criteriaSyntax.type === "equals") {
+
+                                    //Special case easier to handle, when we fulfill readExpression for 1 obect only:
+                                    if(isReadOperationForSingleObject) {
+
+                                        if(readExpressionsCount === 1) {
+                                            //We can re-use the current operation to do what we want
+                                            iReadOperation = readOperation;
+                                            iReadOperation.target = iValueDescriptorReference;
+                                            iReadOperation.data = {};
+
+                                            //We're not returning anything from the original objectDescriptor.
+                                            //REVIEW - needs to be better structured when we can make it more general
+                                            rawReadExpressions= null;
+                                        }
+
+                                        /*
+                                            we find our primaryKey on the other side, we can just use the converter since we have the primary key value:
+                                        */
+                                       iInversePropertyDescriptor = iValueDescriptorReference.propertyDescriptorForName(iPropertyDescriptor.inversePropertyName);
+                                       iInversePropertyObjectRule = iValueDescriptorReferenceMapping.objectMappingRules.get(iPropertyDescriptor.inversePropertyName);
+                                       iInversePropertyObjectRuleConverter = iInversePropertyObjectRule && iInversePropertyObjectRule.converter;
+
+                                        if(iInversePropertyDescriptor.cardinality === 1) {
+                                            iReadOperationCriteriaExpression = `${iInversePropertyDescriptor.name}.${criteria.expression}`;
+
+                                        } else {
+                                            iReadOperationCriteriaExpression = `${iInversePropertyDescriptor.name}.filter{${criteria.expression}}`;
+                                        }
+                                        iReadOperationCriteria = new Criteria().initWithExpression(iReadOperationCriteriaExpression, criteria.parameters);
+
+                                        // iReadOperationCriteria = iInversePropertyObjectRuleConverter.convertCriteriaForValue(criteria.parameters.id);
+
+                                    } else {
+                                        /*
+                                            More general case where we need to combine the criteria with rebasing the criteria.
+
+                                        */
+                                        iInversePropertyDescriptor = iValueDescriptorReference.propertyDescriptorForName(iPropertyDescriptor.inversePropertyName);
+
+                                        if(iInversePropertyDescriptor) {
+                                            var iReadOperationCriteriaExpression;
+                                            if(iInversePropertyDescriptor.cardinality === 1) {
+                                                iReadOperationCriteriaExpression = `${iInversePropertyDescriptor.name}.${criteria.expression}`;
+
+                                            } else {
+                                                iReadOperationCriteriaExpression = `${iInversePropertyDescriptor.name}.filter{${criteria.expression}}`;
+                                            }
+
+                                            /*
+                                                Un-comment the next line to finish testing and immplementing. The filter block needs work to properly create the right joins primarily.
+                                            */
+
+                                            // iReadOperationCriteria = new Criteria().initWithExpression(iReadOperationCriteriaExpression, criteria.parameters);
+                                        }
+                                        else {
+                                            //console.error("Can't fulfill fetching read expression '"+iExpression+"'. No inverse property descriptor was found for '"+objectDescriptor.name+"', '"+iExpression+"' with inversePropertyName '"+iPropertyDescriptor.inversePropertyName+"'");
+                                        }
+
+                                    }
+
+
+                                    if(iReadOperationCriteria && !iReadOperation) {
+                                        iReadOperation = new DataOperation();
+                                        iReadOperation.type = DataOperation.Type.Read;
+                                        iReadOperation.target = iValueDescriptorReference;
+                                        iReadOperation.data = {};
+                                        readOperations.push(iReadOperation);
+                                    }
+
+                                } else {
+                                    //console.log("No implementation yet for external read expressions with a non equal criteria");
+                                }
+                            //    iReadOperationCriteria = iObjectRuleConverter.convertCriteriaForValue(criteria.parameters.id);
+
+                                /*
+                                iInversePropertyDescriptor = iValueDescriptorReference.propertyDescriptorForName(iPropertyDescriptor.inversePropertyName);
+
+                                if(iInversePropertyDescriptor) {
+                                    //Let's try to
+
+                                } else {
+
+                                    // TODO: If it's missing, we can proabably create it with the mapping info we have on eiher side.
+                                    // remove the else and test first and once created proceed;
+
+                                    console.error("Can't fulfill fetching read expression '"+iExpression+"'. No inverse property descriptor was found for '"+objectDescriptor.name+"', '"+iExpression+"' with inversePropertyName '"+iPropertyDescriptor.inversePropertyName+"'");
+                                    iReadOperation = null;
+                                }
+                                */
+                            }
+                        }
+                    }
+
+
+                    if(iReadOperationCriteria && iPropertyDescriptor.isLocalizable) {
+                        iReadOperationCriteria = userLocaleCriteria.and(iReadOperationCriteria);
+                    }
+
+                    if(iReadOperation && iReadOperationCriteria) {
+                        iReadOperation.criteria = iReadOperationCriteria;
+                    }
+
+                    // if(iReadOperation && (readExpressionsCount > 1) && (i>0)) {
+                    //     readOperations.push(iReadOperation);
+                    // }
+                }
+
+                //if(readExpressions.length && objectDescriptor.name === "Service") console.warn(objectDescriptor.name+" Read expressions \""+JSON.stringify(readExpressions)+"\" left are most likely a relationship which isn't supported yet.");
+
+                // rawReadExpressions = new Set(readExpressions.map(expression => mapping.mapObjectPropertyNameToRawPropertyName(expression)));
+            }
+
+            /*
+                if we have rawReadExpressions and several readOperations, it means we need to return data for an object itself as well as more from the other reads. If the object didn't already exists, we're going to make sure that we return it first before adding details, to simplify the client side graph-stiching logic.
+            */
+
+
+           readOperationExecutionPromises = [];
+           readOperationsCount = readOperations.length;
 
             //This adds the right access key, db name. etc... to the RawOperation.
             this.mapOperationToRawOperationConnection(readOperation, rawDataOperation);
-            this.mapReadOperationToRawStatement(readOperation, rawDataOperation);
 
-            //return new Promise(function(resolve,reject) {
-            //var timeID = self._handleReadCount++,
-            //start = Date.now();
-            // startTime = console.time(readOperation.id);
-            //var timer = new Timer(readOperation.id);
+            //The root one is special as we have built the rawReadExpressions already:
+            this.mapReadOperationToRawStatement(readOperation, rawDataOperation, rawReadExpressions);
 
-            // if(rawDataOperation.sql.indexOf('"name" = ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1) {
-            //   console.log(rawDataOperation.sql);
-            // }
+            firstPromise = new Promise(function (resolve, reject) {
 
-            // if(objectDescriptor.name === "RespondentQuestionnaire") {
-            //    console.log("handleRead: "+rawDataOperation.sql);
-            // }
+                self._executeStatement(rawDataOperation, function (err, data) {
+                    var isNotLast
 
-            self._executeStatement(rawDataOperation, function (err, data) {
-                //var endTime  = console.timeEnd(readOperation.id);
-                //console.log(timer.runtimeMsStr() + " for sql: "+rawDataOperation.sql);
+                    readOperationExecutedCount++;
 
-                //console.log("Query took "+(Date.now()-start)+ " ms");
-                //debug
-                //   if(rawDataOperation.sql.indexOf('"name" ilike ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1 && data.records.length === 0) {
-                //     console.log(rawDataOperation.sql);
-                //   }
-                //   else if(rawDataOperation.sql.indexOf('"name" ilike ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1 && data.records.length > 0){
-                //       console.log("organization found by name");
-                //   }
-                // if(rawDataOperation.sql.indexOf('"label"') !== -1) {
-                //     console.log(rawDataOperation.sql);
-                //   }
+                    isNotLast = (readOperationsCount - readOperationExecutedCount) > 0;
 
-                if(err) {
-                    console.error("handleRead Error",readOperation,rawDataOperation,err);
-                }
+                    //var endTime  = console.timeEnd(readOperation.id);
+                    //console.log(timer.runtimeMsStr() + " for sql: "+rawDataOperation.sql);
 
-                // if(objectDescriptor.name === "RespondentQuestionnaire") {
-                //     console.log("data: "+data);
-                //  }
+                    //console.log("Query took "+(Date.now()-start)+ " ms");
+                    //debug
+                    //   if(rawDataOperation.sql.indexOf('"name" ilike ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1 && data.records.length === 0) {
+                    //     console.log(rawDataOperation.sql);
+                    //   }
+                    //   else if(rawDataOperation.sql.indexOf('"name" ilike ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1 && data.records.length > 0){
+                    //       console.log("organization found by name");
+                    //   }
+                    // if(rawDataOperation.sql.indexOf('"label"') !== -1) {
+                    //     console.log(rawDataOperation.sql);
+                    //   }
 
-                //DEBUG:
-                // if(readOperation.criteria && readOperation.criteria.syntax.type === "has") {
-                //     console.log(rawDataOperation);
-                // }
-                var operation = self.mapHandledReadResponseToOperation(readOperation, err, data/*, record*/);
-                objectDescriptor.dispatchEvent(operation);
+                    if(err) {
+                        console.error("handleRead Error",readOperation,rawDataOperation,err);
+                    }
+
+                    // if(objectDescriptor.name === "RespondentQuestionnaire") {
+                    //     console.log("data: "+data);
+                    //  }
+
+                    //DEBUG:
+                    // if(readOperation.criteria && readOperation.criteria.syntax.type === "has") {
+                    //     console.log(rawDataOperation);
+                    // }
+                    var operation = self.mapHandledReadResponseToOperation(readOperation, err, data/*, record*/, isNotLast);
+                    objectDescriptor.dispatchEvent(operation);
+
+                    resolve(operation);
+                });
             });
+
+            if(readOperationsCount > 1) {
+                /*
+                    now we loop on all the other read operations starting at 1
+                */
+                firstPromise.then(function(firstReadUpdateOperation) {
+
+                    for(i=1, countI = readOperationsCount;(i<countI); i++) {
+                        iReadOperation = readOperations[i];
+                        iRawDataOperation = {};
+
+                        //This adds the right access key, db name. etc... to the RawOperation.
+                        self.mapOperationToRawOperationConnection(iReadOperation, iRawDataOperation);
+
+                        /*
+                            For nested reads for read expressions, we don't have rawReadExpressions to offer, so we'll end up with the default in mapReadOperationToRawStatement:
+                        */
+                        self.mapReadOperationToRawStatement(iReadOperation, iRawDataOperation);
+
+
+                        self._executeStatement(iRawDataOperation, function (err, data) {
+                            var isNotLast
+
+                            readOperationExecutedCount++;
+
+                            isNotLast = (readOperationsCount - readOperationExecutedCount) > 0;
+
+                            //var endTime  = console.timeEnd(readOperation.id);
+                            //console.log(timer.runtimeMsStr() + " for sql: "+rawDataOperation.sql);
+
+                            //console.log("Query took "+(Date.now()-start)+ " ms");
+                            //debug
+                            //   if(rawDataOperation.sql.indexOf('"name" ilike ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1 && data.records.length === 0) {
+                            //     console.log(rawDataOperation.sql);
+                            //   }
+                            //   else if(rawDataOperation.sql.indexOf('"name" ilike ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1 && data.records.length > 0){
+                            //       console.log("organization found by name");
+                            //   }
+                            // if(rawDataOperation.sql.indexOf('"label"') !== -1) {
+                            //     console.log(rawDataOperation.sql);
+                            //   }
+
+                            if(err) {
+                                console.error("handleRead Error",readOperation,rawDataOperation,err);
+                            }
+
+                            // if(objectDescriptor.name === "RespondentQuestionnaire") {
+                            //     console.log("data: "+data);
+                            //  }
+
+                            //DEBUG:
+                            // if(readOperation.criteria && readOperation.criteria.syntax.type === "has") {
+                            //     console.log(rawDataOperation);
+                            // }
+                            var operation = self.mapHandledReadResponseToOperation(readOperation, err, data/*, record*/, isNotLast);
+                            objectDescriptor.dispatchEvent(operation);
+                        });
+
+                    }
+
+
+
+                });
+            }
+
+
+
 
             //});
             //}
         }
     },
 
+    _performAndDisPatchRawReadOperation: {
+        value: function() {
+
+        }
+    },
+
     mapHandledReadResponseToOperation: {
-        value: function(readOperation, err, data, records) {
+        value: function(readOperation, err, data, isNotLast) {
             var operation = new DataOperation();
 
             operation.referrerId = readOperation.id;
@@ -1157,7 +1611,14 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             }
             else {
                 // successful response
-                operation.type = DataOperation.Type.ReadCompleted;
+
+                //If we need to take care of readExpressions, we can't send a ReadCompleted until we have returnes everything that we asked for.
+                if(isNotLast) {
+                    operation.type = DataOperation.Type.ReadUpdate;
+                } else {
+                    operation.type = DataOperation.Type.ReadCompleted;
+                }
+
                 //We provide the inserted record as the operation's payload
                 operation.data = data.records;
             }
@@ -2060,6 +2521,11 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 keyArrayColumn,
                 valueArrayColumn;
 
+
+            /* For example for Date or Map */
+            if(!mapping) {
+                return null;
+            }
 
             //mapping.schemaDescriptor =
             schemaDescriptor = new ObjectDescriptor();
