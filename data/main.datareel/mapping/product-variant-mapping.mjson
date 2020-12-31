@@ -10,7 +10,7 @@
                     "price": {"<->": "price"},
                     "availableForSale": {"<->": "availableForSale"},
                     "product":{
-                        "<->": "productId",
+                        "<->": "id",
                         "converter": {"@": "productForeignKeyConverter"}
                     },
                     "images": {
@@ -18,11 +18,13 @@
                         "converter": {"@": "imagesConverter"},
                         "debug":true
                     },
-                    "selectedOptions": {"<->": "selectedOptions",
+                    "selectedOptions": {
+                        "<->": "selectedOptions",
                         "converter": {"@": "jsonbConverter"}
                     },
                     "sku": {"<->": "sku"},
-                    "presentmentPrices": {"<->": "presentmentPrices",
+                    "presentmentPrices": {
+                        "<->": "presentmentPrices",
                         "converter": {"@": "jsonbConverter"}
                     }
                 }
@@ -55,7 +57,7 @@
     "productForeignKeyConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
-            "convertExpression": "id == $"
+            "convertExpression": "variantIds.has($)"
         }
     },
     "jsonbConverter": {
