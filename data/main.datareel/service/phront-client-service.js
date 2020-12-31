@@ -373,8 +373,10 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     handleReadUpdate: {
         value: function (operation) {
             var referrer = operation.referrerId,
-            records = operation.data,
-            stream = this._thenableByOperationId.get(referrer);
+                objectDescriptor = operation.target,
+                records = operation.data,
+                stream = this._thenableByOperationId.get(referrer),
+                streamObjectDescriptor;
             // if(operation.type === DataOperation.Type.ReadCompleted) {
             //     console.log("handleReadCompleted  referrerId: ",operation.referrerId, "records.length: ",records.length);
             // } else {
@@ -383,13 +385,22 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             //if(operation.type === DataOperation.Type.ReadUpdate) console.log("handleReadUpdate  referrerId: ",referrer);
 
             if(stream) {
-                if(records && records.length > 0) {
-                    //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
-                    this.addRawData(stream, records, operation);
-                } else if(operation.type !== DataOperation.Type.ReadCompleted){
-                    console.log("operation of type:"+operation.type+", has no data");
-                }
+                streamObjectDescriptor = stream.query.type;
+                /*
 
+                    We now could get readUpdate that are reads for readExpressions that are properties (with a valueDescriptor) of the ObjectDescriptor of the referrer. So we need to add a check that the obectDescriptor maatch, otherwise, it needs to be assigned to the right instance, or created in memory and mapping/converters will find it.
+                */
+
+                if(streamObjectDescriptor === objectDescriptor) {
+                    if(records && records.length > 0) {
+                        //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
+                        this.addRawData(stream, records, operation);
+                    } else if(operation.type !== DataOperation.Type.ReadCompleted){
+                        console.log("operation of type:"+operation.type+", has no data");
+                    }
+                } else {
+                    console.log("Received "+operation.type+" operation that is for a readExpression of referrer ",referrer);
+                }
             } else {
                 console.log("receiving operation of type:"+operation.type+", but can't find a matching stream");
             }
@@ -622,41 +633,51 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
     fetchObjectProperty: {
         value: function (object, propertyName) {
-            var objectDescriptor = this.objectDescriptorForObject(object),
+            var self = this,
+                objectDescriptor = this.objectDescriptorForObject(object),
                 propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyName),
                 valueDescriptor = propertyDescriptor && propertyDescriptor.valueDescriptor;
 
-            // console.log(objectDescriptor.name+": fetchObjectProperty "+ " -"+propertyName);
+            //console.log(objectDescriptor.name+": fetchObject:",object, "property:"+ " -"+propertyName);
 
             if(!Promise.is(valueDescriptor)) {
                 valueDescriptor = Promise.resolve(valueDescriptor);
             }
 
-            return valueDescriptor.then( (valueDescriptor) => {
-                var mapping = objectDescriptor && this.mappingForType(objectDescriptor),
+            return valueDescriptor.then( function(valueDescriptor) {
+                var mapping = objectDescriptor && self.mappingForType(objectDescriptor),
                     objectRule = mapping && mapping.objectMappingRules.get(propertyName),
+                    snapshot = self.snapshotForObject(object),
                     objectRuleConverter = objectRule && objectRule.converter;
 
+
+                // if(!snapshot) {
+                //     throw "Can't fetchObjectProperty: type: "+valueDescriptor.name+" propertyName: "+propertyName+" - doesn't have a snapshot";
+                // }
 
 
                 /*
                     if we can get the value from the type's storage itself:
+                    or
+                    we don't have the foreign key necessary or it
+
+                    -- !!! embedded values don't have their own snapshots --
                 */
                 if(
                     !valueDescriptor ||
                     ( valueDescriptor && !objectRuleConverter ) /*for Date for example*/ ||
-                    ( valueDescriptor && objectRuleConverter && objectRuleConverter instanceof RawEmbeddedValueToObjectConverter)
+                    ( valueDescriptor && objectRuleConverter && objectRuleConverter instanceof RawEmbeddedValueToObjectConverter) || (snapshot && !objectRule.hasRawDataRequiredValues(snapshot))
                 ) {
-                    var propertyNameQuery = DataQuery.withTypeAndCriteria(objectDescriptor,this.rawCriteriaForObject(object, objectDescriptor));
+                    var propertyNameQuery = DataQuery.withTypeAndCriteria(objectDescriptor,self.rawCriteriaForObject(object, objectDescriptor));
 
                     propertyNameQuery.readExpressions = [propertyName];
 
-                    console.log(objectDescriptor.name+": fetchObjectProperty "+ " -"+propertyName);
+                    //console.log(objectDescriptor.name+": fetchObjectProperty "+ " -"+propertyName);
 
-                    return this.fetchData(propertyNameQuery);
+                    return self.fetchData(propertyNameQuery);
 
                 } else {
-                    return this._fetchObjectPropertyWithPropertyDescriptor(object, propertyName, propertyDescriptor);
+                    return self._fetchObjectPropertyWithPropertyDescriptor(object, propertyName, propertyDescriptor);
                 }
             });
         }
@@ -1312,6 +1333,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         transactionObjectDescriptorArray,
                         batchOperation,
                         batchedOperationPromises,
+                        transactionOperations,
                         dataOperationsByObject = new Map(),
                         changedDataObjectOperations = new Map(),
                         deletedDataObjectOperations = new Map(),
@@ -1384,64 +1406,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         reject(error);
                     })
                     .then(function(_transactionObjectDescriptors) {
-                        //Now that all objects are valid we can proceed and kickstart a transaction as it needs to do the round trip
-                        //We keep the promise and continue to prepare the work.
-                        return self._socketOpenPromise.then(function () {
-
-                            var _createTransactionPromise;
-
-                            createTransaction = new DataOperation();
-                            createTransaction.type = DataOperation.Type.CreateTransaction;
-
-                            /*
-                                createTransaction.target = DataService.mainService;
-
-                                Workaround until we get the serialization/deserialization to work with an object passed with a label that is pre-existing and passed to both the serialiaer and deserializer on each side.
-
-                                So until then, if target is null, it's meant for the coordinaator, needed for transactions that could contain object descriptors that are handled by different data services and the OperationCoordinator will have to handle that himself first to triage, before distributing to the relevant data services by creating nested transactions with the subset of dataoperations/types they deal with.
-                            */
-                            createTransaction.target = DataService.mainService;
-                            createTransaction.data = _transactionObjectDescriptors.map((objectDescriptor) => {return objectDescriptor.module.id});
-
-                            _createTransactionPromise = new Promise(function(resolve, reject) {
-                                createTransaction._promiseResolve = resolve;
-                                createTransaction._promiseReject = reject;
-                            });
-                            self._thenableByOperationId.set(createTransaction.id,_createTransactionPromise);
-
-
-                            //Bookeeping for client side:
-                            createTransaction.createdDataObjects = createdDataObjects;
-                            createTransaction.changedDataObjects = changedDataObjects;
-                            createTransaction.deletedDataObjects = deletedDataObjects;
-                            createTransaction.dataObjectChanges = dataObjectChanges;
-
-                            self.addPendingTransaction(createTransaction);
-
-                            self._dispatchOperation(createTransaction);
-
-                            return _createTransactionPromise;
-                        }, function(error) {
-                            console.error("Error trying to communicate with server",error);
-                            self.deletePendingTransaction(createTransaction);
-                            reject(error);
-                        });
-                    }, function(error) {
-                        self.deletePendingTransaction(createTransaction);
-                        reject(error);
-                    })
-                    .then(function(createTransactionResult) {
                         var iterator, iOperation;
 
-                        if(createTransactionResult.type === DataOperation.Type.CreateTransactionFailed) {
-                            var error = new Error("CreateTransactionFailed");
-                            error.details = createTransactionResult;
-                            self.deletePendingTransaction(createTransaction);
-                            return reject(error);
-                        }
-
-                        //createTransactionCompletedId = createTransactionResult.data.transactionId;
-                        createTransactionCompletedId = createTransactionResult.id;
 
                         /*
                             Now that we have cleaned sets, an open transaction, we build all individual operations. Rigth now we have lost the timestamps related to individual changes. If it turns out we need it (EOF/CoreData have it along with a delegate method to intervene) then the recording of changes in DataService will need to be overahauled to track timestamps. When we add undoManagementt to DataService, that subsystem will have every single change in a list as they happen and could also be leveraged?
@@ -1503,6 +1469,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                                     result.push.apply(result,deleteOperations);
                                 }
 
+                                transactionOperations = result;
                                 return result;
                             });
 
@@ -1510,8 +1477,69 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         self.deletePendingTransaction(createTransaction);
                         reject(error);
                     })
+
                     .then(function(batchedOperations) {
-                        if(batchedOperations) {
+                        //Now that all objects are valid we can proceed and kickstart a transaction as it needs to do the round trip
+                        //We keep the promise and continue to prepare the work.
+                        return self._socketOpenPromise.then(function () {
+
+                            var _createTransactionPromise;
+
+                            createTransaction = new DataOperation();
+                            createTransaction.type = DataOperation.Type.CreateTransaction;
+
+                            /*
+                                createTransaction.target = DataService.mainService;
+
+                                Workaround until we get the serialization/deserialization to work with an object passed with a label that is pre-existing and passed to both the serialiaer and deserializer on each side.
+
+                                So until then, if target is null, it's meant for the coordinaator, needed for transactions that could contain object descriptors that are handled by different data services and the OperationCoordinator will have to handle that himself first to triage, before distributing to the relevant data services by creating nested transactions with the subset of dataoperations/types they deal with.
+                            */
+                            createTransaction.target = DataService.mainService;
+                            createTransaction.data = transactionObjectDescriptors.map((objectDescriptor) => {return objectDescriptor.module.id});
+
+                            _createTransactionPromise = new Promise(function(resolve, reject) {
+                                createTransaction._promiseResolve = resolve;
+                                createTransaction._promiseReject = reject;
+                            });
+                            self._thenableByOperationId.set(createTransaction.id,_createTransactionPromise);
+
+
+                            //Bookeeping for client side:
+                            createTransaction.createdDataObjects = createdDataObjects;
+                            createTransaction.changedDataObjects = changedDataObjects;
+                            createTransaction.deletedDataObjects = deletedDataObjects;
+                            createTransaction.dataObjectChanges = dataObjectChanges;
+
+                            self.addPendingTransaction(createTransaction);
+
+                            self._dispatchOperation(createTransaction);
+
+                            return _createTransactionPromise;
+                        }, function(error) {
+                            console.error("Error trying to communicate with server",error);
+                            self.deletePendingTransaction(createTransaction);
+                            reject(error);
+                        });
+
+                    }, function(error) {
+                        self.deletePendingTransaction(createTransaction);
+                        reject(error);
+                    })
+                    .then(function(createTransactionResult) {
+
+                        if(createTransactionResult.type === DataOperation.Type.CreateTransactionFailed) {
+                            var error = new Error("CreateTransactionFailed");
+                            error.details = createTransactionResult;
+                            self.deletePendingTransaction(createTransaction);
+                            return reject(error);
+                        }
+
+                        //createTransactionCompletedId = createTransactionResult.data.transactionId;
+                        createTransactionCompletedId = createTransactionResult.id;
+                        console.log("PhrontClientService saveChanges: createTransactionCompletedId is "+createTransactionCompletedId);
+
+                        if(transactionOperations) {
 /*
                             var batchedOperationsPromises = [], maxBatchSize = 10,
                                 i, countI, iBatch;
@@ -1565,7 +1593,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             //batchOperation.target = (transactionObjectDescriptors.size === 1) ? Array.from(transactionObjectDescriptors)[0] : null;
                             // batchOperation.target = (transactionObjecDescriptors.length === 1) ? transactionObjecDescriptors[0] : transactionObjecDescriptors;
                             batchOperation.data = {
-                                    batchedOperations: batchedOperations,
+                                    batchedOperations: transactionOperations,
                                     transactionId: createTransactionCompletedId
                             };
                             batchOperation.referrerId = createTransaction.id;
