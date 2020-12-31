@@ -20,11 +20,11 @@ var parse = require("montage/core/frb/parse"),
 
 function makeBlockStringifier(type) {
     return function (syntax, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements) {
-        var chain = type + '{' + dataService.stringify(syntax.args[1], scope, dataMappings, locales, rawExpressionJoinStatements) + '}';
+        var chain = type + '{' + dataService.stringify(syntax.args[1], scope, dataMappings, locales, rawExpressionJoinStatements, syntax) + '}';
         if (syntax.args[0].type === "value") {
             return chain;
         } else {
-            return dataService.stringify(syntax.args[0], scope, dataMappings, locales, rawExpressionJoinStatements) + '.' + chain;
+            return dataService.stringify(syntax.args[0], scope, dataMappings, locales, rawExpressionJoinStatements, syntax) + '.' + chain;
         }
     };
 }
@@ -453,6 +453,7 @@ module.exports = {
 
             var dataMapping = dataMappings[dataMappings.length-1],
                 objectDescriptor = dataMapping.objectDescriptor,
+                schemaName = dataService.connection.schema,
                 tableName = dataService.tableForObjectDescriptor(objectDescriptor),
                 rawPropertyValue = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName),
                 // rule = dataMapping.rawDataMappingRules.get(rawPropertyValue),
@@ -510,16 +511,16 @@ module.exports = {
                         */
 
                             if(propertyDescriptor.cardinality > 1) {
-                                result = `JOIN "${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = ANY (COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}'))`;
+                                result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = ANY (COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}'))`;
                             } else {
-                                result = `JOIN "${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
+                                result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
                             }
 
                         } else {
                             if(propertyDescriptor.cardinality > 1) {
-                                result = `JOIN "${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = ANY ("${tableName}"."${rawPropertyValue}")`;
+                                result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = ANY ("${tableName}"."${rawPropertyValue}")`;
                             } else {
-                                result = `JOIN "${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = "${tableName}"."${rawPropertyValue}"`;
+                                result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = "${tableName}"."${rawPropertyValue}"`;
                             }
                         }
 
@@ -551,21 +552,21 @@ module.exports = {
                                 ? syntaxProperty.args[1].value
                                 : syntaxProperty.args[0].value;
 
-                        if(converterSyntax.type !== "equals") {
-                            console.warn("Creaating a join where rule.reverter syntax operator isn't 'equals' but '"+converterSyntax.type+"'");
-                        }
+                        // if(converterSyntax.type !== "equals") {
+                        //     console.warn("Creaating a join where rule.reverter syntax operator isn't 'equals' but '"+converterSyntax.type+"'");
+                        // }
 
                         if(locales && isLocalizable) {
                             if(inversePropertyDescriptor.cardinality > 1) {
-                                result = `JOIN "${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = ANY (COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}'))`;
+                                result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = ANY (COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}'))`;
                             } else {
-                                result = `JOIN "${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
+                                result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
                             }
                         } else {
                             if(inversePropertyDescriptor.cardinality > 1) {
-                                result = `JOIN "${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = ANY ("${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}")`;
+                                result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = ANY ("${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}")`;
                             } else {
-                                result = `JOIN "${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = "${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}"`;
+                                result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = "${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}"`;
                             }
                         }
 
