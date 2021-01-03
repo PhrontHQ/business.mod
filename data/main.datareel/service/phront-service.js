@@ -3895,6 +3895,27 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                             }
                         }
 
+                        if(batchedOperations.length > 1) {
+                            var percentCompletion,
+                                progressOperation = new DataOperation();
+
+                            progressOperation.referrerId = batchOperation.referrerId;
+                            progressOperation.clientId = batchOperation.clientId;
+                            //progressOperation.target = transactionObjectDescriptors;
+                            progressOperation.target = batchOperation.target;
+                            progressOperation.type = DataOperation.Type.PerformTransactionProgress;
+                            if(startIndex === 0 && endIndex === 0 && batchedOperations.length === 1) {
+                                percentCompletion = 1;
+                            } else {
+                                // percentCompletion = ((startIndex + (endIndex - startIndex)) / batchedOperations.length);
+                                percentCompletion = ((endIndex + 1) / batchedOperations.length);
+                            }
+                            progressOperation.data = percentCompletion;
+                            progressOperation.target.dispatchEvent(progressOperation);
+                        }
+
+
+
                         if(response.hasNextPage()) {
                             response.nextPage(arguments.callee);
                         }
