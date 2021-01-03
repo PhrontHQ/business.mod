@@ -65,6 +65,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
             mainService.addEventListener(DataOperation.Type.BatchCompleted,this,false);
             mainService.addEventListener(DataOperation.Type.BatchFailed,this,false);
             mainService.addEventListener(DataOperation.Type.TransactionUpdated,this,false);
+            mainService.addEventListener(DataOperation.Type.PerformTransactionProgress,this,false);
             mainService.addEventListener(DataOperation.Type.PerformTransactionFailed,this,false);
             mainService.addEventListener(DataOperation.Type.PerformTransactionCompleted,this,false);
             mainService.addEventListener(DataOperation.Type.RollbackTransactionFailed,this,false);
@@ -125,7 +126,12 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
     dispatchOperationToConnectionClientId: {
         value: function(operation, connection, clientId) {
 
-            //console.log("OperationCoordinator: dispatchOperationToConnectionClientId()",operation, connection, clientId)
+            // if(operation.type === DataOperation.Type.PerformTransactionCompleted ||
+            //     operation.type === DataOperation.Type.PerformTransactionFailed) {
+            //     console.log("OperationCoordinator: dispatchOperationToConnectionClientId()",operation, connection, clientId)
+            // }
+
+
 
             //remove _target & _currentTarget as it creates a pbm? and we don't need to send it
             delete operation._currentTarget;
@@ -138,7 +144,10 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 //console.log("operation size is "+operationDataKBSize);
                 //console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #1 operation.referrerId "+operation.referrerId);
 
-                return this._sendData(undefined, connection, clientId, operationSerialization);
+                return this._sendData(undefined, connection, clientId, operationSerialization)
+                .then(function() {
+                    return operation;
+                });
 
                 // return connection
                 // .postToConnection({
@@ -232,13 +241,21 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
             /*
                 We're now receiving PhrontService event/operations that are response to operations initiated locally, so until we sort out more carefully who answer what, we're going to make sure we filter operations that don't have a clientId, and to be even more careful, if there's a clientId, to compare it to the one in environemnt, which is re-set everytime we receive a call from the APIGateway
             */
+
+            // if(operation.type === DataOperation.Type.PerformTransactionCompleted ||
+            //     operation.type === DataOperation.Type.PerformTransactionFailed) {
+            //         console.log("OperationCoordinator: handleEvent",operation, "operation.clientId: ",operation.clientId);
+            // }
+
             if(operation.clientId) {
                 var self = this;
                 //console.log("handleEvent:",operation);
                 this.dispatchOperationToConnectionClientId(operation,this.gateway,operation.clientId)
-                .then(function(values) {
-                    //resolve
-                    self._operationPromisesByReferrerId.get(operation.referrerId)[0]();
+                .then(function(operation) {
+                    if(operation.type.endsWith("Completed") || operation.type.endsWith("Failed")) {
+                        //resolve
+                        self._operationPromisesByReferrerId.get(operation.referrerId)[0]();
+                    }
                 },function(error) {
                     //reject
                     self._operationPromisesByReferrerId.get(operation.referrerId)[1](error);
@@ -548,6 +565,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                     )) {
                     var operation = new DataOperation();
                     operation.referrerId = rootCreateTransaction.id;
+                    operation.clientId = rootCreateTransaction.clientId;
                     //We keep the same
                     /*
                         WARNING - it's ok as we handle it ourselves, but that  a null target would throw an exception if handled by the
