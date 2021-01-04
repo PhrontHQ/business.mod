@@ -370,6 +370,8 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 return resultOperationPromise;
                 //resultOperationPromise = phrontService.handleRead(deserializedOperation);
                 //phrontService.handleRead(deserializedOperation);
+            } else if(deserializedOperation.type ===  DataOperation.Type.KeepAlive) {
+                resolve(true);
             } else {
                 console.error("OperationCoordinator: not programmed to handle type of operation ",deserializedOperation);
                 resultOperationPromise = Promise.reject(null);
