@@ -1208,7 +1208,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     },
 
     _saveDataOperationsForObjects: {
-        value: function(objects, operationType, dataObjectChangesMap, dataOperationsByObject) {
+        value: function(objects, operationType, dataObjectChangesMap, dataOperationsByObject, createTransaction, operationCount) {
             var self = this;
             return new Promise(function(resolve, reject) {
                 var iterator = objects.values(),
@@ -1216,18 +1216,34 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 iOperationPromises,
                 iOperationPromise,
                 operations,
+                percentCompletion,
+                lastProgressSent = createTransaction.lastProgressSent || 0,
                 iObject;
 
                 while(iObject = iterator.next().value) {
                     iOperationPromise = self._saveDataOperationForObject(iObject, operationType, dataObjectChangesMap, dataOperationsByObject);
                     (iOperationPromises || (iOperationPromises = [])).push(iOperationPromise);
                     iOperationPromise.then(function(resolvedOperation) {
+                        var operationCreationProgress = createTransaction.operationCreationProgress || 0;
+
+                        createTransaction.operationCreationProgress = ++operationCreationProgress;
+
                         /*
                             NoOps will be handled by iterating on dataObjectChangesMap later on
                         */
                         if(resolvedOperation.type !== DataOperation.Type.NoOp) {
                             (operations || (operations = [])).push(resolvedOperation);
                         }
+
+                        percentCompletion = Math.round((operationCreationProgress / operationCount)*100)/100;
+
+                        if(percentCompletion > lastProgressSent) {
+                            //console.log("_saveDataOperationsForObjects: "+percentCompletion);
+
+                            self.dispatchDataEventTypeForObject(DataEvent.saveChangesProgress, self, percentCompletion);
+                            lastProgressSent = createTransaction.lastProgressSent = percentCompletion;
+                        }
+
                     }, function(rejectedValue) {
                         reject(rejectedValue);
                     });
@@ -1351,6 +1367,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         rollbackTransactionOperationPromise,
                         createTransactionCompletedId;
 
+                    createTransaction = new DataOperation();
+                    createTransaction.type = DataOperation.Type.CreateTransaction;
+                    createTransaction.target = DataService.mainService;
 
 
                     //We first remove from create and update objects that are also deleted:
@@ -1406,7 +1425,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         reject(error);
                     })
                     .then(function(_transactionObjectDescriptors) {
-                        var iterator, iOperation;
+                        var operationCount = createdDataObjects.size + changedDataObjects.size + deletedDataObjects.size,
+                            operationIndex = 0;
 
 
                         /*
@@ -1422,25 +1442,13 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         // }
 
                         //We want createdDataObjects operations first:
-                        batchedOperationPromises.push(self._saveDataOperationsForObjects(createdDataObjects, createOperationType, dataObjectChanges, dataOperationsByObject));
-                        // iterator = createdDataObjects.values();
-                        // while(iObject = iterator.next().value) {
-                        //     batchedOperationPromises.push(self._saveDataOperationForObject(iObject, createOperationType, dataObjectChanges, dataOperationsByObject));
-                        // }
+                        batchedOperationPromises.push(self._saveDataOperationsForObjects(createdDataObjects, createOperationType, dataObjectChanges, dataOperationsByObject, createTransaction, operationCount));
 
                         //Loop over changedDataObjects:
-                        batchedOperationPromises.push(self._saveDataOperationsForObjects(changedDataObjects, updateOperationType, dataObjectChanges, dataOperationsByObject));
-                        // iterator = changedDataObjects.values();
-                        // while(iObject = iterator.next().value) {
-                        //     batchedOperationPromises.push(self._saveDataOperationForObject(iObject, updateOperationType, dataObjectChanges, dataOperationsByObject));
-                        // }
+                        batchedOperationPromises.push(self._saveDataOperationsForObjects(changedDataObjects, updateOperationType, dataObjectChanges, dataOperationsByObject, createTransaction, operationCount));
 
                         //And complete by deletedDataObjects:
-                        batchedOperationPromises.push(self._saveDataOperationsForObjects(deletedDataObjects, deleteOperationType, dataObjectChanges, dataOperationsByObject));
-                        // iterator = deletedDataObjects.values();
-                        // while(iObject = iterator.next().value) {
-                        //     batchedOperationPromises.push(self._saveDataOperationForObject(iObject, deleteOperationType, dataObjectChanges, dataOperationsByObject));
-                        // }
+                        batchedOperationPromises.push(self._saveDataOperationsForObjects(deletedDataObjects, deleteOperationType, dataObjectChanges, dataOperationsByObject, createTransaction, operationCount));
 
                         return Promise.all(batchedOperationPromises)
                             .then(function(operationsByTypes) {
@@ -1485,8 +1493,6 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                             var _createTransactionPromise;
 
-                            createTransaction = new DataOperation();
-                            createTransaction.type = DataOperation.Type.CreateTransaction;
 
                             /*
                                 createTransaction.target = DataService.mainService;
@@ -1495,7 +1501,6 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                                 So until then, if target is null, it's meant for the coordinaator, needed for transactions that could contain object descriptors that are handled by different data services and the OperationCoordinator will have to handle that himself first to triage, before distributing to the relevant data services by creating nested transactions with the subset of dataoperations/types they deal with.
                             */
-                            createTransaction.target = DataService.mainService;
                             createTransaction.data = transactionObjectDescriptors.map((objectDescriptor) => {return objectDescriptor.module.id});
 
                             _createTransactionPromise = new Promise(function(resolve, reject) {
