@@ -371,6 +371,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 //resultOperationPromise = phrontService.handleRead(deserializedOperation);
                 //phrontService.handleRead(deserializedOperation);
             } else if(deserializedOperation.type ===  DataOperation.Type.KeepAlive) {
+                console.log("KeepAlive received");
                 resolve(true);
             } else {
                 console.error("OperationCoordinator: not programmed to handle type of operation ",deserializedOperation);
