@@ -304,6 +304,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 deserializedOperation = this._deserializer.deserializeObject();
             } catch (ex) {
                 console.error("No deserialization for ",serializedOperation);
+                return Promise.reject("Unknown message: ",serializedOperation);
             }
 
             if(deserializedOperation && !deserializedOperation.target && deserializedOperation.dataDescriptor) {
