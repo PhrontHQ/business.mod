@@ -3954,7 +3954,8 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                 i, countI, sqlMapPromises = [], iRecord,
                 createdCount = 0,
                 //For a transaction, .target holds an array vs a single one.
-                transactionObjectDescriptors = batchOperation.target;
+                transactionObjectDescriptors = batchOperation.target,
+                rawDataOperationHeaderLength;
 
             /*
                 TODO: using firstObjectDescriptor was a workaround for finding which database we should talk to.
@@ -3979,6 +3980,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
 
             this.mapOperationToRawOperationConnection(batchOperation, rawDataOperation);
 
+            rawDataOperationHeaderLength = JSON.stringify(rawDataOperation).length;
             //Now loop on operations and create the matching sql:
             for (i = 0, countI = batchedOperations && batchedOperations.length; (i < countI); i++) {
                 iOperation = batchedOperations[i];
@@ -4020,7 +4022,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
 
                         if(!iStatement || iStatement === "") continue;
 
-                        if( ((iStatement.length+iBatch.length) > MaxSQLStatementLength) || (i === lastIndex) ) {
+                        if( ((rawDataOperationHeaderLength+iStatement.length+iBatch.length) > MaxSQLStatementLength) || (i === lastIndex) ) {
 
                             if(i === lastIndex) {
                                 if(iBatch.length) {
