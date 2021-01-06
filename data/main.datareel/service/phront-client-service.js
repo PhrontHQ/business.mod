@@ -1177,6 +1177,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     invalidityStates.set(object,objectInvalidityStates);
                 }
                 return objectInvalidityStates;
+            }, function(error) {
+                console.error(error);
+                reject(error);
             });
         }
     },
@@ -1186,13 +1189,13 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             //Bones only for now
             //It's a bit weird, createdDataObjects is a set, but changedDataObjects is a Map, but changedDataObjects has entries
             //for createdObjects as well, so we might be able to simlify to just dealing with a Map, or send the Map keys?
-            var iterator = objects.values(), iObject, promises = validityEvaluationPromises || [];
+            var iterator = objects.values(), iObject;
 
             while(iObject = iterator.next().value) {
-                promises.push(this._evaluateObjectValidity(iObject,invalidityStates, transactionObjectDescriptors));
+                validityEvaluationPromises.push(this._evaluateObjectValidity(iObject,invalidityStates, transactionObjectDescriptors));
             }
 
-            return promises.length > 1 ? Promise.all(promises) : promises[0];
+            // return promises.length > 1 ? Promise.all(promises) : promises[0];
         }
     },
 
