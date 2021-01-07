@@ -1801,7 +1801,10 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                 // referrerOperation = self._pendingOperationById.get(operation.referrerId);
                 iDataIdentifier = this.dataIdentifierForObject(iObject);
-                this.recordSnapshot(iDataIdentifier, iOperation.data);
+                /*
+                    iOperation.data can contains .addedValues / .removedValues, we'll make recordSnapshot which needs to loop ob each
+                */
+                this.recordSnapshot(iDataIdentifier, iOperation.data, true);
                 saveEventDetail.changes = iOperation.changes;
                 this.dispatchDataEventTypeForObject(DataEvent.save, iObject, saveEventDetail);
             }
