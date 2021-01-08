@@ -756,7 +756,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                             We really need to use some kind of mapping/converter to go SQL, rather than inlining things like that...
                         */
                         if (reverter && reverter instanceof WktToGeometryConverter) {
-                            result = `ST_AsEWKT("${tableName}".${escapeIdentifier(anExpression)})`;
+                            result = `ST_AsEWKT("${tableName}".${escapeIdentifier(anExpression)}) as ${escapeIdentifier(anExpression)}`;
                         }
 
                     }
@@ -1237,10 +1237,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                             */
 
-                            iSourceJoinKey = iObjectRule.sourcePath;
+                            iSourceJoinKey = iObjectRule && iObjectRule.sourcePath;
                             //    iConverterExpression = iObjectRuleConverter && iObjectRuleConverter.convertExpression;
                             //    iConverterSyntax = iObjectRuleConverter && iObjectRuleConverter.convertSyntax;
-                            if(rawDataPrimaryKeys.indexOf(iSourceJoinKey) === -1) {
+                            if(iSourceJoinKey && rawDataPrimaryKeys.indexOf(iSourceJoinKey) === -1) {
                                 /* we host the foreign key, we add it to rawReadExpressions so the client can stich things together, or issue a new fetch as needed */
                                 rawReadExpressions.add(iSourceJoinKey);
                             }
@@ -1468,6 +1468,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             //The root one is special as we have built the rawReadExpressions already:
             this.mapReadOperationToRawStatement(readOperation, rawDataOperation, rawReadExpressions);
+
+            //console.log("------------------> rawDataOperation:",rawDataOperation);
 
             firstPromise = new Promise(function (resolve, reject) {
 
@@ -2243,7 +2245,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
     mapPropertyValueToRawType: {
         value: function (property, value, type) {
-            if (value == null || value == "") {
+            if (value === null || value === "") {
                 return "NULL";
             }
             else if (typeof value === "string") {
