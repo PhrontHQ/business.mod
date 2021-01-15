@@ -45,7 +45,7 @@
             "name": "ranking",
             "valueType": "number"
         }
-    }
+    },
 
     "partyPhoneNumber": {
         "prototype": "montage/core/meta/property-descriptor",
