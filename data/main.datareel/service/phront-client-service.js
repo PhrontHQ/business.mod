@@ -60,6 +60,18 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         value: function (mainService) {
             //That only happens once
             if(mainService) {
+
+
+                // mainService.addEventListener(DataOperation.Type.Read,this,false);
+                // mainService.addEventListener(DataOperation.Type.Update,this,false);
+                // mainService.addEventListener(DataOperation.Type.Create,this,false);
+                // mainService.addEventListener(DataOperation.Type.Delete,this,false);
+                // mainService.addEventListener(DataOperation.Type.CreateTransaction,this,false);
+                // mainService.addEventListener(DataOperation.Type.Batch,this,false);
+                // mainService.addEventListener(DataOperation.Type.PerformTransaction,this,false);
+                // mainService.addEventListener(DataOperation.Type.RollbackTransaction,this,false);
+
+
                 mainService.addEventListener(DataOperation.Type.NoOp,this,false);
                 mainService.addEventListener(DataOperation.Type.ReadFailed,this,false);
                 mainService.addEventListener(DataOperation.Type.ReadCompleted,this,false);
@@ -84,6 +96,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
     __socketOpenPromise: {
         value: Promise.resolve(true)
+        //value: undefined
     },
 
     _socketOpenPromise: {
@@ -547,6 +560,25 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
+    // handleEvent: {
+    //     value: function(operation) {
+    //         this._socketOpenPromise.then(() => {
+    //             var serializedOperation = this._serializer.serializeObject(operation);
+
+    //             //console.log("----> send operation "+serializedOperation);
+
+    //             // if(operation.type === "batch") {
+    //             //     var deserializer = new Deserializer();
+    //             //     deserializer.init(serializedOperation, require, undefined, module, true);
+    //             //     var deserializedOperation = deserializer.deserializeObject();
+    //             //     console.log(deserializedOperation);
+    //             // }
+
+    //             this._socket.send(serializedOperation);
+    //         });
+    //     }
+    // },
+
 /*
     First shot at batching reads:
     - Aurora DataAPI doesn't return a result for each select in the bacth, just the firs
@@ -790,9 +822,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     readOperation = new DataOperation(),
                     rawReadExpressions = [],
                     rawOrderings,
-                    promises,
-                    serializedOperation,
-                    localizableProperties = objectDescriptor.localizablePropertyDescriptors;
+                    promises;
+                    // localizableProperties = objectDescriptor.localizablePropertyDescriptors;
 
                 /*
                     We need to turn this into a Read Operation. Difficulty is to turn the query's criteria into
@@ -806,44 +837,32 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 readOperation.data = {};
 
                 //Need to add a check to see if criteria may have more spefific instructions for "locale".
-                if(localizableProperties && localizableProperties.size) {
-                    // var a = new Criteria().initWithExpression("locale == $locale", {
-                    //     locale: this.userLocale
-                    // });
-                    // console.log(a.syntax);
-                    // var b = new Criteria().initWithExpression("locale == $.locale", {
-                    //     locale: this.userLocale
-                    // });
-                    // console.log(b.syntax);
-                    // var c = new Criteria().initWithExpression("locale == $", this.userLocale);
-                    // console.log(c.syntax);
-                    // var d = new Criteria().initWithExpression("$key.has(id)", {"key":"123"});
-                    // console.log(d.syntax);
-                    // var e = new Criteria().initWithExpression("$.key.has(id)", {"key":"123"});
-                    // console.log(e.syntax);
-                    //var f = new Criteria().initWithExpression("$.has(id)", "123");
-                    //console.log(JSON.stringify(f.syntax));
+                /*
+                    1/19/2021 - we were only adding locale when the object descriptor being fetched has some localizableProperties, but a criteria may involve a subgraph and we wou'd have to go through the syntactic tree of the criteria, and readExpressions, to figure out if anywhere in that subgraph, there might be localizable properties we need to include the locales for.
 
-                    if(criteria) {
-                        /*
-                            WIP Adds locale as needed. Most common case is that it's left to the framework to qualify what Locale to use.
+                    Since we're localized by default, we're going to include it no matter what, it's going to be more rare that it is not needed than it is.
+                */
+                // if(localizableProperties && localizableProperties.size) {
+                if(criteria) {
+                    /*
+                        WIP Adds locale as needed. Most common case is that it's left to the framework to qualify what Locale to use.
 
-                            A core principle is that each data object (DO) has a locale property behaving in the following way:
-                            locales has 1 locale value, a locale object.
-                            This is the most common use case. The property’s getter returns the user’s locale.
-                            Fetching an object with a criteria asking for a specific locale will return an object in that locale.
-                            Changing the locale property of an object to another locale instance (singleton in Locale’s case), updates all the values of its localizable properties to the new locale set.
-                            locales has either no value, or “*” equivalent, an “All Locale Locale”
-                            This feches the json structure and returns all the values in all the locales
-                            locales has an array of locale instances.
-                            If locale’s cardinality is > 1 then each localized property would return a json/dictionary of locale->value instead of 1 value.
-                        */
+                        A core principle is that each data object (DO) has a locale property behaving in the following way:
+                        locales has 1 locale value, a locale object.
+                        This is the most common use case. The property’s getter returns the user’s locale.
+                        Fetching an object with a criteria asking for a specific locale will return an object in that locale.
+                        Changing the locale property of an object to another locale instance (singleton in Locale’s case), updates all the values of its localizable properties to the new locale set.
+                        locales has either no value, or “*” equivalent, an “All Locale Locale”
+                        This feches the json structure and returns all the values in all the locales
+                        locales has an array of locale instances.
+                        If locale’s cardinality is > 1 then each localized property would return a json/dictionary of locale->value instead of 1 value.
+                    */
 
-                        criteria = self.userLocalesCriteria.and(criteria);
-                    } else {
-                        criteria = self.userLocalesCriteria;
-                    }
+                    criteria = self.userLocalesCriteria.and(criteria);
+                } else {
+                    criteria = self.userLocalesCriteria;
                 }
+                // }
 
                 if(criteria) {
                     readOperation.criteria = criteria;
