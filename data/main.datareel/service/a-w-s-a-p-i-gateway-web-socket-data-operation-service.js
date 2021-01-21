@@ -27,11 +27,10 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
         value: function AWSAPIGatewayWebSocketDataOperationService() {
             var self = this;
 
+            this._failedConnections = 0;
             this.super();
 
             this.addOwnPropertyChangeListener("mainService", this);
-
-
 
             this._serializer = new MontageSerializer().initWithRequire(require);
             this._deserializer = new Deserializer();
@@ -44,6 +43,18 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
         value: function (mainService) {
             //That only happens once
             if(mainService) {
+
+                /*
+
+                    here we're preparing to listen for DataOperations we will get from the stack, but:
+                        - we're getting DataEvent "create", sent by DataService when an object is created in-memory that we don't care about
+                        - If there are other raw data services handling other types, we're going to get some operations that we don't want to handle.
+                        - So being a listener of mainService is too wide
+                            - we should be listening for
+
+                */
+
+
                 mainService.addEventListener(DataOperation.Type.Read,this,false);
                 mainService.addEventListener(DataOperation.Type.Update,this,false);
                 mainService.addEventListener(DataOperation.Type.Create,this,false);
@@ -155,6 +166,11 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
         }
     },
 
+    handleClose: {
+        value: function (event) {
+            console.log("WebSocket closed with message:",event);
+        }
+    },
 
     _operationListenerNamesByType: {
         value: new Map()
