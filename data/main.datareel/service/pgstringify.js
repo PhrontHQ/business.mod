@@ -471,6 +471,10 @@ module.exports = {
             if(locales) {
                 language = locales[0].language;
                 region = locales[0].region;
+            } else if(isLocalizable) {
+                //Use at least a default to be correct
+                language = "en";
+                region = "*";
             }
 
             //ToMany
