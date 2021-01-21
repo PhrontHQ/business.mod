@@ -1365,15 +1365,20 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                                        iInversePropertyObjectRule = iValueDescriptorReferenceMapping.objectMappingRules.get(iPropertyDescriptor.inversePropertyName);
                                        iInversePropertyObjectRuleConverter = iInversePropertyObjectRule && iInversePropertyObjectRule.converter;
 
-                                        if(iInversePropertyDescriptor.cardinality === 1) {
-                                            iReadOperationCriteriaExpression = `${iInversePropertyDescriptor.name}.${criteria.expression}`;
+                                       if(iInversePropertyDescriptor) {
 
-                                        } else {
-                                            iReadOperationCriteriaExpression = `${iInversePropertyDescriptor.name}.filter{${criteria.expression}}`;
+                                            if(iInversePropertyDescriptor.cardinality === 1) {
+                                                iReadOperationCriteriaExpression = `${iInversePropertyDescriptor.name}.${criteria.expression}`;
+
+                                            } else {
+                                                iReadOperationCriteriaExpression = `${iInversePropertyDescriptor.name}.filter{${criteria.expression}}`;
+                                            }
+                                            iReadOperationCriteria = new Criteria().initWithExpression(iReadOperationCriteriaExpression, criteria.parameters);
+                                            // iReadOperationCriteria = iInversePropertyObjectRuleConverter.convertCriteriaForValue(criteria.parameters.id);
                                         }
-                                        iReadOperationCriteria = new Criteria().initWithExpression(iReadOperationCriteriaExpression, criteria.parameters);
-
-                                        // iReadOperationCriteria = iInversePropertyObjectRuleConverter.convertCriteriaForValue(criteria.parameters.id);
+                                        else {
+                                            //console.error("Can't fulfill fetching read expression '"+iExpression+"'. No inverse property descriptor was found for '"+objectDescriptor.name+"', '"+iExpression+"' with inversePropertyName '"+iPropertyDescriptor.inversePropertyName+"'");
+                                        }
 
                                     } else {
                                         /*
