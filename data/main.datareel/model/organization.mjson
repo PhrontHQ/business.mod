@@ -14,7 +14,8 @@
                 {"@": "b2cCustomerRelationships"},
                 {"@": "b2bCustomerRelationships"},
                 {"@": "supplierRelationships"},
-                {"@": "services"}
+                {"@": "services"},
+                {"@": "customerEngagementQuestionnaires"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/organization.mjson"
@@ -170,13 +171,28 @@
             "name": "services",
             "valueType": "array",
             "cardinality": -1,
-            "inversePropertyName": "vendors",
+            "inversePropertyName": "vendor",
             "valueDescriptor": {"@": "servicesDescriptor"}
        }
     },
 
     "servicesDescriptor": {
         "object": "data/main.datareel/model/service.mjson"
+    },
+
+    "customerEngagementQuestionnaires": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "customerEngagementQuestionnaires",
+            "valueType": "array",
+            "cardinality": -1,
+            "inversePropertyName": "organizations",
+            "valueDescriptor": {"@": "customerEngagementQuestionnaireDescriptor"}
+       }
+    },
+
+    "customerEngagementQuestionnaireDescriptor": {
+        "object": "data/main.datareel/model/customer-engagement-questionnaire.mjson"
     }
 
 }

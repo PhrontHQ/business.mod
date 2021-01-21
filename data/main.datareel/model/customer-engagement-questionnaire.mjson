@@ -2,21 +2,22 @@
     "root": {
         "prototype": "montage/core/meta/module-object-descriptor",
         "values": {
-            "name": "ServiceQuestionnaire",
+            "name": "CustomerEngagementQuestionnaire",
             "propertyDescriptors": [
-                {"@": "service"},
+                {"@": "organizations"},
+                {"@": "services"},
                 {"@": "questionnaire"},
                 {"@": "rolesRequiredToComplete"},
                 {"@": "rolesOptionalToComplete"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/service-questionnaire.mjson"
+                "%": "data/main.datareel/model/customer-engagement-questionnaire.mjson"
             },
-            "exportName": "ServiceQuestionnaire",
+            "exportName": "CustomerEngagementQuestionnaire",
             "module": {
-                "%": "data/main.datareel/model/service-questionnaire"
+                "%": "data/main.datareel/model/customer-engagement-questionnaire"
             },
-            "object":{"@": "ServiceQuestionnaire"},
+            "object":{"@": "CustomerEngagementQuestionnaire"},
             "parent":{"@": "ObjectDescriptor"},
             "userInterfaceDescriptorModules": {
                 "*": {
@@ -36,17 +37,32 @@
         "object": "data/main.datareel/model/data-object.mjson"
     },
 
-    "ServiceQuestionnaire": {
-        "object": "data/main.datareel/model/service-questionnaire"
+    "CustomerEngagementQuestionnaire": {
+        "object": "data/main.datareel/model/customer-engagement-questionnaire"
     },
 
-    "service": {
+    "organizations": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "service",
+            "name": "organizations",
             "valueType": "object",
-            "cardinality": 1,
-            "inversePropertyName": "serviceQuestionnaires",
+            "cardinality": -1,
+            "inversePropertyName": "customerEngagementQuestionnaires",
+            "valueDescriptor": {"@": "organizationDescriptor"}
+        }
+    },
+    "organizationDescriptor": {
+        "object": "data/main.datareel/model/organization.mjson"
+    },
+
+
+    "services": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "services",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "customerEngagementQuestionnaires",
             "valueDescriptor": {"@": "serviceDescriptor"}
         }
     },
@@ -60,8 +76,8 @@
             "name": "questionnaire",
             "valueType": "object",
             "cardinality": 1,
-            "inversePropertyName": "serviceQuestionnaires",
-            "valueDescriptor": {"@": "serviceDescriptor"}
+            "inversePropertyName": "customerEngagementQuestionnaires",
+            "valueDescriptor": {"@": "questionnaireDescriptor"}
         }
     },
     "questionnaireDescriptor": {

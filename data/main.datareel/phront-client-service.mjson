@@ -65,7 +65,7 @@
                 {"@": "AnswerMapping"},
                 {"@": "RespondentQuestionnaireAnswerMapping"},
                 {"@": "RespondentQuestionnaireVariableValueMapping"},
-                {"@": "ServiceQuestionnaireMapping"},
+                {"@": "CustomerEngagementQuestionnaireMapping"},
                 {"@": "RoleRankingMapping"}
             ],
             "types": [
@@ -133,7 +133,7 @@
                 {"@": "Answer"},
                 {"@": "RespondentQuestionnaireAnswer"},
                 {"@": "RespondentQuestionnaireVariableValue"},
-                {"@": "ServiceQuestionnaire"},
+                {"@": "CustomerEngagementQuestionnaire"},
                 {"@": "RoleRanking"}
             ],
             "rawDataTypeMappings": [
@@ -637,12 +637,12 @@
         "object": "data/main.datareel/mapping/questionnaire/respondent-questionnaire-variable-value-mapping.mjson"
     },
 
-    "ServiceQuestionnaire": {
-        "object": "data/main.datareel/model/service-questionnaire.mjson"
+    "CustomerEngagementQuestionnaire": {
+        "object": "data/main.datareel/model/customer-engagement-questionnaire.mjson"
     },
 
-    "ServiceQuestionnaireMapping": {
-        "object": "data/main.datareel/mapping/service-questionnaire-mapping.mjson"
+    "CustomerEngagementQuestionnaireMapping": {
+        "object": "data/main.datareel/mapping/customer-engagement-questionnaire-mapping.mjson"
     },
 
     "RoleRanking": {

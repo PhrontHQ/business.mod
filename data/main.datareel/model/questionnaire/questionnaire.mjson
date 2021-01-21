@@ -12,7 +12,8 @@
                 {"@": "userContextVariables"},
                 {"@": "referrerQuestionnaire"},
                 {"@": "followUpQuestionnaires"},
-                {"@": "respondentQuestionnaires"}
+                {"@": "respondentQuestionnaires"},
+                {"@": "customerEngagementQuestionnaires"}
             ],
             "objectDescriptorModule": {
                 "%":"data/main.datareel/model/questionnaire/questionnaire.mjson"
@@ -140,6 +141,20 @@
     },
     "respondentQuestionnairesDescriptor": {
         "object": "data/main.datareel/model/questionnaire/respondent-questionnaire.mjson"
+    },
+
+    "customerEngagementQuestionnaires": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "customerEngagementQuestionnaires",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "questionnaire",
+            "valueDescriptor": {"@": "CustomerEngagementQuestionnaireDescriptor"}
+       }
+    },
+    "CustomerEngagementQuestionnaireDescriptor": {
+        "object": "data/main.datareel/model/customer-engagement-questionnaire.mjson"
     }
 
 }

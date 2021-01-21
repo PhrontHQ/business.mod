@@ -15,11 +15,11 @@
                         "converter": {"@": "questionnaireConverter"}
                     },
                     "respondentAnswers": {
-                        "<->": "respondentAnswerIds",
+                        "<->": "id",
                         "converter": {"@": "respondentAnswersConverter"}
                     },
                     "respondentVariableValues": {
-                        "<->": "respondentVariableValueIds",
+                        "<->": "id",
                         "converter": {"@": "respondentVariableValuesConverter"}
                     },
                     "completionDate": {
@@ -63,14 +63,14 @@
     "respondentAnswersConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
-                "convertExpression": "$.has(id)"
+                "convertExpression": "respondentQuestionnaireId == $"
         }
     },
 
     "respondentVariableValuesConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
-                "convertExpression": "$.has(id)"
+                "convertExpression": "respondentQuestionnaireId == $"
         }
     },
 

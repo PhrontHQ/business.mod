@@ -4,7 +4,8 @@
         "values": {
             "name": "IntangibleProduct",
             "propertyDescriptors": [
-                 {"@": "variants"}
+                {"@": "template"},
+                {"@": "variants"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/intangible-product.mjson"
@@ -36,6 +37,17 @@
 
     "intangible-product": {
         "object": "data/main.datareel/model/intangible-product"
+    },
+
+    "template": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "template",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "root"},
+            "isSearchable": true
+        }
     },
 
     "variants": {

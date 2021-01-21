@@ -43,10 +43,18 @@
                     "suborganizations": {"<->": "suborganizations",
                                     "converter": {"@": "suborganizationsConverter"}},
                     "tags": {"<->": "tags"},
-                    "mainContact": {"<->":"mainContactId",
-                                    "converter": {"@": "mainContactConverter"}},
-                    "services": {"<->": "id",
-                                    "converter": {"@": "servicesConverter"}},
+                    "mainContact": {
+                        "<->":"mainContactId",
+                        "converter": {"@": "mainContactConverter"}
+                    },
+                    "services": {
+                        "<->": "id",
+                        "converter": {"@": "servicesConverter"}
+                    },
+                    "customerEngagementQuestionnaires": {
+                        "<->": "customerEngagementQuestionnaireIds",
+                        "converter": {"@": "customerEngagementQuestionnairesConverter"}
+                    },
                     "employmentPositions": {
                         "<->": "id",
                         "converter": {"@": "employmentPositionsConverter"}
@@ -146,6 +154,12 @@
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "vendorIds.has($)"
+        }
+    },
+    "customerEngagementQuestionnairesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
         }
     },
     "employmentPositionsConverter": {

@@ -6,6 +6,10 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
+                    "customerEngagementQuestionnaires": {
+                        "<->": "customerEngagementQuestionnaireIds",
+                        "converter": {"@": "engagementQuestionnairesConverter"}
+                    }
                 }
             },
             "rawDataMapping": {
@@ -19,6 +23,13 @@
 
     "ServiceObjectDescriptor": {
         "object": "data/main.datareel/model/service.mjson"
+    },
+
+    "engagementQuestionnairesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
+        }
     }
 
 }

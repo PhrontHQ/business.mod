@@ -32,6 +32,10 @@
                     "respondentQuestionnaires": {
                         "<->": "id",
                         "converter": {"@": "respondentQuestionnairesConverter"}
+                    },
+                    "customerEngagementQuestionnaires": {
+                        "<->": "id",
+                        "converter": {"@": "customerEngagementQuestionnairesConverter"}
                     }
 
                 }
@@ -84,6 +88,12 @@
     },
 
     "respondentQuestionnairesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "questionnaireId == $"
+        }
+    },
+    "customerEngagementQuestionnairesConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "questionnaireId == $"

@@ -6,6 +6,10 @@
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
+                    "template": {
+                        "<->": "templateId",
+                        "converter": {"@": "templateForeignKeyConverter"}
+                    },
                     "name": {"<->": "title"},
                     "description": {"<->": "description"},
                     "descriptionHtml": {"<->": "descriptionHtml"},
@@ -20,22 +24,19 @@
                     },
                     "variants": {
                         "<->": "variantIds",
-                        "converter": {"@": "variantsConverter"},
-                        "debug":true
+                        "converter": {"@": "variantsConverter"}
                     },
                     "link": {"<->": "link"},
                     "productType": {"<->": "productType"},
                     "unitCost": {"<->": "unitCost"},
                     "notes": {"<->": "notes"},
-                    "vendors": {
-                        "<->": "vendorIds",
-                        "converter": {"@": "vendorsForeignKeyConverter"},
-                        "debug":true
+                    "vendor": {
+                        "<->": "vendorId",
+                        "converter": {"@": "vendorForeignKeyConverter"}
                     },
                     "locations": {
                         "<->": "vendorIds",
-                        "converter": {"@": "locationsForeignKeyConverter"},
-                        "debug":true
+                        "converter": {"@": "locationsForeignKeyConverter"}
                     },
                     "totalInventory": {"<->": "totalInventory"},
                     "totalVariants": {"<->": "totalVariants"},
@@ -65,6 +66,14 @@
     "ProductObjectDescriptor": {
         "object": "data/main.datareel/model/product.mjson"
     },
+
+    "templateForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
     "ordersForeignKeyConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
@@ -83,10 +92,10 @@
             "convertExpression": "$.has(id)"
         }
     },
-    "vendorsForeignKeyConverter": {
+    "vendorForeignKeyConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
-            "convertExpression": "$.has(id)"
+            "convertExpression": "id == $"
         }
     },
     "variantsConverter": {

@@ -4,7 +4,8 @@
         "values": {
             "name": "TangibleProduct",
             "propertyDescriptors": [
-                 {"@": "variants"}
+                {"@": "template"},
+                {"@": "variants"}
            ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/tangible-product.mjson"
@@ -37,6 +38,18 @@
     "tangible-product": {
         "object": "data/main.datareel/model/tangible-product"
     },
+
+    "template": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "template",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "root"},
+            "isSearchable": true
+        }
+    },
+
     "variants": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {

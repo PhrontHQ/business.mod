@@ -4,7 +4,9 @@
         "values": {
             "name": "Service",
             "propertyDescriptors": [
-                {"@": "variants"}
+                {"@": "template"},
+                {"@": "variants"},
+                {"@": "customerEngagementQuestionnaires"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/service.mjson"
@@ -38,6 +40,17 @@
         "object": "data/main.datareel/model/service"
     },
 
+    "template": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "template",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "root"},
+            "isSearchable": true
+        }
+    },
+
     "variants": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -49,5 +62,18 @@
     },
     "variant_descriptor": {
         "object": "data/main.datareel/model/service-product-variant.mjson"
+    },
+
+    "customerEngagementQuestionnaires": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "customerEngagementQuestionnaires",
+            "cardinality": -1,
+            "inversePropertyName": "services",
+            "valueDescriptor": {"@": "engagementQuestionnaire_descriptor"}
+        }
+    },
+    "engagementQuestionnaire_descriptor": {
+        "object": "data/main.datareel/model/customer-engagement-questionnaire.mjson"
     }
 }
