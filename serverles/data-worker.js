@@ -140,7 +140,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
            this.operationCoordinator.handleOperation(connectOperation, event, context, callback, this.apiGateway)
            .then(() => {
-               console.log("DataWorker -handleConnect: operationCoordinator.handleOperation() done");
+               //console.log("DataWorker -handleConnect: operationCoordinator.handleOperation() done");
                callback(null, {
                    statusCode: 200,
                    body: 'Connected.'
