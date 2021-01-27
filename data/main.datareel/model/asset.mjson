@@ -10,6 +10,7 @@
                 {"@": "s3Object"},
                 {"@": "description"},
                 {"@": "s3Location"},
+                {"@": "signedS3Location"},
                 {"@": "originLocation"}
             ],
             "objectDescriptorModule": {
@@ -81,6 +82,14 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "s3Location",
+            "valueType": "URL"
+        }
+    },
+    "signedS3Location": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "signedS3Location",
+            "definition": "s3Object.signedUrl",
             "valueType": "URL"
         }
     },

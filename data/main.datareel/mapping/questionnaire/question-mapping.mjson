@@ -13,7 +13,7 @@
                         "converter": {"@": "superQuestionIdForeignKeyConverter"}
                     },
                     "subQuestions": {
-                        "<->": "id",
+                        "<-": "id",
                         "converter": {"@": "subQuestionIdForeignKeyConverter"}
                     },
                     "variables": {

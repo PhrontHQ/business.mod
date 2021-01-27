@@ -221,7 +221,9 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                         // });
                     }
                     //console.log(">>>>Large ReadOperation split in "+(countI+lengthRemainder)+ " sub operations: operationDataKBSize:"+operationDataKBSize+", integerSizeQuotient:"+integerSizeQuotient+", sizeRemainder:"+sizeRemainder+", operationData.length:"+operationData.length+", integerLengthQuotient:"+integerLengthQuotient+", lengthRemainder:",lengthRemainder );
-                    return iPromise;
+                    return iPromise.then(function() {
+                        return operation;
+                    });
             }
         }
     },

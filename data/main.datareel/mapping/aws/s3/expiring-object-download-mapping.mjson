@@ -1,0 +1,77 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "ExpiringObjectDownload"},
+            "primaryKeyPropertyDescriptors": [
+                {"@": "Bucket"},
+                {"@": "Key"}
+            ],
+            "objectMapping": {
+                "rules": {
+                    "key": {"<-": "Key"},
+                    "bucketName": {"<-": "Bucket"},
+                    "bucket": {
+                        "<->": "Bucket",
+                        "converter": {"@": "bucket-converter"}
+                    },
+                    "object": {
+                        "<->": "{Bucket: Bucket, Key: Key}",
+                        "converter": {"@": "objectForeignKeyConverter"}
+                    },
+                    "signedUrl": {
+                        "<->": "{Bucket: Bucket, Key: Key, expirationDelay: expirationDelay}",
+                        "converter": {"@": "signedUrlForeignKeyConverter"}
+                    },
+                    "expirationDelay": {"<->": "expirationDelay"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                    "Bucket": {"<-": "bucketName.defined() ? bucketName : (bucket.defined() ? bucket.name : (object.defined() ? object.bucketName : null))"},
+                    "Key": {"<-": "key.defined() ? key : (object.defined() ? object.key : null)"}
+                }
+            },
+            "requisitePropertyNames": [
+                "bucketName","key","signedUrl","expirationDelay"
+            ]
+        }
+    },
+
+    "Key": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "Key",
+            "valueType": "string"
+        }
+    },
+    "Bucket": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "Bucket",
+            "valueType": "string"
+        }
+    },
+
+    "ExpiringObjectDownload": {
+        "object": "data/main.datareel/model/aws/s3/expiring-object-download.mjson"
+    },
+    "bucket-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "Bucket == $"
+        }
+    },
+    "signedUrlForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "Key == $.Key && Bucket == $.Bucket && expirationDelay == $.expirationDelay"
+        }
+    },
+    "objectForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "Key == $.Key && Bucket == $.Bucket"
+        }
+    }
+}

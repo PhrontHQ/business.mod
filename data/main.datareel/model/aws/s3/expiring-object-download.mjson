@@ -2,34 +2,41 @@
     "root": {
         "prototype": "montage/core/meta/module-object-descriptor",
         "values": {
-            "name": "Object",
+            "name": "ExpiringObjectDownload",
             "propertyDescriptors": [
                 {"@": "key"},
                 {"@": "bucketName"},
                 {"@": "bucket"},
-                {"@": "contentType"},
-                {"@": "contentLength"},
-                {"@": "ETag"},
-                {"@": "metadata"},
-                {"@": "accessControlList"}
+                {"@": "object"},
+                {"@": "signedUrl"},
+                {"@": "expirationDelay"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/aws/s3/object.mjson"
+                "%": "data/main.datareel/model/aws/s3/expiring-object-download.mjson"
             },
-            "exportName": "Object",
+            "exportName": "ExpiringObjectDownload",
             "module": {
-                "%": "data/main.datareel/model/aws/s3/object"
+                "%": "data/main.datareel/model/aws/s3/expiring-object-download"
             },
             "object":{"@": "Object"},
             "parent":{"@": "ObjectDescriptor"}
         }
     },
     "Object": {
-        "object": "data/main.datareel/model/aws/s3/object"
+        "object": "data/main.datareel/model/aws/s3/expiring-object-download"
     },
     "ObjectDescriptor": {
         "object": "data/main.datareel/model/data-object.mjson"
     },
+
+    "key": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "key",
+            "valueType": "string"
+        }
+    },
+
     "bucketName": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -37,6 +44,7 @@
             "valueType": "string"
         }
     },
+
     "bucket": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -50,48 +58,33 @@
         "object": "data/main.datareel/model/aws/s3/bucket.mjson"
     },
 
-    "key": {
+    "object": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "key",
-            "valueType": "string"
-        }
-    },
-    "contentType": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "contentType",
-            "valueType": "string"
-        }
-    },
-    "contentLength": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "contentLength",
-            "valueType": "number"
-        }
-    },
-    "ETag": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "ETag",
-            "valueType": "string"
-        }
-    },
-    "metadata": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "metadata",
+            "name": "object",
             "cardinality": 1,
-            "valueType": "object"
-        }
+            "valueType": "object",
+            "valueDescriptor": {"@": "ObjectDescriptor"}
+       }
     },
-    "accessControlList": {
+    "ObjectDescriptor": {
+        "object": "data/main.datareel/model/aws/s3/object.mjson"
+    },
+
+    "signedUrl": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "accessControlList",
-            "cardinality": -1,
-            "valueType": "object"
-       }
+            "name": "signedUrl",
+            "valueType": "string"
+        }
+    },
+    "expirationDelay": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "expirationDelay",
+            "valueType": "number",
+            "defaultValue": 900
+        }
     }
+
 }

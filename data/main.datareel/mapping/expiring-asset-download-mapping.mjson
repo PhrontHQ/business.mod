@@ -2,23 +2,23 @@
     "root": {
         "prototype": "montage/data/service/expression-data-mapping",
         "values": {
-            "objectDescriptor": {"@": "Asset"},
+            "objectDescriptor": {"@": "ExpiringAssetDownload"},
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
-                    "s3Location": {"<->": "s3Location"},
-                    "originLocation": {"<->": "originLocation"},
-                    "description": {"<->": "description"},
-                    "s3BucketName": {"<-": "s3BucketName"},
-                    "s3Bucket": {
-                        "<->": "s3BucketName",
-                        "converter": {"@": "s3BucketForeignKeyConverter"}
+                    "asset": {
+                        "<->": "{s3BucketName: s3BucketName, s3ObjectKey: s3ObjectKey}",
+                        "converter": {"@": "assetForeignKeyConverter"}
                     },
-                    "s3ObjectKey": {"<-": "s3ObjectKey"},
                     "s3Object": {
                         "<->": "{Bucket: s3BucketName, Key: s3ObjectKey}",
                         "converter": {"@": "s3ObjectForeignKeyConverter"}
-                    }
+                    },
+                    "signedUrl": {
+                        "<->": "{Bucket: s3BucketName, Key: s3ObjectKey, expirationDelay: expirationDelay}",
+                        "converter": {"@": "signedUrlForeignKeyConverter"}
+                    },
+                    "expirationDelay": {"<->": "expirationDelay"}
                 }
             },
             "rawDataMapping": {
@@ -28,18 +28,24 @@
                 }
             },
             "requisitePropertyNames": [
-                "s3BucketName","s3ObjectKey","s3Location","originURL","description"
+                "s3BucketName","s3ObjectKey","originURL","description"
             ]
         }
     },
 
-    "Asset": {
-        "object": "data/main.datareel/model/asset.mjson"
+    "ExpiringAssetDownload": {
+        "object": "data/main.datareel/model/expiring-asset-download.mjson"
     },
-    "s3BucketForeignKeyConverter": {
+    "assetForeignKeyConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
-            "convertExpression": "Bucket == $"
+            "convertExpression": "s3BucketName == $.s3BucketName && s3ObjectKey == $.s3ObjectKey"
+        }
+    },
+    "signedUrlForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "Key == $.Key && Bucket == $.Bucket && expirationDelay == $.expirationDelay"
         }
     },
     "s3ObjectForeignKeyConverter": {

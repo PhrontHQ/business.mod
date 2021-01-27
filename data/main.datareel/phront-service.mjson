@@ -7,6 +7,7 @@
             "mappings": [
                 {"@": "DataObjectMapping"},
                 {"@": "assetMapping"},
+                {"@": "expiringAssetDownloadMapping"},
                 {"@": "collectionMapping"},
                 {"@": "countryMapping"},
                 {"@": "productMapping"},
@@ -71,6 +72,7 @@
             "types": [
                 {"@": "DataObject"},
                 {"@": "asset"},
+                {"@": "expiringAssetDownload"},
                 {"@": "LocalizedString"},
                 {"@": "collection"},
                 {"@": "country"},
@@ -157,6 +159,13 @@
         "object": "data/main.datareel/mapping/asset-mapping.mjson"
     },
 
+    "expiringAssetDownload": {
+        "object": "data/main.datareel/model/expiring-asset-download.mjson"
+    },
+
+    "expiringAssetDownloadMapping": {
+        "object": "data/main.datareel/mapping/expiring-asset-download-mapping.mjson"
+    },
 
     "LocalizedString": {
         "object": "data/main.datareel/model/localized-string.mjson"

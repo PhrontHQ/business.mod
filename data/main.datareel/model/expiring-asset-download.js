@@ -1,0 +1,25 @@
+/**
+    @module phront/data/main.datareel/model/aws/s3/object
+*/
+
+var DataObject = require("./data-object").DataObject;
+
+/**
+ * @class ExpiringAssetDownload
+ * @extends DataObject
+ *
+ */
+
+
+
+exports.ExpiringAssetDownload = DataObject.specialize(/** @lends ExpiringAssetDownload.prototype */ {
+    asset: {
+        value: undefined
+    },
+    expirationDelay: {
+        value: undefined
+    },
+    signedUrl: {
+        value: undefined
+    }
+});

@@ -1,0 +1,57 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ExpiringAssetDownload",
+            "propertyDescriptors": [
+                {"@": "asset"},
+                {"@": "signedUrl"},
+                {"@": "expirationDelay"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/expiring-asset-download.mjson"
+            },
+            "exportName": "ExpiringAssetDownload",
+            "module": {
+                "%": "data/main.datareel/model/expiring-asset-download"
+            },
+            "object":{"@": "Object"},
+            "parent":{"@": "ObjectDescriptor"}
+        }
+    },
+    "Object": {
+        "object": "data/main.datareel/model/expiring-asset-download"
+    },
+    "ObjectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+    "asset": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "asset",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "AssetDescriptor"}
+       }
+    },
+    "AssetDescriptor": {
+        "object": "data/main.datareel/model/asset.mjson"
+    },
+
+    "signedUrl": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "signedUrl",
+            "valueType": "string"
+        }
+    },
+    "expirationDelay": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "expirationDelay",
+            "valueType": "number",
+            "defaultValue": 900
+        }
+    }
+
+}

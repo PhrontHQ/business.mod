@@ -18,6 +18,7 @@ var DataService = require("montage/data/service/data-service").DataService,
     Set = require("montage/core/collections/set"),
     ObjectDescriptor = require("montage/core/meta/object-descriptor").ObjectDescriptor,
     PropertyDescriptor = require("montage/core/meta/property-descriptor").PropertyDescriptor,
+    SyntaxInOrderIterator = require("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
 
 
     //Not needed at all as not used
@@ -801,13 +802,51 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 delete criteria.parameters.DataServiceUserLocales;
 
                 if(criteria.syntax.type === "and") {
-                /*
-                    We remove the "and", the current root of the syntax, and the left side (args[0])
-                    that is the syntax for "locales == $DataServiceUserLocales"
-                */
-                    criteria.syntax = criteria.syntax.args[1];
+
+
+                    var iterator = new SyntaxInOrderIterator(criteria.syntax, "and"),
+                        parentSyntax, currentSyntax, firstArgSyntax, secondArgSyntax,
+                        localeSyntax;
+
+                        // while (!(currentSyntax = iterator.next()).done) {
+                        //     console.log(currentSyntax);
+                        //   }
+                    while ((currentSyntax = iterator.next("and").value)) {
+                        firstArgSyntax = currentSyntax.args[0];
+                        secondArgSyntax = currentSyntax.args[1];
+
+                        if(firstArgSyntax.type === "equals" && firstArgSyntax.args[1] && firstArgSyntax.args[1].args[1].value === "DataServiceUserLocales") {
+                            localeSyntax = firstArgSyntax;
+
+                            //We need to stich
+                            parentSyntax = iterator.parent(currentSyntax);
+                            if(parentSyntax === null) {
+                                //The simplest case, one root and criteria
+                                /*
+                                    We remove the "and", the current root of the syntax, and the left side (args[0])
+                                    that is the syntax for "locales == $DataServiceUserLocales"
+                                */
+                                criteria.syntax = secondArgSyntax;
+                            } else {
+                                //We need to replace currentSyntax in it's own parent, by secondArgSyntax
+                                var parentSyntaxArgIndex = parentSyntax.args.indexOf(currentSyntax);
+
+                                parentSyntax.args[parentSyntaxArgIndex] = secondArgSyntax;
+
+                            }
+
+                            //Delete the expression as it would be out of sync:
+                            // criteria.expression = "";
+
+                            break;
+                        }
+
+                    }
+
+
+                    //criteria.syntax = criteria.syntax.args[1];
                     //Delete the expression as it would be out of sync:
-                    criteria.expression = "";
+                    //criteria.expression = "";
                     return criteria;
                 } else {
                     //If there's only the locale expression, we remove it
@@ -1129,6 +1168,15 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
     handleRead: {
         value: function (readOperation) {
+
+            /*
+                Until we solve more efficiently (lazily) how RawDataServices listen for and receive data operations, we have to check wether we're the one to deal with this:
+            */
+            if(!this.handlesType(readOperation.target)) {
+                return;
+            }
+
+
             var data = readOperation.data,
                 rawReadExpressionMap,
 
@@ -1512,7 +1560,9 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     // if(readOperation.criteria && readOperation.criteria.syntax.type === "has") {
                     //     console.log(rawDataOperation);
                     // }
-                    var operation = self.mapHandledReadResponseToOperation(readOperation, err, data/*, record*/, isNotLast);
+                    // var operation = self.mapHandledReadResponseToOperation(readOperation, err, data/*, record*/, isNotLast);
+                    var operation = self.responseOperationForReadOperation(readOperation, err, data && data.records, isNotLast);
+
                     objectDescriptor.dispatchEvent(operation);
 
                     resolve(operation);
@@ -1572,7 +1622,9 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                             // if(readOperation.criteria && readOperation.criteria.syntax.type === "has") {
                             //     console.log(rawDataOperation);
                             // }
-                            var operation = self.mapHandledReadResponseToOperation(readOperation, err, data/*, record*/, isNotLast);
+                            // var operation = self.mapHandledReadResponseToOperation(readOperation, err, data/*, record*/, isNotLast);
+                            var operation = self.responseOperationForReadOperation(readOperation, err, data.records, isNotLast);
+
                             objectDescriptor.dispatchEvent(operation);
                         });
 
@@ -2250,7 +2302,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
     mapPropertyValueToRawType: {
         value: function (property, value, type) {
-            if (value === null || value === "") {
+            if (value === null || value === "" || value === undefined) {
                 return "NULL";
             }
             else if (typeof value === "string") {
@@ -2595,7 +2647,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                     //If cardinality is 1, we need to create a uuid columne, if > 1 a uuid[]
                     var cardinality = iPropertyDescriptor.cardinality,
-                        j, countJ, jRawProperty;
+                        j, countJ, jRawProperty,
+                        k, countK, kPropertyDescriptor;
 
                     for(j=0, countJ = converterforeignDescriptorMappings.length;(j<countJ);j++) {
                         jRawProperty = converterforeignDescriptorMappings[j].rawDataProperty;
@@ -2658,6 +2711,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 } else {
                     //If the source syntax is a record and we have a converter, it can't become a column and has to be using a combination of other raw proeprties that have to be in propertyDescriptors
                     if(iObjectRuleSourcePathSyntax && iObjectRuleSourcePathSyntax.type === "record") {
+                        var rawDataService = this.rootService.childServiceForType(iPropertyDescriptorValueDescriptor),
+                            iPropertyDescriptorValueDescriptorMapping = iPropertyDescriptorValueDescriptor && rawDataService.mappingForType(iPropertyDescriptorValueDescriptor),
+                        iPropertyDescriptorValueDescriptorMappingPrimaryKeyPropertyDescriptors = iPropertyDescriptorValueDescriptorMapping && iPropertyDescriptorValueDescriptorMapping.primaryKeyPropertyDescriptors;
+
                         //Check wether we he have these properties defined
                         iPropertyDescriptorRawProperties = Object.keys(iObjectRuleSourcePathSyntax.args);
                         for(j=0, countJ=iPropertyDescriptorRawProperties.length;(j<countJ); j++) {
@@ -2671,11 +2728,17 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                             if(iPropertyDescriptorRawProperties[j] === "id") {
                                 columnType = "uuid";
-                            } else {
+                            } else if(iPropertyDescriptorValueDescriptorMappingPrimaryKeyPropertyDescriptors) {
                                 /*
                                     We can now only try to see if we find that property name on the other side...
                                     iPropertyDescriptor.inversePropertyDescriptor (which returns a promise) could give us a clue. Punting for now as we don't have that use-case.
                                 */
+                                for(k=0, countK = iPropertyDescriptorValueDescriptorMappingPrimaryKeyPropertyDescriptors.length; (k<countJ); k++) {
+                                    if(iPropertyDescriptorValueDescriptorMappingPrimaryKeyPropertyDescriptors[k].name === iPropertyDescriptorRawProperties[j]) {
+                                        columnType = this.mapPropertyDescriptorToRawType(iPropertyDescriptorValueDescriptorMappingPrimaryKeyPropertyDescriptors[k]);
+                                    }
+                                }
+                            } else {
                                 throw "Implementation missing for dynamically discovering the column type of raw property ' "+iPropertyDescriptorRawProperties[j]+"' in mapping of property '"+iPropertyDescriptor.name+"' of ObjectDescriptor '"+objectDescriptor.name+"'";
                             }
 

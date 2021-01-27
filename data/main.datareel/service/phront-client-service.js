@@ -633,6 +633,16 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
     rawCriteriaForObject: {
         value: function(object, _objectDescriptor) {
+
+            var objectDescriptor = _objectDescriptor || this.objectDescriptorForObject(object),
+            mapping = this.mappingForType(objectDescriptor);
+
+            return mapping.rawDataPrimaryKeyCriteriaForObject(object);
+
+            /*
+                Keeping previous implementation bellow for now as reference. It can only deal with single property primary keys. The new one is a step in supporing natural / compound keys.
+            */
+
             if(object.dataIdentifier) {
                 var objectDescriptor = _objectDescriptor || this.objectDescriptorForObject(object),
                 mapping = this.mappingForType(objectDescriptor),
@@ -668,7 +678,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             var self = this,
                 objectDescriptor = this.objectDescriptorForObject(object),
                 propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyName),
-                valueDescriptor = propertyDescriptor && propertyDescriptor.valueDescriptor;
+                valueDescriptor = propertyDescriptor && propertyDescriptor.valueDescriptor,
+                isObjectCreated = this.isObjectCreated(object);
 
             //console.log(objectDescriptor.name+": fetchObject:",object, "property:"+ " -"+propertyName);
 
@@ -696,7 +707,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     -- !!! embedded values don't have their own snapshots --
                 */
                 if(
-                    !valueDescriptor ||
+                    (!valueDescriptor && !objectRuleConverter) ||
                     ( valueDescriptor && !objectRuleConverter ) /*for Date for example*/ ||
                     ( valueDescriptor && objectRuleConverter && objectRuleConverter instanceof RawEmbeddedValueToObjectConverter) || (snapshot && !objectRule.hasRawDataRequiredValues(snapshot))
                 ) {
@@ -709,7 +720,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     return self.fetchData(propertyNameQuery);
 
                 } else {
-                    return self._fetchObjectPropertyWithPropertyDescriptor(object, propertyName, propertyDescriptor);
+                    return self._fetchObjectPropertyWithPropertyDescriptor(object, propertyName, propertyDescriptor,isObjectCreated);
                 }
             });
         }
@@ -1309,17 +1320,23 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
     isObjectCreated: {
         value: function(object) {
-            var pendingTransactions = this._pendingTransactions;
+            var isObjectCreated = this.super(object);
 
-            if(pendingTransactions && pendingTransactions.length) {
-                for(var i=0, countI = pendingTransactions.length; (i < countI); i++ ) {
-                    if(pendingTransactions[i].createdDataObjects.has(object)) {
-                        return true;
-                    }
-                }
-                return false;
+            if(isObjectCreated) {
+                return isObjectCreated;
             } else {
-                return false;
+                var pendingTransactions = this._pendingTransactions;
+
+                if(pendingTransactions && pendingTransactions.length) {
+                    for(var i=0, countI = pendingTransactions.length; (i < countI); i++ ) {
+                        if(pendingTransactions[i].createdDataObjects.has(object)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                } else {
+                    return false;
+                }
             }
         }
     },
@@ -1968,7 +1985,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     dataIdentifier = this.dataIdentifierForObject(object),
                     objectDescriptor = this.objectDescriptorForObject(object),
                     //We make a shallow copy so we can remove properties we don't care about
-                    snapshot = Object.assign({},object.dataIdentifier && this.snapshotForDataIdentifier(object.dataIdentifier)),
+                    snapshot,
                     dataSnapshot = {},
                     dataObjectChanges = dataObjectChangesMap.get(object),
                     propertyIterator,
@@ -1998,6 +2015,12 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         operationData.id = dataIdentifier.primaryKey;
                     }
                 }
+
+                if(snapshot = this.snapshotForDataIdentifier(object.dataIdentifier)) {
+                     //We make a shallow copy so we can remove properties we don't care about
+                     snapshot = Object.assign({},snapshot);
+                }
+
 
                 if(localizableProperties && localizableProperties.size) {
                     if(criteria) {

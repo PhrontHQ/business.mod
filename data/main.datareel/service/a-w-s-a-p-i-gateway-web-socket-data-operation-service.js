@@ -248,20 +248,22 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
 
     handleEvent: {
         value: function(operation) {
-            this._socketOpenPromise.then(() => {
-                var serializedOperation = this._serializer.serializeObject(operation);
+            if(operation instanceof DataOperation) {
+                this._socketOpenPromise.then(() => {
+                    var serializedOperation = this._serializer.serializeObject(operation);
 
-                //console.log("----> send operation "+serializedOperation);
+                    //console.log("----> send operation "+serializedOperation);
 
-                // if(operation.type === "batch") {
-                //     var deserializer = new Deserializer();
-                //     deserializer.init(serializedOperation, require, undefined, module, true);
-                //     var deserializedOperation = deserializer.deserializeObject();
-                //     console.log(deserializedOperation);
-                // }
+                    // if(operation.type === "batch") {
+                    //     var deserializer = new Deserializer();
+                    //     deserializer.init(serializedOperation, require, undefined, module, true);
+                    //     var deserializedOperation = deserializer.deserializeObject();
+                    //     console.log(deserializedOperation);
+                    // }
 
-                this._socket.send(serializedOperation);
-            });
+                    this._socket.send(serializedOperation);
+                });
+            }
         }
     }
 

@@ -4,22 +4,28 @@
         "values": {
             "objectDescriptor": {"@": "Object"},
             "primaryKeyPropertyDescriptors": [
+                {"@": "Bucket"},
                 {"@": "Key"}
             ],
             "objectMapping": {
                 "rules": {
                     "key": {"<->": "Key"},
-                    "bucketName": {"<->": "bucketName"},
+                    "bucketName": {"<->": "Bucket"},
                     "contentType": {"<->": "ContentType"},
+                    "contentLength": {"<->": "ContentLength"},
                     "contentData": {"<->": "Body"},
                     "bucket": {
-                        "<->": "bucketName",
+                        "<->": "Bucket",
                         "converter": {"@": "bucket-converter"}
                     },
                     "modificationDate": {
                         "<->": "LastModified",
                         "converter": {"@": "string-to-date-converter"}
-                    }
+                    },
+                    "ETag": {"<->": "ETag"},
+                    "metadata": {"<->": "Metadata"}
+
+
                 }
             },
             "rawDataMapping": {
@@ -27,7 +33,7 @@
                 }
             },
             "requisitePropertyNames": [
-                "identifier","contentType","bucket","modificationDate"
+                "key","bucketName"
             ]
         }
     },
@@ -51,6 +57,14 @@
             "name": "Key",
             "valueType": "string"
         }
+    },
+    "Bucket": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "Bucket",
+            "valueType": "string"
+        }
     }
+
 
 }

@@ -5,13 +5,17 @@
             "name": "DataService",
             "isUniquing": true,
             "childServices": [
-                {"@": "phrontService"}
+                {"@": "phrontService"},
+                {"@": "S3DataService"}
             ]
         }
     },
 
     "phrontService": {
         "object": "data/main.datareel/phront-service.mjson"
-
+    },
+    "S3DataService": {
+        "object": "data/main.datareel/s3-data-service.mjson"
     }
+
 }

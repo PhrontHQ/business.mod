@@ -6,11 +6,13 @@
             "exportName": "S3DataService",
             "mappings": [
                 {"@": "BucketMapping"},
-                {"@": "ObjectMapping"}
+                {"@": "ObjectMapping"},
+                {"@": "ExpiringObjectDownloadMapping"}
             ],
             "types": [
                 {"@": "Bucket"},
-                {"@": "Object"}
+                {"@": "Object"},
+                {"@": "ExpiringObjectDownload"}
             ]
         }
     },
@@ -30,5 +32,14 @@
 
     "ObjectMapping": {
         "object": "./mapping/aws/s3/object-mapping.mjson"
+    },
+
+    "ExpiringObjectDownload": {
+        "object": "data/main.datareel/model/aws/s3/expiring-object-download.mjson"
+    },
+
+    "ExpiringObjectDownloadMapping": {
+        "object": "data/main.datareel/mapping/aws/s3/expiring-object-download-mapping.mjson"
     }
+
 }
