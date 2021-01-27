@@ -747,7 +747,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 iExpression = readExpressions[i];
                 rule = rawDataMappingRules.get(iExpression);
                 propertyName = rule ? rule.sourcePath : iExpression;
-                propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyName);
+                //propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyName);
 
                 // if(propertyDescriptor && propertyDescriptor.isLocalizable) {
                 //     rawReadExpressions.push(this.localizedReadExpressionForPropertyDescriptor(propertyDescriptor));
