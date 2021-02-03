@@ -460,6 +460,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             }
 
             rawExpression = this.stringify(criteria.syntax, rawParameters, [mapping], locales, rawExpressionJoinStatements);
+            //console.log("rawExpression: ",rawExpression);
             if(rawExpression && rawExpression.length > 0) {
                 rawCriteria = new Criteria().initWithExpression(rawExpression, this.inlineCriteriaParameters ? null : rawParameters);
             }
@@ -913,11 +914,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 readOffset = readOperation.data.readOffset;
 
             //Take care of locales
-            if(operationLocales = this.localesFromCriteria(criteria)) {
-                //Now we got what we want, we strip it out to get back to the basic.
-                criteria = this._criteriaByRemovingDataServiceUserLocalesFromCriteria(criteria);
-            }
-
+            operationLocales = readOperation.locales;
 
             //WARNING If a set of readExpressions is expressed on the operation for now it will excludes
             //the requisites.
@@ -1099,6 +1096,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 }
             }
 
+            //console.log("handleRead sql: ",sql);
             rawDataOperation.sql = sql;
             if (rawCriteria && rawCriteria.parameters) {
                 rawDataOperation.parameters = rawCriteria.parameters;
@@ -1733,189 +1731,189 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     },
 
 
-    saveDataObject: {
-        value: function (object) {
-            var self = this,
-                operation = new DataOperation(),
-                dataIdentifier = this.dataIdentifierForObject(object),
-                objectDescriptor = this.objectDescriptorForObject(object),
-                snapshot = this.snapshotForDataIdentifier(object.dataIdentifier),
-                dataObjectChanges,
-                changesIterator,
-                aProperty,
-                operationData = {},
-                mappingPromises,
-                mapping,
-                i, countI;
+    // saveDataObject: {
+    //     value: function (object) {
+    //         var self = this,
+    //             operation = new DataOperation(),
+    //             dataIdentifier = this.dataIdentifierForObject(object),
+    //             objectDescriptor = this.objectDescriptorForObject(object),
+    //             snapshot = this.snapshotForDataIdentifier(object.dataIdentifier),
+    //             dataObjectChanges,
+    //             changesIterator,
+    //             aProperty,
+    //             operationData = {},
+    //             mappingPromises,
+    //             mapping,
+    //             i, countI;
 
-            operation.target = objectDescriptor;
+    //         operation.target = objectDescriptor;
 
-            //When we have an operation to deal with, we'll know which it is.
-            //Here we don't know if this record is a newly created object or one we fetched.
+    //         //When we have an operation to deal with, we'll know which it is.
+    //         //Here we don't know if this record is a newly created object or one we fetched.
 
-            //We have a known dataIdentifier for this object, it's an Update Operation:
-            if (dataIdentifier) {
-                operation.type = DataOperation.Type.Update;
-                mapping = this.mappingForType(objectDescriptor);
+    //         //We have a known dataIdentifier for this object, it's an Update Operation:
+    //         if (dataIdentifier) {
+    //             operation.type = DataOperation.Type.Update;
+    //             mapping = this.mappingForType(objectDescriptor);
 
-                //TEMPORARY, we need to send what changed only
-                operation.criteria = Criteria.withExpression("identifier == $identifier", { "identifier": dataIdentifier });
-                operation.data = operationData;
+    //             //TEMPORARY, we need to send what changed only
+    //             operation.criteria = Criteria.withExpression("identifier == $identifier", { "identifier": dataIdentifier });
+    //             operation.data = operationData;
 
-                dataObjectChanges = this.changesForDataObject(object);
+    //             dataObjectChanges = this.changesForDataObject(object);
 
-                if (!dataObjectChanges) {
-                    //No changes to save for that object, we cancel.
-                    var createCancelledOperation = new DataOperation();
-                    createCancelledOperation.referrerId = operation.id;
-                    createCancelledOperation.type = DataOperation.Type.CreateCancelled;
+    //             if (!dataObjectChanges) {
+    //                 //No changes to save for that object, we cancel.
+    //                 var createCancelledOperation = new DataOperation();
+    //                 createCancelledOperation.referrerId = operation.id;
+    //                 createCancelledOperation.type = DataOperation.Type.CreateCancelled;
 
-                    //What else should we put on a CreateCancelled opration? A reason?
+    //                 //What else should we put on a CreateCancelled opration? A reason?
 
-                    return Promise.resolve(createCancelledOperation);
-                }
+    //                 return Promise.resolve(createCancelledOperation);
+    //             }
 
-                //Now that we got them, clear it so we don't conflict with further changes
-                //if we have some async mapping stuff in-between
-                this.clearRegisteredChangesForDataObject(object);
+    //             //Now that we got them, clear it so we don't conflict with further changes
+    //             //if we have some async mapping stuff in-between
+    //             this.clearRegisteredChangesForDataObject(object);
 
-                changesIterator = dataObjectChanges.keys();
-                while ((aProperty = changesIterator.next().value)) {
-                    aValueChanges = dataObjectChanges.get(aProperty);
-                    aPropertyDescriptor = objectDescriptor.propertyDescriptorForName(aProperty);
+    //             changesIterator = dataObjectChanges.keys();
+    //             while ((aProperty = changesIterator.next().value)) {
+    //                 aValueChanges = dataObjectChanges.get(aProperty);
+    //                 aPropertyDescriptor = objectDescriptor.propertyDescriptorForName(aProperty);
 
-                    // if(aPropertyDescriptor.valueDescriptor) {
-                    //     console.log("It's an object, identifier is: ",this.dataIdentifierForObject(aValue));
-                    // }
+    //                 // if(aPropertyDescriptor.valueDescriptor) {
+    //                 //     console.log("It's an object, identifier is: ",this.dataIdentifierForObject(aValue));
+    //                 // }
 
-                    //A collection with "addedValues" / "removedValues" keys
-                    if (aValueChanges.hasOwnProperty("addedValues") || aValueChanges.hasOwnProperty("removedValues")) {
-                        if (!(aPropertyDescriptor.cardinality > 1)) {
-                            throw new Error("added/removed values for property without a to-many cardinality");
-                        }
-                        //Until we get more sophisticated / use an expression mapping, we're
-                        //going to turn objects into their identifer
-                        addedValues = aValueChanges.addedValues;
-                        for (i = 0, countI = addedValues.length; i < countI; i++) {
-                            addedValues[i] = this.dataIdentifierForObject(addedValues[i]);
-                        }
-                        removedValues = aValueChanges.removedValues;
-                        for (i = 0, countI = removedValues.length; i < countI; i++) {
-                            removedValues[i] = this.dataIdentifierForObject(removedValues[i]);
-                        }
-                        //Here we mutated the structure from changesForDataObject. I should be cleared
-                        //when saved, but what if save fails and changes happen in-between?
+    //                 //A collection with "addedValues" / "removedValues" keys
+    //                 if (aValueChanges.hasOwnProperty("addedValues") || aValueChanges.hasOwnProperty("removedValues")) {
+    //                     if (!(aPropertyDescriptor.cardinality > 1)) {
+    //                         throw new Error("added/removed values for property without a to-many cardinality");
+    //                     }
+    //                     //Until we get more sophisticated / use an expression mapping, we're
+    //                     //going to turn objects into their identifer
+    //                     addedValues = aValueChanges.addedValues;
+    //                     for (i = 0, countI = addedValues.length; i < countI; i++) {
+    //                         addedValues[i] = this.dataIdentifierForObject(addedValues[i]);
+    //                     }
+    //                     removedValues = aValueChanges.removedValues;
+    //                     for (i = 0, countI = removedValues.length; i < countI; i++) {
+    //                         removedValues[i] = this.dataIdentifierForObject(removedValues[i]);
+    //                     }
+    //                     //Here we mutated the structure from changesForDataObject. I should be cleared
+    //                     //when saved, but what if save fails and changes happen in-between?
 
-                        //1/10/2020: was operation which was putting
-                        //aProperty -> aValueChanges in the wrong place
-                        operationData[mapping.mapObjectPropertyNameToRawPropertyName(aProperty)] = aValueChanges;
-                    }
-                    else {
-                        //Here, we don't really use the store value of a regular property's change
-                        //It should be exactly the same as the value on the object. Should we really
-                        //use memory to keep a pointer on it?
-                        result = this._mapObjectPropertyToRawData(object, aProperty, operationData);
-                        if (this._isAsync(result)) {
-                            mappingPromises = mappingPromises || [];
-                            mappingPromises.push(result);
-                        }
-                    }
-                }
+    //                     //1/10/2020: was operation which was putting
+    //                     //aProperty -> aValueChanges in the wrong place
+    //                     operationData[mapping.mapObjectPropertyNameToRawPropertyName(aProperty)] = aValueChanges;
+    //                 }
+    //                 else {
+    //                     //Here, we don't really use the store value of a regular property's change
+    //                     //It should be exactly the same as the value on the object. Should we really
+    //                     //use memory to keep a pointer on it?
+    //                     result = this._mapObjectPropertyToRawData(object, aProperty, operationData);
+    //                     if (this._isAsync(result)) {
+    //                         mappingPromises = mappingPromises || [];
+    //                         mappingPromises.push(result);
+    //                     }
+    //                 }
+    //             }
 
-                if (Object.keys(operationData).length === 0 && !mappingPromises || mappingPromises.length === 0) {
-                    //console.log("NOTHING CHANGED TO SAVE");
-                    var saveCanceledOperation = new DataOperation();
-                    operation.type = DataOperation.Type.UpdateCanceled;
-                    operation.reason = "No Changes to save";
-                    return Promise.resolve(operation);
-                }
+    //             if (Object.keys(operationData).length === 0 && !mappingPromises || mappingPromises.length === 0) {
+    //                 //console.log("NOTHING CHANGED TO SAVE");
+    //                 var saveCanceledOperation = new DataOperation();
+    //                 operation.type = DataOperation.Type.UpdateCanceled;
+    //                 operation.reason = "No Changes to save";
+    //                 return Promise.resolve(operation);
+    //             }
 
-                return (mappingPromises
-                    ? Promise.all(mappingPromises)
-                    : Promise.resolve(true))
-                    .then(function (success) {
-                        //All mapping done and stored in operation.
-                        return new Promise(function (resolve, reject) {
+    //             return (mappingPromises
+    //                 ? Promise.all(mappingPromises)
+    //                 : Promise.resolve(true))
+    //                 .then(function (success) {
+    //                     //All mapping done and stored in operation.
+    //                     return new Promise(function (resolve, reject) {
 
-                            self.handleUpdate(operation)
-                                .then(function (rawUpdateCompletedOperation) {
-                                    var updateCompletedOperation = new DataOperation();
-                                    updateCompletedOperation.type = DataOperation.Type.UpdateCompleted;
-                                    updateCompletedOperation.data = object;
-                                    updateCompletedOperation.target = objectDescriptor;
-                                    resolve(updateCompletedOperation);
-                                }, function (rawUpdateFailedOperation) {
-                                    var updateFailedOperation = new DataOperation();
-                                    updateFailedOperation.type = DataOperation.Type.UpdateFailed;
-                                    updateFailedOperation.data = object;
-                                    updateFailedOperation.target = objectDescriptor;
+    //                         self.handleUpdate(operation)
+    //                             .then(function (rawUpdateCompletedOperation) {
+    //                                 var updateCompletedOperation = new DataOperation();
+    //                                 updateCompletedOperation.type = DataOperation.Type.UpdateCompleted;
+    //                                 updateCompletedOperation.data = object;
+    //                                 updateCompletedOperation.target = objectDescriptor;
+    //                                 resolve(updateCompletedOperation);
+    //                             }, function (rawUpdateFailedOperation) {
+    //                                 var updateFailedOperation = new DataOperation();
+    //                                 updateFailedOperation.type = DataOperation.Type.UpdateFailed;
+    //                                 updateFailedOperation.data = object;
+    //                                 updateFailedOperation.target = objectDescriptor;
 
-                                    reject(updateFailedOperation);
-                                });
-                        });
-                    }, function (mappingError) {
-                        console.error(mappingError);
-                    });
+    //                                 reject(updateFailedOperation);
+    //                             });
+    //                     });
+    //                 }, function (mappingError) {
+    //                     console.error(mappingError);
+    //                 });
 
-            } else {
-                operation.type = DataOperation.Type.Create;
-                operation.data = object;
+    //         } else {
+    //             operation.type = DataOperation.Type.Create;
+    //             operation.data = object;
 
-                return new Promise(function (resolve, reject) {
+    //             return new Promise(function (resolve, reject) {
 
-                    //THIS NEEDS TO RETURN SOMETHING SUCCEED/FAIL
-                    //AND Regiter the new dataIdentifierForObject(object) so that from now-on. this.dataIdentifierForObject(object) returns it
-                    self.handleCreate(operation)
-                        .then(function (createCompletedRawOperation) {
-                            //Record dataIdentifier for object
-                            var createCompletedOperation = new DataOperation(),
-                                rawData = createCompletedRawOperation.data,
-                                objectDescriptor = createCompletedRawOperation.target,
-                                dataIdentifier = self.dataIdentifierForTypeRawData(objectDescriptor, rawData);
+    //                 //THIS NEEDS TO RETURN SOMETHING SUCCEED/FAIL
+    //                 //AND Regiter the new dataIdentifierForObject(object) so that from now-on. this.dataIdentifierForObject(object) returns it
+    //                 self.handleCreate(operation)
+    //                     .then(function (createCompletedRawOperation) {
+    //                         //Record dataIdentifier for object
+    //                         var createCompletedOperation = new DataOperation(),
+    //                             rawData = createCompletedRawOperation.data,
+    //                             objectDescriptor = createCompletedRawOperation.target,
+    //                             dataIdentifier = self.dataIdentifierForTypeRawData(objectDescriptor, rawData);
 
-                            self.recordSnapshot(dataIdentifier, rawData);
-                            self.rootService.registerUniqueObjectWithDataIdentifier(object, dataIdentifier);
+    //                         self.recordSnapshot(dataIdentifier, rawData);
+    //                         self.rootService.registerUniqueObjectWithDataIdentifier(object, dataIdentifier);
 
-                            //   var objectIdentifer =  self.dataIdentifierForObject(object);
-                            //   console.log("objectIdentifer: ",objectIdentifer," for newly inserted object: ",object);
-                            createCompletedOperation.referrerId = operation.id;
+    //                         //   var objectIdentifer =  self.dataIdentifierForObject(object);
+    //                         //   console.log("objectIdentifer: ",objectIdentifer," for newly inserted object: ",object);
+    //                         createCompletedOperation.referrerId = operation.id;
 
-                            createCompletedOperation.type = DataOperation.Type.CreateCompleted;
-                            createCompletedOperation.data = object;
-                            resolve(createCompletedOperation);
+    //                         createCompletedOperation.type = DataOperation.Type.CreateCompleted;
+    //                         createCompletedOperation.data = object;
+    //                         resolve(createCompletedOperation);
 
-                        }, function (createFailedRawOperation) {
-                            //TODO needs a more dedicated type of error
-                            var createFailedOperation = new DataOperation();
-                            createFailedOperation.referrerId = operation.id;
-                            createFailedOperation.type = DataOperation.Type.CreateFailed;
-                            createFailedOperation.data = object;
-                            reject(createFailedOperation);
-                        });
-                });
+    //                     }, function (createFailedRawOperation) {
+    //                         //TODO needs a more dedicated type of error
+    //                         var createFailedOperation = new DataOperation();
+    //                         createFailedOperation.referrerId = operation.id;
+    //                         createFailedOperation.type = DataOperation.Type.CreateFailed;
+    //                         createFailedOperation.data = object;
+    //                         reject(createFailedOperation);
+    //                     });
+    //             });
 
-            }
-            return this.nullPromise;
+    //         }
+    //         return this.nullPromise;
 
-            //Temporary ripped from DataService implementation:
-            // var self = this,
-            //     mappingPromise,
-            //     record = {};
-            // mappingPromise =  this._mapObjectToRawData(object, record);
-            // if (!mappingPromise) {
-            //     mappingPromise = this.nullPromise;
-            // }
-            // return mappingPromise.then(function () {
-            //         return self.saveRawData(record, object)
-            //             .then(function (data) {
-            //                 self.rootService.createdDataObjects.delete(object);
-            //                 return data;
-            //             });
-            //  });
+    //         //Temporary ripped from DataService implementation:
+    //         // var self = this,
+    //         //     mappingPromise,
+    //         //     record = {};
+    //         // mappingPromise =  this._mapObjectToRawData(object, record);
+    //         // if (!mappingPromise) {
+    //         //     mappingPromise = this.nullPromise;
+    //         // }
+    //         // return mappingPromise.then(function () {
+    //         //         return self.saveRawData(record, object)
+    //         //             .then(function (data) {
+    //         //                 self.rootService.createdDataObjects.delete(object);
+    //         //                 return data;
+    //         //             });
+    //         //  });
 
 
-        }
-    },
+    //     }
+    // },
 
     persistObjectDescriptors: {
         value: function (objectDescriptors) {
