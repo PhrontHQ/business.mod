@@ -164,7 +164,7 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                                     reject(err);
                                 }
                                 else {
-                                    console.log('signedURL is', url);
+                                    //console.log('signedURL is', url);
                                     (rawData || (rawData = {}))["signedUrl"] = url;
 
                                     resolve(url);
