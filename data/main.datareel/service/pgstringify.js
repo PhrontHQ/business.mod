@@ -11,21 +11,98 @@ var parse = require("montage/core/frb/parse"),
     literal = pgutils.literal,
     escapeString = pgutils.escapeString,
     RangeDescriptor = require("montage/core/range.mjson").montageObject,
-    Range = require("montage/core/range").Range;
+    Range = require("montage/core/range").Range,
+    EqualsToken = "==",
+    DataServiceUserLocales = "DataServiceUserLocales";
 
 // module.exports.stringify = stringify;
 // function stringify(syntax, scope) {
 //     return stringify.semantics.stringify(syntax, scope);
 // }
 
+/*
+    TODO: Add aliasing:
+
+        SELECT column_name AS alias_name FROM table_name AS table_alias_name;
+
+        The AS keyword is optional so
+
+        SELECT column_name alias_name FROM table_name table_alias_name;
+
+
+    - less bytes sent
+    - only solution to support table self-joins as in:
+
+        SELECT
+            e.first_name employee,
+            m .first_name manager
+        FROM
+            employee e
+        INNER JOIN employee m
+            ON m.employee_id = e.manager_id
+        ORDER BY manager;
+
+    - For columns, can only be used mopped as we need to have a mapping to build the final obects' expected property, but it could save quite some data, some already done by compression
+
+    - https://www.postgresqltutorial.com/postgresql-alias/
+
+*/
+
 function makeBlockStringifier(type) {
     return function (syntax, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements) {
-        var chain = type + '{' + dataService.stringify(syntax.args[1], scope, dataMappings, locales, rawExpressionJoinStatements, syntax) + '}';
-        if (syntax.args[0].type === "value") {
-            return chain;
-        } else {
-            return dataService.stringify(syntax.args[0], scope, dataMappings, locales, rawExpressionJoinStatements, syntax) + '.' + chain;
+        /*
+            Entering a blocl means we're entering an array so the syntax inside the block is built for the type of objects right before the block
+
+
+        */
+       var  _propertyNameStringifier = makeBlockStringifier._propertyName || (makeBlockStringifier._propertyName = dataService.stringifiers._propertyName),
+            dataMappingStartLength = dataMappings.length,
+            parentDataMapping = dataMappings[dataMappings.length - 1],
+            parentObjectDescriptor = parentDataMapping.objectDescriptor,
+            propertyFilteredSyntax = syntax.args[0],
+            filteredPropertyName,
+            filteredPropertyDescriptor,
+            filteredPropertyValueDescriptor,
+            result;
+
+        if(propertyFilteredSyntax.args[0].type === "value") {
+            filteredPropertyName = propertyFilteredSyntax.args[1].value;
+        } else if(propertyFilteredSyntax.args[0].type === "parameters") {
+            filteredPropertyName = scope[propertyFilteredSyntax.args[1].value];
         }
+
+        /*
+            First we need to take care of filteredPropertyName, which adds the mapping of filteredPropertyName's valueDescriptor if any to the dataMappings array.
+        */
+        var joinToFilteredProperty =  _propertyNameStringifier(filteredPropertyName, scope, syntax, dataService, dataMappings, locales, rawExpressionJoinStatements);
+
+
+        //Then we need to stingify the content of the filter, but first we need to dive in one level:
+        filteredPropertyDescriptor = parentObjectDescriptor.propertyDescriptorForName(filteredPropertyName);
+        filteredPropertyValueDescriptor = filteredPropertyDescriptor ? filteredPropertyDescriptor._valueDescriptorReference : null;
+
+        if(!filteredPropertyValueDescriptor) {
+            console.error("Could not find value descriptor for property named '"+filteredPropertyName+"'");
+        }
+        //dataMappings.push(dataService.mappingForType(filteredPropertyValueDescriptor));
+        //_propertyNameStringifier added the mapping of
+
+
+        var filterExpressionStringified =  dataService.stringify(syntax.args[1], scope, dataMappings, locales, rawExpressionJoinStatements, syntax);
+
+        //Remove whatever was added before we leave our scope:
+        dataMappings.splice(dataMappingStartLength);
+
+        result = ` ${joinToFilteredProperty} ${filterExpressionStringified}`;
+
+        return result;
+
+        // var chain = type + '{' + filterExpressionStringified + '}';
+        // if (syntax.args[0].type === "value") {
+        //     return chain;
+        // } else {
+        //     return dataService.stringify(syntax.args[0], scope, dataMappings, locales, rawExpressionJoinStatements, syntax) + '.' + chain;
+        // }
     };
 }
 
@@ -490,9 +567,16 @@ module.exports = {
                 */
                 if(objectRule.sourcePath !== "id") {
 
-                    //If dataMappings.length === 1, we're evaluating a column on the "root" table
-                    //or if we're the end of a path
-                    if((dataMappings.length === 1 && !propertyDescriptorValueDescriptor) || (parent.type !== "scope")) {
+                    /*
+                        If dataMappings.length === 1, we're evaluating a column on the "root" table
+                        or if we're the end of a path.
+
+                        But if we're entering a block we need to do a join.
+                    */
+                    if(
+                        (dataMappings.length === 1 && !propertyDescriptorValueDescriptor) ||
+                        (parent.type !== "scope" && !parent.type.endsWith("Block"))
+                    ) {
                         result = `${escapeIdentifier(tableName)}.${escapeIdentifier(rawPropertyValue)}`;
                     } else {
 
@@ -542,7 +626,7 @@ module.exports = {
 
                                         //If dataMappings.length === 1, we're evaluating a column on the "root" table
                     //or if we're the end of a path
-                    if (parent.type !== "scope") {
+                    if (parent.type !== "scope" && !parent.type.endsWith("Block")) {
                         result = `${escapeIdentifier(tableName)}.${escapeIdentifier(rawPropertyValue)}`;
                     } else {
 
@@ -577,11 +661,16 @@ module.exports = {
                         rawExpressionJoinStatements.add(result);
 
                         dataMappings.push(dataService.mappingForType(propertyDescriptorValueDescriptor));
+                        result = "";
 
-                        return "";
                     }
 
+                    return result;
                 }
+
+                // dataMappings.push(dataService.mappingForType(propertyDescriptorValueDescriptor));
+                // return result;
+
             } else {
                 if(locales && isLocalizable) {
                     /*
@@ -613,12 +702,16 @@ module.exports = {
         },
 
         property: function _property(syntax, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements) {
-            var dataMapping = dataMappings[dataMappings.length-1],
+            var dataMappingStartLength = dataMappings.length,
+                dataMapping = dataMappings[dataMappingStartLength-1],
+                objectDescriptor = dataMapping.objectDescriptor,
+                propertyName,
+                propertyDescriptor,
                 _propertyNameStringifier = _property._propertyName || (_property._propertyName = dataService.stringifiers._propertyName);
 
             if (syntax.args[0].type === "value") {
                 if (typeof syntax.args[1].value === "string") {
-                    return _propertyNameStringifier(syntax.args[1].value, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements);
+                    return _propertyNameStringifier(syntax.args[1].value, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements, objectDescriptor);
 
                     // var propertyValue = syntax.args[1].value,
                     //     objectDescriptor = dataMapping.objectDescriptor,
@@ -696,6 +789,11 @@ module.exports = {
                 syntax.args[1].type === "literal" &&
                 /^[\w\d_]+$/.test(syntax.args[1].value)
             ) {
+
+                /*
+                    Where there are chained properies, the deapest one in the proeprty sub-tree is actually the first in the expresssion-form chain.
+                */
+
                 //When processing "vendors.name == $.name", we end up here for "name"
                 //and then call dataService.stringify(..) that handles "vendors,
                 //and it's concatenated wirh a "." again.
@@ -743,6 +841,11 @@ module.exports = {
                    } else {
                         result = "";
                    }
+
+                    //Needs to remove what nested property syntax may have added:
+                    if(dataMappings && parent.type !== "scope") {
+                        dataMappings.splice(dataMappingStartLength);
+                    }
 
                     //return argZeroStringified + '.' + syntax.args[1].value;
                     return result;
@@ -892,40 +995,28 @@ module.exports = {
             return result.trim();
         }
 */
-/*        ,
+        ,
 
-        equal: function (syntax, scope, parent, dataService, dataMappings) {
-            var args = syntax.args,
-                i, countI, result = "",
-                mappedToken = dataService.mapTokenToRawToken(token);
+        equals: function (syntax, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements) {
 
-            if (args[].args[0].type === "value") {
-                    if (typeof syntax.args[1].value === "string") {
+            var argsZeroValue = dataService.stringify(syntax.args[0],scope, dataMappings, locales, rawExpressionJoinStatements, syntax),
+                argsOneValue = dataService.stringify(syntax.args[1],scope, dataMappings, locales, rawExpressionJoinStatements, syntax);
 
-            for(i = 0, countI = args.length;i<countI;i++) {
-                if(i > 0) {
-                    result += " ";
-                    result += mappedToken;
-                    result += " ";
-                }
-                result += dataService.stringify(args[i],scope, dataMappings, syntax);
-            }
-
-            return result.trim();
+            return `${argsZeroValue} ${dataService.mapTokenToRawTokenForValue(EqualsToken,argsZeroValue)} ${argsOneValue}`;
         }
-*/
+
     },
 
     tokenMappers: {
         "&&": function() {
-            return "and";
+            return "AND";
         },
         "||": function() {
-            return "or";
+            return "OR";
         },
         "==": function(value) {
             if(arguments.length === 1 && (value === null || value === undefined)) {
-                return "is";
+                return "IS";
             } else {
                 return "=";
             }
@@ -966,9 +1057,9 @@ typeToToken.forEach(function (token, type) {
 
                 into
 
-                name @> '{"givenName":"Odile"}' and name @> '{"familyName":"Leccia"} and name @> '{"namePrefix":"Dr."}'
+                name @> '{"givenName":"Cathy"}' and name @> '{"familyName":"Smith"} and name @> '{"namePrefix":"Dr."}'
 
-                or name->>'familyName' = 'Leccia'
+                or name->>'familyName' = 'Smith'
 
                 select '{"a": {"b":{"c": "foo"}}}'::jsonb->'a'->'b'->'c' = '"foo"'
                 //Note the double quote in '' around foo to make it a jsonb value compatible with the type returned by -> operator
@@ -977,23 +1068,27 @@ typeToToken.forEach(function (token, type) {
 
             */
 
+           var argsZeroValue = dataService.stringify(syntax.args[0],scope, dataMappings, locales, rawExpressionJoinStatements, syntax),
+                argsOneValue = dataService.stringify(syntax.args[1],scope, dataMappings, locales, rawExpressionJoinStatements, syntax);
+
+           if(argsZeroValue && argsOneValue) {
+                return `${argsZeroValue} ${dataService.mapTokenToRawTokenForValue(token,argsZeroValue)} ${argsOneValue}`;
+           } else {
+               //In case one side doesn't lead to anything, we degrade to the side that did.
+               return argsZeroValue || argsOneValue;
+           }
+
+
+
             var args = syntax.args,
                 i, countI, iValue, result = "";
                 //mappedToken = dataService.mapTokenToRawToken(token);
             for(i = 0, countI = args.length;i<countI;i++) {
                 if(i > 0) {
                     result += " ";
-                    // result += mappedToken;
-                    // result += " ";
-                }
-
-                //clears before each a side of an operator, we reset the dataMappings array:
-                if(dataMappings) {
-                    dataMappings.splice(1,dataMappings.length-1);
                 }
 
                 iValue = dataService.stringify(args[i],scope, dataMappings, locales, rawExpressionJoinStatements, syntax);
-                //result += iValue
 
                 if(i > 0) {
                     result += dataService.mapTokenToRawTokenForValue(token,result);
