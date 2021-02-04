@@ -651,7 +651,8 @@ module.exports = {
                                 result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
                             }
                         } else {
-                            if(inversePropertyDescriptor.cardinality > 1) {
+                            if(converterSyntax && converterSyntax.type === "has") {
+                            // if(inversePropertyDescriptor && inversePropertyDescriptor.cardinality > 1) {
                                 result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = ANY ("${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}")`;
                             } else {
                                 result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = "${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}"`;

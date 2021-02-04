@@ -34,7 +34,11 @@
                         "<->": "location",
                          "converter": {"@": "locationConverter"}
                     },
-                    "timeZone": {"<->": "timeZone"}
+                    "timeZone": {"<->": "timeZone"},
+                    "partyPostalAddresses": {
+                        "<->": "id",
+                         "converter": {"@": "partyPostalAddressesConverter"}
+                    }
                 }
             },
             "rawDataMapping": {
@@ -71,6 +75,13 @@
             "convertingSRID": "4326",
             "revertsSRID": true,
             "convertingGeometryLayout":"XYZ"
+        }
+    },
+
+    "partyPostalAddressesConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "messagingChannelId == $"
         }
     }
 }

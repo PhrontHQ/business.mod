@@ -23,7 +23,8 @@
                 {"@": "secondaryPostalCode"},
                 {"@": "country"},
                 {"@": "location"},
-                {"@": "timeZone"}
+                {"@": "timeZone"},
+                {"@": "partyPostalAddresses"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/messaging-channel/postal-address.mjson"
@@ -208,7 +209,18 @@
     },
     "timeZone-descriptor": {
         "object": "montage/core/date/time-zone.mjson"
+    },
+    "partyPostalAddresses": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "partyPostalAddresses",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "PartyPostalAddressDescriptor"}
+       }
+    },
+    "PartyPostalAddressDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-postal-address.mjson"
     }
-
 
 }
