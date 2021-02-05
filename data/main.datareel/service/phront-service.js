@@ -1221,11 +1221,11 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 let i, countI, iExpression, iRawPropertyName, iKey, iValue, iObjectRule, iPropertyDescriptor, iAssignment, iPrimaryKey, iPrimaryKeyValue, iValueSchemaDescriptor, iValueDescriptorReference, iValueDescriptorReferenceMapping, iInversePropertyObjectRule, iInversePropertyObjectRuleConverter, iRawDataMappingRules, iRawDataMappingRulesIterator, iRawDataMappingRule, iIsInlineReadExpression, iReadOperation, iSourceJoinKey, iDestinationJoinKey, iInversePropertyDescriptor, iObjectRuleConverter,
                 userLocaleCriteria, iReadOperationCriteria;
 
-                if(criteria && criteria.parameters.DataServiceUserLocales) {
-                    userLocaleCriteria = new Criteria().initWithExpression("locales == $DataServiceUserLocales", {
-                        DataServiceUserLocales: criteria.parameters.DataServiceUserLocales
-                    });
-                }
+                // if(criteria && criteria.parameters.DataServiceUserLocales) {
+                //     userLocaleCriteria = new Criteria().initWithExpression("locales == $DataServiceUserLocales", {
+                //         DataServiceUserLocales: criteria.parameters.DataServiceUserLocales
+                //     });
+                // }
 
                 /*
                     if there's only one readExpression for a relationship and the criteria is about one object only —it's only ualifiedProperties is "id"/primaryKey, then we can safely execute one query only and shift the object descriptor to the destination.
@@ -1488,9 +1488,12 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     }
 
 
-                    if(iReadOperationCriteria && iPropertyDescriptor.isLocalizable) {
-                        iReadOperationCriteria = userLocaleCriteria.and(iReadOperationCriteria);
+                    if(iPropertyDescriptor.isLocalizable) {
+                        iReadOperation.locales = operationLocales;
                     }
+                    // if(iReadOperationCriteria && iPropertyDescriptor.isLocalizable) {
+                    //     iReadOperationCriteria = userLocaleCriteria.and(iReadOperationCriteria);
+                    // }
 
                     if(iReadOperation && iReadOperationCriteria) {
                         iReadOperation.criteria = iReadOperationCriteria;
@@ -3301,10 +3304,11 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                 sql;
 
             //Take care of locales
-            if(operationLocales = this.localesFromCriteria(criteria)) {
-                //Now we got what we want, we strip it out to get back to the basic.
-                criteria = this._criteriaByRemovingDataServiceUserLocalesFromCriteria(criteria);
-            }
+            operationLocales = readOperation.locales;
+            // if(operationLocales = this.localesFromCriteria(criteria)) {
+            //     //Now we got what we want, we strip it out to get back to the basic.
+            //     criteria = this._criteriaByRemovingDataServiceUserLocalesFromCriteria(criteria);
+            // }
 
 
             mappingPromise = this._mapObjectToRawData(data, record);

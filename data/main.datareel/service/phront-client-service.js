@@ -586,6 +586,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     - So our only hope to batch reads is to do an "or" or a in from single values
     - should we do that transformation in PhrontService, as an implementation detail of a batch of reads, ideally client would batch only reads from the same type knowing wat happens
     - or should the client make 1 read operation that is an or or in, well a read that involve more? Because each converter think it's doing a fetch, so either way, that promise needs to resolve the individual value matching that criteria of that converter.
+
+
+    TODO: https://github.com/feross/queue-microtask
 */
 
 /*
