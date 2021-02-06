@@ -1208,6 +1208,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 readOperationExecutedCount = 0,
                 readOperations = [readOperation],
                 firstPromise,
+                //Take care of locales
+                operationLocales = readOperation.locales,
                 readOperationsCount;
 
             //fast eliminating test to get started
@@ -1488,7 +1490,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     }
 
 
-                    if(iPropertyDescriptor.isLocalizable) {
+                    if(iReadOperation && iPropertyDescriptor.isLocalizable) {
                         iReadOperation.locales = operationLocales;
                     }
                     // if(iReadOperationCriteria && iPropertyDescriptor.isLocalizable) {
@@ -3304,7 +3306,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                 sql;
 
             //Take care of locales
-            operationLocales = readOperation.locales;
+            operationLocales = createOperation.locales;
             // if(operationLocales = this.localesFromCriteria(criteria)) {
             //     //Now we got what we want, we strip it out to get back to the basic.
             //     criteria = this._criteriaByRemovingDataServiceUserLocalesFromCriteria(criteria);
