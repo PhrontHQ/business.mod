@@ -118,6 +118,7 @@
             "cardinality": 1,
              "valueType": "object",
             "isSearchable": true,
+            "inversePropertyName": "children",
             "valueDescriptor": {"@": "root"}
         }
     },
@@ -128,6 +129,7 @@
             "cardinality": -1,
             "valueType": "array",
             "isSearchable": true,
+            "inversePropertyName": "parent",
             "valueDescriptor": {"@": "root"}
         }
     },
