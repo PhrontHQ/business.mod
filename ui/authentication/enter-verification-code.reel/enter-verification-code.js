@@ -168,7 +168,7 @@ var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize
                 }
             }, function (error) {
                 self.hadError = true;
-                if (error instanceof DataOperation && error.type === DataOperation.Type.ValidateFailed) {
+                if (error instanceof DataOperation && error.type === DataOperation.Type.ValidateFailedOperation) {
                     self.errorMessage = error.userMessage;
                 } else {
                     self.errorMessage = error.message || error;

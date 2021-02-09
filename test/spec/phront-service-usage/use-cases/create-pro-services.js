@@ -53,7 +53,7 @@ function createFullTimeEmployeeEmploymentType() {
     var cdiEmploymentType = mainService.createDataObject(EmploymentType);
     cdiEmploymentType.name = "Contrat à durée indéterminée";
     return mainService.saveChanges().then(function(operation) {
-        if(operation.type !== DataOperation.Type.PerformTransactionCompleted) {
+        if(operation.type !== DataOperation.Type.PerformTransactionCompletedOperation) {
             return cdiEmploymentType;
         } else {
             throw operation.type;
@@ -675,7 +675,7 @@ exports.createProServices = function() {
     .then(function(sistraOrganization) {
 
         //Fetch services:
-        var servicesCriteria = new Criteria().initWithExpression("vendors.has($vendor)", {
+        var servicesCriteria = new Criteria().initWithExpression("vendor == $vendor", {
             vendor: sistraOrganization
         });
         var servicesQuery = DataQuery.withTypeAndCriteria(Service, servicesCriteria);
@@ -698,7 +698,7 @@ exports.createProServices = function() {
 
                 //Surveillance Médicale Ordinaire - 20mn
                 service = mainService.createDataObject(Service);
-                service.vendors = [sistraOrganization];
+                service.vendor = sistraOrganization;
                 // service.originId = originId;
                 service.title = "Surveillance Médicale Ordinaire";
                 service.descriptionHtml = "Les salariés identifiés comme ayant besoin d'une surveillance médicale ordinaire doivent avoir une visite médicale tous les deux ans.";
@@ -722,7 +722,7 @@ exports.createProServices = function() {
 
                 //Surveillance Médicale Renforcée - 40mn
                 service = mainService.createDataObject(Service);
-                service.vendors = [sistraOrganization];
+                service.vendor = sistraOrganization;
                 // service.originId = originId;
                 service.title = "Surveillance Médicale Renforcée";
                 service.descriptionHtml = `Les salariés identifiés comme ayant besoin d'une surveillance médicale renforcée doivent avoir une visite médicale tous les ans.
@@ -749,7 +749,7 @@ exports.createProServices = function() {
 
                 //Surveillance Médicale Ordinaire - 20mn
                 service = mainService.createDataObject(Service);
-                service.vendors = [sistraOrganization];
+                service.vendor = sistraOrganization;
                 // service.originId = originId;
                 service.title = "Visite Médicale d'Embauche";
                 service.descriptionHtml = "Tout salarié doit passer une visite médicale d'embauche.";
@@ -764,7 +764,7 @@ exports.createProServices = function() {
 
                 //Visite Médicale de Reprise - 40mn
                 service = mainService.createDataObject(Service);
-                service.vendors = [sistraOrganization];
+                service.vendor = sistraOrganization;
                 // service.originId = originId;
                 service.title = "Visite Médicale de Reprise";
                 service.descriptionHtml = `Tout salarié doit passer une visite médicale lors d'une reprsie du travail à la suite:

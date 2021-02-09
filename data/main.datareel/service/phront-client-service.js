@@ -62,34 +62,34 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             if(mainService) {
 
 
-                // mainService.addEventListener(DataOperation.Type.Read,this,false);
-                // mainService.addEventListener(DataOperation.Type.Update,this,false);
-                // mainService.addEventListener(DataOperation.Type.Create,this,false);
-                // mainService.addEventListener(DataOperation.Type.Delete,this,false);
-                // mainService.addEventListener(DataOperation.Type.CreateTransaction,this,false);
-                // mainService.addEventListener(DataOperation.Type.Batch,this,false);
-                // mainService.addEventListener(DataOperation.Type.PerformTransaction,this,false);
-                // mainService.addEventListener(DataOperation.Type.RollbackTransaction,this,false);
+                // mainService.addEventListener(DataOperation.Type.ReadOperation,this,false);
+                // mainService.addEventListener(DataOperation.Type.UpdateOperation,this,false);
+                // mainService.addEventListener(DataOperation.Type.CreateOperation,this,false);
+                // mainService.addEventListener(DataOperation.Type.DeleteOperation,this,false);
+                // mainService.addEventListener(DataOperation.Type.CreateTransactionOperation,this,false);
+                // mainService.addEventListener(DataOperation.Type.BatchOperation,this,false);
+                // mainService.addEventListener(DataOperation.Type.PerformTransactionOperation,this,false);
+                // mainService.addEventListener(DataOperation.Type.RollbackTransactionOperation,this,false);
 
 
                 mainService.addEventListener(DataOperation.Type.NoOp,this,false);
-                mainService.addEventListener(DataOperation.Type.ReadFailed,this,false);
-                mainService.addEventListener(DataOperation.Type.ReadCompleted,this,false);
-                mainService.addEventListener(DataOperation.Type.UpdateFailed,this,false);
-                mainService.addEventListener(DataOperation.Type.UpdateCompleted,this,false);
-                mainService.addEventListener(DataOperation.Type.CreateFailed,this,false);
-                mainService.addEventListener(DataOperation.Type.CreateCompleted,this,false);
-                mainService.addEventListener(DataOperation.Type.DeleteFailed,this,false);
-                mainService.addEventListener(DataOperation.Type.DeleteCompleted,this,false);
-                mainService.addEventListener(DataOperation.Type.CreateTransactionFailed,this,false);
-                mainService.addEventListener(DataOperation.Type.CreateTransactionCompleted,this,false);
-                mainService.addEventListener(DataOperation.Type.BatchCompleted,this,false);
-                mainService.addEventListener(DataOperation.Type.BatchFailed,this,false);
-                mainService.addEventListener(DataOperation.Type.TransactionUpdated,this,false);
-                mainService.addEventListener(DataOperation.Type.PerformTransactionFailed,this,false);
-                mainService.addEventListener(DataOperation.Type.PerformTransactionCompleted,this,false);
-                mainService.addEventListener(DataOperation.Type.RollbackTransactionFailed,this,false);
-                mainService.addEventListener(DataOperation.Type.RollbackTransactionCompleted,this,false);
+                mainService.addEventListener(DataOperation.Type.ReadFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.ReadCompletedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.UpdateFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.UpdateCompletedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.CreateFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.CreateCompletedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.DeleteFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.DeleteCompletedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.CreateTransactionFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.CreateTransactionCompletedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.BatchCompletedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.BatchFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.TransactionUpdatedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.PerformTransactionFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.PerformTransactionCompletedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.RollbackTransactionFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.RollbackTransactionCompletedOperation,this,false);
                 }
         }
     },
@@ -153,7 +153,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
     //                 }
     //             } else if(defaultEventManager.application) {
-    //                 defaultEventManager.application.addEventListener(DataOperation.Type.Connect,this,false);
+    //                 defaultEventManager.application.addEventListener(DataOperation.Type.ConnectOperation,this,false);
     //             }
 
     //         }
@@ -367,7 +367,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             console.log("create "+objectDescriptor.name);
             var iOperation = new DataOperation();
 
-            iOperation.type = DataOperation.Type.Create;
+            iOperation.type = DataOperation.Type.CreateOperation;
             iOperation.data = objectDescriptor.module.id;
             iOperation.target = objectDescriptor;
 
@@ -383,19 +383,19 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
-    handleReadUpdate: {
+    handleReadUpdateOperation: {
         value: function (operation) {
             var referrer = operation.referrerId,
                 objectDescriptor = operation.target,
                 records = operation.data,
                 stream = this._thenableByOperationId.get(referrer),
                 streamObjectDescriptor;
-            // if(operation.type === DataOperation.Type.ReadCompleted) {
+            // if(operation.type === DataOperation.Type.ReadCompletedOperation) {
             //     console.log("handleReadCompleted  referrerId: ",operation.referrerId, "records.length: ",records.length);
             // } else {
-            //     console.log("handleReadUpdate  referrerId: ",operation.referrerId, "records.length: ",records.length);
+            //     console.log("handleReadUpdateOperation  referrerId: ",operation.referrerId, "records.length: ",records.length);
             // }
-            //if(operation.type === DataOperation.Type.ReadUpdate) console.log("handleReadUpdate  referrerId: ",referrer);
+            //if(operation.type === DataOperation.Type.ReadUpdateOperation) console.log("handleReadUpdateOperation  referrerId: ",referrer);
 
             if(stream) {
                 streamObjectDescriptor = stream.query.type;
@@ -408,7 +408,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     if(records && records.length > 0) {
                         //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
                         this.addRawData(stream, records, operation);
-                    } else if(operation.type !== DataOperation.Type.ReadCompleted){
+                    } else if(operation.type !== DataOperation.Type.ReadCompletedOperation){
                         console.log("operation of type:"+operation.type+", has no data");
                     }
                 } else {
@@ -420,9 +420,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
-    handleReadCompleted: {
+    handleReadCompletedOperation: {
         value: function (operation) {
-            this.handleReadUpdate(operation);
+            this.handleReadUpdateOperation(operation);
             //The read is complete
             var stream = this._thenableByOperationId.get(operation.referrerId);
             if(stream) {
@@ -436,7 +436,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
-    handleReadFailed: {
+    handleReadFailedOperation: {
         value: function (operation) {
             var stream = this._thenableByOperationId.get(operation.referrerId);
             this.rawDataError(stream,operation.data);
@@ -489,14 +489,14 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
-    handleCreateCompleted: {
+    handleCreateCompletedOperation: {
         value: function (operation) {
             this.handleOperationCompleted(operation);
         }
     },
 
 
-    handleUpdateCompleted: {
+    handleUpdateCompletedOperation: {
         value: function (operation) {
             this.handleOperationCompleted(operation);
         }
@@ -600,7 +600,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         value: function(operation) {
             this._pendingOperationById.set(operation.id, operation);
 
-            if(operation.type === DataOperation.Type.Read) {
+            if(operation.type === DataOperation.Type.ReadOperation) {
                 this._dispatchOperationQueue.push(operation);
 
                 if (this._dispatchOperationQueue.length === 1) {
@@ -608,7 +608,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         var _operation;
                         if(this._dispatchOperationQueue.length > 1) {
                             _operation = new DataOperation();
-                            _operation.type = DataOperation.Type.Batch;
+                            _operation.type = DataOperation.Type.BatchOperation;
                             // batchOperation.target= transactionObjecDescriptors,
                             _operation.data = {
                                     batchedOperations: this._dispatchOperationQueue
@@ -846,7 +846,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     One way to do this is to replace every object in a criteria's parameters by it's data identifier.
                     Another is to serialize the criteria.
                 */
-                readOperation.type = DataOperation.Type.Read;
+                readOperation.type = DataOperation.Type.ReadOperation;
                 readOperation.target = objectDescriptor;
                 readOperation.data = {};
 
@@ -1145,42 +1145,42 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     },
 
 
-    handleCreateTransactionCompleted: {
+    handleCreateTransactionCompletedOperation: {
         value: function (operation) {
             this.handleOperationCompleted(operation);
         }
     },
-    handleCreateTransactionFailed: {
+    handleCreateTransactionFailedOperation: {
         value: function (operation) {
             this.handleOperationFailed(operation);
         }
     },
-    handleBatchCompleted: {
+    handleBatchCompletedOperation: {
         value: function (operation) {
             this.handleOperationCompleted(operation);
         }
     },
-    handleBatchFailed: {
+    handleBatchFailedOperation: {
         value: function (operation) {
             this.handleOperationFailed(operation);
         }
     },
-    handlePerformTransactionCompleted: {
+    handlePerformTransactionCompletedOperation: {
         value: function (operation) {
             this.handleOperationCompleted(operation);
         }
     },
-    handlePerformTransactionFailed: {
+    handlePerformTransactionFailedOperation: {
         value: function (operation) {
             this.handleOperationFailed(operation);
         }
     },
-    handleRollbackTransactionCompleted: {
+    handleRollbackTransactionCompletedOperation: {
         value: function (operation) {
             this.handleOperationCompleted(operation);
         }
     },
-    handleRollbackTransactionFailed: {
+    handleRollbackTransactionFailedOperation: {
         value: function (operation) {
             this.handleOperationFailed(operation);
         }
@@ -1243,7 +1243,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             var self = this;
             return new Promise(function(resolve, reject) {
                 var iterator = objects.values(),
-                isUpdateOperationType = operationType === DataOperation.Type.Update,
+                isUpdateOperationType = operationType === DataOperation.Type.UpdateOperation,
                 iOperationPromises,
                 iOperationPromise,
                 operations,
@@ -1390,9 +1390,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         dataOperationsByObject = new Map(),
                         changedDataObjectOperations = new Map(),
                         deletedDataObjectOperations = new Map(),
-                        createOperationType = DataOperation.Type.Create,
-                        updateOperationType = DataOperation.Type.Update,
-                        deleteOperationType = DataOperation.Type.Delete,
+                        createOperationType = DataOperation.Type.CreateOperation,
+                        updateOperationType = DataOperation.Type.UpdateOperation,
+                        deleteOperationType = DataOperation.Type.DeleteOperation,
                         i, countI, iObject, iOperation, iOperationPromise,
                         createdDataObjectInvalidity = new Map(),
                         changedDataObjectInvalidity = new Map(),
@@ -1405,7 +1405,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         createTransactionCompletedId;
 
                     createTransaction = new DataOperation();
-                    createTransaction.type = DataOperation.Type.CreateTransaction;
+                    createTransaction.type = DataOperation.Type.CreateTransactionOperation;
                     createTransaction.target = DataService.mainService;
 
 
@@ -1448,7 +1448,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             //self.mainService.dispatchDataEventTypeForObject(DataEvent.invalid, self, detail);
 
                             var validatefailedOperation = new DataOperation;
-                            validatefailedOperation.type = DataOperation.Type.ValidateFailed;
+                            validatefailedOperation.type = DataOperation.Type.ValidateFailedOperation;
                             //At this point, it's the dataService
                             validatefailedOperation.target = self.mainService;
                             validatefailedOperation.data = changedDataObjectInvalidity;
@@ -1570,7 +1570,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     })
                     .then(function(createTransactionResult) {
 
-                        if(createTransactionResult.type === DataOperation.Type.CreateTransactionFailed) {
+                        if(createTransactionResult.type === DataOperation.Type.CreateTransactionFailedOperation) {
                             var error = new Error("CreateTransactionFailed");
                             error.details = createTransactionResult;
                             self.deletePendingTransaction(createTransaction);
@@ -1598,7 +1598,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                                 //Now proceed to build the batch operation
                                 //We may have some no-op in there as we didn't cacth them...
                                 batchOperation = new DataOperation();
-                                batchOperation.type = DataOperation.Type.Batch;
+                                batchOperation.type = DataOperation.Type.BatchOperation;
 
                                 //This is to target the OperationCoordinator on the other side
                                 batchOperation.target = DataService.mainService;
@@ -1628,7 +1628,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             //Now proceed to build the batch operation
                             //We may have some no-op in there as we didn't cacth them...
                             batchOperation = new DataOperation();
-                            batchOperation.type = DataOperation.Type.Batch;
+                            batchOperation.type = DataOperation.Type.BatchOperation;
 
                             //This is to target the OperationCoordinator on the other side
                             batchOperation.target = DataService.mainService;
@@ -1662,10 +1662,10 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     })
                     .then(function(batchedOperationResult) {
 
-                        if(batchedOperationResult.type === DataOperation.Type.BatchCompleted) {
+                        if(batchedOperationResult.type === DataOperation.Type.BatchCompletedOperation) {
                             //We proceed to commit:
                             performTransactionOperation = new DataOperation();
-                            performTransactionOperation.type = DataOperation.Type.PerformTransaction;
+                            performTransactionOperation.type = DataOperation.Type.PerformTransactionOperation;
                             performTransactionOperation.target = DataService.mainService;
                             //Not sure we need any data here?
                             //performTransactionOperation.data = batchedOperations;
@@ -1687,11 +1687,11 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                             self._dispatchOperation(performTransactionOperation);
 
                             return performTransactionOperationPromise;
-                        } else if(batchedOperationResult.type === DataOperation.Type.BatchFailed) {
+                        } else if(batchedOperationResult.type === DataOperation.Type.BatchFailedOperation) {
                             //We need to rollback:
 
                             rollbackTransactionOperation = new DataOperation();
-                            rollbackTransactionOperation.type = DataOperation.Type.RollbackTransaction;
+                            rollbackTransactionOperation.type = DataOperation.Type.RollbackTransactionOperation;
                             rollbackTransactionOperation.target = createTransaction.target,
                             //Not sure we need any data here?
                             // rollbackTransactionOperation.data = batchedOperations;
@@ -1722,19 +1722,19 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         reject(error);
                     })
                     .then(function(transactionOperationResult) {
-                        if(transactionOperationResult.type === DataOperation.Type.PerformTransactionCompleted) {
+                        if(transactionOperationResult.type === DataOperation.Type.PerformTransactionCompletedOperation) {
                             //We need to do what we did im saveDataObjects, for each created, updated and deleted obect.
                             self.didCreateDataObjects(createdDataObjects, dataOperationsByObject);
                             self.didUpdateDataObjects(changedDataObjects, dataOperationsByObject);
                             self.didDeleteDataObjects(deletedDataObjects, dataOperationsByObject);
 
-                        } else if(transactionOperationResult.type === DataOperation.Type.PerformTransactionFailed) {
+                        } else if(transactionOperationResult.type === DataOperation.Type.PerformTransactionFailedOperation) {
                             console.error("Missing logic for PerformTransactionFailed");
 
-                        } else if(transactionOperationResult.type === DataOperation.Type.RollbackTransactionCompleted) {
+                        } else if(transactionOperationResult.type === DataOperation.Type.RollbackTransactionCompletedOperation) {
                             console.error("Missing logic for RollbackTransactionCompleted");
 
-                        } else if(transactionOperationResult.type === DataOperation.Type.RollbackTransactionFailed) {
+                        } else if(transactionOperationResult.type === DataOperation.Type.RollbackTransactionFailedOperation) {
                             console.error("Missing logic for RollbackTransactionFailed");
                         } else if(transactionOperationResult.type === DataOperation.Type.NoOp) {
                             console.error("NoOp");
@@ -1762,7 +1762,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
             // .then(function(createTransactionResult) {
 
-            //     if(createTransactionResult.type === DataOperation.Type.CreateTransactionFailed) {
+            //     if(createTransactionResult.type === DataOperation.Type.CreateTransactionFailedOperation) {
 
             //     } else {
 
@@ -1988,14 +1988,14 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                     dataObjectChanges = dataObjectChangesMap.get(object),
                     propertyIterator,
                     isNewObject = operationType
-                        ? operationType === DataOperation.Type.Create
+                        ? operationType === DataOperation.Type.CreateOperation
                         : self.rootService.isObjectCreated(object),
                     localOperationType = operationType
                                         ? operationType
                                         : isNewObject
-                                            ? DataOperation.Type.Create
-                                            : DataOperation.Type.Update,
-                    isDeletedObject = localOperationType === DataOperation.Type.Delete,
+                                            ? DataOperation.Type.CreateOperation
+                                            : DataOperation.Type.UpdateOperation,
+                    isDeletedObject = localOperationType === DataOperation.Type.DeleteOperation,
                     operationData = {},
                     localizableProperties = objectDescriptor.localizablePropertyDescriptors,
                     criteria,
@@ -2186,7 +2186,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                                 rawData, snapshot = {};
 
 
-                            if(operation.type === DataOperation.Type.CreateCompleted) {
+                            if(operation.type === DataOperation.Type.CreateCompletedOperation) {
                                 rawData = operation.data,
                                 objectDescriptor = operation.target,
                                 dataIdentifier = self.dataIdentifierForTypeRawData(objectDescriptor,rawData);
@@ -2198,7 +2198,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                                 self.recordSnapshot(dataIdentifier, snapshot);
                                 self.rootService.registerUniqueObjectWithDataIdentifier(object, dataIdentifier);
                             }
-                            else if(operation.type === DataOperation.Type.UpdateCompleted) {
+                            else if(operation.type === DataOperation.Type.UpdateCompletedOperation) {
                                 // referrerOperation = self._pendingOperationById.get(operation.referrerId);
                                 var dataIdentifier = self.dataIdentifierForObject(object);
                                 self.recordSnapshot(dataIdentifier, referrerOperation.data);
@@ -2218,176 +2218,6 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             }
         }
     },
-
-    // saveDataObject: {
-    //     value: function (object) {
-
-    //         try {
-
-    //         //TODO
-    //         //First thing we should be doing here is run validation
-    //         //on the object, which should be done one level up
-    //         //by the mainService. Do there and test
-
-    //         /*
-    //             Here we want to use:
-    //             this.rootService.changesForDataObject();
-
-    //             to only map back, and send, only:
-    //             1. what was changed by the user, and
-    //             2. that is different from the snapshot?
-
-    //         */
-
-    //         var self = this,
-    //             operation = new DataOperation(),
-    //             dataIdentifier = this.dataIdentifierForObject(object),
-    //             objectDescriptor = this.objectDescriptorForObject(object),
-    //             mapping = this.mappingForType(objectDescriptor),
-    //             //We make a shallow copy so we can remove properties we don't care about
-    //             snapshot = Object.assign({},object.dataIdentifier && this.snapshotForDataIdentifier(object.dataIdentifier)),
-    //             dataSnapshot = {},
-    //             snapshotValue,
-    //             dataObjectChanges = this.rootService.changesForDataObject(object),
-    //             changesIterator,
-    //             aProperty, aRawProperty,
-    //             isNewObject = self.rootService.isObjectCreated(object),
-    //             operationData = {},
-    //             mappingPromise,
-    //             mappingPromises,
-    //             i, iValue, countI;
-
-    //         operation.target = operation.dataDescriptor = objectDescriptor.module.id;
-
-    //         operation.type = isNewObject ? DataOperation.Type.Create : DataOperation.Type.Update;
-
-    //         if(dataIdentifier) {
-    //             operation.criteria = this.rawCriteriaForObject(object, objectDescriptor);
-    //         }
-
-    //         //Nothing to do, change the operatio type and bail out
-    //         if(!isNewObject && !dataObjectChanges) {
-    //             operation.type = DataOperation.Type.NoOp;
-    //             return Promise.resolve(operation);
-    //         }
-
-    //         operation.data = operationData;
-
-    //         if(isNewObject) {
-    //             mappingPromise =  this._mapObjectToRawData(object, operationData);
-    //         } else {
-
-    //             /*
-    //                 The last fetched values of the properties that changed, so the backend can use it to make optimistic-locking update
-    //                 with a where that conditions that the current value is still
-    //                 the one that was last fecthed by the client making the update.
-    //             */
-    //             operation.snapshot = dataSnapshot;
-
-    //             /*
-    //                 Now that we got them, clear it so we don't conflict with further changes if we have some async mapping stuff in-between.
-
-    //                 If somehow things fail, we have the pending operation at hand to re-try
-    //             */
-    //             this.clearRegisteredChangesForDataObject(object);
-
-    //             changesIterator = dataObjectChanges.keys();
-    //             while(aProperty = changesIterator.next().value) {
-    //                 aRawProperty = mapping.mapObjectPropertyNameToRawPropertyName(aProperty);
-    //                 snapshotValue = snapshot[aRawProperty];
-    //                 aPropertyChanges = dataObjectChanges.get(aProperty);
-    //                 aPropertyDescriptor = objectDescriptor.propertyDescriptorForName(aProperty);
-
-    //                 result = this._processObjectChangesForProperty(object, aProperty, aPropertyDescriptor, aRawProperty, aPropertyChanges, operationData, snapshot, dataSnapshot);
-
-    //                 if(result && this._isAsync(result)) {
-    //                     (mappingPromises || (mappingPromises = [])).push(result);
-    //                 }
-    //             }
-
-    //             if(mappingPromises && mappingPromises.length) {
-    //                 mappingPromise = Promise.all(mappingPromises);
-    //             }
-    //         }
-
-
-    //         return (mappingPromise
-    //             ? mappingPromise
-    //             : Promise.resolve(true))
-    //             .then(function(success) {
-
-    //                 if(Object.keys(operationData).length > 0) {
-    //                     return self._socketOpenPromise.then(function () {
-
-    //                         operationPromise = new Promise(function(resolve, reject) {
-    //                             operation._promiseResolve = resolve;
-    //                             operation._promiseReject = reject;
-    //                         });
-    //                         self._thenableByOperationId.set(operation.id,operationPromise);
-
-    //                         /*
-    //                              would it be useful to pass the snapshot raw data as well?
-    //                             // -> great question, yes, because it will help the SQL generation to add a where clause for the previous value, so that if it changed since, then the update will fail, and we can communicate that back to the user.
-
-    //                             to eventually push updates if any it will be better done by a push when something changes, and for that, we'd need to have in the backend a storage/record:
-    //                                 identifier -> list of clients who have it.
-
-    //                             When a client stops to run, unless it supports push notifications and service worker, we could tell the backend
-    //                             so it can remove it from the list of clients.
-
-    //                             Similarly, if a client supports ServiceWorker, the clientId should one from the service worker, which is shared by all tabs and might run in the background. On browsers that don't, all the stack will run in main thread and 2 tabs should behave as 2 different clients.
-    //                         */
-
-
-    //                         self._dispatchOperation(operation);
-
-    //                         return operationPromise;
-    //                         // this is sync
-    //                         // cool, but how do we know that the write operation has been carried out?
-    //                         // the other side of the socket _should_ send us a DataOperation of type createcomplete/updatecomplete
-    //                         // or createfailed/updatefailed, which will pass through our `handleMessage`
-    //                         // maybe we should create a dummy DataStream and record it in this._thenableByOperationId,
-    //                         // so that we can wait for the stream to be rawDataDone before we resolve this saveRawData promise?
-    //                         // or we need some other mechanism of knowing that the complete or failed operation came through
-    //                         // and maybe we should time out if it takes too long?
-    //                     });
-    //                 }
-    //                 else {
-    //                     //if there are no changes known, it's a no-op: if it's an existing object,
-    //                     //nothing to do and if it's a new empty object... should it go through??
-    //                     //Or it's either a CreateCancelled or an UpdateCancelled
-    //                     operation.type = DataOperation.Type.NoOp;
-    //                     return Promise.resolve(operation);
-    //                 }
-
-    //             })
-    //             .then(function(operation) {
-    //                 //rawData contains the id, in case it was generated
-    //                 //by the database
-
-    //                 if(operation.type === DataOperation.Type.CreateCompleted) {
-    //                     var rawData = operation.data,
-    //                     objectDescriptor = self.objectDescriptorWithModuleId(operation.dataDescriptor),
-    //                     dataIdentifier = self.dataIdentifierForTypeRawData(objectDescriptor,rawData);
-
-    //                     self.recordSnapshot(dataIdentifier, operationData);
-    //                     self.rootService.registerUniqueObjectWithDataIdentifier(object, dataIdentifier);
-    //                 }
-    //                 else if(operation.type === DataOperation.Type.UpdateCompleted) {
-    //                     // referrerOperation = self._pendingOperationById.get(operation.referrerId);
-    //                     var dataIdentifier = self.dataIdentifierForObject(object);
-    //                     self.recordSnapshot(dataIdentifier, operationData);
-    //                 }
-    //                 return operation;
-    //             });
-
-    //         }
-    //         catch(error) {
-    //             return Promise.reject(error);
-    //         }
-    //     }
-    // },
-
 
     _rawDataUpdatesFromObjectSnapshot: {
         value: function(rawData, snapshot) {
@@ -2422,86 +2252,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
         }
     },
 
-    // saveRawData: {
-    //     value: function (record, object) {
-    //         try {
-    //             var self = this,
-    //                 updates = this.rawDataUpdatesFromObjectSnapshot(record, object),
-    //                 snapshot = this.snapshotForDataIdentifier(object.dataIdentifier),
-    //                 isNewObject = self.rootService.isObjectCreated(object),
-    //                 objectDescriptor = this.objectDescriptorForObject(object);
-
-    //             if(Object.keys(updates.changes).length > 0) {
-    //                 return this._socketOpenPromise.then(function () {
-
-    //                     var saveOperation = new DataOperation(),
-    //                     saveOperationPromise = new Promise(function(resolve, reject) {
-    //                         saveOperation._promiseResolve = resolve;
-    //                         saveOperation._promiseReject = reject;
-    //                     });
-    //                     this._thenableByOperationId.set(saveOperation.id,saveOperationPromise);
-
-    //                     saveOperation.type = isNewObject ? DataOperation.Type.Create : DataOperation.Type.Update;
-
-    //                     saveOperation.target = saveOperation.dataDescriptor = objectDescriptor.module.id;
-    //                     saveOperation.criteria = this.rawCriteriaForObject(object, objectDescriptor);
-    //                     /*
-    //                         Contains the key / value changes, when key is a toMany, value is like:
-    //                         {
-    //                             addedValues: [],
-    //                             removedValues: []
-    //                         }
-    //                     */
-    //                     saveOperation.data = updates.changes;
-
-    //                     /*
-    //                         The last fetched values of the properties that changed
-    //                     */
-    //                     saveOperation.snapshot = updates.snapshot;
-    //                     /*
-    //                          would it be useful to pass the snapshot raw data as well?
-    //                         // -> great question, yes, because it will help the SQL generation to add a where clause for the previous value, so that if it changed since, then the update will fail, and we can communicate that back to the user.
-
-    //                         to eventually push updates if any it will be better done by a push when something changes, and for that, we'd need to have in the backend a storage/record:
-    //                             identifier -> list of clients who have it.
-
-    //                         When a client stops to run, unless it supports push notifications and service worker, we could tell the backend
-    //                         so it can remove it from the list of clients.
-
-    //                         Similarly, if a client supports ServiceWorker, the clientId should one from the service worker, which is shared by all tabs and might run in the background. On browsers that don't, all the stack will run in main thread and 2 tabs should behave as 2 different clients.
-    //                     */
-
-
-    //                     self._dispatchOperation(saveOperation); // this is sync
-    //                     // cool, but how do we know that the write operation has been carried out?
-    //                     // the other side of the socket _should_ send us a DataOperation of type createcomplete/updatecomplete
-    //                     // or createfailed/updatefailed, which will pass through our `handleMessage`
-    //                     // maybe we should create a dummy DataStream and record it in this._thenableByOperationId,
-    //                     // so that we can wait for the stream to be rawDataDone before we resolve this saveRawData promise?
-    //                     // or we need some other mechanism of knowing that the complete or failed operation came through
-    //                     // and maybe we should time out if it takes too long?
-    //                 });
-    //             }
-    //             else {
-    //                 //if there are no changes known, it's a no-op: if it's an existing object,
-    //                 //nothing to do and if it's a new empty object... should it go through??
-    //                 //Or it's either a CreateCancelled or an UpdateCancelled
-    //                 var noopOperation = new DataOperation();
-    //                 noopOperation.type = DataOperation.Type.NoOp;
-    //                 noopOperation.target = objectDescriptor;
-    //                 noopOperation.dataDescriptor = objectDescriptor.module.id;
-    //                 noopOperation.criteria = this.rawCriteriaForObject(object, objectDescriptor);
-
-    //                 return Promise.resolve(noopOperation);
-
-    //             }
-    //         }
-    //         catch(error) {
-    //             return Promise.reject(error);
-    //         }
-    //     }
-    // },
-    handleCreatefailed: {
+    handleCreateFailedOperation: {
         value: function (operation) {
             var referrerOperation = this._pendingOperationById.get(operation.referrerId),
             error = operation.data;

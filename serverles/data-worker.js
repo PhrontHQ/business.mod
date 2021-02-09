@@ -115,7 +115,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
         value: function(event, context, callback) {
             var connectOperation = new DataOperation();
 
-            connectOperation.type = DataOperation.Type.Connect;
+            connectOperation.type = DataOperation.Type.ConnectOperation;
             connectOperation.target = this;
 
             /*

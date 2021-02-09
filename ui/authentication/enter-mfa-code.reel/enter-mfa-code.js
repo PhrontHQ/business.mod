@@ -97,7 +97,7 @@ var EnterMfaCode = exports.EnterMfaCode = Component.specialize({
             this.application.mainService.saveDataObject(this.userIdentity)
             .catch(function (error) {
                 self.hadError = true;
-                if (error instanceof DataOperation && error.type === DataOperation.Type.ValidateFailed) {
+                if (error instanceof DataOperation && error.type === DataOperation.Type.ValidateFailedOperation) {
                     self.errorMessage = error.userMessage;
                 } else {
                     self.errorMessage = error.message || error;

@@ -38,7 +38,7 @@ describe("CognitoIdentityService", function () {
 
     describe("sign up", function () {
         describe("validation", function () {
-            it("rejects with a ValidateFailed DataOperation if the password is rejected", function () {
+            it("rejects with a ValidateFailedOperation DataOperation if the password is rejected", function () {
                 var userIdentity = mainService.createDataObject(UserIdentity);
                 userIdentity.username = "newuser";
                 userIdentity.password = "short";
@@ -48,12 +48,12 @@ describe("CognitoIdentityService", function () {
                     throw new Error("Did not return an error");
                 }, function (err) {
                     expect(err instanceof DataOperation).toBe(true);
-                    expect(err.type).toBe(DataOperation.Type.ValidateFailed);
+                    expect(err.type).toBe(DataOperation.Type.ValidateFailedOperation);
                     expect(err.data.hasOwnProperty('password')).toBe(true);
                 });
             });
 
-            it("rejects with a ValidateFailed DataOperation if the email is rejected", function () {
+            it("rejects with a ValidateFailedOperation DataOperation if the email is rejected", function () {
                 var userIdentity = mainService.createDataObject(UserIdentity);
                 userIdentity.username = "newuser";
                 userIdentity.password = "password";
@@ -63,7 +63,7 @@ describe("CognitoIdentityService", function () {
                     throw new Error("Did not return an error");
                 }, function (err) {
                     expect(err instanceof DataOperation).toBe(true);
-                    expect(err.type).toBe(DataOperation.Type.ValidateFailed);
+                    expect(err.type).toBe(DataOperation.Type.ValidateFailedOperation);
                     expect(err.data.hasOwnProperty('email')).toBe(true);
                 });
             });
@@ -124,7 +124,7 @@ describe("CognitoIdentityService", function () {
                     throw new Error("did not reject");
                 }, function (err) {
                     expect(err instanceof DataOperation).toBe(true);
-                    expect(err.type).toBe(DataOperation.Type.Update);
+                    expect(err.type).toBe(DataOperation.Type.UpdateOperation);
                     expect(err.data.hasOwnProperty("accountConfirmationCode")).toBe(true);
                     expect(err.context.DeliveryMedium).toBe("EMAIL");
                 });
@@ -165,7 +165,7 @@ describe("CognitoIdentityService", function () {
                 throw new Error("did not reject");
             }, function (err) {
                 expect(err instanceof DataOperation).toBe(true);
-                expect(err.type).toBe(DataOperation.Type.Update);
+                expect(err.type).toBe(DataOperation.Type.UpdateOperation);
                 expect(err.data.hasOwnProperty("accountConfirmationCode")).toBe(true);
                 expect(err.context.DeliveryMedium).toBe("EMAIL");
             });
@@ -273,7 +273,7 @@ describe("CognitoIdentityService", function () {
                         throw new Error("Did not reject");
                     }, function (err) {
                         expect(err instanceof DataOperation).toBe(true);
-                        expect(err.type).toBe(DataOperation.Type.ValidateFailed);
+                        expect(err.type).toBe(DataOperation.Type.ValidateFailedOperation);
                         expect(err.data.hasOwnProperty('accountConfirmationCode')).toBe(true);
                     });
                 });
@@ -328,7 +328,7 @@ describe("CognitoIdentityService", function () {
                     throw new Error("did not reject");
                 }, function (err) {
                     expect(err instanceof DataOperation).toBe(true);
-                    expect(err.type).toBe(DataOperation.Type.Update);
+                    expect(err.type).toBe(DataOperation.Type.UpdateOperation);
                     expect(err.data.hasOwnProperty("password")).toBe(true);
                 });
             });
@@ -385,7 +385,7 @@ describe("CognitoIdentityService", function () {
                     throw new Error("did not reject");
                 }, function (err) {
                     expect(err instanceof DataOperation).toBe(true);
-                    expect(err.type).toBe(DataOperation.Type.Update);
+                    expect(err.type).toBe(DataOperation.Type.UpdateOperation);
                     expect(err.data.hasOwnProperty("mfaCode")).toBe(true);
                 });
             });
@@ -400,7 +400,7 @@ describe("CognitoIdentityService", function () {
                         throw new Error("Did not reject");
                     }, function (err) {
                         expect(err instanceof DataOperation).toBe(true);
-                        expect(err.type).toBe(DataOperation.Type.ValidateFailed);
+                        expect(err.type).toBe(DataOperation.Type.ValidateFailedOperation);
                         expect(err.data.hasOwnProperty('mfaCode')).toBe(true);
                     });
                 });
@@ -498,7 +498,7 @@ describe("CognitoIdentityService", function () {
                 throw new Error("did not reject");
             }, function (err) {
                 expect(err instanceof DataOperation).toBe(true);
-                expect(err.type).toBe(DataOperation.Type.ValidateFailed);
+                expect(err.type).toBe(DataOperation.Type.ValidateFailedOperation);
                 expect(err.data.hasOwnProperty("password")).toBe(true);
             });
         });
@@ -568,7 +568,7 @@ describe("CognitoIdentityService", function () {
                     throw new Error('did not reject');
                 }, function (err) {
                     expect(err instanceof DataOperation).toBe(true);
-                    expect(err.type).toBe(DataOperation.Type.ValidateFailed);
+                    expect(err.type).toBe(DataOperation.Type.ValidateFailedOperation);
                 });
             });
         });

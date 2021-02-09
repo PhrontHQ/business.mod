@@ -55,14 +55,14 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
                 */
 
 
-                mainService.addEventListener(DataOperation.Type.Read,this,false);
-                mainService.addEventListener(DataOperation.Type.Update,this,false);
-                mainService.addEventListener(DataOperation.Type.Create,this,false);
-                mainService.addEventListener(DataOperation.Type.Delete,this,false);
-                mainService.addEventListener(DataOperation.Type.CreateTransaction,this,false);
-                mainService.addEventListener(DataOperation.Type.Batch,this,false);
-                mainService.addEventListener(DataOperation.Type.PerformTransaction,this,false);
-                mainService.addEventListener(DataOperation.Type.RollbackTransaction,this,false);
+                mainService.addEventListener(DataOperation.Type.ReadOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.UpdateOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.CreateOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.DeleteOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.CreateTransactionOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.BatchOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.PerformTransactionOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.RollbackTransactionOperation,this,false);
             }
         }
     },

@@ -174,14 +174,14 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             this._schemaDescriptorByObjectDescriptor = new Map();
 
             var mainService = DataService.mainService;
-            mainService.addEventListener(DataOperation.Type.Read,this,false);
-            mainService.addEventListener(DataOperation.Type.Update,this,false);
-            mainService.addEventListener(DataOperation.Type.Create,this,false);
-            mainService.addEventListener(DataOperation.Type.Delete,this,false);
-            mainService.addEventListener(DataOperation.Type.CreateTransaction,this,false);
-            mainService.addEventListener(DataOperation.Type.Batch,this,false);
-            mainService.addEventListener(DataOperation.Type.PerformTransaction,this,false);
-            mainService.addEventListener(DataOperation.Type.RollbackTransaction,this,false);
+            mainService.addEventListener(DataOperation.Type.ReadOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.UpdateOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.CreateOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.DeleteOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.CreateTransactionOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.BatchOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.PerformTransactionOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.RollbackTransactionOperation,this,false);
 
 
             // this._registeredConnectionsByIdentifier = new Map();
@@ -382,7 +382,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     //         //bieng a worker on the client side or a worker on the server side, is to remove references to live objects.
     //         //One way to do this is to replace every object in a criteria's parameters by it's data identifier.
     //         //Another is to serialize the criteria.
-    //         readOperation.type = DataOperation.Type.Read;
+    //         readOperation.type = DataOperation.Type.ReadOperation;
     //         readOperation.target = objectDescriptor;
     //         readOperation.criteria = query.criteria;
     //         readOperation.data = query.readExpressions;
@@ -395,7 +395,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
     //         // return new Promise(function(resolve,reject) {
 
-    //         self.handleRead(readOperation)
+    //         self.handleReadOperation(readOperation)
     //             .then(function (readUpdatedOperation) {
     //                 var records = readUpdatedOperation.data;
 
@@ -1164,7 +1164,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
     */
 
-    handleRead: {
+    handleReadOperation: {
         value: function (readOperation) {
 
             /*
@@ -1326,7 +1326,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                                         if(!iIsInlineReadExpression && !iReadOperation) {
 
                                             iReadOperation = new DataOperation();
-                                            iReadOperation.type = DataOperation.Type.Read;
+                                            iReadOperation.type = DataOperation.Type.ReadOperation;
                                             iReadOperation.target = iValueDescriptorReference;
                                             iReadOperation.data = {};
                                             readOperations.push(iReadOperation);
@@ -1459,7 +1459,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                                     if(iReadOperationCriteria && !iReadOperation) {
                                         iReadOperation = new DataOperation();
-                                        iReadOperation.type = DataOperation.Type.Read;
+                                        iReadOperation.type = DataOperation.Type.ReadOperation;
                                         iReadOperation.target = iValueDescriptorReference;
                                         iReadOperation.data = {};
                                         readOperations.push(iReadOperation);
@@ -1552,7 +1552,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     //   }
 
                     if(err) {
-                        console.error("handleRead Error",readOperation,rawDataOperation,err);
+                        console.error("handleReadOperation Error",readOperation,rawDataOperation,err);
                     }
 
                     // if(objectDescriptor.name === "RespondentQuestionnaire") {
@@ -1614,7 +1614,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                             //   }
 
                             if(err) {
-                                console.error("handleRead Error",readOperation,rawDataOperation,err);
+                                console.error("handleReadOperation Error",readOperation,rawDataOperation,err);
                             }
 
                             // if(objectDescriptor.name === "RespondentQuestionnaire") {
@@ -1667,7 +1667,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             if (err) {
                 // an error occurred
                 //console.log("!!! handleRead FAILED:", err, err.stack, rawDataOperation.sql);
-                operation.type = DataOperation.Type.ReadFailed;
+                operation.type = DataOperation.Type.ReadFailedOperation;
                 //Should the data be the error?
                 operation.data = err;
             }
@@ -1676,9 +1676,9 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                 //If we need to take care of readExpressions, we can't send a ReadCompleted until we have returnes everything that we asked for.
                 if(isNotLast) {
-                    operation.type = DataOperation.Type.ReadUpdate;
+                    operation.type = DataOperation.Type.ReadUpdateOperation;
                 } else {
-                    operation.type = DataOperation.Type.ReadCompleted;
+                    operation.type = DataOperation.Type.ReadCompletedOperation;
                 }
 
                 //We provide the inserted record as the operation's payload
@@ -1705,7 +1705,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                 return this.googleDataService.handleEventRead(readOperation).
                 then(function(rawEvents) {
-                    operation.type = DataOperation.Type.ReadCompleted;
+                    operation.type = DataOperation.Type.ReadCompletedOperation;
                     //We provide the inserted record as the operation's payload
                     operation.data = rawEvents;
 
@@ -1713,7 +1713,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     //operation._rawReadExpressionIndexMap = rawReadExpressionMap;
                     objectDescriptor.dispatchEvent(operation);
                 },function(error) {
-                    operation.type = DataOperation.Type.ReadFailed;
+                    operation.type = DataOperation.Type.ReadFailedOperation;
                     //Should the data be the error?
                     operation.data = err;
                     objectDescriptor.dispatchEvent(operation);
@@ -1735,190 +1735,6 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         }
     },
 
-
-    // saveDataObject: {
-    //     value: function (object) {
-    //         var self = this,
-    //             operation = new DataOperation(),
-    //             dataIdentifier = this.dataIdentifierForObject(object),
-    //             objectDescriptor = this.objectDescriptorForObject(object),
-    //             snapshot = this.snapshotForDataIdentifier(object.dataIdentifier),
-    //             dataObjectChanges,
-    //             changesIterator,
-    //             aProperty,
-    //             operationData = {},
-    //             mappingPromises,
-    //             mapping,
-    //             i, countI;
-
-    //         operation.target = objectDescriptor;
-
-    //         //When we have an operation to deal with, we'll know which it is.
-    //         //Here we don't know if this record is a newly created object or one we fetched.
-
-    //         //We have a known dataIdentifier for this object, it's an Update Operation:
-    //         if (dataIdentifier) {
-    //             operation.type = DataOperation.Type.Update;
-    //             mapping = this.mappingForType(objectDescriptor);
-
-    //             //TEMPORARY, we need to send what changed only
-    //             operation.criteria = Criteria.withExpression("identifier == $identifier", { "identifier": dataIdentifier });
-    //             operation.data = operationData;
-
-    //             dataObjectChanges = this.changesForDataObject(object);
-
-    //             if (!dataObjectChanges) {
-    //                 //No changes to save for that object, we cancel.
-    //                 var createCancelledOperation = new DataOperation();
-    //                 createCancelledOperation.referrerId = operation.id;
-    //                 createCancelledOperation.type = DataOperation.Type.CreateCancelled;
-
-    //                 //What else should we put on a CreateCancelled opration? A reason?
-
-    //                 return Promise.resolve(createCancelledOperation);
-    //             }
-
-    //             //Now that we got them, clear it so we don't conflict with further changes
-    //             //if we have some async mapping stuff in-between
-    //             this.clearRegisteredChangesForDataObject(object);
-
-    //             changesIterator = dataObjectChanges.keys();
-    //             while ((aProperty = changesIterator.next().value)) {
-    //                 aValueChanges = dataObjectChanges.get(aProperty);
-    //                 aPropertyDescriptor = objectDescriptor.propertyDescriptorForName(aProperty);
-
-    //                 // if(aPropertyDescriptor.valueDescriptor) {
-    //                 //     console.log("It's an object, identifier is: ",this.dataIdentifierForObject(aValue));
-    //                 // }
-
-    //                 //A collection with "addedValues" / "removedValues" keys
-    //                 if (aValueChanges.hasOwnProperty("addedValues") || aValueChanges.hasOwnProperty("removedValues")) {
-    //                     if (!(aPropertyDescriptor.cardinality > 1)) {
-    //                         throw new Error("added/removed values for property without a to-many cardinality");
-    //                     }
-    //                     //Until we get more sophisticated / use an expression mapping, we're
-    //                     //going to turn objects into their identifer
-    //                     addedValues = aValueChanges.addedValues;
-    //                     for (i = 0, countI = addedValues.length; i < countI; i++) {
-    //                         addedValues[i] = this.dataIdentifierForObject(addedValues[i]);
-    //                     }
-    //                     removedValues = aValueChanges.removedValues;
-    //                     for (i = 0, countI = removedValues.length; i < countI; i++) {
-    //                         removedValues[i] = this.dataIdentifierForObject(removedValues[i]);
-    //                     }
-    //                     //Here we mutated the structure from changesForDataObject. I should be cleared
-    //                     //when saved, but what if save fails and changes happen in-between?
-
-    //                     //1/10/2020: was operation which was putting
-    //                     //aProperty -> aValueChanges in the wrong place
-    //                     operationData[mapping.mapObjectPropertyNameToRawPropertyName(aProperty)] = aValueChanges;
-    //                 }
-    //                 else {
-    //                     //Here, we don't really use the store value of a regular property's change
-    //                     //It should be exactly the same as the value on the object. Should we really
-    //                     //use memory to keep a pointer on it?
-    //                     result = this._mapObjectPropertyToRawData(object, aProperty, operationData);
-    //                     if (this._isAsync(result)) {
-    //                         mappingPromises = mappingPromises || [];
-    //                         mappingPromises.push(result);
-    //                     }
-    //                 }
-    //             }
-
-    //             if (Object.keys(operationData).length === 0 && !mappingPromises || mappingPromises.length === 0) {
-    //                 //console.log("NOTHING CHANGED TO SAVE");
-    //                 var saveCanceledOperation = new DataOperation();
-    //                 operation.type = DataOperation.Type.UpdateCanceled;
-    //                 operation.reason = "No Changes to save";
-    //                 return Promise.resolve(operation);
-    //             }
-
-    //             return (mappingPromises
-    //                 ? Promise.all(mappingPromises)
-    //                 : Promise.resolve(true))
-    //                 .then(function (success) {
-    //                     //All mapping done and stored in operation.
-    //                     return new Promise(function (resolve, reject) {
-
-    //                         self.handleUpdate(operation)
-    //                             .then(function (rawUpdateCompletedOperation) {
-    //                                 var updateCompletedOperation = new DataOperation();
-    //                                 updateCompletedOperation.type = DataOperation.Type.UpdateCompleted;
-    //                                 updateCompletedOperation.data = object;
-    //                                 updateCompletedOperation.target = objectDescriptor;
-    //                                 resolve(updateCompletedOperation);
-    //                             }, function (rawUpdateFailedOperation) {
-    //                                 var updateFailedOperation = new DataOperation();
-    //                                 updateFailedOperation.type = DataOperation.Type.UpdateFailed;
-    //                                 updateFailedOperation.data = object;
-    //                                 updateFailedOperation.target = objectDescriptor;
-
-    //                                 reject(updateFailedOperation);
-    //                             });
-    //                     });
-    //                 }, function (mappingError) {
-    //                     console.error(mappingError);
-    //                 });
-
-    //         } else {
-    //             operation.type = DataOperation.Type.Create;
-    //             operation.data = object;
-
-    //             return new Promise(function (resolve, reject) {
-
-    //                 //THIS NEEDS TO RETURN SOMETHING SUCCEED/FAIL
-    //                 //AND Regiter the new dataIdentifierForObject(object) so that from now-on. this.dataIdentifierForObject(object) returns it
-    //                 self.handleCreate(operation)
-    //                     .then(function (createCompletedRawOperation) {
-    //                         //Record dataIdentifier for object
-    //                         var createCompletedOperation = new DataOperation(),
-    //                             rawData = createCompletedRawOperation.data,
-    //                             objectDescriptor = createCompletedRawOperation.target,
-    //                             dataIdentifier = self.dataIdentifierForTypeRawData(objectDescriptor, rawData);
-
-    //                         self.recordSnapshot(dataIdentifier, rawData);
-    //                         self.rootService.registerUniqueObjectWithDataIdentifier(object, dataIdentifier);
-
-    //                         //   var objectIdentifer =  self.dataIdentifierForObject(object);
-    //                         //   console.log("objectIdentifer: ",objectIdentifer," for newly inserted object: ",object);
-    //                         createCompletedOperation.referrerId = operation.id;
-
-    //                         createCompletedOperation.type = DataOperation.Type.CreateCompleted;
-    //                         createCompletedOperation.data = object;
-    //                         resolve(createCompletedOperation);
-
-    //                     }, function (createFailedRawOperation) {
-    //                         //TODO needs a more dedicated type of error
-    //                         var createFailedOperation = new DataOperation();
-    //                         createFailedOperation.referrerId = operation.id;
-    //                         createFailedOperation.type = DataOperation.Type.CreateFailed;
-    //                         createFailedOperation.data = object;
-    //                         reject(createFailedOperation);
-    //                     });
-    //             });
-
-    //         }
-    //         return this.nullPromise;
-
-    //         //Temporary ripped from DataService implementation:
-    //         // var self = this,
-    //         //     mappingPromise,
-    //         //     record = {};
-    //         // mappingPromise =  this._mapObjectToRawData(object, record);
-    //         // if (!mappingPromise) {
-    //         //     mappingPromise = this.nullPromise;
-    //         // }
-    //         // return mappingPromise.then(function () {
-    //         //         return self.saveRawData(record, object)
-    //         //             .then(function (data) {
-    //         //                 self.rootService.createdDataObjects.delete(object);
-    //         //                 return data;
-    //         //             });
-    //         //  });
-
-
-    //     }
-    // },
 
     persistObjectDescriptors: {
         value: function (objectDescriptors) {
@@ -3184,14 +3000,14 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                     if (err) {
                         // an error occurred
                         console.log(err, err.stack, rawDataOperation);
-                        operation.type = DataOperation.Type.CreateFailed;
+                        operation.type = DataOperation.Type.CreateFailedOperation;
                         //Should the data be the error?
                         operation.data = err;
                     }
                     else {
                         // successful response
                         //console.log(data);
-                        operation.type = DataOperation.Type.CreateCompleted;
+                        operation.type = DataOperation.Type.CreateCompletedOperation;
                         //Not sure there's much we can provide as data?
                         operation.data = operation;
                     }
@@ -3431,7 +3247,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
      * @argument {DataOperation} dataOperation - The dataOperation to execute
   `  * @returns {Promise} - The Promise for the execution of the operation
      */
-    handleCreate: {
+    handleCreateOperation: {
         value: function (createOperation) {
 
             /*
@@ -3484,7 +3300,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                 //console.log(sql);
                 self._executeStatement(rawDataOperation, function (err, data) {
                     if(err) {
-                        console.error("handleCreate Error",createOperation,rawDataOperation,err);
+                        console.error("handleCreateOperation Error",createOperation,rawDataOperation,err);
                     }
                     var operation = self.mapHandledCreateResponseToOperation(createOperation, err, data, record);
 
@@ -3504,13 +3320,13 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
             if (err) {
                 // an error occurred
                 console.log(err, err.stack, rawDataOperation);
-                operation.type = DataOperation.Type.CreateFailed;
+                operation.type = DataOperation.Type.CreateFailedOperation;
                 //Should the data be the error?
                 operation.data = err;
             }
             else {
                 // successful response
-                operation.type = DataOperation.Type.CreateCompleted;
+                operation.type = DataOperation.Type.CreateCompletedOperation;
                 //We provide the inserted record as the operation's payload
                 operation.data = record;
             }
@@ -3686,7 +3502,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
     },
 
 
-    handleUpdate: {
+    handleUpdateOperation: {
         value: function (updateOperation) {
             var data = updateOperation.data;
 
@@ -3715,7 +3531,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                 //console.log(sql);
                 self._executeStatement(rawDataOperation, function (err, data) {
                     if(err) {
-                        console.error("handleUpdate Error",updateOperation,rawDataOperation,err);
+                        console.error("handleUpdateOperation Error",updateOperation,rawDataOperation,err);
                     }
                     var operation = self.mapHandledUpdateResponseToOperation(updateOperation, err, data, record);
                     operation.target.dispatchEvent(operation);
@@ -3733,13 +3549,13 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
             if (err) {
                 // an error occurred
                 console.log(err, err.stack, rawDataOperation);
-                operation.type = DataOperation.Type.UpdateFailed;
+                operation.type = DataOperation.Type.UpdateFailedOperation;
                 //Should the data be the error?
                 operation.data = err;
             }
             else {
                 // successful response
-                operation.type = DataOperation.Type.UpdateCompleted;
+                operation.type = DataOperation.Type.UpdateCompletedOperation;
                 //We provide the inserted record as the operation's payload
                 operation.data = record;
 
@@ -3810,7 +3626,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
         }
     },
 
-    handleDelete: {
+    handleDeleteOperation: {
         value: function (deleteOperation) {
             var data = deleteOperation.data,
                 rawDataOperation = {},
@@ -3841,13 +3657,13 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
             if (err) {
                 // an error occurred
                 console.log(err, err.stack, rawDataOperation);
-                operation.type = DataOperation.Type.DeleteFailed;
+                operation.type = DataOperation.Type.DeleteFailedOperation;
                 //Should the data be the error?
                 operation.data = err;
             }
             else {
                 // successful response
-                operation.type = DataOperation.Type.DeleteCompleted;
+                operation.type = DataOperation.Type.DeleteCompletedOperation;
                 //We provide the inserted record as the operation's payload
                 operation.data = record;
             }
@@ -3855,7 +3671,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
         }
     },
 
-    handleCreateTransaction: {
+    handleCreateTransactionOperation: {
         value: function (createTransactionOperation) {
             var self = this,
                 rawDataOperation = {},
@@ -3889,7 +3705,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                     if (err) {
                         // an error occurred
                         console.log(err, err.stack, rawDataOperation);
-                        operation.type = DataOperation.Type.CreateTransactionFailed;
+                        operation.type = DataOperation.Type.CreateTransactionFailedOperation;
                         //Should the data be the error?
                         operation.data = err;
                         //reject(operation);
@@ -3899,7 +3715,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                         //For CreateTreansactionCompleted, we're going to use the id provided by the backend
                         operation.id = data.transactionId;
 
-                        operation.type = DataOperation.Type.CreateTransactionCompleted;
+                        operation.type = DataOperation.Type.CreateTransactionCompletedOperation;
                         //What should be the operation's payload ? The Raw Transaction Id?
                         operation.data = data;
 
@@ -3940,7 +3756,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                         operation.target = batchOperation.target;
                             // an error occurred
                         console.log(err, err.stack, rawDataOperation);
-                        operation.type = DataOperation.Type.BatchFailed;
+                        operation.type = DataOperation.Type.BatchFailedOperation;
                         //Should the data be the error?
                         if(!data) {
                             data = {
@@ -3953,7 +3769,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                         reject(operation);
                     }
                     else {
-                        var i, countI, iData, iOperation, readType = DataOperation.Type.Read, iFetchesults;
+                        var i, countI, iData, iOperation, readType = DataOperation.Type.ReadOperation, iFetchesults;
 
                         for(i=startIndex, countI = endIndex; (i<countI); i++) {
                             iRecord = rawOperationRecords[i];
@@ -3977,7 +3793,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                             progressOperation.clientId = batchOperation.clientId;
                             //progressOperation.target = transactionObjectDescriptors;
                             progressOperation.target = batchOperation.target;
-                            progressOperation.type = DataOperation.Type.PerformTransactionProgress;
+                            progressOperation.type = DataOperation.Type.PerformTransactionProgressOperation;
                             if(startIndex === 0 && endIndex === 0 && batchedOperations.length === 1) {
                                 percentCompletion = 1;
                             } else {
@@ -4000,7 +3816,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
 
                         // executeStatementData.push(data);
                         // successful response
-                        // operation.type = DataOperation.Type.BatchCompleted;
+                        // operation.type = DataOperation.Type.BatchCompletedOperation;
                         // //What should be the operation's payload ? The Raw Transaction Id?
                         // operation.data = data;
 
@@ -4011,16 +3827,16 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
         }
     },
 
-    handleBatch: {
+    handleBatchOperation: {
         value: function (batchOperation) {
             var self = this,
                 batchedOperations = batchOperation.data.batchedOperations,
                 iOperation, iSQL,
                 batchSQL = "",
-                readOperationType = DataOperation.Type.Read,
-                createOperationType = DataOperation.Type.Create,
-                updateOperationType = DataOperation.Type.Update,
-                deleteOperationType = DataOperation.Type.Delete,
+                readOperationType = DataOperation.Type.ReadOperation,
+                createOperationType = DataOperation.Type.CreateOperation,
+                updateOperationType = DataOperation.Type.UpdateOperation,
+                deleteOperationType = DataOperation.Type.DeleteOperation,
                 transactionId = batchOperation.data.transactionId,
                 rawDataOperation = {},
                 // firstObjectDescriptor,
@@ -4072,7 +3888,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                 } else if (iOperation.type === deleteOperationType) {
                     sqlMapPromises.push(this._mapDeleteOperationToSQL(iOperation, rawDataOperation, iRecord));
                 } else {
-                    console.error("-handleBatch: Operation With Unknown Type: ", iOperation);
+                    console.error("-handleBatchOperation: Operation With Unknown Type: ", iOperation);
                 }
             }
 
@@ -4130,7 +3946,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                     return Promise.all(batchPromises)
                     .then(function() {
                         // if(executeStatementErrors.length) {
-                        //     operation.type = DataOperation.Type.BatchFailed;
+                        //     operation.type = DataOperation.Type.BatchFailedOperation;
                         //     //Should the data be the error?
                         //     if(!data) {
                         //         data = {
@@ -4148,7 +3964,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                             operation.clientId = batchOperation.clientId;
                             //operation.target = transactionObjectDescriptors;
                             operation.target = batchOperation.target;
-                            operation.type = DataOperation.Type.BatchCompleted;
+                            operation.type = DataOperation.Type.BatchCompletedOperation;
 
                             /*
                                 Aurora DataAPI doesn't really return much when it comes to a
@@ -4194,7 +4010,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                             if (err) {
                                 // an error occurred
                                 console.log(err, err.stack, rawDataOperation);
-                                operation.type = DataOperation.Type.BatchFailed;
+                                operation.type = DataOperation.Type.BatchFailedOperation;
                                 //Should the data be the error?
                                 if(!data) {
                                     data = {
@@ -4207,7 +4023,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                             }
                             else {
                                 // successful response
-                                operation.type = DataOperation.Type.BatchCompleted;
+                                operation.type = DataOperation.Type.BatchCompletedOperation;
                                 //What should be the operation's payload ? The Raw Transaction Id?
                                 operation.data = data;
 
@@ -4224,7 +4040,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                     operation.target = batchOperation.target;
                         // an error occurred
                     console.log(sqlMapError, sqlMapError.stack, batchOperation);
-                    operation.type = DataOperation.Type.BatchFailed;
+                    operation.type = DataOperation.Type.BatchFailedOperation;
                     //Should the data be the error?
                     data = {
                         transactionId: batchOperation.data.transactionId
@@ -4263,7 +4079,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
             delete rawDataOperation.schema;
 
             /* return new Promise(function (resolve, reject) {*/
-                var method = transactionEndOperation.type === DataOperation.Type.PerformTransaction
+                var method = transactionEndOperation.type === DataOperation.Type.PerformTransactionOperation
                     ? "commitTransaction"
                     : "rollbackTransaction";
                 self._rdsDataService[method](rawDataOperation, function (err, data) {
@@ -4277,14 +4093,14 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                     if (err) {
                         // an error occurred
                         console.log(err, err.stack, rawDataOperation);
-                        operation.type = transactionEndOperation.type === DataOperation.Type.PerformTransaction ? DataOperation.Type.PerformTransactionFailed : DataOperation.Type.RollbackTransactionFailed;
+                        operation.type = transactionEndOperation.type === DataOperation.Type.PerformTransactionOperation ? DataOperation.Type.PerformTransactionFailedOperation : DataOperation.Type.RollbackTransactionFailedOperation;
                         //Should the data be the error?
                         operation.data = err;
                         //resolve(operation);
                     }
                     else {
                         // successful response
-                        operation.type = transactionEndOperation.type === DataOperation.Type.PerformTransaction ? DataOperation.Type.PerformTransactionCompleted : DataOperation.Type.RollbackTransactionCompleted;
+                        operation.type = transactionEndOperation.type === DataOperation.Type.PerformTransactionOperation ? DataOperation.Type.PerformTransactionCompletedOperation : DataOperation.Type.RollbackTransactionCompletedOperation;
                         //What should be the operation's payload ? The Raw Transaction Id?
                         operation.data = data;
 
@@ -4299,13 +4115,13 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
         }
     },
 
-    handlePerformTransaction: {
+    handlePerformTransactionOperation: {
         value: function (performTransactionOperation) {
             /*return */this._handleTransactionEndOperation(performTransactionOperation);
         }
     },
 
-    handleRollbackTransaction: {
+    handleRollbackTransactionOperation: {
         value: function (rollbackTransactionOperation) {
             /*return */this._handleTransactionEndOperation(rollbackTransactionOperation);
         }

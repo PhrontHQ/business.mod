@@ -25,14 +25,14 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
             RawDataService.call(this);
 
             var mainService = DataService.mainService;
-            mainService.addEventListener(DataOperation.Type.Read,this,false);
+            mainService.addEventListener(DataOperation.Type.ReadOperation,this,false);
 
 
             return this;
         }
     },
 
-    handleCreateTransaction: {
+    handleCreateTransactionOperation: {
         value: function (createTransactionOperation) {
 
             /*
@@ -103,7 +103,7 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
         }
     },
 
-    handleExpiringObjectDownloadRead: {
+    handleExpiringObjectDownloadReadOperation: {
         value: function (readOperation) {
             /*
                 Until we solve more efficiently (lazily) how RawDataServices listen for and receive data operations, we have to check wether we're the one to deal with this:
@@ -112,7 +112,7 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                 return;
             }
 
-            //console.log("S3DataService - handleObjectRead");
+            //console.log("S3DataService - handleObjectReadOperation");
 
             var self = this,
                 data = readOperation.data,
@@ -206,7 +206,7 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
         }
     },
 
-    handleObjectRead: {
+    handleObjectReadOperation: {
         value: function (readOperation) {
             /*
                 Until we solve more efficiently (lazily) how RawDataServices listen for and receive data operations, we have to check wether we're the one to deal with this:
@@ -293,7 +293,7 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
         }
     },
 
-    handleBucketRead: {
+    handleBucketReadOperation: {
         value: function (readOperation) {
             /*
                 Until we solve more efficiently (lazily) how RawDataServices listen for and receive data operations, we have to check wether we're the one to deal with this:
@@ -349,7 +349,7 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
         }
     },
 
-    handleRead: {
+    handleReadOperation: {
         value: function (readOperation) {
 
             /*

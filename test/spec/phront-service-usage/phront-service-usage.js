@@ -80,7 +80,7 @@ exports.promise = new Promise(function(resolve,reject) {
                 dataStream = new DataStream();
 
                 dataStream.query = serviceQuery;
-                readOperation.type = DataOperation.Type.Read;
+                readOperation.type = DataOperation.Type.ReadOperation;
                 readOperation.target = serviceDescripto;
 
                 phrontClientService._dispatchOperation(readOperation,dataStream);
@@ -98,7 +98,7 @@ exports.promise = new Promise(function(resolve,reject) {
             //console.log("Montage.getInfoForObject(objectDescriptor): ", Montage.getInfoForObject(objectDescriptor));
 
             readOperation = new DataOperation();
-            readOperation.type = DataOperation.Type.Read;
+            readOperation.type = DataOperation.Type.ReadOperation;
             readOperation.target = objectDescriptor;
             readOperation.criteria = new Criteria().initWithExpression("id == $", "1f9bd2d1-e120-4214-8ff1-273fd49c3a14");
 
@@ -115,7 +115,7 @@ exports.promise = new Promise(function(resolve,reject) {
             deserializer.init(serializedOperation, require, objectRequires, module, isSync);
             deserializedOperation = deserializer.deserializeObject();
 
-            phrontService.handleRead(deserializedOperation)
+            phrontService.handleReadOperation(deserializedOperation)
             .then(function(operationCompleted) {
                 //serialize
                 completedSerializedOperation = serializer.serializeObject(operationCompleted);
@@ -136,7 +136,7 @@ exports.promise = new Promise(function(resolve,reject) {
             //console.log("Montage.getInfoForObject(objectDescriptor): ", Montage.getInfoForObject(objectDescriptor));
 
             readOperation = new DataOperation();
-            readOperation.type = DataOperation.Type.Read;
+            readOperation.type = DataOperation.Type.ReadOperation;
             readOperation.target = objectDescriptor;
             readOperation.criteria = new Criteria().initWithExpression("id == $", "1f9bd2d1-e120-4214-8ff1-273fd49c3a14");
 

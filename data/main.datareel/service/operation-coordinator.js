@@ -37,39 +37,39 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
             phrontService.operationCoordinator = this;
 
-            // mainService.addEventListener(DataOperation.Type.Read,phrontService,false);
-            // mainService.addEventListener(DataOperation.Type.Update,phrontService,false);
-            // mainService.addEventListener(DataOperation.Type.Create,phrontService,false);
-            // mainService.addEventListener(DataOperation.Type.Delete,phrontService,false);
-            // mainService.addEventListener(DataOperation.Type.CreateTransaction,phrontService,false);
-            // mainService.addEventListener(DataOperation.Type.Batch,phrontService,false);
-            // mainService.addEventListener(DataOperation.Type.PerformTransaction,phrontService,false);
-            // mainService.addEventListener(DataOperation.Type.RollbackTransaction,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.ReadOperation,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.UpdateOperation,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.CreateOperation,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.DeleteOperation,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.CreateTransactionOperation,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.BatchOperation,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.PerformTransactionOperation,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.RollbackTransactionOperation,phrontService,false);
 
-            this.addEventListener(DataOperation.Type.CreateTransaction,this,false);
-            this.addEventListener(DataOperation.Type.Batch,this,false);
-            this.addEventListener(DataOperation.Type.PerformTransaction,this,false);
-            this.addEventListener(DataOperation.Type.RollbackTransaction,this,false);
+            this.addEventListener(DataOperation.Type.CreateTransactionOperation,this,false);
+            this.addEventListener(DataOperation.Type.BatchOperation,this,false);
+            this.addEventListener(DataOperation.Type.PerformTransactionOperation,this,false);
+            this.addEventListener(DataOperation.Type.RollbackTransactionOperation,this,false);
 
             mainService.addEventListener(DataOperation.Type.NoOp,this,false);
-            mainService.addEventListener(DataOperation.Type.ReadFailed,this,false);
-            mainService.addEventListener(DataOperation.Type.ReadCompleted,this,false);
-            mainService.addEventListener(DataOperation.Type.UpdateFailed,this,false);
-            mainService.addEventListener(DataOperation.Type.UpdateCompleted,this,false);
-            mainService.addEventListener(DataOperation.Type.CreateFailed,this,false);
-            mainService.addEventListener(DataOperation.Type.CreateCompleted,this,false);
-            mainService.addEventListener(DataOperation.Type.DeleteFailed,this,false);
-            mainService.addEventListener(DataOperation.Type.DeleteCompleted,this,false);
-            mainService.addEventListener(DataOperation.Type.CreateTransactionFailed,this,false);
-            mainService.addEventListener(DataOperation.Type.CreateTransactionCompleted,this,false);
-            mainService.addEventListener(DataOperation.Type.BatchCompleted,this,false);
-            mainService.addEventListener(DataOperation.Type.BatchFailed,this,false);
-            mainService.addEventListener(DataOperation.Type.TransactionUpdated,this,false);
-            mainService.addEventListener(DataOperation.Type.PerformTransactionProgress,this,false);
-            mainService.addEventListener(DataOperation.Type.PerformTransactionFailed,this,false);
-            mainService.addEventListener(DataOperation.Type.PerformTransactionCompleted,this,false);
-            mainService.addEventListener(DataOperation.Type.RollbackTransactionFailed,this,false);
-            mainService.addEventListener(DataOperation.Type.RollbackTransactionCompleted,this,false);
+            mainService.addEventListener(DataOperation.Type.ReadFailedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.ReadCompletedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.UpdateFailedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.UpdateCompletedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.CreateFailedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.CreateCompletedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.DeleteFailedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.DeleteCompletedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.CreateTransactionFailedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.CreateTransactionCompletedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.BatchCompletedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.BatchFailedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.TransactionUpdatedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.PerformTransactionProgressOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.PerformTransactionFailedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.PerformTransactionCompletedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.RollbackTransactionFailedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.RollbackTransactionCompletedOperation,this,false);
 
             return this;
         }
@@ -126,8 +126,8 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
     dispatchOperationToConnectionClientId: {
         value: function(operation, connection, clientId) {
 
-            // if(operation.type === DataOperation.Type.PerformTransactionCompleted ||
-            //     operation.type === DataOperation.Type.PerformTransactionFailed) {
+            // if(operation.type === DataOperation.Type.PerformTransactionCompletedOperation ||
+            //     operation.type === DataOperation.Type.PerformTransactionFailedOperation) {
             //     console.log("OperationCoordinator: dispatchOperationToConnectionClientId()",operation, connection, clientId)
             // }
 
@@ -184,15 +184,15 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                     }
 
                     iReadUpdateOperation = new DataOperation();
-                    iReadUpdateOperation.type = DataOperation.Type.ReadUpdate;
+                    iReadUpdateOperation.type = DataOperation.Type.ReadUpdateOperation;
                     iReadUpdateOperation.target = operation.target;
                     iReadUpdateOperation.criteria = operation.criteria;
                     iReadUpdateOperation.referrerId = operation.referrerId;
 
                     for(;(i<countI);i++) {
                         iReadUpdateOperation.data = operationData.splice(0,integerLengthQuotient);
-                        if((operation.type === DataOperation.Type.ReadCompleted) && i === (countI-1) && (operationData.length === 0)) {
-                            iReadUpdateOperation.type = DataOperation.Type.ReadCompleted;
+                        if((operation.type === DataOperation.Type.ReadCompletedOperation) && i === (countI-1) && (operationData.length === 0)) {
+                            iReadUpdateOperation.type = DataOperation.Type.ReadCompletedOperation;
                         }
 
                         //console.log("OperationCoordinator: dispatchOperationToConnectionClientId() connection.postToConnection #2 operation.referrerId "+operation.referrerId);
@@ -244,8 +244,8 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 We're now receiving PhrontService event/operations that are response to operations initiated locally, so until we sort out more carefully who answer what, we're going to make sure we filter operations that don't have a clientId, and to be even more careful, if there's a clientId, to compare it to the one in environemnt, which is re-set everytime we receive a call from the APIGateway
             */
 
-            // if(operation.type === DataOperation.Type.PerformTransactionCompleted ||
-            //     operation.type === DataOperation.Type.PerformTransactionFailed) {
+            // if(operation.type === DataOperation.Type.PerformTransactionCompletedOperation ||
+            //     operation.type === DataOperation.Type.PerformTransactionFailedOperation) {
             //         console.log("OperationCoordinator: handleEvent",operation, "operation.clientId: ",operation.clientId);
             // }
 
@@ -254,7 +254,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 //console.log("handleEvent:",operation);
                 this.dispatchOperationToConnectionClientId(operation,this.gateway,operation.clientId)
                 .then(function(operation) {
-                    if(operation.type.endsWith("Completed") || operation.type.endsWith("Failed")) {
+                    if(operation.type.endsWith("CompletedOperation") || operation.type.endsWith("FailedOperation")) {
                         //resolve
                         self._operationPromisesByReferrerId.get(operation.referrerId)[0]();
                     }
@@ -299,7 +299,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 self = this,
                 phrontService = this.mainService.childServices[0];
 
-            //console.log(serializedOperation);
+                // console.log(serializedOperation);
 
             this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
             try {
@@ -349,23 +349,23 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
             }
 
             if(
-                (deserializedOperation.type ===  DataOperation.Type.Read) ||
-                (deserializedOperation.type ===  DataOperation.Type.Connect) ||
-                (deserializedOperation.type ===  DataOperation.Type.Create) ||
-                (deserializedOperation.type ===  DataOperation.Type.Update) ||
-                (deserializedOperation.type ===  DataOperation.Type.Delete) ||
-                (deserializedOperation.type ===  DataOperation.Type.CreateTransaction) ||
-                (deserializedOperation.type ===  DataOperation.Type.Batch) ||
-                (deserializedOperation.type ===  DataOperation.Type.PerformTransaction) ||
-                (deserializedOperation.type ===  DataOperation.Type.RollbackTransaction) ||
-                (deserializedOperation.type ===  DataOperation.Type.Merge)
+                (deserializedOperation.type ===  DataOperation.Type.ReadOperation) ||
+                (deserializedOperation.type ===  DataOperation.Type.ConnectOperation) ||
+                (deserializedOperation.type ===  DataOperation.Type.CreateOperation) ||
+                (deserializedOperation.type ===  DataOperation.Type.UpdateOperation) ||
+                (deserializedOperation.type ===  DataOperation.Type.DeleteOperation) ||
+                (deserializedOperation.type ===  DataOperation.Type.CreateTransactionOperation) ||
+                (deserializedOperation.type ===  DataOperation.Type.BatchOperation) ||
+                (deserializedOperation.type ===  DataOperation.Type.PerformTransactionOperation) ||
+                (deserializedOperation.type ===  DataOperation.Type.RollbackTransactionOperation) ||
+                (deserializedOperation.type ===  DataOperation.Type.MergeOperation)
             ) {
                 resultOperationPromise = new Promise(function(resolve,reject) {
                     self._operationPromisesByReferrerId.set(deserializedOperation.id,[resolve,reject]);
                     defaultEventManager.handleEvent(deserializedOperation);
 
                     //If Connect, we can't really return anything to the client, so we resolve now:
-                    if(deserializedOperation.type ===  DataOperation.Type.Connect) {
+                    if(deserializedOperation.type ===  DataOperation.Type.ConnectOperation) {
                         resolve(true);
                     }
                 });
@@ -373,8 +373,8 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 return resultOperationPromise;
                 //resultOperationPromise = phrontService.handleRead(deserializedOperation);
                 //phrontService.handleRead(deserializedOperation);
-            } else if(deserializedOperation.type ===  DataOperation.Type.KeepAlive) {
-                console.log("KeepAlive received");
+            } else if(deserializedOperation.type ===  DataOperation.Type.KeepAliveOperation) {
+                console.log("KeepAliveOperation received");
                 Promise.resolve(true);
             } else {
                 console.error("OperationCoordinator: not programmed to handle type of operation ",deserializedOperation);
@@ -400,7 +400,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
         }
     },
 
-    handleCreateTransaction: {
+    handleCreateTransactionOperation: {
         value: function (createTransactionOperation) {
             //Need to analyze the array of object descriptors:
             var objectDescriptorModuleIds = createTransactionOperation.data,
@@ -443,7 +443,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                     /*
                         We know who needs it and that the listener implements that method.
 
-                        createTransactionOperation.target.handleCreateTransaction(createTransactionOperation);
+                        createTransactionOperation.target.handleCreateTransactionOperation(createTransactionOperation);
 
                         is a shortcut to
 
@@ -454,7 +454,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                         createTransactionOperation.target.dispatchEvent(createTransactionOperation);
                     */
 
-                   createTransactionOperation.target.handleCreateTransaction(createTransactionOperation);
+                   createTransactionOperation.target.handleCreateTransactionOperation(createTransactionOperation);
 
                     /*
                         The client will get the createtransactioncompleted from the single DataService.
@@ -475,7 +475,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
                     while ((mapIteration = mapIterator.next().value)) {
                         iterationOperation = new DataOperation();
-                        iterationOperation.type = DataOperation.Type.CreateTransaction;
+                        iterationOperation.type = DataOperation.Type.CreateTransactionOperation;
                         iterationOperation.referrerId = createTransactionOperation.id;
 
                         iterationOperation.target = mapIteration[0];
@@ -496,7 +496,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
                             iterationOperation.target.dispatchEvent(iterationOperation);
                         */
-                        iterationOperation.target.handleCreateTransaction(iterationOperation);
+                        iterationOperation.target.handleCreateTransactionOperation(iterationOperation);
 
                         /*
                             We'll also need to know when all of these independent, per-service createTransactions are created.
@@ -522,7 +522,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
         }
     },
 
-    handleCreateTransactionFailed: {
+    handleCreateTransactionFailedOperation: {
         value: function (createTransactionFailedOperation) {
             var rootCreateTransaction = this._processCreateTransactionResultOperation(createTransactionFailedOperation);
 
@@ -542,7 +542,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                         WARNING - it's ok as we handle it ourselves, but that  a null target would throw an exception if handled by the
                     */
                     operation.target = null;
-                    operation.type = DataOperation.Type.CreateTransactionFailed;
+                    operation.type = DataOperation.Type.CreateTransactionFailedOperation;
                     operation.data = createTransactionOperation.nestedCreateTransactionsFailedOperations;
 
                 //To dispatch to client:
@@ -556,7 +556,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
         wether we had a transaction that was handled by one rawDataService only that we re-targetd to him or we have nested transactions, since we listen for "createTransactions" on mainService, we'll get the bubbling regardless.
     */
-    handleCreateTransactionCompleted: {
+    handleCreateTransactionCompletedOperation: {
         value: function (createTransactionCompletedOperation) {
             var operation,
                 rootCreateTransaction = this._processCreateTransactionResultOperation(createTransactionCompletedOperation);
@@ -581,10 +581,10 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                     if(createTransactionOperation.nestedCreateTransactionsFailedOperations.size === 0) {
                         //Everything is back and no fail.... So we need to send  createTransactionCompleted Operation to the client
 
-                        operation.type = DataOperation.Type.CreateTransactionCompleted;
+                        operation.type = DataOperation.Type.CreateTransactionCompletedOperation;
                         operation.data = rootCreateTransaction.data;
                     } else {
-                        operation.type = DataOperation.Type.CreateTransactionFailed;
+                        operation.type = DataOperation.Type.CreateTransactionFailedOperation;
                         operation.data = createTransactionOperation.nestedCreateTransactionsFailedOperations;
                     }
                 }
@@ -598,14 +598,14 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
         }
     },
-    handleBatch: {
+    handleBatchOperation: {
         value: function (batchOperation) {
             var rootCreateTransaction =this._pendingOperationById.get(batchOperation.referrerId);
 
             if(rootCreateTransaction) {
                 if(rootCreateTransaction.nestedCreateTransactionsById) {
 
-                    console.error("Implement OperationCoordinator handleBatch when multiple DataServices are involved");
+                    console.error("Implement OperationCoordinator handleBatchOperation when multiple DataServices are involved");
 
                 } else {
                     //get the sole DataService involved
@@ -627,21 +627,21 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                         createTransactionOperation.target.dispatchEvent(createTransactionOperation);
                     */
 
-                   batchOperation.target.handleBatch(batchOperation);
+                   batchOperation.target.handleBatchOperation(batchOperation);
 
                 }
             }
         }
     },
 
-    handlePerformTransaction: {
+    handlePerformTransactionOperation: {
         value: function (performTransactionOperation) {
             var rootCreateTransaction =this._pendingOperationById.get(performTransactionOperation.referrerId);
 
             if(rootCreateTransaction) {
                 if(rootCreateTransaction.nestedCreateTransactionsById) {
 
-                    console.error("Implement OperationCoordinator handlePerformTransaction when multiple DataServices are involved");
+                    console.error("Implement OperationCoordinator handlePerformTransactionOperation when multiple DataServices are involved");
 
                 } else {
                     //get the sole DataService involved
@@ -652,7 +652,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                     /*
                         We know who needs it and that the listener implements that method.
 
-                        createTransactionOperation.target.handleCreateTransaction(createTransactionOperation);
+                        createTransactionOperation.target.handleCreateTransactionOperation(createTransactionOperation);
 
                         is a shortcut to
 
@@ -663,7 +663,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                         createTransactionOperation.target.dispatchEvent(createTransactionOperation);
                     */
 
-                   performTransactionOperation.target.handlePerformTransaction(performTransactionOperation);
+                   performTransactionOperation.target.handlePerformTransactionOperation(performTransactionOperation);
 
                 }
             }

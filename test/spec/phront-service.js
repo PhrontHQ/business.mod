@@ -43,10 +43,10 @@ describe("PhrontService -Create Database", function() {
         function importObjectDescriptor(iType) {
             console.log("create "+iType.name);
             iOperation = new DataOperation();
-            iOperation.type = DataOperation.Type.Create;
+            iOperation.type = DataOperation.Type.CreateOperation;
             iOperation.data = iType;
 
-            phrontService.handleCreate(iOperation)
+            phrontService.handleCreateOperation(iOperation)
             .then(function(createCompletedOperation) {
                 console.log("createCompletedOperation:",createCompletedOperation.objectDescriptor.name);
             },
@@ -84,7 +84,7 @@ describe("PhrontService -Read data from serialized operations", function() {
             //console.log("Montage.getInfoForObject(objectDescriptor): ", Montage.getInfoForObject(objectDescriptor));
 
             readOperation = new DataOperation();
-            readOperation.type = DataOperation.Type.Read;
+            readOperation.type = DataOperation.Type.ReadOperation;
             readOperation.target = objectDescriptor;
             readOperation.criteria = new Criteria().initWithExpression("id == $", "1f9bd2d1-e120-4214-8ff1-273fd49c3a14");
 
@@ -101,7 +101,7 @@ describe("PhrontService -Read data from serialized operations", function() {
             deserializer.init(serializedOperation, require, objectRequires, module, isSync);
             deserializedOperation = deserializer.deserializeObject();
 
-            return phrontService.handleRead(deserializedOperation)
+            return phrontService.handleReadOperation(deserializedOperation)
             .then(function(operationCompleted) {
                 //serialize
                 completedSerializedOperation = serializer.serializeObject(operationCompleted);
@@ -125,7 +125,7 @@ describe("PhrontService -Read data from serialized operations", function() {
         //     //console.log("Montage.getInfoForObject(objectDescriptor): ", Montage.getInfoForObject(objectDescriptor));
 
         //     readOperation = new DataOperation();
-        //     readOperation.type = DataOperation.Type.Read;
+        //     readOperation.type = DataOperation.Type.ReadOperation;
         //     readOperation.target = objectDescriptor;
         //     readOperation.criteria = new Criteria().initWithExpression("id == $", "1f9bd2d1-e120-4214-8ff1-273fd49c3a14");
 
