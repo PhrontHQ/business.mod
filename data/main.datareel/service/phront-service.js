@@ -3416,12 +3416,12 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
 
             //We need to transform the criteria into a SQL equivalent. Hard-coded for a single object for now
             //if (Object.keys(criteria.parameters).length === 1) {
-                if (criteria.parameters.hasOwnProperty("identifier")) {
-                    condition = `id = '${criteria.parameters.dataIdentifier.primaryKey}'::uuid`;
-                }
-                else if (criteria.parameters.hasOwnProperty("id")) {
-                    condition = `id = '${criteria.parameters.id}'::uuid`;
-                }
+                // if (criteria.parameters.hasOwnProperty("identifier")) {
+                //     condition = `id = '${criteria.parameters.dataIdentifier.primaryKey}'::uuid`;
+                // }
+                // else if (criteria.parameters.hasOwnProperty("id")) {
+                //     condition = `id = '${criteria.parameters.id}'::uuid`;
+                // }
             //}
 
             rawCriteria = this.mapCriteriaToRawCriteria(criteria, mapping, operationLocales, (rawExpressionJoinStatements = new Set()));
