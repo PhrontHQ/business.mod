@@ -3393,6 +3393,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                 objectDescriptor = updateOperation.target,
                 mapping = objectDescriptor && self.mappingForType(objectDescriptor),
                 criteria = updateOperation.criteria,
+                rawCriteria,
                 dataChanges = data,
                 changesIterator,
                 aProperty, aValue, addedValues, removedValues, aPropertyDescriptor,
@@ -3408,6 +3409,8 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                 dataSnapshot = updateOperation.snapshot,
                 dataSnapshotKeys = dataSnapshot ? Object.keys(dataSnapshot) : null,
                 condition,
+                operationLocales = updateOperation.locales,
+                rawExpressionJoinStatements,
                 sql;
 
 
@@ -3420,6 +3423,15 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                     condition = `id = '${criteria.parameters.id}'::uuid`;
                 }
             //}
+
+            rawCriteria = this.mapCriteriaToRawCriteria(criteria, mapping, operationLocales, (rawExpressionJoinStatements = new Set()));
+            condition = rawCriteria ? rawCriteria.expression : undefined;
+
+
+            if(rawExpressionJoinStatements.sie > 0) {
+                return Promise.reject(new Error("Update operation doesn't support yet snapshot criteria involving other tables - "+JSON.stringify(rawExpressionJoinStatements)));
+            }
+
 
             if (dataSnapshotKeys) {
                 for (i = 0, countI = dataSnapshotKeys.length; i < countI; i++) {
@@ -3525,15 +3537,22 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                 //This adds the right access key, db name. etc... to the RawOperation.
                 this.mapOperationToRawOperationConnection(updateOperation, rawDataOperation);
 
+                this._mapUpdateOperationToSQL(updateOperation, rawDataOperation, record)
+                .then(function(SQL) {
+                    rawDataOperation.sql = SQL;
 
+                    //console.log(sql);
+                    self._executeStatement(rawDataOperation, function (err, data) {
+                        if(err) {
+                            console.error("handleUpdateOperation Error",updateOperation,rawDataOperation,err);
+                        }
+                        var operation = self.mapHandledUpdateResponseToOperation(updateOperation, err, data, record);
+                        operation.target.dispatchEvent(operation);
+                    });
 
-                rawDataOperation.sql = this._mapUpdateOperationToSQL(updateOperation, rawDataOperation, record);
-                //console.log(sql);
-                self._executeStatement(rawDataOperation, function (err, data) {
-                    if(err) {
-                        console.error("handleUpdateOperation Error",updateOperation,rawDataOperation,err);
-                    }
-                    var operation = self.mapHandledUpdateResponseToOperation(updateOperation, err, data, record);
+                }, function(error) {
+                    console.error("handleUpdateOperation Error",updateOperation,rawDataOperation,err);
+                    var operation = self.mapHandledUpdateResponseToOperation(updateOperation, error, null, record);
                     operation.target.dispatchEvent(operation);
                 });
             }
