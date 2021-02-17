@@ -214,7 +214,7 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
                         //TODO: apptempt at least 1 re-try
                         //event.data: "{"message": "Internal server error", "connectionId":"HXT_RfBnPHcCIIg=", "requestId":"HXUAmGGZvHcF33A="}"
 
-                        return console.error("Invalid Operation Serialization:", event.data);
+                        return console.error("Invalid Operation Serialization:", e, event.data);
                     }
                 }
 
