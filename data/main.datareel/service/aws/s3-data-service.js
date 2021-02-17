@@ -186,7 +186,7 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                         (promises || (promises = [])).push(new Promise(function(resolve, reject) {
                             self._S3Client.getSignedUrl('getObject', params, function (err, url) {
                                 if (err) {
-                                    console.log(err, err.stack); // an error occurred
+                                    console.error(err, err.stack); // an error occurred
                                     (rawData || (rawData = {}))["signedUrl"] = err;
                                     reject(err);
                                 }
@@ -259,61 +259,83 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                     Bucket: Bucket,
                     Key: Key
                 },
+                rawData = params,
+                error = null,
+                self = this,
                 operation;
 
 
 
             if(Bucket && Key) {
 
+                function callback(err, data) {
+                    if (err) {
+                        console.error(err, err.stack); // an error occurred
+                        error = err;
+                        rawData = null;
+                    }
+                    else {
+                        //console.log(data);           // successful response
+                        error = null;
+                        rawData = data;
+                    }
+
+                    operation = self.responseOperationForReadOperation(readOperation, error, [rawData], false/*isNotLast*/);
+                    objectDescriptor.dispatchEvent(operation);
+                }
+
                 if (readExpressions) {
+
                         /*
                             This params returns a data with these keys:
                             ["AcceptRanges","LastModified","ContentLength","ETag","ContentType","ServerSideEncryption","Metadata","Body"]
                         */
+                    if(readExpressions.indexOf("content") !== -1) {
 
-                    this._S3Client.getObject(params, function(err, data) {
-                        if (err) console.log(err, err.stack); // an error occurred
-                        else     console.log(data);           // successful response
                         /*
-                        data = {
-                        AcceptRanges: "bytes",
-                        ContentLength: 3191,
-                        ContentType: "image/jpeg",
-                        ETag: "\"6805f2cfc46c0f04559748bb039d69ae\"",
-                        LastModified: <Date Representation>,
-                        Metadata: {
-                        },
-                        TagCount: 2,
-                        VersionId: "null"
-                        }
+                            https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property
                         */
-                    });
+                        this._S3Client.getObject(params, callback);
+                    } else if(params.hasOwnProperty("Key") && params.hasOwnProperty("Bucket") && Object.keys(params).length > 2) {
+                        //No point to do even a head if nothing more is asked but Key and Bucket...
+                        /*
+                            https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#headObject-property
+                        */
+                        this._S3Client.headObject(params, callback);
+                    } else {
+                        operation = this.responseOperationForReadOperation(readOperation, null, [params], false/*isNotLast*/);
+                        objectDescriptor.dispatchEvent(operation);
+                    }
 
                     /*
                         Expires (Integer) — default: 900 — the number of seconds to expire the pre-signed URL operation in. Defaults to 15 minutes.
                     */
 
-                    var signedURL1
-                    this._S3Client.getSignedUrl('getObject', params, function (err, url) {
-                        if (err) {
-                            console.log(err, err.stack); // an error occurred
-                        }
-                        else {
-                            signedURL1 = url;
-                            console.log('signedURL1 is', url);
-                        }       // successful
-                    });
+                    // var signedURL1
+                    // this._S3Client.getSignedUrl('getObject', params, function (err, url) {
+                    //     if (err) {
+                    //         console.error(err, err.stack); // an error occurred
+                    //     }
+                    //     else {
+                    //         signedURL1 = url;
+                    //         console.log('signedURL is', url);
+                    //     }       // successful
+                    // });
 
+                } else {
+                    //If no expression, we return the default
+                    this._S3Client.headObject(params, callback);
+                    // operation = this.responseOperationForReadOperation(readOperation, null, [params], false/*isNotLast*/);
+                    // objectDescriptor.dispatchEvent(operation);
                 }
 
-                operation = this.responseOperationForReadOperation(readOperation, null, [params], false/*isNotLast*/);
 
             } else {
                 console.log("Not sure what to send back, noOp?");
                 operation = this.responseOperationForReadOperation(readOperation, new Error("No values for Primary Keys 'Bucket' and 'Key'"), null, false/*isNotLast*/);
+                objectDescriptor.dispatchEvent(operation);
             }
 
-            objectDescriptor.dispatchEvent(operation);
 
             // while ((currentSyntax = iterator.next("and").value)) {
 
@@ -349,7 +371,7 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                 operation.target = createOperation.target;
 
                 if (err) {
-                    console.log(err, err.stack); // an error occurred
+                    console.error(err, err.stack); // an error occurred
                     operation.type = DataOperation.Type.CreateFailedOperation;
                     operation.data = err;
                 }
@@ -404,14 +426,25 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                 readExpressions = readOperation.data.readExpressions,
                 // iterator = new SyntaxInOrderIterator(criteria.syntax, "property"),
                 Bucket = criteria.parameters && criteria.parameters.Bucket,
-                params = {
-                    Bucket: Bucket
-                },
+                params,
                 operation;
 
 
+            /*
+                to handle a criteria's expression like 'Bucket == $'
+            */
+            if(!Bucket) {
+                var qualifiedProperties = criteria.qualifiedProperties;
+                if(qualifiedProperties.length === 1 && qualifiedProperties[0] === "Bucket") {
+                    Bucket = criteria.parameters;
+                }
+            }
 
             if(Bucket) {
+
+                params = {
+                    Bucket: Bucket
+                };
 
                 if (readExpressions) {
                         /*
