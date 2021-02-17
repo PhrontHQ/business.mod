@@ -440,7 +440,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                                 //The user is already entering a accountConfirmationCode
                                 //But it's not correct.
                                 var validateOperation = new DataOperation();
-                                validateOperation.type = DataOperation.Type.ValidateFailed;
+                                validateOperation.type = DataOperation.Type.ValidateFailedOperation;
                                 validateOperation.userMessage = "Invalid Verification Code";
                                 validateOperation.target = self.userIdentityDescriptor;
 
@@ -475,7 +475,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                             }
                         } else if (err.code === "CodeMismatchException") {
                             dataOperation = new DataOperation();
-                            dataOperation.type = DataOperation.Type.ValidateFailed;
+                            dataOperation.type = DataOperation.Type.ValidateFailedOperation;
                             dataOperation.userMessage = "Invalid MFA Code";
                             dataOperation.target = self.userIdentityDescriptor;
                             dataOperation.criteria = new Criteria().initWithExpression("identifier == $", object.dataIdentifier);
@@ -493,7 +493,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
 
                     mfaRequired: function (codeDeliveryDetails) {
                         var updateOperation = new DataOperation();
-                        updateOperation.type = DataOperation.Type.Update;
+                        updateOperation.type = DataOperation.Type.UpdateOperation;
                         updateOperation.target = self.userIdentityDescriptor;
                         updateOperation.context = {
                             codeDeliveryDetails: codeDeliveryDetails
@@ -507,7 +507,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
 
                     newPasswordRequired: function (userAttributes, requiredAttributes) {
                         var updateOperation = new DataOperation();
-                        updateOperation.type = DataOperation.Type.Update;
+                        updateOperation.type = DataOperation.Type.UpdateOperation;
                         // updateOperation.target = objectDescriptor;
                         //Hack
                         updateOperation.target = self.userIdentityDescriptor;
@@ -585,7 +585,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                             });
                         } else if (err.code === "InvalidParameterException") {
                             dataOperation = new DataOperation();
-                            dataOperation.type = DataOperation.Type.ValidateFailed;
+                            dataOperation.type = DataOperation.Type.ValidateFailedOperation;
                             dataOperation.target = self.userIdentityDescriptor;
                             dataOperation.userMessage = err.message;
                             dataOperation.data = {};
@@ -619,7 +619,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                             return this._authenticateUser(record, object, cognitoUser);
                         } else {
                             dataOperation = new DataOperation();
-                            dataOperation.type = DataOperation.Type.Update;
+                            dataOperation.type = DataOperation.Type.UpdateOperation;
                             dataOperation.target = self.userIdentityDescriptor;
                             dataOperation.data = {
                                 accountConfirmationCode: undefined
@@ -642,7 +642,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     var dataOperation;
                     if (err) {
                         dataOperation = new DataOperation();
-                        dataOperation.type = DataOperation.Type.ValidateFailed;
+                        dataOperation.type = DataOperation.Type.ValidateFailedOperation;
                         dataOperation.userMessage = "Invalid Verification Code";
                         dataOperation.target = self.userIdentityDescriptor;
                         dataOperation.criteria = new Criteria().initWithExpression("identifier == $", object.dataIdentifier);
@@ -668,7 +668,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                         reject(err);
                     } else {
                         dataOperation = new DataOperation();
-                        dataOperation.type = DataOperation.Type.Update;
+                        dataOperation.type = DataOperation.Type.UpdateOperation;
                         dataOperation.target = self.userIdentityDescriptor;
                         dataOperation.data = {
                             "accountConfirmationCode": undefined
@@ -703,7 +703,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     if (err) {
                         if (err.code === "InvalidPasswordException") {
                             dataOperation = new DataOperation();
-                            dataOperation.type = DataOperation.Type.ValidateFailed;
+                            dataOperation.type = DataOperation.Type.ValidateFailedOperation;
                             dataOperation.target = self.userIdentityDescriptor;
                             dataOperation.userMessage = err.message;
                             dataOperation.data = {
@@ -779,7 +779,7 @@ CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.sp
                     var dataOperation;
                     if (err && err.code === "InvalidParameterException") {
                         dataOperation = new DataOperation();
-                        dataOperation.type = DataOperation.Type.ValidateFailed;
+                        dataOperation.type = DataOperation.Type.ValidateFailedOperation;
                         dataOperation.target = self.userIdentityDescriptor;
                         dataOperation.userMessage = err.message;
                         dataOperation.data = {};
