@@ -57,6 +57,25 @@ module.parent.exports.default = exports.default = async (event, context, cb) => 
   });
 };
 
+module.parent.exports.handlePerformTransaction = exports.handlePerformTransaction  = async function (event, context, callback) {
+  console.log("handlePerformTransaction event:",event,"context:",context);
+
+  const worker = await workerPromise;
+  if(typeof worker.handleMessage === "function") {
+      await worker.handleMessage(event, context, callback);
+  }
+
+  callback(null, {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*', // Required for CORS support to work
+        'Access-Control-Allow-Credentials': true // Required for cookies, authorization headers with HTTPS
+      },
+      body: 'Sent.'
+  });
+
+};
+
 module.parent.exports.disconnect = exports.disconnect = (event, context, cb) => {
   workerPromise.then(function(worker) {
 
