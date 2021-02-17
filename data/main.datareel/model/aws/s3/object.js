@@ -140,7 +140,32 @@ Possible values include:
 
 exports.Object = DataObject.specialize(/** @lends Object.prototype */ {
 
-    identifier: {
+    key: {
+        value: undefined
+    },
+    bucketName: {
+        value: undefined
+    },
+    bucket: {
+        value: undefined
+    },
+    content: {
+        value: undefined
+    },
+    contentType: {
+        value: undefined
+    },
+    contentLength: {
+        value: undefined
+    },
+    ETag: {
+        value: undefined
+    },
+    metadata: {
+        value: undefined
+    },
+    accessControlList: {
         value: undefined
     }
+
 });

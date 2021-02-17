@@ -13,7 +13,7 @@
                     "bucketName": {"<->": "Bucket"},
                     "contentType": {"<->": "ContentType"},
                     "contentLength": {"<->": "ContentLength"},
-                    "contentData": {"<->": "Body"},
+                    "content": {"<->": "Body"},
                     "bucket": {
                         "<->": "Bucket",
                         "converter": {"@": "bucket-converter"}
