@@ -4,6 +4,10 @@ var AWS = require('aws-sdk'),
     RawDataService = require("montage/data/service/raw-data-service").RawDataService,
     SyntaxInOrderIterator = require("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
+    crypto = require("crypto"),
+    BucketDescriptor = require("../../model/aws/s3/bucket.mjson").montageObject,
+    ObjectDescriptor = require("../../model/aws/s3/object.mjson").montageObject,
+    ExpiringObjectDownloadDescriptor = require("../../model/aws/s3/expiring-object-download.mjson").montageObject,
     S3DataService;
 
 
@@ -25,7 +29,30 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
             RawDataService.call(this);
 
             var mainService = DataService.mainService;
-            mainService.addEventListener(DataOperation.Type.ReadOperation,this,false);
+            // mainService.addEventListener(DataOperation.Type.ReadOperation,this,false);
+            // mainService.addEventListener(DataOperation.Type.CreateOperation,this,false);
+
+            /*
+                #TODO #Fix There's a bug with event distribution path constructed for Object: following nextTarget, we end-up on DataObject, the super-class of Object, which is registered to PhrontDataService, and ends up being the nextTarget when we get into services rather than S3DataService which is the service handling Object.
+
+                So we need to re-work nextTarget,
+                    - either adding to it the ability to get the whole path at omce, which for the data layer would give us the ability to build what we need and cache it once and for all.
+                    - or by improving nextTarget by turning it into a method carrying the path built so far su upper objects can be smarter about it? In our case looking at the target's service to continue in that layer the right way?
+
+                In the mean time, listening directly for the type we handle should do it.
+
+                And of course we need the equivalent of prepareForActivationEvent for DataServices to add themselves as listener lazily.
+
+            */
+
+            BucketDescriptor.addEventListener(DataOperation.Type.ReadOperation,this,false);
+            BucketDescriptor.addEventListener(DataOperation.Type.CreateOperation,this,false);
+
+            ObjectDescriptor.addEventListener(DataOperation.Type.ReadOperation,this,false);
+            ObjectDescriptor.addEventListener(DataOperation.Type.CreateOperation,this,false);
+
+            ExpiringObjectDownloadDescriptor.addEventListener(DataOperation.Type.ReadOperation,this,false);
+            ExpiringObjectDownloadDescriptor.addEventListener(DataOperation.Type.CreateOperation,this,false);
 
 
             return this;
@@ -289,6 +316,69 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
             objectDescriptor.dispatchEvent(operation);
 
             // while ((currentSyntax = iterator.next("and").value)) {
+
+        }
+    },
+
+    handleObjectCreateOperation: {
+        value: function (createOperation) {
+
+            if(!this.handlesType(createOperation.target)) {
+                return;
+            }
+
+            var self = this,
+                params = createOperation.data;
+            if((!params.hasOwnProperty("Bucket")) && (this.connection.bucketName)) {
+                params["Bucket"] = this.connection.bucketName;
+            }
+
+            if(!params.hasOwnProperty("ContentMD5")) {
+                var body = params.Body,
+                    contentMD5 = crypto.createHash("md5").update(body).digest("base64");
+
+                params["ContentMD5"] = contentMD5;
+            }
+
+            this._S3Client.putObject(params, function (err, data) {
+
+                var operation = new DataOperation();
+                operation.referrerId = createOperation.id;
+                operation.clientId = createOperation.clientId;
+
+                operation.target = createOperation.target;
+
+                if (err) {
+                    console.log(err, err.stack); // an error occurred
+                    operation.type = DataOperation.Type.CreateFailedOperation;
+                    operation.data = err;
+                }
+                else {
+                    /*
+                        data is like:
+                        data = {
+                        ETag: "\"6805f2cfc46c0f04559748bb039d69ae\"",
+                        VersionId: "Bvq0EDKxOcXLJXNo_Lkz37eM3R4pfzyQ"
+                        }
+                    */
+                    // console.log(data);           // successful response
+                    operation.type = DataOperation.Type.CreateCompletedOperation;
+                    var bucketName = params["Bucket"],
+                        bucketRegion = self.connection.bucketRegion,
+                        key = params["Key"];
+
+                    operation.data = {
+                        Bucket: bucketName,
+                        Key: key,
+                        ETag: data.ETag,
+                        Location: `https://${bucketName}.s3-${bucketRegion}.amazonaws.com/${key}`
+                    };
+
+                }
+
+                operation.target.dispatchEvent(operation);
+
+            });
 
         }
     },
