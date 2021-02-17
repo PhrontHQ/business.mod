@@ -133,14 +133,14 @@
     },
     "PersonForeignKeyMapping": {
         "prototype": "montage/data/service/raw-data-type-mapping",
-        "properties": {
+        "values": {
             "type": {"@": "PersonDescriptor"},
             "expression": "participatingPersonId.defined()"
         }
     },
     "ResourceForeignKeyMapping": {
         "prototype": "montage/data/service/raw-data-type-mapping",
-        "properties": {
+        "values": {
             "type": {"@": "ResourceDescriptor"},
             "expression": "participatingResourceId.defined()"
         }

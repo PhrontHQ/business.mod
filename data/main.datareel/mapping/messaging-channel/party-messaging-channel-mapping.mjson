@@ -60,7 +60,7 @@
 
     "personPartyForeignKeyMapping": {
         "prototype": "montage/data/service/raw-data-type-mapping",
-        "properties": {
+        "values": {
             "type": {"@": "PersonDescriptor"},
             "expression": "personId.defined()"
         }
@@ -71,7 +71,7 @@
 
     "organizationPartyForeignKeyMapping": {
         "prototype": "montage/data/service/raw-data-type-mapping",
-        "properties": {
+        "values": {
             "type": {"@": "OrganizationDescriptor"},
             "expression": "organizationId.defined()"
         }
@@ -82,7 +82,7 @@
 
     "resourcePartyForeignKeyMapping": {
         "prototype": "montage/data/service/raw-data-type-mapping",
-        "properties": {
+        "values": {
             "type": {"@": "ResourceDescriptor"},
             "expression": "resourceId.defined()"
         }
@@ -93,7 +93,7 @@
 
     "employmentPositionStaffingPartyForeignKeyMapping": {
         "prototype": "montage/data/service/raw-data-type-mapping",
-        "properties": {
+        "values": {
             "type": {"@": "EmploymentPositionStaffingDescriptor"},
             "expression": "employmentPositionStaffingId.defined()"
         }
@@ -104,7 +104,7 @@
 
     "b2cCustomerSupplierRelationshipDescriptorForeignKeyMapping": {
         "prototype": "montage/data/service/raw-data-type-mapping",
-        "properties": {
+        "values": {
             "type": {"@": "B2CCustomerSupplierRelationshipDescriptor"},
             "expression": "b2cCustomerSupplierRelationshipId.defined()"
         }

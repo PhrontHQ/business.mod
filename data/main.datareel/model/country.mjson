@@ -39,7 +39,7 @@
 
     "iso3166_1_alpha2Ccode": {
         "prototype": "montage/core/meta/property-descriptor",
-        "properties": {
+        "values": {
             "name": "iso3166_1_alpha2Ccode",
             "valueType": "string",
             "isSearchable": true
@@ -47,7 +47,7 @@
     },
     "iso3166_1_alpha3Ccode": {
         "prototype": "montage/core/meta/property-descriptor",
-        "properties": {
+        "values": {
             "name": "iso3166_1_alpha3Ccode",
             "valueType": "string",
             "isSearchable": true
@@ -55,7 +55,7 @@
     },
     "iso3166_1_numericCode": {
         "prototype": "montage/core/meta/property-descriptor",
-        "properties": {
+        "values": {
             "name": "iso3166_1_numericCode",
             "valueType": "number",
             "isSearchable": true
@@ -64,7 +64,7 @@
 
     "geometry": {
         "prototype": "montage/core/meta/property-descriptor",
-        "properties": {
+        "values": {
             "name": "geometry",
             "valueType": "object",
             "cardinality": 1,
@@ -79,7 +79,7 @@
 
     "officialStateName": {
         "prototype": "montage/core/meta/property-descriptor",
-        "properties": {
+        "values": {
             "name": "officialStateName",
             "valueType": "string",
             "isLocalizable": true
@@ -88,7 +88,7 @@
 
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
-        "properties": {
+        "values": {
             "name": "name",
             "valueType": "string",
             "isLocalizable": true
@@ -97,7 +97,7 @@
 
     "phoneCode": {
         "prototype": "montage/core/meta/property-descriptor",
-        "properties": {
+        "values": {
             "name": "phoneCode",
             "valueType": "string"
         }
@@ -105,7 +105,7 @@
 
     "timeZones": {
         "prototype": "montage/core/meta/property-descriptor",
-        "properties": {
+        "values": {
             "name": "timeZones",
             "valueType": "object",
             "cardinality": -1,

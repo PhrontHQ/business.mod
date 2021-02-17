@@ -71,7 +71,7 @@
     },
     "ownerPersonForeignKeyMapping": {
         "prototype": "montage/data/service/raw-data-type-mapping",
-        "properties": {
+        "values": {
             "type": {"@": "PersonDescriptor"},
             "expression": "personId.defined()"
         }
@@ -82,7 +82,7 @@
 
     "ownerOrganizationForeignKeyMapping": {
         "prototype": "montage/data/service/raw-data-type-mapping",
-        "properties": {
+        "values": {
             "type": {"@": "OrganizationDescriptor"},
             "expression": "organizationId.defined()"
         }
@@ -93,7 +93,7 @@
 
     "ownerResourceForeignKeyMapping": {
         "prototype": "montage/data/service/raw-data-type-mapping",
-        "properties": {
+        "values": {
             "type": {"@": "ResourceDescriptor"},
             "expression": "resourceId.defined()"
         }
@@ -104,7 +104,7 @@
 
     "ownerEmploymentPositionStaffingForeignKeyMapping": {
         "prototype": "montage/data/service/raw-data-type-mapping",
-        "properties": {
+        "values": {
             "type": {"@": "EmploymentPositionStaffingDescriptor"},
             "expression": "employmentPositionStaffingId.defined()"
         }

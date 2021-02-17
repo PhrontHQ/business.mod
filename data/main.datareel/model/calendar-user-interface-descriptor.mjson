@@ -1,7 +1,7 @@
 {
     "root": {
         "prototype": "montage/core/meta/user-interface-descriptor",
-        "properties": {
+        "values": {
             "inspectorComponentModule": {"%": "ui/calendar/calendar.reel"},
             "nameExpression": "'Calendar'"
         }
