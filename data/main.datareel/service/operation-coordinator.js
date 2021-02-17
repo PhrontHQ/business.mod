@@ -46,6 +46,9 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
             // mainService.addEventListener(DataOperation.Type.PerformTransactionOperation,phrontService,false);
             // mainService.addEventListener(DataOperation.Type.RollbackTransactionOperation,phrontService,false);
 
+            //worker.addEventListener(DataOperation.Type.BatchOperation,this,true);
+
+
             this.addEventListener(DataOperation.Type.CreateTransactionOperation,this,false);
             this.addEventListener(DataOperation.Type.BatchOperation,this,false);
             this.addEventListener(DataOperation.Type.PerformTransactionOperation,this,false);
@@ -364,10 +367,14 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                     self._operationPromisesByReferrerId.set(deserializedOperation.id,[resolve,reject]);
                     defaultEventManager.handleEvent(deserializedOperation);
 
+                    var propagationPromise = deserializedOperation.propagationPromise;
+
                     //If Connect, we can't really return anything to the client, so we resolve now:
                     if(deserializedOperation.type ===  DataOperation.Type.ConnectOperation) {
                         resolve(true);
-                    }
+                    };
+
+                    return propagationPromise;
                 });
 
                 return resultOperationPromise;
@@ -598,6 +605,42 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
         }
     },
+
+    /*
+        First rough implementation to dispatch a batch's sub operations on their own. We shouldn't have to do this here, will do for now...
+    */
+    // captureBatchOperation: {
+    //     value: function (batchOperation) {
+    //         /*
+    //             #TODO: cleanup the use of DataOperation .data
+    //                 - passing a specific RawDataService's transaction id as data.transactionId isn't right. a DataOperation's context is more appropriate for that and it should be unique so if there are 2 RawDataServices with each a transactionId, they should use unique keys in the context
+    //                 - Is it ok if an operation is failed that it's data contains an error? What if there are sub-operations? And sub-errors? Do we make a "GroupError" to contains everything?
+    //         */
+    //         var batchedOperations = batchOperation.data.batchedOperations,
+    //             i, countI, iOperation, iPropagationPromise;
+
+
+    //         for(i=0, countI = batchedOperations.length; (i < countI); i++) {
+    //             iOperation = batchedOperations[i];
+    //             if(!iOperation.referrer) {
+    //                 iOperation.referrer = batchOperation;
+    //             }
+
+    //             if(iPropagationPromise) {
+    //                 iPropagationPromise = iPropagationPromise.then(() => {
+    //                     defaultEventManager.handleEvent(iOperation);
+    //                     return iOperation.propagationPromise;
+    //                 });
+    //             } else {
+    //                 defaultEventManager.handleEvent(iOperation);
+    //                 iPropagationPromise = iOperation.propagationPromise;
+    //             }
+
+    //         }
+
+    //     }
+    // },
+
     handleBatchOperation: {
         value: function (batchOperation) {
             var rootCreateTransaction =this._pendingOperationById.get(batchOperation.referrerId);
