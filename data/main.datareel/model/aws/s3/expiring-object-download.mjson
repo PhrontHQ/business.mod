@@ -18,14 +18,14 @@
             "module": {
                 "%": "data/main.datareel/model/aws/s3/expiring-object-download"
             },
-            "object":{"@": "Object"},
-            "parent":{"@": "ObjectDescriptor"}
+            "object":{"@": "ExpiringObjectDownloadPrototype"},
+            "parent":{"@": "DataObjectDescriptor"}
         }
     },
-    "Object": {
+    "ExpiringObjectDownloadPrototype": {
         "object": "data/main.datareel/model/aws/s3/expiring-object-download"
     },
-    "ObjectDescriptor": {
+    "DataObjectDescriptor": {
         "object": "data/main.datareel/model/data-object.mjson"
     },
 
