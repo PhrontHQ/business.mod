@@ -3,6 +3,7 @@ const Worker = require("./worker").Worker,
 
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     OperationCoordinator = require("../data/main.datareel/service/operation-coordinator").OperationCoordinator,
+    uuid = require("montage/core/uuid"),
     currentEnvironment = require("montage/core/environment").currentEnvironment;
 
 const successfullResponse = {
@@ -115,6 +116,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
         value: function(event, context, callback) {
             var connectOperation = new DataOperation();
 
+            connectOperation.id = uuid.generate();
             connectOperation.type = DataOperation.Type.ConnectOperation;
             connectOperation.target = this;
 
