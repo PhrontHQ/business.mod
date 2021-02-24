@@ -112,6 +112,12 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
         }
     },
 
+    handleAuthorize: {
+        value: function(event, context, callback) {
+
+        }
+    },
+
     handleConnect: {
         value: function(event, context, callback) {
             var connectOperation = new DataOperation();

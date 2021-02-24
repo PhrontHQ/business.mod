@@ -32,12 +32,12 @@ mainPackageLocation: PATH.join(module.parent.filename, ".")
 
 module.parent.exports.worker = exports.worker = workerPromise;
 
-module.parent.exports.connect = exports.connect = (event, context, cb) => {
+module.parent.exports.connect = exports.connect = (event, context, callback) => {
     workerPromise.then(function(worker) {
       if(typeof worker.handleConnect === "function") {
-          return worker.handleConnect(event, context, cb);
+          return worker.handleConnect(event, context, callback);
       } else {
-          cb(null, {
+        callback(null, {
               statusCode: 200,
               body: 'Connected.'
           });
@@ -45,13 +45,13 @@ module.parent.exports.connect = exports.connect = (event, context, cb) => {
     });
 };
 
-module.parent.exports.default = exports.default = async (event, context, cb) => {
+module.parent.exports.default = exports.default = async (event, context, callback) => {
   const worker = await workerPromise;
   if(typeof worker.handleMessage === "function") {
-      await worker.handleMessage(event, context, cb);
+      await worker.handleMessage(event, context, callback);
   }
 
-  cb(null, {
+  callback(null, {
       statusCode: 200,
       body: 'Sent.'
   });
@@ -76,17 +76,17 @@ module.parent.exports.handlePerformTransaction = exports.handlePerformTransactio
 
 };
 
-module.parent.exports.disconnect = exports.disconnect = (event, context, cb) => {
+module.parent.exports.disconnect = exports.disconnect = (event, context, callback) => {
   workerPromise.then(function(worker) {
 
       if(typeof worker.handleDisconnect === "function") {
-          return worker.handleDisconnect(event, context, cb);
+          return worker.handleDisconnect(event, context, callback);
       } else {
-          cb(null, {
-              statusCode: 200,
-              body: 'Disconnected.'
-          });
-      }
+            callback(null, {
+                statusCode: 200,
+                body: 'Disconnected.'
+            });
+        }
   });
 };
 
@@ -104,23 +104,35 @@ module.parent.exports.disconnect = exports.disconnect = (event, context, cb) => 
 */
 
 
-module.parent.exports.authorize = module.exports.authorize = async (event, context) => {
-    // return policy statement that allows to invoke the connect function.
-    // in a real world application, you'd verify that the header in the event
-    // object actually corresponds to a user, and return an appropriate statement accordingly
-    return {
-      "principalId": "user",
-      "policyDocument": {
-        "Version": "2012-10-17",
-        "Statement": [
-          {
-            "Action": "execute-api:Invoke",
-            "Effect": "Allow",
-            "Resource": event.methodArn
-          }
-        ]
-      }
-    };
+module.parent.exports.authorize = module.exports.authorize = async (event, context, callback) => {
+
+
+    const worker = await workerPromise;
+    if(typeof worker.handleAuthorize === "function") {
+        authResponse = await worker.handleAuthorize(event, context, callback);
+    }
+
+    if(!authResponse) {
+
+        // return policy statement that allows to invoke the connect function.
+        // in a real world application, you'd verify that the header in the event
+        // object actually corresponds to a user, and return an appropriate statement accordingly
+        authResponse = {
+            "principalId": "user",
+            "policyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                "Action": "execute-api:Invoke",
+                "Effect": "Allow",
+                "Resource": event.methodArn
+                }
+            ]
+            }
+        };
+
+    }
+    callback(null, authResponse);
   };
 
 
