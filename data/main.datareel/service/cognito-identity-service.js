@@ -1,4 +1,4 @@
-var UserIdentityService = require("montage/data/service/user-identity-service").UserIdentityService,
+var IdentityService = require("montage/data/service/identity-service").IdentityService,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     DataOperationType = require("montage/data/service/data-operation").DataOperationType,
     AmazonCognitoIdentity = require("amazon-cognito-identity-js"),
@@ -32,14 +32,14 @@ var UserIdentityService = require("montage/data/service/user-identity-service").
 */
 
 
-CognitoIdentityService = exports.CognitoIdentityService = UserIdentityService.specialize({
+CognitoIdentityService = exports.CognitoIdentityService = IdentityService.specialize({
     /***************************************************************************
      * Initializing
      */
 
     constructor: {
         value: function CognitoIdentityService() {
-            UserIdentityService.call(this);
+            IdentityService.call(this);
             this._usersByName = new Map();
             this._fetchStreamByUser = new WeakMap();
         }
