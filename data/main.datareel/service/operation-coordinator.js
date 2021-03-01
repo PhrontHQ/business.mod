@@ -352,6 +352,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
             }
 
             if(
+                (deserializedOperation.type ===  DataOperation.Type.AuthorizeConnectionOperation) ||
                 (deserializedOperation.type ===  DataOperation.Type.ReadOperation) ||
                 (deserializedOperation.type ===  DataOperation.Type.ConnectOperation) ||
                 (deserializedOperation.type ===  DataOperation.Type.CreateOperation) ||

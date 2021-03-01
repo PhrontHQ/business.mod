@@ -103,35 +103,65 @@ module.parent.exports.disconnect = exports.disconnect = (event, context, callbac
     https://www.serverless.com/framework/docs/providers/aws/events/websocket/
 */
 
+/*
+
+{
+  "Version": "2012-10-17",
+  "Id": "default",
+  "Statement": [
+    {
+      "Sid": "plumming-data-worker-staging-DefaultLambdaPermissionWebsockets-58YRP6F1TUNQ",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "apigateway.amazonaws.com"
+      },
+      "Action": "lambda:InvokeFunction",
+      "Resource": "arn:aws:lambda:us-west-2:545740467277:function:plumming-data-worker-staging-default"
+    }
+  ]
+}
+
+*/
+
 
 module.parent.exports.authorize = module.exports.authorize = async (event, context, callback) => {
 
 
     const worker = await workerPromise;
+    var authResponse;
+
     if(typeof worker.handleAuthorize === "function") {
         authResponse = await worker.handleAuthorize(event, context, callback);
     }
 
-    if(!authResponse) {
+    if(authResponse === undefined) {
 
         // return policy statement that allows to invoke the connect function.
         // in a real world application, you'd verify that the header in the event
         // object actually corresponds to a user, and return an appropriate statement accordingly
         authResponse = {
-            "principalId": "user",
+            "principalId": "me",
             "policyDocument": {
-            "Version": "2012-10-17",
-            "Statement": [
-                {
-                "Action": "execute-api:Invoke",
-                "Effect": "Allow",
-                "Resource": event.methodArn
-                }
-            ]
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                    "Action": "execute-api:Invoke",
+                    "Effect": "Allow",
+                    "Resource": event.methodArn
+                    }
+                ]
             }
+            /*,
+            context: {
+                "A": "a",
+                "OneTwoThree": 123,
+                "true": true
+            }
+            */
         };
 
     }
+    console.log("main authorize authResponse:",authResponse);
     callback(null, authResponse);
   };
 

@@ -23,6 +23,44 @@ exports.Worker = Target.specialize( /** @lends Worker.prototype */{
         value: undefined
     },
 
+    /**
+     * Walks a criteria's syntactic tree to assess if one of more an expression
+     * involving propertyName.
+     *
+     * @method
+     * @argument {AWS API Gateway Event} event - an event representing the request coming through the API Gateway.
+     * @argument {boolean} authorization - a boolean stated wether connection is authorized or not.
+     * @argument {responseContext} responseContext - context property on the authorization response.
+     *
+     * @returns {boolean} - boolean wether the criteri qualifies a value on propertyName.
+     */
+
+    responseForEventAuthorization: {
+        value: function(event, authorization, responseContext) {
+            return {
+                "principalId": "me",
+                "policyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                        "Action": "execute-api:Invoke",
+                        "Effect": authorization ? "Allow" : "Deny",
+                        "Resource": event.methodArn
+                        }
+                    ]
+                },
+                context: responseContext
+            };
+
+        }
+    },
+
+    handleAuthorize: {
+        value: function(event, context, callback) {
+
+        }
+    },
+
     handleConnect: {
         value: function(event, context, cb) {
             cb(null, {
