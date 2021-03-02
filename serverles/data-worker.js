@@ -133,11 +133,13 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
     handleAuthorize: {
         value: function(event, context, callback) {
 
-            var serializedIdentity = event.queryStringParameters.identity,
+            var base64EncodedSerializedIdentity = event.queryStringParameters.identity,
+                serializedIdentity,
                 identity, authorizeConnectionOperation;
 
 
-            if(serializedIdentity) {
+            if(base64EncodedSerializedIdentity) {
+                serializedIdentity = atob(base64EncodedSerializedIdentity);
                 this.deserializer.init(serializedIdentity, require, /*objectRequires*/undefined, /*module*/undefined, /*isSync*/true);
                 try {
                     identity = this.deserializer.deserializeObject();
@@ -158,7 +160,10 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                     return Promise.resolve(this.responseForEventAuthorization(event, false, /*responseContext*/error));
 
                 }
+
+                console.log("DataWorker handleAuthorize with identity:",identity);
             }
+
 
             if(!identity) {
                 /*

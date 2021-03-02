@@ -124,7 +124,25 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
     */
     _createSocket: {
         value: function() {
-            this._socket = new WebSocket(this.connection.websocketURL);
+            var applicationIdentity = this.application.identity,
+                serializedIdentity,
+                base64EncodedSerializedIdentity;
+
+            if(applicationIdentity) {
+                try {
+
+                    serializedIdentity = this._serializer.serializeObject(applicationIdentity);
+                    base64EncodedSerializedIdentity = btoa(serializedIdentity);
+
+                } catch(error) {
+                    console.error(error);
+                    throw error;
+                }
+
+
+            }
+
+            this._socket = new WebSocket(this.connection.websocketURL+"?identity="+base64EncodedSerializedIdentity);
 
             this._socket.addEventListener("open", this);
             this._socket.addEventListener("error", this);
