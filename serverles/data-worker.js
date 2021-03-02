@@ -139,7 +139,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
 
             if(base64EncodedSerializedIdentity) {
-                serializedIdentity = atob(base64EncodedSerializedIdentity);
+                serializedIdentity = Buffer.from(base64EncodedSerializedIdentity, 'base64').toString('binary');
                 this.deserializer.init(serializedIdentity, require, /*objectRequires*/undefined, /*module*/undefined, /*isSync*/true);
                 try {
                     identity = this.deserializer.deserializeObject();
