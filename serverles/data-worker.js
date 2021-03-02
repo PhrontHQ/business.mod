@@ -155,7 +155,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
                     // authorizeConnectionFailedOperation.target = this;
 
-                    return Promise.resolve(this.responseForEventAuthorization(event, false, /*responseContext*/error);
+                    return Promise.resolve(this.responseForEventAuthorization(event, false, /*responseContext*/error));
 
                 }
             }
