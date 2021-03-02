@@ -4,6 +4,7 @@ const Worker = require("./worker").Worker,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     OperationCoordinator = require("../data/main.datareel/service/operation-coordinator").OperationCoordinator,
     uuid = require("montage/core/uuid"),
+    Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
     currentEnvironment = require("montage/core/environment").currentEnvironment;
 
 const successfullResponse = {
