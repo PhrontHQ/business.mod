@@ -54,6 +54,9 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
 
                 */
 
+                /*
+                    DataOperations on their way out:
+                */
 
                 mainService.addEventListener(DataOperation.Type.ReadOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.UpdateOperation,this,false);
@@ -63,6 +66,30 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
                 mainService.addEventListener(DataOperation.Type.BatchOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.PerformTransactionOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.RollbackTransactionOperation,this,false);
+
+
+                /*
+                    DataOperation coming back with a referrer, we listen on ouselves
+                */
+                mainService.addEventListener(DataOperation.Type.NoOp,this,false);
+                mainService.addEventListener(DataOperation.Type.ReadFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.ReadCompletedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.UpdateFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.UpdateCompletedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.CreateFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.CreateCompletedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.DeleteFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.DeleteCompletedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.CreateTransactionFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.CreateTransactionCompletedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.BatchCompletedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.BatchFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.TransactionUpdatedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.PerformTransactionFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.PerformTransactionCompletedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.RollbackTransactionFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.RollbackTransactionCompletedOperation,this,false);
+
             }
         }
     },
@@ -187,8 +214,18 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
     handleClose: {
         value: function (event) {
             console.log("WebSocket closed with message:",event);
+            /*
+            this._failedConnections++;
+            if (this._failedConnections > 5) {
+                // The token we're trying to use is probably invalid, force
+                // sign in again
+                window.location.reload();
+            }
+            */
+            //this._stopHeartbeat();
         }
     },
+
 
     _operationListenerNamesByType: {
         value: new Map()
@@ -263,25 +300,196 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
         }
     },
 
+    /*
+      overriden to efficently counters the data structure
+      returned by AWS RDS DataAPI efficently
+    */
+      addOneRawData: {
+        value: function (stream, rawData, context) {
+            //Data coming from Postresql
+            if(Array.isArray(rawData)) {
+                return this.super(stream, JSON.parse(rawData[0].stringValue), context);
+            }
+            //Possible others
+            else {
+                return this.super(stream, rawData, context);
+            }
+        }
+    },
+
+    handleReadUpdateOperation: {
+        value: function (operation) {
+            var referrer = operation.referrerId,
+                objectDescriptor = operation.target,
+                records = operation.data,
+                stream = DataService.mainService.registeredDataStreamForDataOperation(operation),
+                streamObjectDescriptor;
+            // if(operation.type === DataOperation.Type.ReadCompletedOperation) {
+            //     console.log("handleReadCompleted  referrerId: ",operation.referrerId, "records.length: ",records.length);
+            // } else {
+            //     console.log("handleReadUpdateOperation  referrerId: ",operation.referrerId, "records.length: ",records.length);
+            // }
+            //if(operation.type === DataOperation.Type.ReadUpdateOperation) console.log("handleReadUpdateOperation  referrerId: ",referrer);
+
+            if(stream) {
+                streamObjectDescriptor = stream.query.type;
+                /*
+
+                    We now could get readUpdate that are reads for readExpressions that are properties (with a valueDescriptor) of the ObjectDescriptor of the referrer. So we need to add a check that the obectDescriptor match, otherwise, it needs to be assigned to the right instance, or created in memory and mapping/converters will find it.
+                */
+
+                if(streamObjectDescriptor === objectDescriptor) {
+                    if(records && records.length > 0) {
+                        //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
+                        this.addRawData(stream, records, operation);
+
+                    } else if(operation.type !== DataOperation.Type.ReadCompletedOperation){
+                        console.log("operation of type:"+operation.type+", has no data");
+                    }
+                } else {
+                    console.log("Received "+operation.type+" operation that is for a readExpression of referrer ",referrer);
+                }
+            } else {
+                console.log("receiving operation of type:"+operation.type+", but can't find a matching stream");
+            }
+        }
+    },
+
+    handleReadCompletedOperation: {
+        value: function (operation) {
+            this.handleReadUpdateOperation(operation);
+            //The read is complete
+            var stream = DataService.mainService.registeredDataStreamForDataOperation(operation);
+            if(stream) {
+                this.rawDataDone(stream);
+                //this._thenableByOperationId.delete(operation.referrerId);
+                DataService.mainService.unregisterDataStreamForDataOperation(operation);
+            } else {
+                console.log("receiving operation of type:"+operation.type+", but can't find a matching stream");
+            }
+            //console.log("handleReadCompleted -clear _thenableByOperationId- referrerId: ",operation.referrerId);
+
+        }
+    },
+
+    handleReadFailedOperation: {
+        value: function (operation) {
+            var stream = this._thenableByOperationId.get(operation.referrerId);
+            this.rawDataError(stream,operation.data);
+            DataService.mainService.unregisterDataStreamForDataOperation(operation);
+            //this._thenableByOperationId.delete(operation.referrerId);
+        }
+    },
+
+    handleOperationCompleted: {
+        value: function (operation) {
+            var referrerOperation = this._pendingOperationById.get(operation.referrerId);
+
+            /*
+                Right now, we listen for the types we care about, on the mainService, so we're receiving it all,
+                even those from other data services / types we don' care about, like the PlummingIntakeDataService.
+
+                One solution is to, when we register the types in the data service, to test if it handles operations, and if it does, the add all listeners. But that's a lot of work which will slows down starting time. A better solution would be to do like what we do with Components, where we find all possibly interested based on DOM structure, and tell them to prepare for a first delivery of that type of event. We could do the same as we know which RawDataService handle what ObjectDescriptor, which would give the RawDataService the ability to addListener() right when it's about to be needed.
+
+                Another solution could involve different "pools" of objects/stack, but we'd lose the universal bus.
+
+            */
+            if(!referrerOperation) {
+                return;
+            }
+
+            /*
+                After creation we need to do this:                   self.rootService.registerUniqueObjectWithDataIdentifier(object, dataIdentifier);
+
+                The referrerOperation could get hold of object, but it doesn't right now.
+                We could also create a uuid client side and not have to do that and deal wih it all in here which might be cleaner.
+
+                Now resolving the promise finishes the job in saveObjectData that has the object in scope.
+            */
+            referrerOperation._promiseResolve(operation);
+        }
+    },
+
+    handleOperationFailed: {
+        value: function (operation) {
+            var referrerOperation = this._pendingOperationById.get(operation.referrerId);
+
+            /*
+                After creation we need to do this:                   self.rootService.registerUniqueObjectWithDataIdentifier(object, dataIdentifier);
+
+                The referrerOperation could get hold of object, but it doesn't right now.
+                We could also create a uuid client side and not have to do that and deal wih it all in here which might be cleaner.
+
+                Now resolving the promise finishes the job in saveObjectData that has the object in scope.
+            */
+            referrerOperation._promiseResolve(operation);
+        }
+    },
+
+    handleCreateCompletedOperation: {
+        value: function (operation) {
+            this.handleOperationCompleted(operation);
+        }
+    },
+
+
+    handleUpdateCompletedOperation: {
+        value: function (operation) {
+            this.handleOperationCompleted(operation);
+        }
+    },
+
+    handleReadOperation: {
+        value: function (operation) {
+            if(this.handlesType(operation.target)) {
+                this._socketSendOperation(operation);
+            }
+        }
+    },
+
+    _socketSendOperation: {
+        value: function(operation) {
+            this._socketOpenPromise.then(() => {
+                var serializedOperation = this._serializer.serializeObject(operation);
+
+                //console.log("----> send operation "+serializedOperation);
+
+                // if(operation.type === "batch") {
+                //     var deserializer = new Deserializer();
+                //     deserializer.init(serializedOperation, require, undefined, module, true);
+                //     var deserializedOperation = deserializer.deserializeObject();
+                //     console.log(deserializedOperation);
+                // }
+
+                this._socket.send(serializedOperation);
+            });
+        }
+    },
 
     handleEvent: {
         value: function(operation) {
-            if(operation instanceof DataOperation) {
-                this._socketOpenPromise.then(() => {
-                    var serializedOperation = this._serializer.serializeObject(operation);
-
-                    //console.log("----> send operation "+serializedOperation);
-
-                    // if(operation.type === "batch") {
-                    //     var deserializer = new Deserializer();
-                    //     deserializer.init(serializedOperation, require, undefined, module, true);
-                    //     var deserializedOperation = deserializer.deserializeObject();
-                    //     console.log(deserializedOperation);
-                    // }
-
-                    this._socket.send(serializedOperation);
-                });
+            if(!this.handlesType(operation.target)) {
+                return;
             }
+
+            console.warn(("no concrete handling for event type "+operation.type));
+
+            // if(operation instanceof DataOperation) {
+            //     this._socketOpenPromise.then(() => {
+            //         var serializedOperation = this._serializer.serializeObject(operation);
+
+            //         //console.log("----> send operation "+serializedOperation);
+
+            //         // if(operation.type === "batch") {
+            //         //     var deserializer = new Deserializer();
+            //         //     deserializer.init(serializedOperation, require, undefined, module, true);
+            //         //     var deserializedOperation = deserializer.deserializeObject();
+            //         //     console.log(deserializedOperation);
+            //         // }
+
+            //         this._socket.send(serializedOperation);
+            //     });
+            // }
         }
     }
 
