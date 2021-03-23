@@ -340,7 +340,8 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
     handleOperation: {
         value: function(deserializedOperation, event, context, callback, gatewayClient) {
-            var self = this;
+            var self = this,
+                resultOperationPromise;
 
             /*
                 Workaround until we get the serialization/deserialization to work with an object passed with a label that is pre-existing and passed to both the serialiaer and deserializer on each side.
@@ -381,8 +382,12 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 return resultOperationPromise;
                 //resultOperationPromise = phrontService.handleRead(deserializedOperation);
                 //phrontService.handleRead(deserializedOperation);
-            } else if(deserializedOperation.type ===  DataOperation.Type.KeepAliveOperation) {
-                console.log("KeepAliveOperation received");
+            } else if(deserializedOperation.type ===  DataOperation.Type.KeepAliveOperation ||
+                deserializedOperation.type ===  DataOperation.Type.AuthorizeConnectionCompletedOperation) {
+                /*
+                    These are special cases we don't want to return ourselves to the client for now
+                */
+                // console.log("KeepAliveOperation received");
                 Promise.resolve(true);
             } else {
                 console.error("OperationCoordinator: not programmed to handle type of operation ",deserializedOperation);

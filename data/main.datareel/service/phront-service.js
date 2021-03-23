@@ -1110,6 +1110,29 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         value: 0
     },
 
+
+    /**
+     * Returns true as default so data are sorted according to a query's
+     * orderings. Subclasses can override this if they cam delegate sorting
+     * to another system, like a database for example, or an API, entirely,
+     * or selectively, using the aDataStream passed as an argument, wbich can
+     * help conditionally decide what to do based on the query's objectDescriptor
+     * or the query's orderings themselves.
+     *
+     * TODO: overrides to false as we should have that done by SQL
+     * when correct mapping from orderings to ORDER BY clause is done
+     *
+     * @public
+     * @argument {DataStream} dataStream
+     */
+
+    shouldSortDataStream: {
+        value: function (dataStream) {
+            return true;
+        }
+    },
+
+
     /*
 
         Notes about dealing with advanced readExpressions
