@@ -1,10 +1,13 @@
-const Worker = require("./worker").Worker,
+const   Worker = require("./worker").Worker,
         defaultEventManager = require("montage/core/event/event-manager").defaultEventManager,
         Identity = require("montage/data/model/identity").Identity,
+        IdentityDescriptor = require("montage/data/model/identity.mjson").montageObject,
+        AuthorizationPolicy = require("montage/data/service/authorization-policy").AuthorizationPolicy,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     OperationCoordinator = require("../data/main.datareel/service/operation-coordinator").OperationCoordinator,
     uuid = require("montage/core/uuid"),
     Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
+    Montage = require("montage/core/core").Montage,
     currentEnvironment = require("montage/core/environment").currentEnvironment;
 
 const successfullResponse = {
@@ -132,18 +135,19 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
     },
 
     handleAuthorize: {
-        value: function(event, context, callback) {
+        value: async function(event, context, callback) {
 
             var base64EncodedSerializedIdentity = event.queryStringParameters.identity,
                 serializedIdentity,
-                identity, authorizeConnectionOperation;
+                identityPromise, authorizeConnectionOperatio,
+                self = this;
 
 
             if(base64EncodedSerializedIdentity) {
                 serializedIdentity = Buffer.from(base64EncodedSerializedIdentity, 'base64').toString('binary');
-                this.deserializer.init(serializedIdentity, require, /*objectRequires*/undefined, /*module*/undefined, /*isSync*/true);
+                this.deserializer.init(serializedIdentity, this.require, /*objectRequires*/undefined, /*module*/undefined, /*isSync*/false);
                 try {
-                    identity = this.deserializer.deserializeObject();
+                    identityPromise = this.deserializer.deserializeObject();
                 } catch (error) {
                     /*
                         If there's a serializedIdentity and we can't deserialize it, we're the ones triggering the fail.
@@ -162,55 +166,90 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
                 }
 
+            }
+
+            return identityPromise.then(function(identity) {
+
                 console.log("DataWorker handleAuthorize with identity:",identity);
-            }
+                var identityObjectDescriptor;
+
+                if(!identity) {
+                    /*
+                        Without any info what to do? If it's a storefront kind of app, anonymous users should always connect, if it's about something more personal, we may want to refuse. MainService has AuthorizationPolicy and should be configured for that, so ideally we don't want to make that decision here. if it's onConnect, and we got nothing, we refuse connection.
+
+                        So we use an Anonymous identity singleton
+                    */
+                    if(self.mainService.authorizationPolicy === AuthorizationPolicy.OnConnect) {
+                        return self.responseForEventAuthorization(event, false, null);
+                    } else {
+                        identity = Identity.AnonymousIdentity;
+                        identityObjectDescriptor = IdentityDescriptor;
+                    }
+
+                } else {
+                    identityObjectDescriptor = self.mainService.objectDescriptorForObject(identity);
+                }
 
 
-            if(!identity) {
+                authorizeConnectionOperation = new DataOperation();
+
+                authorizeConnectionOperation.id = event.requestContext.requestId;
+                authorizeConnectionOperation.type = DataOperation.Type.AuthorizeConnectionOperation;
+                authorizeConnectionOperation.target = identityObjectDescriptor;
+                authorizeConnectionOperation.data = identity;
                 /*
-                    Without any info what to do? If it's a storefront kind of app, anonymous users should always connect, if it's about something more personal, we may want to refuse. MainService has AuthorizationPolicy and should be configured for that, so ideally we don't want to make that decision here.
-
-                    So we use an Anonymous identity singleton
+                    The following 2 lines are in OperationCoordinator as well, when it deserialize client-sent operations. We create connectOperation here as it's not sent by teh client, but by the Gateway itself
                 */
-               identity = Identity.AnonymousIdentity;
-            }
+                authorizeConnectionOperation.context = event;
+                //Set the clientId (in API already)
+                authorizeConnectionOperation.clientId = event.requestContext.connectionId;
 
-            authorizeConnectionOperation = new DataOperation();
+                self.setEnvironmentFromEvent(event);
 
-            authorizeConnectionOperation.id = event.requestContext.requestId;
-            authorizeConnectionOperation.type = DataOperation.Type.AuthorizeConnectionOperation;
-            authorizeConnectionOperation.target = identity;
-            /*
-                The following 2 lines are in OperationCoordinator as well, when it deserialize client-sent operations. We create connectOperation here as it's not sent by teh client, but by the Gateway itself
-            */
-           authorizeConnectionOperation.context = event;
-            //Set the clientId (in API already)
-            authorizeConnectionOperation.clientId = event.requestContext.connectionId;
+                /*
+                    Only the event from connect has headers informations, the only moment when we can get accept-language
+                    So we need to catch it and store it as we create the connection in the DB.
 
-            this.setEnvironmentFromEvent(event);
+                    We'll have to start being able to create full-fledge DO for that. If we move saveChanges to DataService,
+                    we should be able to use the main service directly? Then the operations created should just be dispatched locally,
+                    by whom?
 
-            /*
-                Only the event from connect has headers informations, the only moment when we can get accept-language
-                So we need to catch it and store it as we create the connection in the DB.
+                    That's what shpould probably happen client side as well, where the opertions are dispatched locally and the caught by an object that just push them on the WebSocket.
+                */
+                return new Promise(function(resolve, reject) {
 
-                We'll have to start being able to create full-fledge DO for that. If we move saveChanges to DataService,
-                we should be able to use the main service directly? Then the operations created should just be dispatched locally,
-                by whom?
+                    self.handleAuthorizePromiseResolve = resolve;
+                    self.handleAuthorizePromiseReject = reject;
 
-                That's what shpould probably happen client side as well, where the opertions are dispatched locally and the caught by an object that just push them on the WebSocket.
-            */
 
-           return this.operationCoordinator.handleOperation(authorizeConnectionOperation, event, context, callback, this.apiGateway)
-           .then(() => {
+                    return self.operationCoordinator.handleOperation(authorizeConnectionOperation, event, context, callback, this.apiGateway);
+                })
+                .then(() => {
 
-                return this.responseForEventAuthorization(event, true, null);
+                    return self.responseForEventAuthorization(event, true, null);
 
-           }).catch((error) => {
-                console.error("this.operationCoordinator.handleOperation error:",error);
-                return this.responseForEventAuthorization(event, false, error);
+                }).catch((error) => {
+                    console.error("this.operationCoordinator.handleOperation error:",error);
+                    return self.responseForEventAuthorization(event, false, error);
 
-                // callback(failedResponse(500, JSON.stringify(err)))
-           });
+                    // callback(failedResponse(500, JSON.stringify(err)))
+                });
+
+
+            });
+
+
+        }
+    },
+
+    handleAuthorizeConnectionCompletedOperation: {
+        value: function(authorizeConnectionCompletedOperation) {
+            this.handleAuthorizePromiseResolve(authorizeConnectionCompletedOperation);
+        }
+    },
+    handleAuthorizeConnectionFailedOperation: {
+        value: function(authorizeConnectionFailedOperation) {
+            this.handleAuthorizePromiseReject(authorizeConnectionFailedOperation);
         }
     },
 

@@ -1,5 +1,6 @@
 var Target = require("montage/core/target").Target,
-defaultEventManager = require("montage/core/event/event-manager").defaultEventManager;
+defaultEventManager = require("montage/core/event/event-manager").defaultEventManager,
+Montage = require("montage/core/core").Montage;
 
 
 /**
@@ -23,6 +24,18 @@ exports.Worker = Target.specialize( /** @lends Worker.prototype */{
         value: undefined
     },
 
+    _require: {
+        value: undefined
+    },
+
+    require: {
+        get: function() {
+            return this._require || (this._require = Montage.getInfoForObject(this).require);
+        }
+    },
+
+
+
     /**
      * Walks a criteria's syntactic tree to assess if one of more an expression
      * involving propertyName.
@@ -37,7 +50,7 @@ exports.Worker = Target.specialize( /** @lends Worker.prototype */{
 
     responseForEventAuthorization: {
         value: function(event, authorization, responseContext) {
-            return {
+            var response = {
                 "principalId": "me",
                 "policyDocument": {
                     "Version": "2012-10-17",
@@ -48,11 +61,32 @@ exports.Worker = Target.specialize( /** @lends Worker.prototype */{
                         "Resource": event.methodArn
                         }
                     ]
-                },
-                context: responseContext
+                }
             };
 
+            if(responseContext) {
+                response.context =  responseContext;
+            }
+            return response;
         }
+    },
+
+    /**
+     * Holds the resolve function for the current authorize flow.
+     *
+     * @property {function}
+     */
+    handleAuthorizePromiseResolve: {
+        value: undefined
+    },
+
+    /**
+     * Holds the reject function for the current authorize flow.
+     *
+     * @property {function}
+     */
+     handleAuthorizePromiseReject: {
+        value: undefined
     },
 
     handleAuthorize: {

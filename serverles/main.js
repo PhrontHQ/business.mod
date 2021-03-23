@@ -12,7 +12,7 @@ var workerPromise;
 
 /*
     The idea here is to run main.js as if it were in the final function itself,
-    to standaardize and reuse shared logic and shift it to our own objects,
+    to standardize and reuse shared logic and shift it to our own objects,
     the worker that can be subclassed, and other setups that can be serialized
     and where serialization can be reused.
 
@@ -161,8 +161,23 @@ module.parent.exports.authorize = module.exports.authorize = async (event, conte
         };
 
     }
-    console.log("main authorize authResponse:",authResponse);
+
+    var statements = authResponse.policyDocument.Statement,
+        iStatement,
+        countI = statements.length,
+        i = 0;
+
+    for(; ( i < countI); i++ ) {
+        if(statements[i].Effect !== "Allow") {
+            console.log("main authorize authResponse Deny:",authResponse);
+            callback("Unauthorized");
+            return;
+        }
+    }
+
+    console.log("main authorize authResponse Allow:",authResponse);
     callback(null, authResponse);
+
   };
 
 
