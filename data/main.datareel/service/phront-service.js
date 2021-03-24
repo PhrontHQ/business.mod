@@ -867,7 +867,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 operationLocales,
                 mapping = this.mappingForType(objectDescriptor),
                 rawDataMappingRules = mapping.rawDataMappingRules,
-                readExpressions = readOperation.data.readExpressions,
+                readExpressions = readOperation.data?.readExpressions,
                 // readExpressionsCount = (readExpressions && readExpressions.length) || 0,
                 rawDataPrimaryKeys = mapping.rawDataPrimaryKeys,
                 //We start by the mandatory, but the read operation could have
@@ -909,9 +909,9 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 self = this,
                 HAS_DATA_API_UUID_ARRAY_BUG = this.HAS_DATA_API_UUID_ARRAY_BUG,
                 rule, propertyName, propertyDescriptor,
-                rawOrderings = readOperation.data.orderings,
-                readLimit = readOperation.data.readLimit,
-                readOffset = readOperation.data.readOffset;
+                rawOrderings = readOperation.data?.orderings,
+                readLimit = readOperation.data?.readLimit,
+                readOffset = readOperation.data?.readOffset;
 
             //Take care of locales
             operationLocales = readOperation.locales;
@@ -1215,7 +1215,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 iPreviousReadOperationExecutionPromise,
                 objectDescriptor = readOperation.target,
                 mapping = this.mappingForType(objectDescriptor),
-                readExpressions = readOperation.data.readExpressions,
+                readExpressions = readOperation.data?.readExpressions,
                 readExpressionsCount = (readExpressions && readExpressions.length) || 0,
                 rawDataPrimaryKeys = mapping.rawDataPrimaryKeys,
                 criteria = readOperation.criteria,
