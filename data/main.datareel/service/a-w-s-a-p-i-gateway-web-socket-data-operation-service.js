@@ -253,17 +253,17 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
 
             if(serializedOperation) {
                 var deserializedOperation,
-                operation,
+                operationPromise,
                 objectRequires,
                 module,
-                isSync = true;
+                isSync = false;
 
                 if(serializedOperation.indexOf('{"message": "Internal server error"') === 0) {
                      console.warn(event.data);
                 } else {
                     try {
                         this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
-                        operation = this._deserializer.deserializeObject();
+                        operationPromise = this._deserializer.deserializeObject();
                     } catch (e) {
                         //Happens when serverless infra hasn't been used in a while:
                         //TODO: apptempt at least 1 re-try
@@ -273,8 +273,10 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
                     }
                 }
 
-                if(operation) {
-                    defaultEventManager.handleEvent(operation);
+                if(operationPromise) {
+                    operationPromise.then(function(operation) {
+                        defaultEventManager.handleEvent(operation);
+                    })
                 }
 
                 // if(operation) {
@@ -374,8 +376,9 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
 
     handleReadFailedOperation: {
         value: function (operation) {
-            var stream = this._thenableByOperationId.get(operation.referrerId);
+            var stream = DataService.mainService.registeredDataStreamForDataOperation(operation);
             this.rawDataError(stream,operation.data);
+
             DataService.mainService.unregisterDataStreamForDataOperation(operation);
             //this._thenableByOperationId.delete(operation.referrerId);
         }
