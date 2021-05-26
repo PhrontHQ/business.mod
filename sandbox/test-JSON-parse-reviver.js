@@ -12,9 +12,9 @@ var aTestStr =
                 {"@": "company"},
                 {"@": "address1"},
                 {"@": "address2"},
-                {"@": "city"},
-                {"@": "provinceCode"},
-                {"@": "zip"},
+                {"@": "locality"},
+                {"@": "subLocality"},
+                {"@": "primaryPostalCode"},
                 {"@": "country"},
                 {"@": "latitude"},
                 {"@": "longitude"}
@@ -34,7 +34,7 @@ var aTestStr =
         "object": "data/main.datareel/model/messaging-channel/postal-address"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/object.mjson"
+        "object": "data/main.datareel/model/data-object.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -85,24 +85,24 @@ var aTestStr =
             "valueType": "string"
         }
     },
-    "city": {
+    "locality": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "city",
+            "name": "locality",
             "valueType": "string"
         }
     },
-    "provinceCode": {
+    "subLocality": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "provinceCode",
+            "name": "subLocality",
             "valueType": "string"
         }
     },
-    "zip": {
+    "primaryPostalCode": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "zip",
+            "name": "primaryPostalCode",
             "valueType": "string"
         }
     },
