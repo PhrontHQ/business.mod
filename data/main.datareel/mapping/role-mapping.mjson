@@ -14,6 +14,10 @@
                     },
                     "tags": {
                         "<->": "tags"
+                    },
+                    "eventsWithParticipationRole": {
+                        "<->": "id",
+                        "converter": {"@": "eventsWithParticipationRoleConverter"}
                     }
                }
             },
@@ -29,6 +33,12 @@
 
     "RoleDescriptor": {
         "object": "data/main.datareel/model/role.mjson"
+    },
+    "eventsWithParticipationRoleConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "participationRoleIds.has($)"
+        }
     }
 
 }

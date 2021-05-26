@@ -6,7 +6,8 @@
             "propertyDescriptors": [
                 {"@": "name"},
                 {"@": "description"},
-                {"@": "tags"}
+                {"@": "tags"},
+                {"@": "eventsWithParticipationRole"}
             ],
             "objectDescriptorModule": {
                 "%":"data/main.datareel/model/role.mjson"
@@ -50,5 +51,18 @@
             "valueType": "string",
             "cardinality": -1
         }
+    },
+    "eventsWithParticipationRole": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "eventsWithParticipationRole",
+            "cardinality": -1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "EventDescriptor"},
+            "inversePropertyName": "participationRoles"
+        }
+    },
+    "EventDescriptor": {
+        "object": "data/main.datareel/model/event.mjson"
     }
 }

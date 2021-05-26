@@ -169,7 +169,8 @@
             "cardinality": -1,
             "valueType": "object",
             "valueDescriptor": {"@": "role-descriptor"},
-            "drescription": "Organizer, attendee, are very important role in any setting, but roles will allow more elaborated semantics in the context of things like service engagements or tasks in a project for example."
+            "inversePropertyName": "eventsWithParticipationRole",
+            "description": "Organizer, attendee, are very important role in any setting, but roles will allow more elaborated semantics in the context of things like service engagements or tasks in a project for example."
         }
     },
     "role-descriptor": {
