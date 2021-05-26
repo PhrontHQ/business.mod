@@ -1,6 +1,9 @@
 "use strict";
 
+const { result } = require("lodash");
+
 var parse = require("montage/core/frb/parse"),
+    solve = require("montage/core/frb/algebra"),
     precedence = require("montage/core/frb/language").precedence,
     typeToToken = require("montage/core/frb/language").operatorTypes,
     tokenToType = require("montage/core/frb/language").operatorTokens,
@@ -13,7 +16,15 @@ var parse = require("montage/core/frb/parse"),
     RangeDescriptor = require("montage/core/range.mjson").montageObject,
     Range = require("montage/core/range").Range,
     EqualsToken = "==",
-    DataServiceUserLocales = "DataServiceUserLocales";
+    DataServiceUserLocales = "DataServiceUserLocales",
+    SyntaxIteratorModule = require("montage/core/frb/syntax-iterator"),
+    SyntaxIteratorModule = require("montage/core/frb/syntax-iterator"),
+    SQLJoinModule = require("./s-q-l-join"),
+    SQLJoinType = SQLJoinModule.SQLJoinType,
+    SQLJoin = SQLJoinModule.SQLJoin,
+    // SQLJoinStatements = require("./s-q-l-join-statements").SQLJoinStatements,
+    SyntaxPostOrderIterator = SyntaxIteratorModule.SyntaxPostOrderIterator,
+    SyntaxInOrderIterator = SyntaxIteratorModule.SyntaxInOrderIterator;
 
 // module.exports.stringify = stringify;
 // function stringify(syntax, scope) {
@@ -51,9 +62,7 @@ var parse = require("montage/core/frb/parse"),
 function makeBlockStringifier(type) {
     return function (syntax, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements) {
         /*
-            Entering a blocl means we're entering an array so the syntax inside the block is built for the type of objects right before the block
-
-
+            Entering a block means we're entering an array so the syntax inside the block is built for the type of objects right before the block
         */
        var  _propertyNameStringifier = makeBlockStringifier._propertyName || (makeBlockStringifier._propertyName = dataService.stringifiers._propertyName),
             dataMappingStartLength = dataMappings.length,
@@ -63,35 +72,76 @@ function makeBlockStringifier(type) {
             filteredPropertyName,
             filteredPropertyDescriptor,
             filteredPropertyValueDescriptor,
+            joinToFilteredProperty,
+            propertyFilteredSyntaxArg0Type,
             result;
 
-        if(propertyFilteredSyntax.args[0].type === "value") {
-            filteredPropertyName = propertyFilteredSyntax.args[1].value;
-        } else if(propertyFilteredSyntax.args[0].type === "parameters") {
-            filteredPropertyName = scope[propertyFilteredSyntax.args[1].value];
-        }
+        joinToFilteredProperty =  dataService.stringify(syntax.args[0], scope, dataMappings, locales, rawExpressionJoinStatements, syntax);
 
-        /*
-            First we need to take care of filteredPropertyName, which adds the mapping of filteredPropertyName's valueDescriptor if any to the dataMappings array.
-        */
-        var joinToFilteredProperty =  _propertyNameStringifier(filteredPropertyName, scope, syntax, dataService, dataMappings, locales, rawExpressionJoinStatements);
+
+        // if((propertyFilteredSyntaxArg0Type = propertyFilteredSyntax.args[0].type) === "value") {
+
+        //     //We should be able to use the generic top level method to route stringifiers.
+        //     // joinToFilteredProperty = dataService.stringify(propertyFilteredSyntax, scope, dataMappings, locales, rawExpressionJoinStatements, syntax);
+
+        //     filteredPropertyName = propertyFilteredSyntax.args[1].value;
+        //     /*
+        //         we need to take care of filteredPropertyName, which adds the mapping of filteredPropertyName's valueDescriptor if any to the dataMappings array.
+        //     */
+        //     joinToFilteredProperty =  _propertyNameStringifier(filteredPropertyName, scope, syntax, dataService, dataMappings, locales, rawExpressionJoinStatements);
+
+        // } else if(propertyFilteredSyntaxArg0Type === "parameters") {
+        //     filteredPropertyName = scope[propertyFilteredSyntax.args[1].value];
+        //     /*
+        //         we need to take care of filteredPropertyName, which adds the mapping of filteredPropertyName's valueDescriptor if any to the dataMappings array.
+        //     */
+        //     joinToFilteredProperty =  _propertyNameStringifier(filteredPropertyName, scope, syntax, dataService, dataMappings, locales, rawExpressionJoinStatements);
+
+        // } else if(propertyFilteredSyntaxArg0Type === "property") {
+
+        //     /*
+        //         FIXME: Tried to, but here it seems like we should be able to delegate the processing of chanined properties leading to the filter block (left) to the generic dataService.stringify, but it doesn't handle joins properly as it's been handled in a more custom way so far. We should fix this, but until then, we leverage _propertyNameStringifier() that does handle the joins manually to get the work done.
+        //     */
+        //     //joinToFilteredProperty = dataService.stringify(propertyFilteredSyntax, scope, dataMappings, locales, rawExpressionJoinStatements, syntax);
+
+        //     /*
+        //         Here there could be be multiple chained properties leading to the filterBlock.
+        //     */
+        //     var iterator = new SyntaxInOrderIterator(propertyFilteredSyntax, "property"),
+        //     currentSyntax;
+        //     while ((currentSyntax = iterator.next("property").value)) {
+        //         filteredPropertyName = currentSyntax.args[1].value;
+        //         //console.log("filteredPropertyName: ",filteredPropertyName);
+
+        //         /*
+        //             we're not really expecting _propertyNameStringifier() to return anything here besides an empty string
+        //         */
+
+        //         joinToFilteredProperty =  _propertyNameStringifier(filteredPropertyName, scope, syntax, dataService, dataMappings, locales, rawExpressionJoinStatements);
+        //         //console.log("joinToFilteredProperty:",joinToFilteredProperty);
+        //     }
+        // }
+
 
 
         //Then we need to stingify the content of the filter, but first we need to dive in one level:
-        filteredPropertyDescriptor = parentObjectDescriptor.propertyDescriptorForName(filteredPropertyName);
-        filteredPropertyValueDescriptor = filteredPropertyDescriptor ? filteredPropertyDescriptor._valueDescriptorReference : null;
+        // filteredPropertyDescriptor = parentObjectDescriptor.propertyDescriptorForName(filteredPropertyName);
+        // filteredPropertyValueDescriptor = filteredPropertyDescriptor ? filteredPropertyDescriptor._valueDescriptorReference : null;
 
-        if(!filteredPropertyValueDescriptor) {
-            console.error("Could not find value descriptor for property named '"+filteredPropertyName+"'");
-        }
+        // if(!filteredPropertyValueDescriptor) {
+        //     console.error("Could not find value descriptor for property named '"+filteredPropertyName+"'");
+        // }
         //dataMappings.push(dataService.mappingForType(filteredPropertyValueDescriptor));
         //_propertyNameStringifier added the mapping of
 
 
         var filterExpressionStringified =  dataService.stringify(syntax.args[1], scope, dataMappings, locales, rawExpressionJoinStatements, syntax);
 
-        //Remove whatever was added before we leave our scope:
+        //The left side (0) leads to the filter and set the rigt contex, so we remove whatever was added before we leave our scope by the right side (args[1]):
         dataMappings.splice(dataMappingStartLength);
+        if(dataMappings.aliases) {
+            dataMappings.aliases.splice(dataMappingStartLength);
+        }
 
         result = ` ${joinToFilteredProperty} ${filterExpressionStringified}`;
 
@@ -209,8 +259,10 @@ module.exports = {
             )
         ) {
             return string;
-        } else {
+        } else if(string && string.length) {
             return "(" + string + ")";
+        } else {
+            return string;
         }
     },
 
@@ -234,6 +286,7 @@ module.exports = {
             i, countI, args,
             dataMapping = dataMappings[dataMappings.length-1],
             objectDescriptor = dataMapping.objectDescriptor,
+            tableName = dataService.tableForObjectDescriptor(objectDescriptor),
             propertyDescriptor, propertyValueDescriptor;
 
             //chain = "(";
@@ -247,7 +300,8 @@ module.exports = {
                 propertyValueDescriptor = propertyDescriptor ? propertyDescriptor._valueDescriptorReference : null;
 
                 if((propertyName === "id" || (propertyDescriptor && propertyDescriptor.cardinality === 1)) && Array.isArray(scope)) {
-                    propertyName = `ARRAY[${propertyName}]`;
+                    //propertyName = `ARRAY[${propertyName}]`;
+                    propertyName = `ARRAY[${escapeIdentifier(tableName)}.${escapeIdentifier(propertyName)}]`;
                 }
                 // if((propertyName === "id" || (propertyDescriptor && propertyDescriptor.cardinality === 1))) {
                 //     propertyName = `ARRAY[${propertyName}]`;
@@ -306,7 +360,9 @@ module.exports = {
                 propertyValueDescriptor = propertyDescriptor ? propertyDescriptor._valueDescriptorReference : null;
 
                 if((propertyName === "id" || (propertyDescriptor && propertyDescriptor.cardinality === 1)) && Array.isArray(value)) {
-                    propertyName = `ARRAY[${propertyName}]`;
+                    // propertyName = `ARRAY[${propertyName}]`;
+                    propertyName = `ARRAY[${escapeIdentifier(tableName)}.${escapeIdentifier(propertyName)}]`;
+
                 }
                 escapedValue = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
             }
@@ -323,7 +379,8 @@ module.exports = {
             }
 
             if((propertyName === "id" || (propertyDescriptor && propertyDescriptor.cardinality === 1)) && Array.isArray(scope)) {
-                propertyName = `ARRAY[${propertyName}]`;
+                //propertyName = `ARRAY[${propertyName}]`;
+                propertyName = `ARRAY[${escapeIdentifier(tableName)}.${escapeIdentifier(propertyName)}]`;
                 escapedValue = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
             } else {
                 rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
@@ -458,7 +515,21 @@ module.exports = {
         },
 
         literal: function (syntax, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements) {
-            if (typeof syntax.value === 'string') {
+            //New to replace a case in _propertyName
+            if(parent.type === "property") {
+                //console.log("literal: parent.type === 'property': "+syntax.value);
+                return dataService.stringifiers._propertyName(syntax.value, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements);
+
+                var lastDataMappingIndex = dataMappings.length-1,
+                    dataMapping = dataMappings[lastDataMappingIndex],
+                    objectDescriptor = dataMapping.objectDescriptor,
+                    tableName = dataMappings.aliases && (tableName = dataMappings.aliases[lastDataMappingIndex])
+                    ? tableName
+                    : dataService.tableForObjectDescriptor(objectDescriptor);
+
+                return `${escapeIdentifier(tableName)}.${escapeIdentifier(syntax.value)}`;
+            }
+            else if (typeof syntax.value === 'string') {
                 return "'" + syntax.value.replace("'", "\\'") + "'";
             } else {
                 return "" + syntax.value;
@@ -526,12 +597,99 @@ module.exports = {
 
         inlineCriteriaParameters: true,
 
+
+        /**
+         * Transforms a concat statement to it's SQL part. The point is to "merge" to arrays.
+         * Our first implementation needs to support it in the context of this expression:
+         *
+         * "services.concat(parent.services).filter{variants.filter{serviceEngagements.filter{originId == $.serviceEngagementOriginId}}}"
+         * combined with another into:
+         * id == $parameter1 && services.concat(parent.services).filter{variants.filter{serviceEngagements.filter{originId == $serviceEngagementOriginId}}}
+         *
+         * 1. A first approach removes the second join between organization for parents, since both ends up joining servies, which becomes equivalent to do:
+         *
+         *          SELECT *
+         *          FROM phront."Organization"
+         *  >>>>>   JOIN "phront"."Service" ON ("Organization".id = "Service"."vendorId" or "Organization".parent = "Service"."vendorId")
+         *          JOIN "phront"."ServiceProductVariant" ON "ServiceProductVariant".id = ANY ("Service"."variantIds")
+         *          JOIN "phront"."ServiceEngagement" ON "ServiceProductVariant".id = "ServiceEngagement"."serviceVariantId"
+         *          WHERE ("Organization"."id" = 'f643fca5-f539-4335-98d1-17f42b354234' AND ("ServiceEngagement"."originId" = '187cfa9a-c303-4737-a770-17d46e7524a4'))
+         *
+         *      This is an optimization. The current logic would create a join for parent, like:
+         *      JOIN "phront"."Organization" "parentOrganization" ON ("parentOrganization".id = "Organization"."parent")
+         *
+         *      but this doesn't work in all cases becauses it reduces the rows too much before we get to the condition in where for id == $parameter1,
+         *      unless we use a left outer join:
+         *
+         *          LEFT JOIN "phront"."Organization" "parentOrganization" ON ("parentOrganization".id = "Organization"."parent")
+         *
+         *      which we can only know that after the fact, after all is processed as individual branches don't have access to ther whole tree.
+         *      We could change that but should we? Should node type stringifier should account what's above? Doesn't feels right. The parent could pass a hint?
+         *
+         * 2. A second approach keeps it, but the left join is still needed:
+         *
+         *      This one doesn't need a second pass, if we're able to determine locally that a left join is needed. Is the presence of an alias one?
+         *      An OR might require one as well.
+         *
+         *          SELECT *
+         *          FROM phront."Organization"
+         *          LEFT JOIN "phront"."Organization" "parentOrganization" ON ("parentOrganization".id = "Organization"."parent")
+         *          JOIN "phront"."Service" ON ("Organization".id = "Service"."vendorId" or "parentOrganization".id = "Service"."vendorId")
+         *          JOIN "phront"."ServiceProductVariant" ON "ServiceProductVariant".id = ANY ("Service"."variantIds")
+         *          JOIN "phront"."ServiceEngagement" ON "ServiceProductVariant".id = "ServiceEngagement"."serviceVariantId"
+         *          WHERE ("Organization"."id" = 'f643fca5-f539-4335-98d1-17f42b354234' AND ("ServiceEngagement"."originId" = '187cfa9a-c303-4737-a770-17d46e7524a4'))
+         *
+         * 3. A third approach is to bring a condition on a property used as a join in the join itself rather than doing it in the where. This means no LEFT JOIN is needed
+         *      It would look like this:
+         *
+         *          SELECT distinct (
+	     *               SELECT to_jsonb(_)
+         *               FROM (
+         *                   SELECT "Organization"."id","Organization"."publicationDate","Organization"."modificationDate",
+         *                          "Organization"."creationDate","Organization"."originId",
+         *                          "Organization"."imageIds","Organization"."socialProfileIds","Organization"."urlAddresses",
+         *                          "Organization"."existenceTimeRange", "Organization"."userPoolIds","Organization"."customerEngagementQuestionnaireIds",
+         *                          "Organization"."mainContactId","Organization"."tags", "Organization"."suborganizations","Organization"."parent",
+         *                          "Organization"."type","Organization"."name"
+         *                ) as _
+         *            )
+         *
+         *          FROM phront."Organization"
+         *
+         *          JOIN "phront"."Organization" "parentOrganization" ON (
+         *              "parentOrganization".id = "Organization"."parent"
+         *              or
+         *              "Organization"."id" = '19a4daba-199b-4566-8fe2-29722af69a00'
+         *          )
+         *          JOIN "phront"."Service" ON (
+         *              "Organization".id = "Service"."vendorId"
+         *              or
+         *              "parentOrganization".id = "Service"."vendorId")
+         *          JOIN "phront"."ServiceProductVariant" ON "ServiceProductVariant".id = ANY ("Service"."variantIds")
+         *          JOIN "phront"."ServiceEngagement" ON "ServiceProductVariant".id = "ServiceEngagement"."serviceVariantId"
+         *
+         *          WHERE (
+         *              "Organization"."id" = '19a4daba-199b-4566-8fe2-29722af69a00' //----> this is redundant and should be removed
+         *              AND
+         *              ("ServiceEngagement"."originId" = '187cfa9a-c303-4737-a770-17d46e7524a4')
+         *          )
+         *
+         * @type {number}
+         */
+
+        concat: function (syntax, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements) {
+            console.log("concat syntax:",syntax);
+
+        },
         _propertyName: function (propertyName, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements) {
 
-            var dataMapping = dataMappings[dataMappings.length-1],
+            var lastDataMappingIndex = dataMappings.length-1,
+                dataMapping = dataMappings[lastDataMappingIndex],
                 objectDescriptor = dataMapping.objectDescriptor,
                 schemaName = dataService.connection.schema,
-                tableName = dataService.tableForObjectDescriptor(objectDescriptor),
+                tableName = dataMappings.aliases && (tableName = dataMappings.aliases[lastDataMappingIndex])
+                ? tableName
+                : dataService.tableForObjectDescriptor(objectDescriptor),
                 rawPropertyValue = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName),
                 // rule = dataMapping.rawDataMappingRules.get(rawPropertyValue),
                 objectRule = dataMapping.objectMappingRules.get(propertyName),
@@ -541,8 +699,13 @@ module.exports = {
                 //propertyValueDescriptor = propertyDescriptor.valueDescriptor;
                 //So until we fix this, tap into the private instance variable that contains what we want:
                 propertyDescriptorValueDescriptor = propertyDescriptor ? propertyDescriptor._valueDescriptorReference : null,
+                propertyDescriptorValueDescriptorAlias,
                 language, region,
                 //propertyDescriptorValueDescriptor = propertyDescriptor.valueDescriptor,
+                resultJoinString,
+                resultJoin,
+                joinConditionLeftSide,
+                joinCondition,
                 result;
 
             if(locales) {
@@ -558,7 +721,40 @@ module.exports = {
             //if(propertyDescriptor && propertyDescriptor.cardinality > 1) {
             if(propertyDescriptor && propertyDescriptorValueDescriptor) {
 
+
+
+                /*
+                    If the property is a relationship to the same object descriptor, we need to alias in SQL.
+                    Instead of using numbers and keep track of what number maps to what relationship,
+                    we're going to bake the semantic in the name, which hopefully works out for many cases,
+                    until we run into one where a new alias would be needed, but we'll cross that bridge
+                    when we have to
+                */
+                if(propertyDescriptorValueDescriptor === objectDescriptor) {
+                    propertyDescriptorValueDescriptorAlias = `${rawPropertyValue}${tableName}`;
+
+                    if(!dataMappings.aliases) {
+                        dataMappings.aliases = [];
+                    }
+                }
+
                 //propertyDescriptorValueDescriptor = propertyDescriptor._valueDescriptorReference;
+
+                /*
+                    Create the SQLJoin and set shared properties
+                */
+
+
+                resultJoin = new SQLJoin();
+                resultJoin.leftDataSet = tableName;
+                resultJoin.rightDataSet = propertyDescriptorValueDescriptor.name;
+                resultJoin.rightDataSetAlias = propertyDescriptorValueDescriptorAlias;
+                resultJoin.rightDataSetSchema = schemaName;
+
+                if(propertyDescriptorValueDescriptorAlias) {
+                    resultJoin.type = SQLJoinType.LeftJoin
+                }
+
 
                 /*
                     This is the case where the table hosts the array of ids
@@ -573,12 +769,12 @@ module.exports = {
 
                         But if we're entering a block we need to do a join.
                     */
-                    if(
-                        (dataMappings.length === 1 && !propertyDescriptorValueDescriptor) ||
-                        (parent.type !== "scope" && !parent.type.endsWith("Block"))
-                    ) {
-                        result = `${escapeIdentifier(tableName)}.${escapeIdentifier(rawPropertyValue)}`;
-                    } else {
+                    // if(
+                    //     (dataMappings.length === 1 && !propertyDescriptorValueDescriptor) ||
+                    //     (parent.type !== "scope" && !parent.type.endsWith("Block"))
+                    // ) {
+                    //     result = `${escapeIdentifier(tableName)}.${escapeIdentifier(rawPropertyValue)}`;
+                    // } else {
 
                     /*
                         We're trying to transform Service's vendors into something like:
@@ -599,24 +795,77 @@ module.exports = {
                         */
 
                             if(propertyDescriptor.cardinality > 1) {
-                                result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = ANY (COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}'))`;
+
+
+                                result = joinConditionLeftSide = `ANY (COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}'))`;
+                                joinCondition = `"${resultJoin.rightDataSetAlias ? propertyDescriptorValueDescriptorAlias : resultJoin.rightDataSet}".id = ${joinConditionLeftSide}`;
+
+
+                                /*
+                                    Previous string based implementation, the LEFT JOIN here was added as an attempt to handle a JOIN wiuth an OR node that wouldn't work without. With the new SQLJoin object, the OR can do that himself if needed now if we don't have a local reason to do so here.
+                                */
+                                resultJoinString = propertyDescriptorValueDescriptorAlias
+                                    ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${propertyDescriptorValueDescriptorAlias}".id = ${joinConditionLeftSide}`
+                                    : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = ${joinConditionLeftSide}`;
+                                console.log("resultJoinString: ",resultJoinString);
+
                             } else {
-                                result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
+
+                                result = joinConditionLeftSide = `COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
+                                joinCondition = `"${resultJoin.rightDataSetAlias ? propertyDescriptorValueDescriptorAlias : resultJoin.rightDataSet}".id = ${joinConditionLeftSide}`;
+
+                                resultJoinString = propertyDescriptorValueDescriptorAlias
+                                    ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${propertyDescriptorValueDescriptorAlias}".id = COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}')`
+                                    : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
+
+                                console.log("resultJoinString: ",resultJoinString);
+
                             }
+
+                            //resultJoin.onConditions.add(joinCondition);
+                            resultJoin.onCondition = joinCondition;
+
 
                         } else {
                             if(propertyDescriptor.cardinality > 1) {
-                                result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = ANY ("${tableName}"."${rawPropertyValue}")`;
+
+                                result = joinConditionLeftSide = `ANY ("${tableName}"."${rawPropertyValue}")`;
+                                joinCondition = `"${resultJoin.rightDataSetAlias ? propertyDescriptorValueDescriptorAlias : resultJoin.rightDataSet}".id = ${joinConditionLeftSide}`;
+
+                                resultJoinString = propertyDescriptorValueDescriptorAlias
+                                    ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${propertyDescriptorValueDescriptorAlias}".id = ANY ("${tableName}"."${rawPropertyValue}")`
+                                    : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = ANY ("${tableName}"."${rawPropertyValue}")`;
+
+                                //console.log("resultJoinString: ",resultJoinString);
+
                             } else {
-                                result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = "${tableName}"."${rawPropertyValue}"`;
+
+                                result = joinConditionLeftSide = `"${tableName}"."${rawPropertyValue}"`;
+                                joinCondition = `"${resultJoin.rightDataSetAlias ? propertyDescriptorValueDescriptorAlias : resultJoin.rightDataSet}".id = ${joinConditionLeftSide}`;
+
+                                resultJoinString = propertyDescriptorValueDescriptorAlias
+                                    ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${propertyDescriptorValueDescriptorAlias}".id = "${tableName}"."${rawPropertyValue}"`
+                                    : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = "${tableName}"."${rawPropertyValue}"`;
+
+                                //console.log("resultJoinString: ",resultJoinString);
+
+
                             }
+
+                            //resultJoin.onConditions.add(joinCondition);
+                            resultJoin.onCondition = joinCondition;
+
                         }
 
-                        rawExpressionJoinStatements.add(result);
+                        rawExpressionJoinStatements.add(resultJoin);
                         dataMappings.push(dataService.mappingForType(propertyDescriptorValueDescriptor));
 
-                        result = "";
-                    }
+                        if(propertyDescriptorValueDescriptorAlias) {
+                            dataMappings.aliases[dataMappings.length-1] = propertyDescriptorValueDescriptorAlias;
+                        }
+
+                        //result = "";
+                    //}
 
                     return result;
                 }
@@ -626,9 +875,9 @@ module.exports = {
 
                                         //If dataMappings.length === 1, we're evaluating a column on the "root" table
                     //or if we're the end of a path
-                    if (parent.type !== "scope" && !parent.type.endsWith("Block")) {
-                        result = `${escapeIdentifier(tableName)}.${escapeIdentifier(rawPropertyValue)}`;
-                    } else {
+                    // if (parent.type !== "scope" && !parent.type.endsWith("Block")) {
+                    //     result = `${escapeIdentifier(tableName)}.${escapeIdentifier(rawPropertyValue)}`;
+                    // } else {
 
                         var converterSyntax = objectRule.converter.convertSyntax,
                             syntaxProperty = converterSyntax.args[0].type === 'property'
@@ -646,27 +895,76 @@ module.exports = {
 
                         if(locales && isLocalizable) {
                             if(inversePropertyDescriptor.cardinality > 1) {
-                                result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = ANY (COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}'))`;
+
+                                result = joinConditionLeftSide = `ANY (COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}'))`;
+                                joinCondition = `"${resultJoin.leftDataSet}".id = ${joinConditionLeftSide}`;
+
+                                resultJoinString = propertyDescriptorValueDescriptorAlias
+                                    ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${tableName}".id = ANY (COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}'))`
+                                    : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = ANY (COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}'))`;
+
+                                console.log("resultJoinString: ",resultJoinString);
+
                             } else {
-                                result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
+
+                                result = joinConditionLeftSide = `COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
+                                joinCondition = `"${resultJoin.leftDataSet}".id = ${joinConditionLeftSide}`;
+
+                                resultJoinString = propertyDescriptorValueDescriptorAlias
+                                    ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${tableName}".id = COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}')`
+                                    : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = COALESCE("${tableName}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${tableName}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
+
+                                console.log("resultJoinString: ",resultJoinString);
+
                             }
+
+                            //resultJoin.onConditions.add(joinCondition);
+                            resultJoin.onCondition = joinCondition;
+
                         } else {
                             if((converterSyntax && converterSyntax.type === "has") || (inversePropertyDescriptor && inversePropertyDescriptor.cardinality > 1)) {
 
+                                result = joinConditionLeftSide = `ANY ("${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}")`;
+                                joinCondition = `"${resultJoin.leftDataSet}".id = ${joinConditionLeftSide}`;
+
+
                             //if(converterSyntax && converterSyntax.type === "has") {
                             // if(inversePropertyDescriptor && inversePropertyDescriptor.cardinality > 1) {
-                                result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = ANY ("${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}")`;
+                                resultJoinString = propertyDescriptorValueDescriptorAlias
+                                    ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${tableName}".id = ANY ("${propertyDescriptorValueDescriptorAlias}"."${rawPropertyValue}")`
+                                    : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = ANY ("${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}")`;
+
+                                //console.log("resultJoinString: ",resultJoinString);
+
                             } else {
-                                result = `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = "${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}"`;
+
+                                result = joinConditionLeftSide = `"${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}"`;
+                                joinCondition = `"${resultJoin.leftDataSet}".id = ${joinConditionLeftSide}`;
+
+                                resultJoinString = propertyDescriptorValueDescriptorAlias
+                                    ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${tableName}".id = "${propertyDescriptorValueDescriptorAlias}"."${rawPropertyValue}"`
+                                    : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${tableName}".id = "${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}"`;
+
+                                //console.log("resultJoinString: ",resultJoinString);
+
                             }
+
+                            //resultJoin.onConditions.add(joinCondition);
+                            resultJoin.onCondition = joinCondition;
+
                         }
 
-                        rawExpressionJoinStatements.add(result);
+                        rawExpressionJoinStatements.add(resultJoin);
 
                         dataMappings.push(dataService.mappingForType(propertyDescriptorValueDescriptor));
-                        result = "";
 
-                    }
+                        if(propertyDescriptorValueDescriptorAlias) {
+                            dataMappings.aliases[dataMappings.length-1] = propertyDescriptorValueDescriptorAlias;
+                        }
+
+                        //result = "";
+
+                    //}
 
                     return result;
                 }
@@ -694,9 +992,15 @@ module.exports = {
                     if(propertyDescriptorValueDescriptor) {
                         console.warn("shouldn't be here - DEBUG ME");
                         dataMappings.push(dataService.mappingForType(propertyDescriptorValueDescriptor));
+
+                        if(propertyDescriptorValueDescriptorAlias) {
+                            dataMappings.aliases[dataMappings.length-1] = propertyDescriptorValueDescriptorAlias;
+                        }
+
                         return `"${tableName}".${escapeIdentifier(rawPropertyValue)}`
                     } else {
-                        return `"${tableName}".${escapeIdentifier(rawPropertyValue)}`
+                        return `${escapeIdentifier(tableName)}.${escapeIdentifier(rawPropertyValue)}`;
+                        //return `"${tableName}".${escapeIdentifier(rawPropertyValue)}`
                         //return escapeIdentifier(dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName));
                     }
                 }
@@ -710,11 +1014,22 @@ module.exports = {
                 objectDescriptor = dataMapping.objectDescriptor,
                 propertyName,
                 propertyDescriptor,
+                syntaxArg0,
                 _propertyNameStringifier = _property._propertyName || (_property._propertyName = dataService.stringifiers._propertyName);
 
-            if (syntax.args[0].type === "value") {
+            if ((syntaxArg0 = syntax.args[0]).type === "value") {
                 if (typeof syntax.args[1].value === "string") {
-                    return _propertyNameStringifier(syntax.args[1].value, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements, objectDescriptor);
+                    var rawExpressionJoinStatementsSize = rawExpressionJoinStatements ? rawExpressionJoinStatements.size : 0,
+                        result =  _propertyNameStringifier(syntax.args[1].value, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements, objectDescriptor);
+
+                    /*
+                        If parent is a property node and we added a join, we shouldn't need a statement in the where clause.
+                    */
+                    if(!parent || (parent && !parent.type.endsWith("Block") && (parent.type !== "property" || (parent.type === "property" && rawExpressionJoinStatementsSize == rawExpressionJoinStatements.size)))) {
+                        return result;
+                    } else {
+                        return "";
+                    }
 
                     // var propertyValue = syntax.args[1].value,
                     //     objectDescriptor = dataMapping.objectDescriptor,
@@ -767,7 +1082,7 @@ module.exports = {
                 } else {
                     return "this[" + dataService.stringify(syntax.args[1], scope, dataMappings, locales, rawExpressionJoinStatements) + "]";
                 }
-            } else if (syntax.args[0].type === "parameters") {
+            } else if (syntaxArg0.type === "parameters") {
                 if(dataService.inlineCriteriaParameters) {
                     //We need to find the type of the property to know how to format the value
                     var parameterName = syntax.args[1].value,
@@ -788,7 +1103,30 @@ module.exports = {
                 } else {
                     return ":" + syntax.args[1].value;
                 }
-            } else if (
+            } else if(syntaxArg0.type === "property") {
+                var arg0Result =  dataService.stringify(syntaxArg0, scope, dataMappings, locales, rawExpressionJoinStatements, syntax),
+                    rawExpressionJoinStatementsSize = rawExpressionJoinStatements ? rawExpressionJoinStatements.size : 0,
+                    arg1Result =  dataService.stringify(syntax.args[1], scope, dataMappings, locales, rawExpressionJoinStatements, syntax);
+
+                //console.log("arg0Result: ",arg0Result," arg1Result:",arg1Result);
+
+
+                // dataMappings.splice(dataMappingStartLength);
+                // if(dataMappings.aliases) {
+                //     dataMappings.aliases.splice(dataMappingStartLength);
+                // }
+
+                /*
+                    If parent is a block node and we added a join, we shouldn't need a statement in the where clause.
+                */
+                if(parent.type.endsWith("Block") && rawExpressionJoinStatementsSize < rawExpressionJoinStatements.size) {
+                    return "";
+                } else {
+                    return arg1Result;
+                }
+            }
+
+            else if (
                 syntax.args[1].type === "literal" &&
                 /^[\w\d_]+$/.test(syntax.args[1].value)
             ) {
@@ -848,6 +1186,9 @@ module.exports = {
                     //Needs to remove what nested property syntax may have added:
                     if(dataMappings && parent.type !== "scope") {
                         dataMappings.splice(dataMappingStartLength);
+                        if(dataMappings.aliases) {
+                            dataMappings.aliases.splice(dataMappingStartLength);
+                        }
                     }
 
                     //return argZeroStringified + '.' + syntax.args[1].value;
@@ -887,6 +1228,10 @@ module.exports = {
         toNumber: function (syntax, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements) {
             return '+' + dataService.stringify(syntax.args[0], scope, dataMappings, locales, rawExpressionJoinStatements, syntax)
         },
+
+        /*
+            handling parent might need LATERAL joins ?
+        */
 
         parent: function (syntax, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements) {
             return '^' + dataService.stringify(syntax.args[0], scope, dataMappings, locales, rawExpressionJoinStatements, syntax)
@@ -954,14 +1299,138 @@ module.exports = {
                 return dataService.stringify(block, scope, dataMappings, locales, rawExpressionJoinStatements);
             }).join("\n") + "\n";
         },
+
+
+        /*
+            New kind to handle, an expression with shared similar expressions on left and right of the or, like:
+            id == $parameter1
+            &&
+            (
+                parent.services.filter{variants.filter{serviceEngagements.filter{originId == $serviceEngagementOriginId}}}
+                ||
+                services.filter{variants.filter{serviceEngagements.filter{originId == $serviceEngagementOriginId}}}
+            )
+
+            One way to handle is to alias both sides and use left joins:
+                SELECT DISTINCT (SELECT to_jsonb(_) FROM (SELECT "Organization"."id","Organization"."publicationDate","Organization"."modificationDate","Organization"."creationDate","Organization"."originId","Organization"."imageIds","Organization"."socialProfileIds","Organization"."urlAddresses","Organization"."existenceTimeRange","Organization"."userPoolIds","Organization"."customerEngagementQuestionnaireIds","Organization"."mainContactId","Organization"."tags","Organization"."suborganizations","Organization"."parent","Organization"."type","Organization"."name") as _)
+
+                FROM phront."Organization"
+
+                LEFT JOIN "phront"."Organization" "parentOrganization" ON "parentOrganization".id = "Organization"."parent"
+                LEFT JOIN "phront"."Service" "parentOrganizationService" ON "parentOrganization".id = "parentOrganizationService"."vendorId"
+                LEFT JOIN "phront"."ServiceProductVariant" "parentOrganizationServiceProductVariant" ON "parentOrganizationServiceProductVariant".id = ANY ("parentOrganizationService"."variantIds")
+                LEFT JOIN "phront"."ServiceEngagement" "parentOrganizationServiceEngagement" ON "parentOrganizationServiceProductVariant".id = "parentOrganizationServiceEngagement"."serviceVariantId"
+
+                LEFT JOIN "phront"."Service" ON "Organization".id = "Service"."vendorId"
+                LEFT JOIN "phront"."ServiceProductVariant" ON "ServiceProductVariant".id = ANY ("Service"."variantIds")
+                LEFT JOIN "phront"."ServiceEngagement" ON "ServiceProductVariant".id = "ServiceEngagement"."serviceVariantId"
+
+                WHERE (
+                    "Organization"."id" = 'f643fca5-f539-4335-98d1-17f42b354234'
+                    AND (
+                        ("parentOrganizationServiceEngagement"."originId" = '187cfa9a-c303-4737-a770-17d46e7524a4')
+                        or
+                        ("ServiceEngagement"."originId" = '187cfa9a-c303-4737-a770-17d46e7524a4'))
+                )
+
+
+            Another is to just continue logically uniquing joins on fully formed equivalent, but detect when we have multiple conditions. To do so the OR could send his own new rawExpressionJoinStatements structure so it's clear after calling both left and rights side what joins came up directly from it's left and right.
+            then if for a left-table to right table join there's an array with multiple conditions, then we combine them with the current operator, here the or.
+            In the following, because
+
+            SELECT DISTINCT (SELECT to_jsonb(_) FROM (SELECT "Organization"."id","Organization"."publicationDate","Organization"."modificationDate","Organization"."creationDate","Organization"."originId","Organization"."imageIds","Organization"."socialProfileIds","Organization"."urlAddresses","Organization"."existenceTimeRange","Organization"."userPoolIds","Organization"."customerEngagementQuestionnaireIds","Organization"."mainContactId","Organization"."tags","Organization"."suborganizations","Organization"."parent","Organization"."type","Organization"."name") as _)
+
+            FROM phront."Organization"
+
+            [LEFT] JOIN "phront"."Organization" "parentOrganization" ON "parentOrganization".id = "Organization"."parent" << left join not needed anymore in this case
+            JOIN "phront"."Service" ON ("parentOrganization".id = "Service"."vendorId" or "Organization".id = "Service"."vendorId") <<<<<<
+            JOIN "phront"."ServiceProductVariant" ON "ServiceProductVariant".id = ANY ("Service"."variantIds")
+            JOIN "phront"."ServiceEngagement" ON "ServiceProductVariant".id = "ServiceEngagement"."serviceVariantId"
+            >>>JOIN "phront"."Service" ON "Organization".id = "Service"."vendorId"<<<<---- Remove and move as to the join up on service as an OR in that join's condition
+
+            WHERE (
+                "Organization"."id" = 'f643fca5-f539-4335-98d1-17f42b354234'
+                AND (
+                    ("ServiceEngagement"."originId" = '187cfa9a-c303-4737-a770-17d46e7524a4')
+                    or
+                    ("ServiceEngagement"."originId" = '187cfa9a-c303-4737-a770-17d46e7524a4')
+                )
+            )
+
+
+        */
+
         or: function (syntax, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements) {
 
             //a list of Or becomes a tree of as syntax args go by 2
             //If the value of properties/expression involved is boolean, than we should use "or" operator
-            //however if it's a or of properties and they are not of type boolean, then we should use COALESCE()
+            //however if it's a or of properties and they are not of type boolean, then we ould use COALESCE()
             //and we should really use only one COALESCE for all.
 
+            /*
+                !!!! #WARNING TODO
+
+                This has only been tested with one level of OR (not nested ones) and I think it will might be necessary to know what was added to rawExpressionJoinStatements by the two calls to stringify() for args[0] and args[1].
+
+                Right now we're looping on all rawExpressionJoinStatements values after, but we should only do so for values that were actually added.
+
+                So we could send an empty/new SQLJoin(), which would guarantee that rawExpressionJoinStatements.values() are what we want, and once we've consolidated things our way, we would merge it back on the rawExpressionJoinStatements we received.
+
+                Or we could observer the rawExpressionJoinStatements for changes, and collect whhat was modified and use it to loop bellow.
+            */
+
             var args = syntax.args,
+                left = dataService.stringify(args[0],scope, dataMappings, locales, rawExpressionJoinStatements, syntax),
+                right = dataService.stringify(args[1],scope, dataMappings, locales, rawExpressionJoinStatements, syntax),
+                result;
+
+            /*
+                Look at generated joins and if an entry has more than one join, we'll combine them with our operator.
+                We're using a SET to eliminate duplicates so that conditions that are the same will only be generated once.
+            */
+                var iterator = rawExpressionJoinStatements.values(),
+                iteration, iSQLJoins,
+                iSQLJoinsIterator,
+                iteration2, iSQLJoin,
+                iSQLConsolidatedJoin,
+                iSQLConsolidatedJoinConditions;
+
+            while(!(iteration = iterator.next()).done) {
+                iSQLJoins = iteration.value;
+                iSQLConsolidatedJoin = null;
+                if(iSQLJoins.size > 1) {
+                    iSQLJoinsIterator = iSQLJoins.values();
+                    iSQLConsolidatedJoinConditions = null;
+                    while(!(iteration2 = iSQLJoinsIterator.next()).done) {
+                        iSQLJoin = iteration2.value;
+
+                        if(!iSQLConsolidatedJoin) {
+                            iSQLConsolidatedJoin = iSQLJoin;
+                            iSQLConsolidatedJoinConditions = new Set();
+                        } else {
+                            iSQLJoins.delete(iSQLJoin);
+                        }
+                        iSQLConsolidatedJoinConditions.add(iSQLJoin.onCondition);
+
+                    }
+                    iSQLConsolidatedJoin.onCondition = `(${iSQLConsolidatedJoinConditions.join(" OR ")})`;
+                    // result = result ? `${result} ${iSQLJoin.toString()}` : iSQLJoin.toString();
+                }
+            }
+
+
+
+            if(left && right && left !== right) {
+                result = `${left} OR ${right}`;
+            } else if(left) {
+                result = left;
+            } else if(right) {
+                result = right;
+            }
+
+            return result;
+
+                //solved = solve(args[0],args[1]),
                 i, countI, result = "";
             for(i = 0, countI = args.length;i<countI;i++) {
                 if(i > 0) {
@@ -1002,9 +1471,23 @@ module.exports = {
 
         equals: function (syntax, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements) {
 
-            var argsZeroValue = dataService.stringify(syntax.args[0],scope, dataMappings, locales, rawExpressionJoinStatements, syntax),
-                argsOneValue = dataService.stringify(syntax.args[1],scope, dataMappings, locales, rawExpressionJoinStatements, syntax);
+            var dataMappingStartLength = dataMappings.length,
+                argsZeroValue,
+                argsOneValue;
 
+            argsZeroValue = dataService.stringify(syntax.args[0],scope, dataMappings, locales, rawExpressionJoinStatements, syntax);
+
+            dataMappings.splice(dataMappingStartLength);
+            if(dataMappings.aliases) {
+                dataMappings.aliases.splice(dataMappingStartLength);
+            }
+
+            argsOneValue = dataService.stringify(syntax.args[1],scope, dataMappings, locales, rawExpressionJoinStatements, syntax);
+
+            dataMappings.splice(dataMappingStartLength);
+            if(dataMappings.aliases) {
+                dataMappings.aliases.splice(dataMappingStartLength);
+            }
             return `${argsZeroValue} ${dataService.mapTokenToRawTokenForValue(EqualsToken,argsZeroValue)} ${argsOneValue}`;
         }
 
