@@ -15,6 +15,7 @@
                 {"@": "b2bCustomerRelationships"},
                 {"@": "supplierRelationships"},
                 {"@": "services"},
+                {"@": "customerEngagementQuestionnaires"},
                 {"@": "userPools"},
                 {"@": "applications"}
             ],
