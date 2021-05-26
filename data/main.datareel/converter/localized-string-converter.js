@@ -1,5 +1,5 @@
 /**
- * @module phront/data/main.datareel/converter/locslized-string-coonverter
+ * @module phront/data/main.datareel/converter/localized-string-converter
  * @requires montage/core/converter/converter
  * @requires montage/core/converter/number-converter
  */
