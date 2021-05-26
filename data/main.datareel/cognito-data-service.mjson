@@ -1,0 +1,33 @@
+{
+    "root": {
+        "prototype": "./service/aws/cognito-data-service",
+        "values": {
+            "name": "CognitoDataService",
+            "exportName": "CognitoDataService",
+            "mappings": [
+                {"@": "UserPoolMapping"},
+                {"@": "UserPoolClientMapping"}
+            ],
+            "types": [
+                {"@": "UserPool"},
+                {"@": "UserPoolClient"}
+            ]
+        }
+    },
+
+    "UserPool": {
+        "object": "./model/aws/cognito/user-pool.mjson"
+    },
+
+    "UserPoolMapping": {
+        "object": "./mapping/aws/cognito/user-pool-mapping.mjson"
+    },
+
+    "UserPoolClient": {
+        "object": "./model/aws/cognito/user-pool-client.mjson"
+    },
+
+    "UserPoolClientMapping": {
+        "object": "./mapping/aws/cognito/user-pool-client-mapping.mjson"
+    }
+}
