@@ -26,7 +26,8 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "originId",
-            "valueType": "string"
+            "valueType": "string",
+            "isSearchable": true
         }
     },
     "creationDate": {
