@@ -364,9 +364,9 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             isSync = true,
             self = this;
 
-            this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
+            this.deserializer.init(serializedOperation, require, objectRequires, module, isSync);
             try {
-                deserializedOperation = this._deserializer.deserializeObject();
+                deserializedOperation = this.deserializer.deserializeObject();
             } catch (ex) {
                 console.error("No deserialization for ",serializedOperation);
                 return Promise.reject("Unknown message: ",serializedOperation);
