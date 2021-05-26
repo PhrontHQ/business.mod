@@ -19,8 +19,7 @@
                     },
                     "images": {
                         "<->": "imageIds",
-                        "converter": {"@": "imagesConverter"},
-                        "debug":true
+                        "converter": {"@": "imagesConverter"}
                     }
 
                }
@@ -52,5 +51,4 @@
             "convertExpression": "$.has(id)"
         }
     }
-
 }
