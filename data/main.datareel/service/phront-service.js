@@ -4423,7 +4423,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
             /*
                 FOR DEBUG ONLY:
             */
-            method = "rollbackTransaction";
+            //method = "rollbackTransaction";
 
             self._rdsDataService[method](rawDataOperation, function (err, data) {
                 var operation = new DataOperation();
