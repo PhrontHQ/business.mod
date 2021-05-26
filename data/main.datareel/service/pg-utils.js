@@ -242,7 +242,7 @@ module.exports = {
 
     // Ported from PostgreSQL 9.2.4 source code in src/interfaces/libpq/fe-exec.c
     escapeIdentifier: function (str) {
-        return '"' + str.replace(/"/g, '""') + '"'
+        return str ? '"' + str.replace(/"/g, '""') + '"' : "";
     },
 
     // Ported from PostgreSQL 9.2.4 source code in src/interfaces/libpq/fe-exec.c
