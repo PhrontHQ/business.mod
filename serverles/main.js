@@ -27,6 +27,7 @@ mainPackageLocation: PATH.join(module.parent.filename, ".")
 }).then(function (module) {
     console.log("Phront Worker reporting for duty!");
     var worker = module.montageObject;
+    Montage.application = worker;
     return worker;
 });
 
