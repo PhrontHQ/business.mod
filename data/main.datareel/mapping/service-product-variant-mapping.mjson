@@ -65,7 +65,7 @@
     "serviceEngagementsForeignKeyConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
-            "convertExpression": "serviceId == $"
+            "convertExpression": "serviceVariantId == $"
         }
     }
 
