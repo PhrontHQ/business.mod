@@ -31,7 +31,11 @@
                         "<->": "pdfExportId",
                         "converter": {"@": "pdfExportConverter"}
                     },
-                    "notes": {"<->": "notes"}
+                    "notes": {"<->": "notes"},
+                    "events": {
+                        "<->": "id",
+                        "converter": {"@": "eventsConverter"}
+                    }
                 }
             },
             "rawDataMapping": {
@@ -83,5 +87,13 @@
         "values": {
             "convertExpression": "id == $"
         }
+    },
+
+    "eventsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "respondentQuestionnaireIds.has($)"
+        }
     }
+
 }

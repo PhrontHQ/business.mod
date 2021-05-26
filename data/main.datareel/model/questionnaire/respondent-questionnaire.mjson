@@ -11,7 +11,8 @@
                 {"@": "completionDate"},
                 {"@": "isMandatory"},
                 {"@": "pdfExport"},
-                {"@": "notes"}
+                {"@": "notes"},
+                {"@": "events"}
             ],
             "objectDescriptorModule": {
                 "%":"data/main.datareel/model/questionnaire/respondent-questionnaire.mjson"
@@ -129,6 +130,20 @@
             "valueType": "string",
             "description": "Add comments to questions for internal use"
         }
+    },
+
+    "events": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "events",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "respondentQuestionnaires",
+            "valueDescriptor": {"@": "eventDescriptor"}
+        }
+    },
+    "eventDescriptor": {
+        "object": "data/main.datareel/model/event.mjson"
     }
 
 }
