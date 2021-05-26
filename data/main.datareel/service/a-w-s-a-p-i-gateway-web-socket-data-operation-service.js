@@ -1,5 +1,6 @@
 var DataService = require("montage/data/service/data-service").DataService,
     RawDataService = require("montage/data/service/raw-data-service").RawDataService,
+    DataQuery = require("montage/data/model/data-query").DataQuery,
     Promise = require("montage/core/promise").Promise,
     evaluate = require("montage/core/frb/evaluate"),
     Set = require("montage/core/collections/set"),
@@ -10,7 +11,12 @@ var DataService = require("montage/data/service/data-service").DataService,
     Phluid = require("./phluid").Phluid,
     WebSocket = require("montage/core/web-socket").WebSocket,
     defaultEventManager = require("montage/core/event/event-manager").defaultEventManager,
+    RawEmbeddedValueToObjectConverter = require("montage/data/converter/raw-embedded-value-to-object-converter").RawEmbeddedValueToObjectConverter,
+    ReadEvent = require("montage/data/model/read-event").ReadEvent,
     currentEnvironment = require("montage/core/environment").currentEnvironment;
+
+
+var Identity = require("montage/data/model/identity").Identity;
 
 //Set our DataTrigger custom subclass:
 //DataService.prototype.DataTrigger = DataTrigger;
@@ -39,6 +45,10 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
         }
     },
 
+    supportsTransaction: {
+        value: true
+    },
+
     handleMainServiceChange: {
         value: function (mainService) {
             //That only happens once
@@ -58,22 +68,22 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
                     DataOperations on their way out:
                 */
 
-                mainService.addEventListener(DataOperation.Type.ReadOperation,this,false);
-                mainService.addEventListener(DataOperation.Type.UpdateOperation,this,false);
-                mainService.addEventListener(DataOperation.Type.CreateOperation,this,false);
-                mainService.addEventListener(DataOperation.Type.DeleteOperation,this,false);
-                mainService.addEventListener(DataOperation.Type.CreateTransactionOperation,this,false);
-                mainService.addEventListener(DataOperation.Type.BatchOperation,this,false);
-                mainService.addEventListener(DataOperation.Type.PerformTransactionOperation,this,false);
-                mainService.addEventListener(DataOperation.Type.RollbackTransactionOperation,this,false);
+                // this.addEventListener(DataOperation.Type.ReadOperation,this,false);
+                this.addEventListener(DataOperation.Type.UpdateOperation,this,false);
+                this.addEventListener(DataOperation.Type.CreateOperation,this,false);
+                this.addEventListener(DataOperation.Type.DeleteOperation,this,false);
+                this.addEventListener(DataOperation.Type.CreateTransactionOperation,this,false);
+                this.addEventListener(DataOperation.Type.AppendTransactionOperation,this,false);
+                this.addEventListener(DataOperation.Type.CommitTransactionOperation,this,false);
+                this.addEventListener(DataOperation.Type.RollbackTransactionOperation,this,false);
 
 
                 /*
                     DataOperation coming back with a referrer, we listen on ouselves
                 */
                 mainService.addEventListener(DataOperation.Type.NoOp,this,false);
-                mainService.addEventListener(DataOperation.Type.ReadFailedOperation,this,false);
-                mainService.addEventListener(DataOperation.Type.ReadCompletedOperation,this,false);
+                // mainService.addEventListener(DataOperation.Type.ReadFailedOperation,this,false);
+                // mainService.addEventListener(DataOperation.Type.ReadCompletedOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.UpdateFailedOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.UpdateCompletedOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.CreateFailedOperation,this,false);
@@ -85,8 +95,12 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
                 mainService.addEventListener(DataOperation.Type.BatchCompletedOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.BatchFailedOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.TransactionUpdatedOperation,this,false);
-                mainService.addEventListener(DataOperation.Type.PerformTransactionFailedOperation,this,false);
-                mainService.addEventListener(DataOperation.Type.PerformTransactionCompletedOperation,this,false);
+
+                mainService.addEventListener(DataOperation.Type.AppendTransactionCompletedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.AppendTransactionFailedOperation,this,false);
+
+                mainService.addEventListener(DataOperation.Type.CommitTransactionFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.CommitTransactionCompletedOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.RollbackTransactionFailedOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.RollbackTransactionCompletedOperation,this,false);
 
@@ -154,6 +168,23 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
             var applicationIdentity = this.application.identity,
                 serializedIdentity,
                 base64EncodedSerializedIdentity;
+
+
+            /*
+                TEMPORARY FIXME
+                hard-coding applicationId and applicationCredentials to run some tests.
+
+                THIS WILL NOT BE USED BY CLIENT SIDE APP
+
+            */
+        //    {
+        //     var identity = new Identity/* Identity */
+        //     identity.applicationIdentifier = "3bht9ellqo8j90krq0kpklf7mm";
+        //     identity.applicationCredentials = "881t5di0qtlmap7s6hge6hj4tv45r9heom9o5vugu8u179sv60h";
+        //     applicationIdentity = identity;
+        //    }
+
+
 
             if(applicationIdentity) {
                 try {
@@ -227,14 +258,63 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
     },
 
 
-    _operationListenerNamesByType: {
-        value: new Map()
-    },
-    _operationListenerNameForType: {
-        value: function(type) {
-            return this._operationListenerNamesByType.get(type) || this._operationListenerNamesByType.set(type,"handle"+type.toCapitalized()).get(type);
-        }
-    },
+    // fetchObjectProperty: {
+    //     value: function (object, propertyName) {
+    //         var self = this,
+    //             objectDescriptor = this.objectDescriptorForObject(object),
+    //             propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyName),
+    //             valueDescriptor = propertyDescriptor && propertyDescriptor.valueDescriptor,
+    //             isObjectCreated = this.isObjectCreated(object);
+
+    //         //console.log(objectDescriptor.name+": fetchObject:",object, "property:"+ " -"+propertyName);
+
+    //         if(!Promise.is(valueDescriptor)) {
+    //             valueDescriptor = Promise.resolve(valueDescriptor);
+    //         }
+
+    //         return valueDescriptor.then( function(valueDescriptor) {
+    //             var mapping = objectDescriptor && self.mappingForType(objectDescriptor),
+    //                 objectRule = mapping && mapping.objectMappingRules.get(propertyName),
+    //                 snapshot = self.snapshotForObject(object),
+    //                 objectRuleConverter = objectRule && objectRule.converter;
+
+
+    //             // if(!snapshot) {
+    //             //     throw "Can't fetchObjectProperty: type: "+valueDescriptor.name+" propertyName: "+propertyName+" - doesn't have a snapshot";
+    //             // }
+
+
+    //             /*
+    //                 if we can get the value from the type's storage itself:
+    //                 or
+    //                 we don't have the foreign key necessary or it
+
+    //                 -- !!! embedded values don't have their own snapshots --
+    //             */
+    //             if(
+    //                 (!valueDescriptor && !objectRuleConverter) ||
+    //                 ( valueDescriptor && !objectRuleConverter ) /*for Date for example*/ ||
+    //                 ( valueDescriptor && objectRuleConverter && objectRuleConverter instanceof RawEmbeddedValueToObjectConverter) || (snapshot && !objectRule.hasRawDataRequiredValues(snapshot))
+    //             ) {
+    //                 var propertyNameQuery = DataQuery.withTypeAndCriteria(objectDescriptor,self.rawCriteriaForObject(object, objectDescriptor));
+
+    //                 propertyNameQuery.readExpressions = [propertyName];
+
+    //                 //console.log(objectDescriptor.name+": fetchObjectProperty "+ " -"+propertyName);
+
+    //                 return DataService.mainService.fetchData(propertyNameQuery);
+
+    //                 /*
+    //                     Original from PhrontClient who was overriding fetchData
+    //                 */
+    //                 return self.fetchData(propertyNameQuery);
+
+    //             } else {
+    //                 return self._fetchObjectPropertyWithPropertyDescriptor(object, propertyName, propertyDescriptor,isObjectCreated);
+    //             }
+    //         });
+    //     }
+    // },
 
     /**
     * handle events/messages from the socket, turns them to operations and dispatch to rest of the app
@@ -274,7 +354,12 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
                 }
 
                 if(operationPromise) {
+                    var self = this;
                     operationPromise.then(function(operation) {
+                        // if(operation.type === "readCompletedOperation" || operation.type === "readUpdateOperation") {
+                        //         console.debug("readCompletedOperation: ",operation.data);
+                        // }
+                        //operation.target = self;
                         defaultEventManager.handleEvent(operation);
                     })
                 }
@@ -319,70 +404,70 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
         }
     },
 
-    handleReadUpdateOperation: {
-        value: function (operation) {
-            var referrer = operation.referrerId,
-                objectDescriptor = operation.target,
-                records = operation.data,
-                stream = DataService.mainService.registeredDataStreamForDataOperation(operation),
-                streamObjectDescriptor;
-            // if(operation.type === DataOperation.Type.ReadCompletedOperation) {
-            //     console.log("handleReadCompleted  referrerId: ",operation.referrerId, "records.length: ",records.length);
-            // } else {
-            //     console.log("handleReadUpdateOperation  referrerId: ",operation.referrerId, "records.length: ",records.length);
-            // }
-            //if(operation.type === DataOperation.Type.ReadUpdateOperation) console.log("handleReadUpdateOperation  referrerId: ",referrer);
+    // handleReadUpdateOperation: {
+    //     value: function (operation) {
+    //         var referrer = operation.referrerId,
+    //             objectDescriptor = operation.target,
+    //             records = operation.data,
+    //             stream = DataService.mainService.registeredDataStreamForDataOperation(operation),
+    //             streamObjectDescriptor;
+    //         // if(operation.type === DataOperation.Type.ReadCompletedOperation) {
+    //         //     console.log("handleReadCompleted  referrerId: ",operation.referrerId, "records.length: ",records.length);
+    //         // } else {
+    //         //     console.log("handleReadUpdateOperation  referrerId: ",operation.referrerId, "records.length: ",records.length);
+    //         // }
+    //         //if(operation.type === DataOperation.Type.ReadUpdateOperation) console.log("handleReadUpdateOperation  referrerId: ",referrer);
 
-            if(stream) {
-                streamObjectDescriptor = stream.query.type;
-                /*
+    //         if(stream) {
+    //             streamObjectDescriptor = stream.query.type;
+    //             /*
 
-                    We now could get readUpdate that are reads for readExpressions that are properties (with a valueDescriptor) of the ObjectDescriptor of the referrer. So we need to add a check that the obectDescriptor match, otherwise, it needs to be assigned to the right instance, or created in memory and mapping/converters will find it.
-                */
+    //                 We now could get readUpdate that are reads for readExpressions that are properties (with a valueDescriptor) of the ObjectDescriptor of the referrer. So we need to add a check that the obectDescriptor match, otherwise, it needs to be assigned to the right instance, or created in memory and mapping/converters will find it.
+    //             */
 
-                if(streamObjectDescriptor === objectDescriptor) {
-                    if(records && records.length > 0) {
-                        //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
-                        this.addRawData(stream, records, operation);
+    //             if(streamObjectDescriptor === objectDescriptor) {
+    //                 if(records && records.length > 0) {
+    //                     //We pass the map key->index as context so we can leverage it to do record[index] to find key's values as returned by RDS Data API
+    //                     this.addRawData(stream, records, operation);
 
-                    } else if(operation.type !== DataOperation.Type.ReadCompletedOperation){
-                        console.log("operation of type:"+operation.type+", has no data");
-                    }
-                } else {
-                    console.log("Received "+operation.type+" operation that is for a readExpression of referrer ",referrer);
-                }
-            } else {
-                console.log("receiving operation of type:"+operation.type+", but can't find a matching stream");
-            }
-        }
-    },
+    //                 } else if(operation.type !== DataOperation.Type.ReadCompletedOperation){
+    //                     console.log("operation of type:"+operation.type+", has no data");
+    //                 }
+    //             } else {
+    //                 console.log("Received "+operation.type+" operation that is for a readExpression of referrer ",referrer);
+    //             }
+    //         } else {
+    //             console.log("receiving operation of type:"+operation.type+", but can't find a matching stream");
+    //         }
+    //     }
+    // },
 
-    handleReadCompletedOperation: {
-        value: function (operation) {
-            this.handleReadUpdateOperation(operation);
-            //The read is complete
-            var stream = DataService.mainService.registeredDataStreamForDataOperation(operation);
-            if(stream) {
-                this.rawDataDone(stream);
-                //this._thenableByOperationId.delete(operation.referrerId);
-                DataService.mainService.unregisterDataStreamForDataOperation(operation);
-            } else {
-                console.log("receiving operation of type:"+operation.type+", but can't find a matching stream");
-            }
-            //console.log("handleReadCompleted -clear _thenableByOperationId- referrerId: ",operation.referrerId);
+    // handleReadCompletedOperation: {
+    //     value: function (operation) {
+    //         this.handleReadUpdateOperation(operation);
+    //         //The read is complete
+    //         var stream = DataService.mainService.registeredDataStreamForDataOperation(operation);
+    //         if(stream) {
+    //             this.rawDataDone(stream);
+    //             //this._thenableByOperationId.delete(operation.referrerId);
+    //             DataService.mainService.unregisterDataStreamForDataOperation(operation);
+    //         } else {
+    //             console.log("receiving operation of type:"+operation.type+", but can't find a matching stream");
+    //         }
+    //         //console.log("handleReadCompleted -clear _thenableByOperationId- referrerId: ",operation.referrerId);
 
-        }
-    },
+    //     }
+    // },
 
-    handleReadFailedOperation: {
-        value: function (operation) {
-            var stream = DataService.mainService.registeredDataStreamForDataOperation(operation);
-            this.rawDataError(stream,operation.data);
+    // handleReadFailedOperation: {
+    //     value: function (operation) {
+    //         var stream = DataService.mainService.registeredDataStreamForDataOperation(operation);
+    //         this.rawDataError(stream,operation.data);
 
-            DataService.mainService.unregisterDataStreamForDataOperation(operation);
-            //this._thenableByOperationId.delete(operation.referrerId);
-        }
-    },
+    //         DataService.mainService.unregisterDataStreamForDataOperation(operation);
+    //         //this._thenableByOperationId.delete(operation.referrerId);
+    //     }
+    // },
 
     handleOperationCompleted: {
         value: function (operation) {
@@ -450,6 +535,38 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
         }
     },
 
+    handleCreateTransactionOperation: {
+        value: function (createTransactionOperation) {
+            this._socketSendOperation(createTransactionOperation);
+        }
+    },
+
+    handleCreateTransactionCompletedOperation: {
+        value: function (operation) {
+            var rawTransaction
+
+            this.super(operation);
+        }
+    },
+
+    handleAppendTransactionOperation: {
+        value: function (appendTransactionOperation) {
+            this._socketSendOperation(appendTransactionOperation);
+        }
+    },
+
+    handleCommitTransactionOperation: {
+        value: function (commitTransactionOperation) {
+            this._socketSendOperation(commitTransactionOperation);
+        }
+    },
+
+    handleRollbackTransactionOperation: {
+        value: function (rollbackTransactionOperation) {
+            this._socketSendOperation(rollbackTransactionOperation);
+        }
+    },
+
     _socketSendOperation: {
         value: function(operation) {
             this._socketOpenPromise.then(() => {
@@ -471,9 +588,9 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
 
     handleEvent: {
         value: function(operation) {
-            if(!this.handlesType(operation.target)) {
-                return;
-            }
+            // if(!this.handlesType(operation.target)) {
+            //     return;
+            // }
 
             console.warn(("no concrete handling for event type "+operation.type));
 

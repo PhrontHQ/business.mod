@@ -7,6 +7,8 @@ const   Worker = require("./worker").Worker,
     OperationCoordinator = require("../data/main.datareel/service/operation-coordinator").OperationCoordinator,
     uuid = require("montage/core/uuid"),
     Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
+    MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
+
     Montage = require("montage/core/core").Montage,
     currentEnvironment = require("montage/core/environment").currentEnvironment;
 
@@ -31,6 +33,9 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
     constructor: {
         value: function DataWorker() {
             this.super();
+
+            this._serializer = new MontageSerializer().initWithRequire(require);
+
         }
     },
     operationCoordinator: {
@@ -58,6 +63,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
         },
         set: function(value) {
             this._mainService = value;
+
             if(!this.operationCoordinator) {
                 this.operationCoordinator = new OperationCoordinator(this);
             }
@@ -97,6 +103,8 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
     /**
      * Only the event from connect has headers informations
+     *
+     * Shouldn't we move that on the DataOperation itself as context instead?
      *
      * @class DataWorker
      * @extends Worker
@@ -162,7 +170,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
                     // authorizeConnectionFailedOperation.target = this;
 
-                    return Promise.resolve(this.responseForEventAuthorization(event, false, /*responseContext*/error));
+                    return Promise.resolve(this.responseForEventAuthorization(event, null, false, /*responseContext*/error));
 
                 }
 
@@ -180,7 +188,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                         So we use an Anonymous identity singleton
                     */
                     if(self.mainService.authorizationPolicy === AuthorizationPolicy.OnConnect) {
-                        return self.responseForEventAuthorization(event, false, null);
+                        return self.responseForEventAuthorization(event, serializedIdentity, false, null);
                     } else {
                         identity = Identity.AnonymousIdentity;
                         identityObjectDescriptor = IdentityDescriptor;
@@ -224,13 +232,17 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
                     return self.operationCoordinator.handleOperation(authorizeConnectionOperation, event, context, callback, this.apiGateway);
                 })
-                .then(() => {
+                .then((authorizeConnectionCompletedOperation) => {
+                    /*
+                        Identity may have been modified by the authorization logic, so we need to re-serialize
+                    */
+                    var serializedAuthorizedIdentity = self._serializer.serializeObject(authorizeConnectionCompletedOperation.data);
 
-                    return self.responseForEventAuthorization(event, true, null);
+                    return self.responseForEventAuthorization(event, serializedAuthorizedIdentity, true, null);
 
                 }).catch((error) => {
                     console.error("this.operationCoordinator.handleOperation error:",error);
-                    return self.responseForEventAuthorization(event, false, error);
+                    return self.responseForEventAuthorization(event, null, false, error);
 
                     // callback(failedResponse(500, JSON.stringify(err)))
                 });
@@ -253,9 +265,34 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
         }
     },
 
+    /**
+     * Deserialized an identity from the event.requestContext.authorizer.principalId property, but if it's not there,
+     * we would fecth the identity from the database using connectionId
+     *
+     * @param {object} event The event sent by the API Gateway
+     * @return {Promise<Identity>} a Promise of the identity
+     */
+    authorizerIdentityFromEvent: {
+        value: function(event) {
+
+            this.deserializer.init(event.requestContext.authorizer.principalId, this.require, /*objectRequires*/undefined, /*module*/undefined, /*isSync*/false);
+            try {
+                return this.deserializer.deserializeObject();
+            } catch (error) {
+                /*
+                    If there's a serializedIdentity and we can't deserialize it, we're the ones triggering the fail.
+                */
+                console.error("Error: ",error, " Deserializing ",serializedIdentity);
+                return Promise.reject(error);
+            }
+        }
+    },
+
     handleConnect: {
         value: function(event, context, callback) {
-            var connectOperation = new DataOperation();
+            var self = this,
+                connectOperation = new DataOperation(),
+            serializedIdentity = event.requestContext.authorizer.principalId;
 
             connectOperation.id = event.requestContext.requestId;
             connectOperation.type = DataOperation.Type.ConnectOperation;
@@ -281,7 +318,11 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                 That's what shpould probably happen client side as well, where the opertions are dispatched locally and the caught by an object that just push them on the WebSocket.
             */
 
-           this.operationCoordinator.handleOperation(connectOperation, event, context, callback, this.apiGateway)
+            this.authorizerIdentityFromEvent(event)
+            .then(function(identity) {
+                connectOperation.identity = identity;
+                return self.operationCoordinator.handleOperation(connectOperation, event, context, callback, self.apiGateway);
+            })
            .then(() => {
                //console.log("DataWorker -handleConnect: operationCoordinator.handleOperation() done");
                callback(null, {
@@ -300,8 +341,63 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
     handleMessage: {
         value: function(event, context, callback) {
 
+
+            /*
+                Add a check if the message isn't coming from the socket, the only other is through the handleCommitTransaction lambda.
+
+                We must only accept things if there's an included conectionId that matches a known connection.
+
+                But is that enough or should we also re-include the identity?
+                It doesn't look like
+
+                https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/ApiGatewayManagementApi.html#getConnection-property
+
+                returns the context where our serialized identity is stored.
+            */
+
             this.setEnvironmentFromEvent(event);
-            this.operationCoordinator.handleMessage(event, context, callback, this.apiGateway)
+
+            var serializedOperation = event.body,
+            deserializedOperation,
+            objectRequires,
+            module,
+            isSync = true,
+            self = this;
+
+            this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
+            try {
+                deserializedOperation = this._deserializer.deserializeObject();
+            } catch (ex) {
+                console.error("No deserialization for ",serializedOperation);
+                return Promise.reject("Unknown message: ",serializedOperation);
+            }
+
+            if(deserializedOperation && !deserializedOperation.target && deserializedOperation.dataDescriptor) {
+                deserializedOperation.target = this.mainService.objectDescriptorWithModuleId(deserializedOperation.dataDescriptor);
+            }
+
+            //Add connection (custom) info the operation:
+            // deserializedOperation.connection = gatewayClient;
+
+            /*
+                Sets the whole AWS API Gateway event as the dataOperations's context.
+
+                Reading the stage for example -
+                aDataOperation.context.requestContext.stage
+
+                Can help a DataService address the right resource/database for that stage
+            */
+            deserializedOperation.context = event;
+
+            //Set the clientId (in API already)
+            deserializedOperation.clientId = event.requestContext.connectionId;
+
+            //this.operationCoordinator.handleMessage(event, context, callback, this.apiGateway)
+            this.authorizerIdentityFromEvent(event)
+            .then(function(identity) {
+                deserializedOperation.identity = identity;
+                return self.operationCoordinator.handleOperation(deserializedOperation, event, context, callback, self.apiGateway);
+            })
             .then(() => {
                 callback(null, successfullResponse)
             })

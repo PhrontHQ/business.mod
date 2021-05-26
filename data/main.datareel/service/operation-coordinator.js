@@ -42,17 +42,20 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
             // mainService.addEventListener(DataOperation.Type.CreateOperation,phrontService,false);
             // mainService.addEventListener(DataOperation.Type.DeleteOperation,phrontService,false);
             // mainService.addEventListener(DataOperation.Type.CreateTransactionOperation,phrontService,false);
-            // mainService.addEventListener(DataOperation.Type.BatchOperation,phrontService,false);
-            // mainService.addEventListener(DataOperation.Type.PerformTransactionOperation,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.AppendTransactionOperation,phrontService,false);
+            // mainService.addEventListener(DataOperation.Type.CommitTransactionOperation,phrontService,false);
             // mainService.addEventListener(DataOperation.Type.RollbackTransactionOperation,phrontService,false);
 
-            //worker.addEventListener(DataOperation.Type.BatchOperation,this,true);
+            //worker.addEventListener(DataOperation.Type.AppendTransactionOperation,this,true);
 
 
-            this.addEventListener(DataOperation.Type.CreateTransactionOperation,this,false);
-            this.addEventListener(DataOperation.Type.BatchOperation,this,false);
-            this.addEventListener(DataOperation.Type.PerformTransactionOperation,this,false);
-            this.addEventListener(DataOperation.Type.RollbackTransactionOperation,this,false);
+            /*
+                target null now handled in DataOperation deserializedSelf, so we change observing this to mainService for these 4
+            */
+            mainService.addEventListener(DataOperation.Type.CreateTransactionOperation,this,false);
+            //mainService.addEventListener(DataOperation.Type.AppendTransactionOperation,this,false);
+            //mainService.addEventListener(DataOperation.Type.CommitTransactionOperation,this,false);
+            //mainService.addEventListener(DataOperation.Type.RollbackTransactionOperation,this,false);
 
             mainService.addEventListener(DataOperation.Type.NoOp,this,false);
             mainService.addEventListener(DataOperation.Type.ReadFailedOperation,this,false);
@@ -67,10 +70,14 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
             mainService.addEventListener(DataOperation.Type.CreateTransactionCompletedOperation,this,false);
             mainService.addEventListener(DataOperation.Type.BatchCompletedOperation,this,false);
             mainService.addEventListener(DataOperation.Type.BatchFailedOperation,this,false);
+
+            mainService.addEventListener(DataOperation.Type.AppendTransactionCompletedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.AppendTransactionFailedOperation,this,false);
+
             mainService.addEventListener(DataOperation.Type.TransactionUpdatedOperation,this,false);
-            mainService.addEventListener(DataOperation.Type.PerformTransactionProgressOperation,this,false);
-            mainService.addEventListener(DataOperation.Type.PerformTransactionFailedOperation,this,false);
-            mainService.addEventListener(DataOperation.Type.PerformTransactionCompletedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.CommitTransactionProgressOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.CommitTransactionFailedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.CommitTransactionCompletedOperation,this,false);
             mainService.addEventListener(DataOperation.Type.RollbackTransactionFailedOperation,this,false);
             mainService.addEventListener(DataOperation.Type.RollbackTransactionCompletedOperation,this,false);
 
@@ -129,19 +136,48 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
     dispatchOperationToConnectionClientId: {
         value: function(operation, connection, clientId) {
 
-            // if(operation.type === DataOperation.Type.PerformTransactionCompletedOperation ||
-            //     operation.type === DataOperation.Type.PerformTransactionFailedOperation) {
+            // if(operation.type === DataOperation.Type.CommitTransactionCompletedOperation ||
+            //     operation.type === DataOperation.Type.CommitTransactionFailedOperation) {
             //     console.log("OperationCoordinator: dispatchOperationToConnectionClientId()",operation, connection, clientId)
             // }
 
 
 
             //remove _target & _currentTarget as it creates a pbm? and we don't need to send it
-            delete operation._currentTarget;
+            var _currentTarget = operation._currentTarget,
+                    _context = operation.context,
+                    errorStack;
+
+
+
+            /*
+                cleanup context stuff we don't want to serialize:
+            */
+
+
+            if(operation.data instanceof Error) {
+                console.error("dispatchOperationToConnectionClientId with error: ",operation.data);
+
+                //Now remove the stack trace we don't want to share with clients and it can get big:
+                errorStack = operation.data.stack;
+                operation.data.stack = null;
+            }
+
+
+            operation.currentTarget = null;
+            operation.context = null;
 
             //We need to assess the size of the data returned.
             //serialize
             var operationSerialization = this._serializer.serializeObject(operation);
+
+            //Set it back for local use now that we've serialized it:
+            operation.currentTarget = _currentTarget;
+            operation.context = _context;
+            if(errorStack) {
+                operation.data.stack = errorStack;
+            }
+
             var operationDataKBSize = sizeof(operationSerialization) / 1024;
             if(operationDataKBSize < this.MAX_PAYLOAD_SIZE) {
                 //console.log("operation size is "+operationDataKBSize);
@@ -159,7 +195,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 // })
                 // .promise();
             }
-            else {
+            else if(operation.type === DataOperation.Type.ReadCompletedOperation || operation.type === DataOperation.Type.ReadUpdateOperation) {
                 /*
                     Failing:
                     Large ReadOperation split in 1 sub operations: operationDataKBSize:230.927734375, integerSizeQuotient:1, sizeRemainder:102.927734375, operationData.length:0, integerLengthQuotient:170, lengthRemainder: 0
@@ -227,6 +263,8 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                     return iPromise.then(function() {
                         return operation;
                     });
+            } else {
+                return Promise.reject(new Error("can't send operation "+operation.type+"that is bigger serialized ("+operationDataKBSize+"kb) than MAX_PAYLOAD_SIZE ("+MAX_PAYLOAD_SIZE+"kb) - serialization: "+operationSerialization));
             }
         }
     },
@@ -247,8 +285,8 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 We're now receiving PhrontService event/operations that are response to operations initiated locally, so until we sort out more carefully who answer what, we're going to make sure we filter operations that don't have a clientId, and to be even more careful, if there's a clientId, to compare it to the one in environemnt, which is re-set everytime we receive a call from the APIGateway
             */
 
-            // if(operation.type === DataOperation.Type.PerformTransactionCompletedOperation ||
-            //     operation.type === DataOperation.Type.PerformTransactionFailedOperation) {
+            // if(operation.type === DataOperation.Type.CommitTransactionCompletedOperation ||
+            //     operation.type === DataOperation.Type.CommitTransactionFailedOperation) {
             //         console.log("OperationCoordinator: handleEvent",operation, "operation.clientId: ",operation.clientId);
             // }
 
@@ -282,61 +320,63 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
     */
     gateway: {
-        value: undefined
+        get: function() {
+            return this.worker.apiGateway;
+        }
     },
     _operationPromisesByReferrerId: {
         value: new Map()
     },
 
-    handleMessage: {
-        value: function(event, context, callback, gatewayClient) {
+    // handleMessage: {
+    //     value: function(event, context, callback, gatewayClient) {
 
-            this.gateway = gatewayClient;
+    //         this.gateway = gatewayClient;
 
-            var serializedOperation = event.body,
-                deserializedOperation,
-                objectRequires,
-                module,
-                isSync = true,
-                resultOperationPromise,
-                self = this,
-                phrontService = this.mainService.childServices[0];
+    //         var serializedOperation = event.body,
+    //             deserializedOperation,
+    //             objectRequires,
+    //             module,
+    //             isSync = true,
+    //             resultOperationPromise,
+    //             self = this,
+    //             phrontService = this.mainService.childServices[0];
 
-                // console.log(serializedOperation);
+    //             // console.log(serializedOperation);
 
-            this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
-            try {
-                deserializedOperation = this._deserializer.deserializeObject();
-            } catch (ex) {
-                console.error("No deserialization for ",serializedOperation);
-                return Promise.reject("Unknown message: ",serializedOperation);
-            }
+    //         this._deserializer.init(serializedOperation, require, objectRequires, module, isSync);
+    //         try {
+    //             deserializedOperation = this._deserializer.deserializeObject();
+    //         } catch (ex) {
+    //             console.error("No deserialization for ",serializedOperation);
+    //             return Promise.reject("Unknown message: ",serializedOperation);
+    //         }
 
-            if(deserializedOperation && !deserializedOperation.target && deserializedOperation.dataDescriptor) {
-                deserializedOperation.target = this.mainService.objectDescriptorWithModuleId(deserializedOperation.dataDescriptor);
-            }
+    //         if(deserializedOperation && !deserializedOperation.target && deserializedOperation.dataDescriptor) {
+    //             deserializedOperation.target = this.mainService.objectDescriptorWithModuleId(deserializedOperation.dataDescriptor);
+    //         }
 
-            //Add connection (custom) info the operation:
-            // deserializedOperation.connection = gatewayClient;
+    //         //Add connection (custom) info the operation:
+    //         // deserializedOperation.connection = gatewayClient;
 
-            /*
-                Sets the whole AWS API Gateway event as the dataOperations's context.
+    //         /*
+    //             Sets the whole AWS API Gateway event as the dataOperations's context.
 
-                Reading the stage for example -
-                aDataOperation.context.requestContext.stage
+    //             Reading the stage for example -
+    //             aDataOperation.context.requestContext.stage
 
-                Can help a DataService address the right resource/database for that stage
-            */
-            deserializedOperation.context = event;
+    //             Can help a DataService address the right resource/database for that stage
+    //         */
+    //         deserializedOperation.context = event;
 
-            //Set the clientId (in API already)
-            deserializedOperation.clientId = event.requestContext.connectionId;
+    //         //Set the clientId (in API already)
+    //         deserializedOperation.clientId = event.requestContext.connectionId;
 
-            // console.log("OperationCoordinator handleMessage(...)",deserializedOperation);
+    //         // console.log("OperationCoordinator handleMessage(...)",deserializedOperation);
 
-            return this.handleOperation(deserializedOperation, event, context, callback, gatewayClient);
-        }
-    },
+    //         return this.handleOperation(deserializedOperation, event, context, callback, gatewayClient);
+    //     }
+    // },
 
     handleOperation: {
         value: function(deserializedOperation, event, context, callback, gatewayClient) {
@@ -360,8 +400,8 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 (deserializedOperation.type ===  DataOperation.Type.UpdateOperation) ||
                 (deserializedOperation.type ===  DataOperation.Type.DeleteOperation) ||
                 (deserializedOperation.type ===  DataOperation.Type.CreateTransactionOperation) ||
-                (deserializedOperation.type ===  DataOperation.Type.BatchOperation) ||
-                (deserializedOperation.type ===  DataOperation.Type.PerformTransactionOperation) ||
+                (deserializedOperation.type ===  DataOperation.Type.AppendTransactionOperation) ||
+                (deserializedOperation.type ===  DataOperation.Type.CommitTransactionOperation) ||
                 (deserializedOperation.type ===  DataOperation.Type.RollbackTransactionOperation) ||
                 (deserializedOperation.type ===  DataOperation.Type.MergeOperation)
             ) {
@@ -372,14 +412,40 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                     var propagationPromise = deserializedOperation.propagationPromise;
 
                     //If Connect, we can't really return anything to the client, so we resolve now:
-                    if(deserializedOperation.type ===  DataOperation.Type.ConnectOperation) {
+                    if(deserializedOperation.type === DataOperation.Type.ConnectOperation) {
                         resolve(true);
                     };
 
                     return propagationPromise;
                 });
 
-                return resultOperationPromise;
+                return resultOperationPromise
+                .then(function() {
+                    /*
+                        This is a way to independently provide the client that whoever handled that event is completely done.
+                        Which opens the way for participants to independently message the client.
+
+                        For example, RawDataServices handling createTransactionOperation could direcly manifest their participation by dispatching also a createTransactionOperation. The client could then become the coordinator and get dynamic discovery without a man in the middle.
+                    */
+                    // var dispatchedOperation = new DataOperation();
+                    // dispatchedOperation.type = deserializedOperation.type+"DispatchComplete";
+                    // dispatchedOperation.referrerId = deserializedOperation.id;
+                    // dispatchedOperation.clientId = deserializedOperation.clientId;
+
+                    // self.dispatchOperationToConnectionClientId(dispatchedOperation,self.gateway,dispatchedOperation.clientId);
+
+                    return (deserializedOperation.completionPromise = (deserializedOperation.completionPromises && deserializedOperation.completionPromises.length ) ? Promise.all(deserializedOperation.completionPromises) : Promise.resolve(null));
+                })
+                .catch(function(error) {
+                    // var dispatchedOperation = new DataOperation();
+                    // dispatchedOperation.type = deserializedOperation.type+"DispatchFail";
+                    // dispatchedOperation.referrerId = deserializedOperation.id;
+                    // dispatchedOperation.clientId = deserializedOperation.clientId;
+
+                    // self.dispatchOperationToConnectionClientId(dispatchedOperation,self.gateway,dispatchedOperation.clientId);
+
+                    return Promise.reject(error);
+                });
                 //resultOperationPromise = phrontService.handleRead(deserializedOperation);
                 //phrontService.handleRead(deserializedOperation);
             } else if(deserializedOperation.type ===  DataOperation.Type.KeepAliveOperation ||
@@ -416,12 +482,12 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
     handleCreateTransactionOperation: {
         value: function (createTransactionOperation) {
             //Need to analyze the array of object descriptors:
-            var objectDescriptorModuleIds = createTransactionOperation.data,
+            var objectDescriptorModuleIds = createTransactionOperation.data.objectDescriptors,
                 i, countI, iObjectDescriptorModuleId, iObjectDescriptor, iObjectDescriptorDataService, iOperation, iObjectDescriptors
                 objectDescriptorByDataService = new Map();
 
             createTransactionOperation.objectDescriptorByDataService = objectDescriptorByDataService;
-            if(objectDescriptorModuleIds) {
+            if(objectDescriptorModuleIds)  {
                 for(i=0, countI = objectDescriptorModuleIds.length; (i<countI); i++) {
                     iObjectDescriptorModuleId = objectDescriptorModuleIds[i];
 
@@ -492,7 +558,9 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                         iterationOperation.referrerId = createTransactionOperation.id;
 
                         iterationOperation.target = mapIteration[0];
-                        iterationOperation.data = mapIteration[1];
+                        iterationOperation.data = {
+                            objectDescriptors: mapIteration[1]
+                        };
 
                         nestedCreateTransactionsById.set(iterationOperation.id,iterationOperation);
 
@@ -535,35 +603,35 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
         }
     },
 
-    handleCreateTransactionFailedOperation: {
-        value: function (createTransactionFailedOperation) {
-            var rootCreateTransaction = this._processCreateTransactionResultOperation(createTransactionFailedOperation);
+    // handleCreateTransactionFailedOperation: {
+    //     value: function (createTransactionFailedOperation) {
+    //         var rootCreateTransaction = this._processCreateTransactionResultOperation(createTransactionFailedOperation);
 
-            rootCreateTransaction.nestedCreateTransactionsFailedOperations.add(createTransactionFailedOperation);
+    //         rootCreateTransaction.nestedCreateTransactionsFailedOperations.add(createTransactionFailedOperation);
 
-            if(rootCreateTransaction.nestedCreateTransactionsById.size ===
-                (
-                    createTransactionOperation.nestedCreateTransactionsFailedOperations.size +
-                    createTransactionOperation.nestedCreateTransactionsCompletedOperations.size
-                )) {
-                    //Everything is back but some failed.... So we need to send  createTransactionFailed Operation to the client
+    //         if(rootCreateTransaction.nestedCreateTransactionsById.size ===
+    //             (
+    //                 createTransactionOperation.nestedCreateTransactionsFailedOperations.size +
+    //                 createTransactionOperation.nestedCreateTransactionsCompletedOperations.size
+    //             )) {
+    //                 //Everything is back but some failed.... So we need to send  createTransactionFailed Operation to the client
 
-                    var operation = new DataOperation();
-                    operation.referrerId = rootCreateTransaction.id;
-                    //We keep the same
-                    /*
-                        WARNING - it's ok as we handle it ourselves, but that  a null target would throw an exception if handled by the
-                    */
-                    operation.target = null;
-                    operation.type = DataOperation.Type.CreateTransactionFailedOperation;
-                    operation.data = createTransactionOperation.nestedCreateTransactionsFailedOperations;
+    //                 var operation = new DataOperation();
+    //                 operation.referrerId = rootCreateTransaction.id;
+    //                 //We keep the same
+    //                 /*
+    //                     WARNING - it's ok as we handle it ourselves, but that  a null target would throw an exception if handled by the
+    //                 */
+    //                 operation.target = null;
+    //                 operation.type = DataOperation.Type.CreateTransactionFailedOperation;
+    //                 operation.data = createTransactionOperation.nestedCreateTransactionsFailedOperations;
 
-                //To dispatch to client:
-                this.handleEvent(operation);
+    //             //To dispatch to client:
+    //             this.handleEvent(operation);
 
-            }
-        }
-    },
+    //         }
+    //     }
+    // },
 
     /*
 
@@ -615,21 +683,21 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
     /*
         First rough implementation to dispatch a batch's sub operations on their own. We shouldn't have to do this here, will do for now...
     */
-    // captureBatchOperation: {
-    //     value: function (batchOperation) {
+    // captureAppendTransactionOperation: {
+    //     value: function (appendTransactionOperation) {
     //         /*
     //             #TODO: cleanup the use of DataOperation .data
     //                 - passing a specific RawDataService's transaction id as data.transactionId isn't right. a DataOperation's context is more appropriate for that and it should be unique so if there are 2 RawDataServices with each a transactionId, they should use unique keys in the context
     //                 - Is it ok if an operation is failed that it's data contains an error? What if there are sub-operations? And sub-errors? Do we make a "GroupError" to contains everything?
     //         */
-    //         var batchedOperations = batchOperation.data.batchedOperations,
+    //         var batchedOperations = appendTransactionOperation.data.batchedOperations,
     //             i, countI, iOperation, iPropagationPromise;
 
 
     //         for(i=0, countI = batchedOperations.length; (i < countI); i++) {
     //             iOperation = batchedOperations[i];
     //             if(!iOperation.referrer) {
-    //                 iOperation.referrer = batchOperation;
+    //                 iOperation.referrer = appendTransactionOperation;
     //             }
 
     //             if(iPropagationPromise) {
@@ -647,20 +715,20 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
     //     }
     // },
 
-    handleBatchOperation: {
-        value: function (batchOperation) {
-            var rootCreateTransaction =this._pendingOperationById.get(batchOperation.referrerId);
+    handleAppendTransactionOperation: {
+        value: function (appendTransactionOperation) {
+            var rootCreateTransaction =this._pendingOperationById.get(appendTransactionOperation.referrerId);
 
             if(rootCreateTransaction) {
                 if(rootCreateTransaction.nestedCreateTransactionsById) {
 
-                    console.error("Implement OperationCoordinator handleBatchOperation when multiple DataServices are involved");
+                    console.error("Implement OperationCoordinator handleAppendTransactionOperation when multiple DataServices are involved");
 
                 } else {
                     //get the sole DataService involved
                     var dataService = rootCreateTransaction.objectDescriptorByDataService.keys().next().value;
 
-                    batchOperation.target = dataService;
+                    appendTransactionOperation.target = dataService;
 
                     /*
                         We know who needs it and that the listener implements that method.
@@ -676,27 +744,27 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                         createTransactionOperation.target.dispatchEvent(createTransactionOperation);
                     */
 
-                   batchOperation.target.handleBatchOperation(batchOperation);
+                   appendTransactionOperation.target.handleAppendTransactionOperation(appendTransactionOperation);
 
                 }
             }
         }
     },
 
-    handlePerformTransactionOperation: {
-        value: function (performTransactionOperation) {
-            var rootCreateTransaction =this._pendingOperationById.get(performTransactionOperation.referrerId);
+    handleCommitTransactionOperation: {
+        value: function (commitTransactionOperation) {
+            var rootCreateTransaction =this._pendingOperationById.get(commitTransactionOperation.referrerId);
 
             if(rootCreateTransaction) {
                 if(rootCreateTransaction.nestedCreateTransactionsById) {
 
-                    console.error("Implement OperationCoordinator handlePerformTransactionOperation when multiple DataServices are involved");
+                    console.error("Implement OperationCoordinator handleCommitTransactionOperation when multiple DataServices are involved");
 
                 } else {
                     //get the sole DataService involved
                     var dataService = rootCreateTransaction.objectDescriptorByDataService.keys().next().value;
 
-                    performTransactionOperation.target = dataService;
+                    commitTransactionOperation.target = dataService;
 
                     /*
                         We know who needs it and that the listener implements that method.
@@ -712,7 +780,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                         createTransactionOperation.target.dispatchEvent(createTransactionOperation);
                     */
 
-                   performTransactionOperation.target.handlePerformTransactionOperation(performTransactionOperation);
+                   commitTransactionOperation.target.handleCommitTransactionOperation(commitTransactionOperation);
 
                 }
             }

@@ -14,6 +14,7 @@ exports.Worker = Target.specialize( /** @lends Worker.prototype */{
     constructor: {
         value: function Worker() {
             this.eventManager = defaultEventManager;
+            Montage.application = this;
             defaultEventManager.application = this;
         }
     },
@@ -49,9 +50,9 @@ exports.Worker = Target.specialize( /** @lends Worker.prototype */{
      */
 
     responseForEventAuthorization: {
-        value: function(event, authorization, responseContext) {
+        value: function(event, principalId, authorization, responseContext) {
             var response = {
-                "principalId": "me",
+                "principalId": principalId ? principalId : "me",
                 "policyDocument": {
                     "Version": "2012-10-17",
                     "Statement": [
