@@ -1072,7 +1072,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             */
 
-            sql = `SELECT (SELECT row_to_json(_) FROM (SELECT ${escapedRawReadExpressionsArray.join(",")}) as _) FROM ${schemaName}."${tableName}"`;
+            sql = `SELECT (SELECT to_jsonb(_) FROM (SELECT ${escapedRawReadExpressionsArray.join(",")}) as _) FROM ${schemaName}."${tableName}"`;
 
             //Adding the join expressions if any
             if(rawExpressionJoinStatements.size) {
