@@ -18,7 +18,7 @@
                 {"@": "phone"},
                 {"@": "addresses"},
                 {"@": "events"},
-                {"@": "questionnaires"},
+                {"@": "respondentQuestionnaires"},
                 {"@": "supplierRelationships"},
                 {"@": "customerSupplierResponsibilities"},
                 {"@": "firstPersonalRelationships"},
@@ -147,10 +147,10 @@
         "object": "data/main.datareel/model/event.mjson"
     },
 
-    "questionnaires": {
+    "respondentQuestionnaires": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "questionnaires",
+            "name": "respondentQuestionnaires",
             "valueType": "object",
             "cardinality": -1,
             "inversePropertyName": "respondent",

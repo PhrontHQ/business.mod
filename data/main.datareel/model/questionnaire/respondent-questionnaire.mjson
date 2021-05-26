@@ -38,7 +38,7 @@
             "name": "respondent",
             "valueType": "object",
             "cardinality": 1,
-            "inversePropertyName": "questionnaires",
+            "inversePropertyName": "respondentQuestionnaires",
             "valueDescriptor": {"@": "personDescriptor"}
         }
     },

@@ -19,6 +19,12 @@ var Party = require("./party").Party;
 
 
 exports.Person = Party.specialize(/** @lends Person.prototype */ {
+    constructor: {
+        value: function Person() {
+            this.super();
+            return this;
+        }
+    },
 
     /**
      * name
@@ -46,7 +52,7 @@ exports.Person = Party.specialize(/** @lends Person.prototype */ {
      *
      * @property {PersonName}
      */
-    name: {
+    gender: {
         value: undefined
     },
 
@@ -100,6 +106,9 @@ exports.Person = Party.specialize(/** @lends Person.prototype */ {
         value: undefined
     },
     employmentHistory: {
+        value: undefined
+    },
+    respondentQuestionnaires: {
         value: undefined
     }
 

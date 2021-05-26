@@ -71,9 +71,9 @@
                         "<->": "id",
                         "converter": {"@": "eventsConverter"}
                     },
-                    "questionnaires": {
+                    "respondentQuestionnaires": {
                         "<->": "id",
-                        "converter": {"@": "questionnairesConverter"}
+                        "converter": {"@": "respondentQuestionnairesConverter"}
                     },
                     "supplierRelationships": {
                         "<->": "id",
@@ -199,7 +199,7 @@
         }
     },
 
-    "questionnairesConverter": {
+    "respondentQuestionnairesConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "respondentId == $"
