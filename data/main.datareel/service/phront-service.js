@@ -3848,7 +3848,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                         operation.data = {};
                         operation.data[self.identifier] = data.transactionId;
 
-                        console.log("+++++++ handleCreateTransactionOperation: transactionId is "+data.transactionId);
+                        //console.log("+++++++ handleCreateTransactionOperation: transactionId is "+data.transactionId);
                         //resolve(operation);
                     }
 
