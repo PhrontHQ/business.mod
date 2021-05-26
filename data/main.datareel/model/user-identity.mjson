@@ -31,9 +31,14 @@
             "module": {
                 "%": "data/main.datareel/model/user-identity"
             },
-            "object":{"@": "user-identity"}
+            "object":{"@": "user-identity"},
+            "parent":{"@": "IdentityDescriptor"}
         }
     },
+    "IdentityDescriptor": {
+        "object": "montage/data/model/identity.mjson"
+    },
+
     "user-identity": {
         "object": "data/main.datareel/model/user-identity"
     },
