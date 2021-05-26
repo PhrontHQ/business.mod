@@ -2,6 +2,7 @@
     "root": {
         "prototype": "data/main.datareel/service/phront-service",
         "values": {
+            "identifier": "PhrontService",
             "name": "PhrontService",
             "exportName": "PhrontService",
             "mappings": [
@@ -66,7 +67,10 @@
                 {"@": "RespondentQuestionnaireAnswerMapping"},
                 {"@": "RespondentQuestionnaireVariableValueMapping"},
                 {"@": "CustomerEngagementQuestionnaireMapping"},
-                {"@": "RoleRankingMapping"}
+                {"@": "RoleRankingMapping"},
+                {"@": "ApplicationMapping"},
+                {"@": "UserPoolMapping"},
+                {"@": "UserPoolClientMapping"}
 
             ],
             "types": [
@@ -135,7 +139,10 @@
                 {"@": "RespondentQuestionnaireAnswer"},
                 {"@": "RespondentQuestionnaireVariableValue"},
                 {"@": "CustomerEngagementQuestionnaire"},
-                {"@": "RoleRanking"}
+                {"@": "RoleRanking"},
+                {"@": "Application"},
+                {"@": "UserPool"},
+                {"@": "UserPoolClient"}
           ],
             "userIdentityServices": [
                 {"@": "cognitoIdentityService"}
@@ -658,6 +665,30 @@
 
     "RoleRankingMapping": {
         "object": "data/main.datareel/mapping/role-ranking-mapping.mjson"
+    },
+
+    "Application": {
+        "object": "data/main.datareel/model/app/application.mjson"
+    },
+
+    "ApplicationMapping": {
+        "object": "data/main.datareel/mapping/app/application-mapping.mjson"
+    },
+
+    "UserPool": {
+        "object": "data/main.datareel/model/app/user-pool.mjson"
+    },
+
+    "UserPoolMapping": {
+        "object": "data/main.datareel/mapping/app/user-pool-mapping.mjson"
+    },
+
+    "UserPoolClient": {
+        "object": "data/main.datareel/model/app/user-pool-client.mjson"
+    },
+
+    "UserPoolClientMapping": {
+        "object": "data/main.datareel/mapping/app/user-pool-client-mapping.mjson"
     },
 
     "cognitoIdentityService": {

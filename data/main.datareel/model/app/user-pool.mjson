@@ -1,0 +1,77 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "UserPool",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "userPoolClients"},
+                {"@": "cognitoUserPool"},
+                {"@": "servedOrganizations"}
+
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/app/user-pool.mjson"
+            },
+            "exportName": "UserPool",
+            "module": {
+                "%": "data/main.datareel/model/app/user-pool"
+            },
+            "object":{"@": "UserPool"},
+            "parent":{"@": "DataObjectDescriptor"}
+        }
+    },
+    "UserPool": {
+        "object": "data/main.datareel/model/app/user-pool"
+    },
+    "DataObjectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "userPoolClients": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "userPoolClients",
+            "cardinality": -1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "UserPoolClientDescriptor"},
+            "inversePropertyName": "userPool"
+        }
+    },
+    "UserPoolClientDescriptor": {
+        "object": "data/main.datareel/model/app/user-pool-client.mjson"
+    },
+    "cognitoUserPool": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "cognitoUserPool",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "CognitoUserPoolDescriptor"}
+       }
+    },
+    "CognitoUserPoolDescriptor": {
+        "object": "data/main.datareel/model/aws/cognito/user-pool.mjson"
+    },
+    "servedOrganizations": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "servedOrganizations",
+            "cardinality": -1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "OrganizationDescriptor"},
+            "inversePropertyName": "userPools",
+            "description": "The parties using a UserPool"
+       }
+    },
+    "OrganizationDescriptor": {
+        "object": "data/main.datareel/model/organization.mjson"
+    }
+
+}

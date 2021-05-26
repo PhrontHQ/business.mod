@@ -2,6 +2,7 @@
     "root": {
         "prototype": "./service/aws/s3-data-service",
         "values": {
+            "identifier": "S3DataService",
             "name": "S3DataService",
             "exportName": "S3DataService",
             "mappings": [

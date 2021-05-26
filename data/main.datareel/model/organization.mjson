@@ -15,7 +15,8 @@
                 {"@": "b2bCustomerRelationships"},
                 {"@": "supplierRelationships"},
                 {"@": "services"},
-                {"@": "customerEngagementQuestionnaires"}
+                {"@": "userPools"},
+                {"@": "applications"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/organization.mjson"
@@ -193,6 +194,33 @@
 
     "customerEngagementQuestionnaireDescriptor": {
         "object": "data/main.datareel/model/customer-engagement-questionnaire.mjson"
+    },
+
+    "userPools": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "userPools",
+            "cardinality": -1,
+            "inversePropertyName": "servedParties",
+            "valueDescriptor": {"@": "UserPoolDescriptor"},
+            "isSearchable": true
+        }
+    },
+    "UserPoolDescriptor": {
+        "object": "data/main.datareel/model/app/user-pool.mjson"
+    },
+
+    "applications": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "applications",
+            "cardinality": -1,
+            "inversePropertyName": "controllingParty",
+            "valueDescriptor": {"@": "ApplicationDescriptor"}
+        }
+    },
+    "ApplicationDescriptor": {
+        "object": "data/main.datareel/model/app/application.mjson"
     }
 
 }

@@ -1,0 +1,90 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "ApplicationDescriptor"},
+            "primaryKeyPropertyDescriptors": [
+                {"@": "ApplicationIdDescriptor"}
+            ],
+            "objectMapping": {
+                "rules": {
+                    "name": {"<->": "name"},
+                    "userPoolClients": {
+                        "<->": "id",
+                        "converter": {"@": "userPoolClients-converter"}
+                    },
+                    "controllingParty": {
+                        "<-": "this",
+                        "converter": {"@": "controllingPartyForeignKeyConverter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                    "controllingPersonId": {
+                        "<-": "controllingParty",
+                        "reverter": {"@": "controllingPartyForeignKeyConverter"}
+                    },
+                    "controllingOrganizationId": {
+                        "<-": "controllingParty",
+                        "reverter": {"@": "controllingPartyForeignKeyConverter"}
+                    }
+                }
+            },
+            "requisitePropertyNames": [
+                "name"
+            ]
+        }
+    },
+
+    "ApplicationDescriptor": {
+        "object": "data/main.datareel/model/app/application.mjson"
+    },
+
+    "ApplicationIdDescriptor": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "id",
+            "valueType": "string"
+        }
+    },
+    "userPoolClients-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "applicationId == $"
+        }
+    },
+
+    "PersonDescriptor": {
+        "object": "data/main.datareel/model/person.mjson"
+    },
+
+    "OrganizationDescriptor": {
+        "object": "data/main.datareel/model/organization.mjson"
+    },
+
+    "PersonForeignKeyMapping": {
+        "prototype": "montage/data/service/raw-data-type-mapping",
+        "values": {
+            "type": {"@": "PersonDescriptor"},
+            "expression": "controllingPersonId.defined()"
+        }
+    },
+
+    "OrganizationForeignKeyMapping": {
+        "prototype": "montage/data/service/raw-data-type-mapping",
+        "values": {
+            "type": {"@": "OrganizationDescriptor"},
+            "expression": "controllingOrganizationId.defined()"
+        }
+    },
+
+    "controllingPartyForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $",
+            "foreignDescriptorMappings": [{"@": "PersonForeignKeyMapping"},{"@": "OrganizationForeignKeyMapping"}]
+        }
+    }
+
+}

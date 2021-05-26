@@ -1,0 +1,67 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "UserPoolDescriptor"},
+            "primaryKeyPropertyDescriptors": [
+                {"@": "UserPoolIdDescriptor"}
+            ],
+            "objectMapping": {
+                "rules": {
+                    "name": {"<->": "name"},
+                    "userPoolClients": {
+                        "<->": "id",
+                        "converter": {"@": "userPoolClients-converter"}
+                    },
+                    "cognitoUserPool": {
+                        "<->": "cognitoUserPoolId",
+                        "converter": {"@": "cognitoUserPool-converter"}
+                    },
+                    "servedOrganizations": {
+                        "<-": "id",
+                        "converter": {"@": "servedOrganizationsForeignKeyConverter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "name"
+            ]
+        }
+    },
+
+    "UserPoolDescriptor": {
+        "object": "data/main.datareel/model/app/user-pool.mjson"
+    },
+
+    "UserPoolIdDescriptor": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "id",
+            "valueType": "string"
+        }
+    },
+    "userPoolClients-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "userPoolId == $"
+        }
+    },
+    "cognitoUserPool-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "Id == $"
+        }
+    },
+
+    "servedOrganizationsForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "userPoolIds == $"
+        }
+    }
+
+}

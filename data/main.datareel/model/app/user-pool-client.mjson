@@ -1,0 +1,108 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "UserPoolClient",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "application"},
+                {"@": "identifier"},
+                {"@": "credentials"},
+                {"@": "userPool"},
+                {"@": "cognitoUserPoolClient"},
+                {"@": "controllingParty"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/app/user-pool-client.mjson"
+            },
+            "exportName": "UserPoolClient",
+            "module": {
+                "%": "data/main.datareel/model/app/user-pool-client"
+            },
+            "object":{"@": "UserPoolClient"},
+            "parent":{"@": "DataObjectDescriptor"}
+        }
+    },
+    "UserPoolClient": {
+        "object": "data/main.datareel/model/app/user-pool-client"
+    },
+    "DataObjectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "application": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "application",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "ApplicationDescriptor"},
+            "inversePropertyName": "userPoolClients",
+            "description": "The application the user pool client represents. An application could have access to different pools via different UserPoolClients"
+       }
+    },
+    "ApplicationDescriptor": {
+        "object": "data/main.datareel/model/app/application.mjson"
+    },
+
+    "identifier": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "identifier",
+            "valueType": "string"
+        }
+    },
+    "credentials": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "credentials",
+            "valueType": "string"
+        }
+    },
+    "userPool": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "userPool",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "UserPoolDescriptor"},
+            "inversePropertyName": "userPoolClients"
+       }
+    },
+    "UserPoolDescriptor": {
+        "object": "data/main.datareel/model/app/user-pool.mjson"
+    },
+    "cognitoUserPoolClient": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "cognitoUserPoolClient",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "CognitoUserPoolClientDescriptor"}
+       }
+    },
+    "CognitoUserPoolClientDescriptor": {
+        "object": "data/main.datareel/model/aws/cognito/user-pool-client.mjson"
+    },
+    "controllingParty": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "controllingParty",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "PartyDescriptor"},
+            "inversePropertyName": "applications",
+            "description": "The party owning the application. Important for security, analytics, etc... Could be a Person, an organiation, any Party subclass"
+       }
+    },
+    "PartyDescriptor": {
+        "object": "data/main.datareel/model/party.mjson"
+    }
+
+}

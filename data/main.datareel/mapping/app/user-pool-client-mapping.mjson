@@ -1,0 +1,68 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "UserPoolClientDescriptor"},
+            "primaryKeyPropertyDescriptors": [
+                {"@": "ApplicationIdDescriptor"}
+            ],
+            "objectMapping": {
+                "rules": {
+                    "name": {"<->": "name"},
+                    "identifier": {"<->": "identifier"},
+                    "credentials": {"<->": "credentials"},
+                    "userPool": {
+                        "<->": "cognitoUserPoolId",
+                        "converter": {"@": "userPool-converter"}
+                    },
+                    "application": {
+                        "<-": "applicationId",
+                        "converter": {"@": "applicationForeignKeyConverter"}
+                    },
+                    "cognitoUserPoolClient": {
+                        "<->": "{ClientId: identifier, UserPoolId: cognitoUserPoolId}",
+                        "converter": {"@": "cognitoAppClient-converter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "name"
+            ]
+        }
+    },
+
+    "UserPoolClientDescriptor": {
+        "object": "data/main.datareel/model/app/user-pool-client.mjson"
+    },
+
+    "ApplicationIdDescriptor": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "id",
+            "valueType": "string"
+        }
+    },
+    "userPool-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "cognitoUserPoolId == $"
+        }
+    },
+    "cognitoAppClient-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "ClientId == $.ClientId && UserPoolId == $.UserPoolId"
+        }
+    },
+    "applicationForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    }
+
+}

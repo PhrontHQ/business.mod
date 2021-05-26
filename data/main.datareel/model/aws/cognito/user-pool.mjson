@@ -1,0 +1,43 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "UserPool",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "appClients"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/aws/cognito/app-client.mjson"
+            },
+            "exportName": "UserPool",
+            "module": {
+                "%": "data/main.datareel/model/aws/cognito/user-pool"
+            },
+            "object":{"@": "UserPool"}
+        }
+    },
+    "UserPool": {
+        "object": "data/main.datareel/model/aws/cognito/user-pool"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "appClients": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "appClients",
+            "cardinality": -1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "AppClientDescriptor"}
+       }
+    },
+    "AppClientDescriptor": {
+        "object": "data/main.datareel/model/aws/cognito/user-pool-client.mjson"
+    }
+
+}

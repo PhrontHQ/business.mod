@@ -70,6 +70,14 @@
                     "b2bCustomerRelationships": {
                         "<->": "id",
                         "converter": {"@": "b2bCustomerRelationshipsConverter"}
+                    },
+                    "applications": {
+                        "<->": "id",
+                        "converter": {"@": "applicationsConverter"}
+                    },
+                    "userPools": {
+                        "<->": "userPoolIds",
+                        "converter": {"@": "userPoolsConverter"}
                     }
                 }
             },
@@ -153,7 +161,7 @@
     "servicesConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
-            "convertExpression": "vendorIds.has($)"
+            "convertExpression": "vendorId == $"
         }
     },
     "customerEngagementQuestionnairesConverter": {
@@ -184,6 +192,18 @@
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "supplierId == $"
+        }
+    },
+    "applicationsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "controllingOrganizationId == $"
+        }
+    },
+    "userPoolsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "$.has(id)"
         }
     }
 }

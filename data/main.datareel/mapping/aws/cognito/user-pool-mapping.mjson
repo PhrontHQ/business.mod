@@ -1,0 +1,46 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "UserPoolDescriptor"},
+            "primaryKeyPropertyDescriptors": [
+                {"@": "IdDescriptor"}
+            ],
+            "objectMapping": {
+                "rules": {
+                    "name": {"<->": "name"},
+                    "appClients": {
+                        "<->": "Id",
+                        "converter": {"@": "userPool-converter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "name"
+            ]
+        }
+    },
+
+    "UserPoolDescriptor": {
+        "object": "data/main.datareel/model/aws/cognito/user-pool.mjson"
+    },
+
+    "IdDescriptor": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "Id",
+            "valueType": "string"
+        }
+    },
+    "userPool-converter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "UserPoolId == $"
+        }
+    }
+
+}

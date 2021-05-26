@@ -1,0 +1,63 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Application",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "userPoolClients"},
+                {"@": "controllingParty"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/app/application.mjson"
+            },
+            "exportName": "Application",
+            "module": {
+                "%": "data/main.datareel/model/app/application"
+            },
+            "object":{"@": "Application"},
+            "parent":{"@": "DataObjectDescriptor"}
+        }
+    },
+    "Application": {
+        "object": "data/main.datareel/model/app/application"
+    },
+    "DataObjectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "userPoolClients": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "userPoolClients",
+            "cardinality": -1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "UserPoolClientDescriptor"},
+            "inversePropertyName": "application"
+       }
+    },
+    "UserPoolClientDescriptor": {
+        "object": "data/main.datareel/model/app/user-pool-client.mjson"
+    },
+    "controllingParty": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "controllingParty",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "PartyDescriptor"},
+            "inversePropertyName": "applications",
+            "description": "The party owning the application. Important for security, analytics, etc... Could be a Person, an organiation, any Party subclass"
+       }
+    },
+    "PartyDescriptor": {
+        "object": "data/main.datareel/model/party.mjson"
+    }
+
+}
