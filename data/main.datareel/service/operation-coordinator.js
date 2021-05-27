@@ -67,7 +67,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
             mainService.addEventListener(DataOperation.Type.DeleteFailedOperation,this,false);
             mainService.addEventListener(DataOperation.Type.DeleteCompletedOperation,this,false);
             mainService.addEventListener(DataOperation.Type.CreateTransactionFailedOperation,this,false);
-            mainService.addEventListener(DataOperation.Type.CreateTransactionCompletedOperation,this,false);
+            //mainService.addEventListener(DataOperation.Type.CreateTransactionCompletedOperation,this,false);
             mainService.addEventListener(DataOperation.Type.BatchCompletedOperation,this,false);
             mainService.addEventListener(DataOperation.Type.BatchFailedOperation,this,false);
 
@@ -647,8 +647,8 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
                 if(rootCreateTransaction.nestedCreateTransactionsById.size ===
                     (
-                        createTransactionOperation.nestedCreateTransactionsFailedOperations.size +
-                        createTransactionOperation.nestedCreateTransactionsCompletedOperations.size
+                        rootCreateTransaction.nestedCreateTransactionsFailedOperations.size +
+                        rootCreateTransaction.nestedCreateTransactionsCompletedOperations.size
                     )) {
                     var operation = new DataOperation();
                     operation.referrerId = rootCreateTransaction.id;
