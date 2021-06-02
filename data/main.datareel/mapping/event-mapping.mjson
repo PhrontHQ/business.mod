@@ -175,7 +175,7 @@
     },
 
     "DateToStringConverter": {
-        "prototype": "../converter/ISO-date-string-to-date-converter"
+        "prototype": "montage/core/converter/RFC3339UTC-string-to-date-converter"
     },
 
     "participationStatusLogValuesConverter": {
@@ -189,7 +189,7 @@
         "prototype": "montage/core/converter/key-value-array-to-map-converter",
         "values": {
             "convertedValueDescriptor": {"@": "MapObjectDescriptor"},
-            "valuesConverter": {"@": "participationStatusLogValuesConverter"}
+            "valuesConverter": {"@": "DateToStringConverter"}
         }
     },
     "MapObjectDescriptor": {
