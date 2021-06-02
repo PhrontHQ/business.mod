@@ -603,35 +603,35 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
         }
     },
 
-    // handleCreateTransactionFailedOperation: {
-    //     value: function (createTransactionFailedOperation) {
-    //         var rootCreateTransaction = this._processCreateTransactionResultOperation(createTransactionFailedOperation);
+    handleCreateTransactionFailedOperation: {
+        value: function (createTransactionFailedOperation) {
+            var rootCreateTransaction = this._processCreateTransactionResultOperation(createTransactionFailedOperation);
 
-    //         rootCreateTransaction.nestedCreateTransactionsFailedOperations.add(createTransactionFailedOperation);
+            rootCreateTransaction.nestedCreateTransactionsFailedOperations.add(createTransactionFailedOperation);
 
-    //         if(rootCreateTransaction.nestedCreateTransactionsById.size ===
-    //             (
-    //                 createTransactionOperation.nestedCreateTransactionsFailedOperations.size +
-    //                 createTransactionOperation.nestedCreateTransactionsCompletedOperations.size
-    //             )) {
-    //                 //Everything is back but some failed.... So we need to send  createTransactionFailed Operation to the client
+            if(rootCreateTransaction.nestedCreateTransactionsById.size ===
+                (
+                    rootCreateTransaction.nestedCreateTransactionsFailedOperations.size +
+                    rootCreateTransaction.nestedCreateTransactionsCompletedOperations.size
+                )) {
+                    //Everything is back but some failed.... So we need to send  createTransactionFailed Operation to the client
 
-    //                 var operation = new DataOperation();
-    //                 operation.referrerId = rootCreateTransaction.id;
-    //                 //We keep the same
-    //                 /*
-    //                     WARNING - it's ok as we handle it ourselves, but that  a null target would throw an exception if handled by the
-    //                 */
-    //                 operation.target = null;
-    //                 operation.type = DataOperation.Type.CreateTransactionFailedOperation;
-    //                 operation.data = createTransactionOperation.nestedCreateTransactionsFailedOperations;
+                    var operation = new DataOperation();
+                    operation.referrerId = rootCreateTransaction.id;
+                    //We keep the same
+                    /*
+                        WARNING - it's ok as we handle it ourselves, but that  a null target would throw an exception if handled by the
+                    */
+                    operation.target = null;
+                    operation.type = DataOperation.Type.CreateTransactionFailedOperation;
+                    operation.data = createTransactionOperation.nestedCreateTransactionsFailedOperations;
 
-    //             //To dispatch to client:
-    //             this.handleEvent(operation);
+                //To dispatch to client:
+                this.handleEvent(operation);
 
-    //         }
-    //     }
-    // },
+            }
+        }
+    },
 
     /*
 
@@ -666,6 +666,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                         operation.data = rootCreateTransaction.data;
                     } else {
                         operation.type = DataOperation.Type.CreateTransactionFailedOperation;
+                        //Need to combines the
                         operation.data = createTransactionOperation.nestedCreateTransactionsFailedOperations;
                     }
                 }
