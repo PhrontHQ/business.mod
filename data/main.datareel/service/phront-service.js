@@ -1608,7 +1608,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                             console.log("------------------> rawDataOperation.sql:",rawDataOperation.sql);
                         }
                     }
-                    // else if(readOperation.target.name === "Event") {
+                    // else if(readOperation.target.name === "Event" || readOperation.target.name === "Organization") {
                     //     console.log("------------------> readDataOperation: ",readOperation);
                     //     console.log("------------------> rawDataOperation.sql > ",rawDataOperation.sql);
                     //     console.log("<------------------ rawDataOperation data < ",data);
@@ -3497,6 +3497,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                 condition,
                 operationLocales = updateOperation.locales,
                 rawExpressionJoinStatements,
+                hasRawExpressionJoinStatements,
                 sql;
 
 
@@ -3510,14 +3511,9 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                 // }
             //}
 
-            rawCriteria = this.mapCriteriaToRawCriteria(criteria, mapping, operationLocales, (rawExpressionJoinStatements = new Set()));
+            rawCriteria = this.mapCriteriaToRawCriteria(criteria, mapping, operationLocales, (rawExpressionJoinStatements = new SQLJoinStatements()));
             condition = rawCriteria ? rawCriteria.expression : undefined;
-
-
-            if(rawExpressionJoinStatements.sie > 0) {
-                return Promise.reject(new Error("Update operation doesn't support yet snapshot criteria involving other tables - "+JSON.stringify(rawExpressionJoinStatements)));
-            }
-
+            hasRawExpressionJoinStatements = (rawExpressionJoinStatements.size > 0);
 
             if (dataSnapshotKeys) {
                 for (i = 0, countI = dataSnapshotKeys.length; i < countI; i++) {
@@ -3532,9 +3528,9 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                     iValue = dataSnapshot[iKey];
                     if(iValue === undefined || iValue === null) {
                         //TODO: this needs to be taken care of in pgstringify as well for criteria. The problem is the operator changes based on value...
-                        condition += `${escapeIdentifier(iKey)} is ${this.mapPropertyValueToRawTypeExpression(iKey, iValue)}`;
+                        condition += `"${tableName}".${escapeIdentifier(iKey)} is ${this.mapPropertyValueToRawTypeExpression(iKey, iValue)}`;
                     } else {
-                        condition += `${escapeIdentifier(iKey)} = ${this.mapPropertyValueToRawTypeExpression(iKey, iValue)}`;
+                        condition += `"${tableName}".${escapeIdentifier(iKey)} = ${this.mapPropertyValueToRawTypeExpression(iKey, iValue)}`;
                     }
                 }
             }
@@ -3593,8 +3589,22 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                 return Promise.resolve(null);
             }
 
+            /*
+                Now we need to support
 
-            sql = `UPDATE  ${schemaName}."${tableName}" SET ${setRecordKeys.join(",")} WHERE (${condition})`;
+                UPDATE table1
+                SET table1.col1 = expression
+                FROM table2
+                WHERE table1.col2 = table2.col2;
+
+
+
+            */
+
+
+            sql = `UPDATE  ${schemaName}."${tableName}" SET ${setRecordKeys.join(",")} ${hasRawExpressionJoinStatements ? "FROM" : ""} ${hasRawExpressionJoinStatements ? rawExpressionJoinStatements.fromClauseQualifiedRightDataSetsString : ""} WHERE (${condition})${hasRawExpressionJoinStatements ? " AND (" : ""}${hasRawExpressionJoinStatements ? rawExpressionJoinStatements.joinAndConditionString : ""}${hasRawExpressionJoinStatements ? ")" : ""}`;
+
+
             return Promise.resolve(sql);
         }
     },

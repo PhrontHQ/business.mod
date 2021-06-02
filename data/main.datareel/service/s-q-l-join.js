@@ -67,8 +67,21 @@ SQLJoin = exports.SQLJoin = Montage.specialize( /** @lends SQLJoin */ {
     leftDataSet: {
         value: undefined
     },
+    leftDataSetAlias: {
+        value: undefined
+    },
+    leftDataSetAliasToStringFragment: {
+        get: function() {
+            return this.leftDataSetAlias ? ` "${this.leftDataSetAlias}"` : "";
+        }
+    },
     leftDataSetSchema: {
         value: undefined
+    },
+    qualifiedLeftDataSet: {
+        get: function() {
+            return `"${this.leftDataSetSchema}"."${this.leftDataSet}"${this.leftDataSetAliasToStringFragment}`;
+        }
     },
 
     /**
@@ -93,6 +106,12 @@ SQLJoin = exports.SQLJoin = Montage.specialize( /** @lends SQLJoin */ {
     },
     rightDataSetSchema: {
         value: undefined
+    },
+
+    qualifiedRightDataSet: {
+        get: function() {
+            return `"${this.rightDataSetSchema}"."${this.rightDataSet}"${this.rightDataSetAliasToStringFragment}`;
+        }
     },
 
     /**
@@ -120,7 +139,7 @@ SQLJoin = exports.SQLJoin = Montage.specialize( /** @lends SQLJoin */ {
     toString: {
         value: function () {
             // return `${this.type} "${this.rightDataSetSchema}"."${this.rightDataSet}"${this.rightDataSetAliasToStringFragment} ON ${this.onConditions.join(" ")}`;
-            return `${this.type} "${this.rightDataSetSchema}"."${this.rightDataSet}"${this.rightDataSetAliasToStringFragment} ON ${this.onCondition}`;
+            return `${this.type} ${this.qualifiedRightDataSet} ON ${this.onCondition}`;
         }
     }
 

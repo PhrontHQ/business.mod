@@ -22,7 +22,10 @@
      constructor: {
         value: function SQLJoinStatements() {
             this._joinMap = new Map();
-
+            this._joinDependencyMap = new Map();
+            this._joinIndexMap = new Map();
+            this._addOrderedJoins = [];
+            return this;
         }
     },
 
@@ -34,14 +37,44 @@
      add: {
          value: function (join) {
 
-            var value = this._joinMap.get(join.rightDataSet);
+            var value = this._joinMap.get(join.qualifiedRightDataSet);
             if(!value) {
                 value = new Set();
-                this._joinMap.set(join.rightDataSet, value);
+                this._joinMap.set(join.qualifiedRightDataSet, value);
             }
             value.add(join);
+            this._joinIndexMap.set(join,this._addOrderedJoins.length);
+            this._addOrderedJoins.add(join);
+            this._joinDependencyMap.set(join,join.qualifiedLeftDataSet);
+            // console.log("------> SQLJoinStatements add "+join.toString() );
+            // console.log("------> this._addOrderedJoins is "+this._addOrderedJoins.join(", ") );
          }
      },
+
+     delete: {
+        value: function (join) {
+
+            var value = this._joinMap.get(join.qualifiedRightDataSet);
+            if(value) {
+                if(!value.has(join)) {
+                    console.debug("something's off");
+                }
+                value.delete(join);
+                if(!this._addOrderedJoins.has(join)) {
+                    console.debug("something's off");
+                }
+                this._addOrderedJoins.delete(join);
+                this._joinDependencyMap.delete(join);
+                this._joinIndexMap.delete(join);
+            }
+        }
+    },
+
+    has: {
+        value: function(value) {
+            return this._joinDependencyMap.has(value);
+        }
+    },
 
      size: {
          get: function() {
@@ -88,7 +121,84 @@
         }
     },
 
-    toString: {
+    fromClauseQualifiedRightDataSetsString: {
+        get: function () {
+
+            if (this._joinMap.size) {
+                var separator = ", ",
+                    keyIterator = this._joinMap.keys(), aValue, aNextValue, resultValue = "";
+
+                    while((aValue = keyIterator.next().value) && (aNextValue = keyIterator.next().value)) {
+                        //aValue and aNextValue are Sets that contain SQLJoins
+                        if(resultValue.length > 0) {
+                            resultValue += separator;
+                        }
+                        resultValue += `${aValue}${separator}${aNextValue}`;
+                    }
+                    if(aValue) {
+                        resultValue += (resultValue.length > 0 )
+                        ? `${separator}${aValue}`
+                        : aValue;
+                    }
+                return resultValue;
+            } else {
+                return "";
+            }
+
+        }
+    },
+
+    _joinAndConditionStringForJoinSet: {
+        value: function (joinSet) {
+            if (joinSet.size) {
+                var separator = " AND ",
+                    setIterator = joinSet.values(), aValue, aNextValue, joinValue = "";
+                while((aValue = setIterator.next().value) && (aNextValue = setIterator.next().value)) {
+                    //aValue and aNextValue are Sets that contain SQLJoins
+                    if(joinValue.length > 0) {
+                        joinValue += separator;
+                    }
+                    joinValue += `${aValue.onCondition}${separator}${aNextValue.onCondition}`;
+                }
+                if(aValue) {
+                    joinValue += (joinValue.length > 0 )
+                    ? `${separator}${aValue.onCondition}`
+                    : aValue.onCondition;
+                }
+
+                return joinValue;
+            } else {
+                return "";
+            }
+        }
+    },
+
+    joinAndConditionString: {
+        get: function () {
+            if (this.size) {
+                var separator = " AND ",
+                    setIterator = this._joinMap.values(), aValue, aNextValue, joinValue = "";
+                while((aValue = setIterator.next().value) && (aNextValue = setIterator.next().value)) {
+                    //aValue and aNextValue are Sets that contain SQLJoins
+                    if(joinValue.length > 0) {
+                        joinValue += separator;
+                    }
+                    joinValue += `${this._joinAndConditionStringForJoinSet(aValue)}${separator}${this._joinAndConditionStringForJoinSet(aNextValue)}`;
+                }
+                if(aValue) {
+                    joinValue += (joinValue.length > 0 )
+                    ? `${separator}${this._joinAndConditionStringForJoinSet(aValue)}`
+                    : this._joinAndConditionStringForJoinSet(aValue);
+                }
+
+                return joinValue;
+            } else {
+                return "";
+            }
+        }
+    },
+
+    _toString: {
         value: function () {
             if (this.size) {
                 var separator = " ",
@@ -102,7 +212,7 @@
                 }
                 if(aValue) {
                     joinValue += (joinValue.length > 0 )
-                    ? ` ${this.stringifySQLJoinSet(aValue)}`
+                    ? `${separator}${this.stringifySQLJoinSet(aValue)}`
                     : this.stringifySQLJoinSet(aValue);
                 }
 
@@ -111,7 +221,33 @@
                 return "";
             }
         }
+    },
+
+    toString: {
+        value: function () {
+            if (this.size) {
+                var separator = " ",
+                    setIterator = this._addOrderedJoins .values(), aValue, aNextValue, joinValue = "";
+                while((aValue = setIterator.next().value) && (aNextValue = setIterator.next().value)) {
+                    //aValue and aNextValue are Sets that contain SQLJoins
+                    if(joinValue.length > 0) {
+                        joinValue += separator;
+                    }
+                    joinValue += `${aValue.toString()}${separator}${aNextValue.toString()}`;
+                }
+                if(aValue) {
+                    joinValue += (joinValue.length > 0 )
+                    ? `${separator}${aValue.toString()}`
+                    : aValue.toString();
+                }
+
+                return joinValue;
+            } else {
+                return "";
+            }
+        }
     }
+
 
  });
 
