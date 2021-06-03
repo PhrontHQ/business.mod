@@ -51,6 +51,25 @@
          }
      },
 
+     hasJoinEqualTo: {
+        value: function(aJoin) {
+            var candidateJoins = this._joinMap.get(aJoin.qualifiedRightDataSet);
+            if(candidateJoins) {
+                var candidateJoinsIterator = candidateJoins.values(),
+                    candidateJoinsIteration,
+                    iCandidtateJoin;
+
+                while(!(candidateJoinsIteration = candidateJoinsIterator.next()).done) {
+                    iCandidtateJoin = candidateJoinsIteration.value;
+                    if(iCandidtateJoin.onCondition === aJoin.onCondition) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+     },
+
      delete: {
         value: function (join) {
 
