@@ -758,9 +758,9 @@ module.exports = {
                 if(propertyDescriptorValueDescriptor === objectDescriptor) {
                     joinType = SQLJoinType.LeftJoin;
                     if(currentAliasPrefix) {
-                        propertyDescriptorValueDescriptorAlias = `${currentAliasPrefix}_${rawPropertyValue}${leftDataSetAlias}`;
+                        propertyDescriptorValueDescriptorAlias = `${currentAliasPrefix}_${rawPropertyValue}${tableName}`;
                     } else {
-                        propertyDescriptorValueDescriptorAlias = `${rawPropertyValue}${leftDataSetAlias}`;
+                        propertyDescriptorValueDescriptorAlias = `${rawPropertyValue}${tableName}`;
                     }
                 }
                 // else if(currentAliasPrefix) {
@@ -1478,14 +1478,16 @@ module.exports = {
             function addJoinDependenciesToArray(sqlJoinStatements, dependencyJoin, dependencyArray) {
                 var dependency, dependencies, dependenciesIterator, dependenciesIteration, iterationJoin;
                 dependency = sqlJoinStatements._joinDependencyMap.get(dependencyJoin);
-                dependencies = rightRawExpressionJoinStatements._joinMap.get(dependency);
+                dependencies = sqlJoinStatements._joinMap.get(dependency);
                 if(dependencies) {
                     dependenciesIterator = dependencies.values();
                     while(!(dependenciesIteration = dependenciesIterator.next()).done) {
                         iterationJoin = dependenciesIteration.value;
-                        dependencyArray.push(iterationJoin);
-                        addJoinDependenciesToArray(sqlJoinStatements, iterationJoin, dependencyArray)
-                    }
+                        if(iterationJoin !== dependencyJoin) {
+                            dependencyArray.push(iterationJoin);
+                            addJoinDependenciesToArray(sqlJoinStatements, iterationJoin, dependencyArray);
+                        }
+                }
                 }
             };
 
@@ -1493,9 +1495,13 @@ module.exports = {
                 Loop on joins created, try to streamline/alias as needed and add back to main rawExpressionJoinStatements.
             */
            var mergedJoins = new Set();
-            for(var li = 0, lCountI = leftRawExpressionAddOrderedJoins.length, liJoin, riJoin, riMatchedJoins, riMatchedJoinsIteration, riMatchedJoinsIterator, riMatchedJoin; (li < lCountI); li++) {
+            for(
+                var li = 0, lCountI = leftRawExpressionAddOrderedJoins.length, liJoin,
+                    riJoin, riMatchedJoins, riMatchedJoinsIterator, riMatchedJoinsIteration, riMatchedJoin, mainMatchedJoins, mainMatchedJoinsIterator, mainMatchedJoinsIteration, mainMatchedJoin;
+                (li < lCountI);
+                li++) {
                 liJoin = leftRawExpressionAddOrderedJoins[li];
-                riJoin = rightRawExpressionAddOrderedJoins[li];
+                // riJoin = rightRawExpressionAddOrderedJoins[li];
 
                 //Now check if there's one on the right side:
                 riMatchedJoins = rightRawExpressionJoinStatements._joinMap.get(liJoin.qualifiedRightDataSet);
@@ -1529,7 +1535,9 @@ module.exports = {
                             while((dependencyJoin = dependencyArray[--j])) {
                                 if(!mergedJoins.has(dependencyJoin)) {
                                     mergedJoins.add(dependencyJoin);
-                                    rawExpressionJoinStatements.add(dependencyJoin);
+                                    // if(!rawExpressionJoinStatements.hasJoinEqualTo(dependencyJoin)) {
+                                        rawExpressionJoinStatements.add(dependencyJoin);
+                                    // }
                                 }
                             }
 
@@ -1542,23 +1550,89 @@ module.exports = {
                     liJoin.onCondition = `(${liJoin.onCondition})`;
 
                 }
-                mergedJoins.add(liJoin);
-                rawExpressionJoinStatements.add(liJoin);
-                // /*
-                //     To avoid dependency issues, we interleaves the 2 sides, so that everyrhing stay relatively ordered.
-                //     if the right statement still have the join, it means it wasn't identical, nor having a siilar entry, so add it to shared and delete it from the right side:
-                // */
 
-                // if(rightRawExpressionJoinStatements.has(riJoin)) {
-                //     rightRawExpressionJoinStatements.delete(riJoin);
-                //     rawExpressionJoinStatements.add(riJoin);
-                // }
+
+
+                mainMatchedJoins = rawExpressionJoinStatements._joinMap.get(liJoin.qualifiedRightDataSet);
+                if(mainMatchedJoins) {
+                    mainMatchedJoinsIterator = mainMatchedJoins.values();
+                    while(!(mainMatchedJoinsIteration = mainMatchedJoinsIterator.next()).done) {
+                        mainMatchedJoin = mainMatchedJoinsIteration.value;
+
+                        //If conditions aren't equal, we need to consolidate them in one join:
+                        if(liJoin.onCondition !== mainMatchedJoin.onCondition) {
+                            mainMatchedJoin.onCondition = `${mainMatchedJoin.onCondition} OR ${liJoin.onCondition}`;
+
+                            var dependencyArray = [];
+                            addJoinDependenciesToArray(leftRawExpressionJoinStatements,liJoin,dependencyArray);
+
+                            //Now dependencyArray contains the list that needs to preceed riMatchedJoin
+                            var dependencyJoin, j=dependencyArray.length;
+                            while((dependencyJoin = dependencyArray[--j])) {
+                                if(!mergedJoins.has(dependencyJoin)) {
+                                    mergedJoins.add(dependencyJoin);
+                                    // if(!rawExpressionJoinStatements.hasJoinEqualTo(dependencyJoin)) {
+                                        rawExpressionJoinStatements.add(dependencyJoin);
+                                    // }
+                                }
+                            }
+
+                        }
+                        mergedJoins.add(liJoin);
+
+                    }
+                    mainMatchedJoin.onCondition = `(${mainMatchedJoin.onCondition})`;
+                } else {
+                    mergedJoins.add(liJoin);
+                    // if(!rawExpressionJoinStatements.hasJoinEqualTo(liJoin)) {
+                        rawExpressionJoinStatements.add(liJoin);
+                    // }
+                }
             }
 
             //Now add the right ones:
-            for(var ri = 0, rCountI = rightRawExpressionAddOrderedJoins.length; (ri < rCountI); ri++) {
-                if(!mergedJoins.has(rightRawExpressionAddOrderedJoins[ri])) {
-                    rawExpressionJoinStatements.add(rightRawExpressionAddOrderedJoins[ri]);
+            for(var ri = 0, rCountI = rightRawExpressionAddOrderedJoins.length,
+                riJoin,
+                mainMatchedJoins, mainMatchedJoinsIterator, mainMatchedJoinsIteration, mainMatchedJoin;
+                (ri < rCountI);
+                ri++) {
+                riJoin = rightRawExpressionAddOrderedJoins[ri];
+                if(!mergedJoins.has(riJoin)) {
+                    mainMatchedJoins = rawExpressionJoinStatements._joinMap.get(riJoin.qualifiedRightDataSet);
+                    if(mainMatchedJoins) {
+                        mainMatchedJoinsIterator = mainMatchedJoins.values();
+                        while(!(mainMatchedJoinsIteration = mainMatchedJoinsIterator.next()).done) {
+                            mainMatchedJoin = mainMatchedJoinsIteration.value;
+
+                            //If conditions aren't equal, we need to consolidate them in one join:
+                            if(riJoin.onCondition !== mainMatchedJoin.onCondition) {
+                                mainMatchedJoin.onCondition = `${mainMatchedJoin.onCondition} OR ${riJoin.onCondition}`;
+
+                                var dependencyArray = [];
+                                addJoinDependenciesToArray(rightRawExpressionJoinStatements,riJoin,dependencyArray);
+
+                                //Now dependencyArray contains the list that needs to preceed riMatchedJoin
+                                var dependencyJoin, j=dependencyArray.length;
+                                while((dependencyJoin = dependencyArray[--j])) {
+                                    if(!mergedJoins.has(dependencyJoin)) {
+                                        mergedJoins.add(dependencyJoin);
+                                        // if(!rawExpressionJoinStatements.hasJoinEqualTo(dependencyJoin)) {
+                                            rawExpressionJoinStatements.add(dependencyJoin);
+                                        // }
+                                    }
+                                }
+
+                            }
+                            mergedJoins.add(riJoin);
+
+                        }
+                        mainMatchedJoin.onCondition = `(${mainMatchedJoin.onCondition})`;
+                    } else {
+                        mergedJoins.add(riJoin);
+                        // if(!rawExpressionJoinStatements.hasJoinEqualTo(riJoin)) {
+                            rawExpressionJoinStatements.add(riJoin);
+                        // }
+                    }
                 }
             }
 
