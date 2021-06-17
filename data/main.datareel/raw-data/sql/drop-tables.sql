@@ -1,57 +1,36 @@
-drop table phront."Asset";
-drop table phront."Answer";
-drop table phront."B2CCustomerSupplierRelationship";
-drop table phront."B2CCustomerSupplierResponsibleParty";
-drop table phront."Calendar";
-drop table phront."Country";
-drop table phront."EmailAddress";
-drop table phront."EmploymentPosition";
-drop table phront."EmploymentPositionStaffing";
-drop table phront."Event";
-drop table phront."Organization";
-drop table phront."PartyEmailAddress";
-drop table phront."PartyPhoneNumber";
-drop table phront."PartyPostalAddress";
-drop table phront."PartySMSNumber";
-drop table phront."Person";
-drop table phront."PersonalRelationship";
-drop table phront."PhoneNumber";
-drop table phront."Position";
-drop table phront."PostalAddress";
-drop table phront."Question";
-drop table phront."Questionnaire";
-drop table phront."QuestionnaireQuestion";
-drop table phront."RespondentQuestionnaire";
-drop table phront."RespondentQuestionnaireAnswer";
-drop table phront."RespondentQuestionnaireVariableValue";
-drop table phront."Role";
-drop table phront."RoleRanking";
-drop table phront."Service";
-drop table phront."ServiceEngagement";
-drop table phront."ServiceProductVariant";
-drop table phront."Variable";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+drop table if exists phront."Application";
+drop table if exists phront."UserPool";
+drop table if exists phront."UserPoolClient";
+drop table if exists phront."Asset";
+drop table if exists phront."Answer";
+drop table if exists phront."B2CCustomerSupplierRelationship";
+drop table if exists phront."B2CCustomerSupplierResponsibleParty";
+drop table if exists phront."Calendar";
+drop table if exists phront."Country";
+drop table if exists phront."EmailAddress";
+drop table if exists phront."EmploymentPosition";
+drop table if exists phront."EmploymentPositionStaffing";
+drop table if exists phront."Event";
+drop table if exists phront."Organization";
+drop table if exists phront."PartyEmailAddress";
+drop table if exists phront."PartyPhoneNumber";
+drop table if exists phront."PartyPostalAddress";
+drop table if exists phront."PartySMSNumber";
+drop table if exists phront."Person";
+drop table if exists phront."PersonalRelationship";
+drop table if exists phront."PhoneNumber";
+drop table if exists phront."Position";
+drop table if exists phront."PostalAddress";
+drop table if exists phront."Question";
+drop table if exists phront."Questionnaire";
+drop table if exists phront."QuestionnaireQuestion";
+drop table if exists phront."RespondentQuestionnaire";
+drop table if exists phront."RespondentQuestionnaireAnswer";
+drop table if exists phront."RespondentQuestionnaireVariableValue";
+drop table if exists phront."CustomerEngagementQuestionnaire";
+drop table if exists phront."Role";
+drop table if exists phront."RoleRanking";
+drop table if exists phront."Service";
+drop table if exists phront."ServiceEngagement";
+drop table if exists phront."ServiceProductVariant";
+drop table if exists phront."Variable";
