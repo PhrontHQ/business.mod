@@ -29,6 +29,7 @@ var DataService = require("montage/data/service/data-service").DataService,
     //sqlString = require('sqlstring'),
 
     DataOperation = require("montage/data/service/data-operation").DataOperation,
+    DataOperationErrorNames = require("montage/data/service/data-operation").DataOperationErrorNames,
     DataOperationType = require("montage/data/service/data-operation").DataOperationType,
     PGClass = require("../model/p-g-class").PGClass,
 
@@ -195,6 +196,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             // this._registeredConnectionsByIdentifier = new Map();
         }
+    },
+
+    supportsTransaction: {
+        value: true
     },
 
     addMainServiceEventListeners: {
@@ -442,7 +447,13 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         value: true
     },
 
-
+    /*
+        https://www.postgresql.org/docs/10/queries-order.html
+        SELECT select_list
+            FROM table_expression
+            ORDER BY sort_expression1 [ASC | DESC] [NULLS { FIRST | LAST }]
+                    [, sort_expression2 [ASC | DESC] [NULLS { FIRST | LAST }] ...]
+    */
     mapOrderingsToRawOrderings: {
         value: function (orderings, mapping) {
             throw new Error("mapOrderingsToRawOrderings is not implemented");
@@ -930,7 +941,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 self = this,
                 HAS_DATA_API_UUID_ARRAY_BUG = this.HAS_DATA_API_UUID_ARRAY_BUG,
                 rule, propertyName, propertyDescriptor,
-                rawOrderings = readOperation.data?.orderings,
+                orderings = readOperation.data?.orderings,
+                rawOrderings,
                 readLimit = readOperation.data?.readLimit,
                 readOffset = readOperation.data?.readOffset;
 
@@ -1079,8 +1091,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             );
             condition = rawCriteria ? rawCriteria.expression : undefined;
 
-            if(rawOrderings) {
-                this.mapOrderingsToRawOrderings(rawOrderings, mapping);
+            if(orderings) {
+                rawOrderings = this.mapOrderingsToRawOrderings(orderings, mapping);
             }
             //     console.log(" new condition: ",condition);
             //condition = this.mapCriteriaToRawStatement(criteria, mapping);
@@ -1111,6 +1123,11 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 }
             }
             //sql = `SELECT ${escapedRawReadExpressionsArray.join(",")} FROM ${schemaName}."${tableName}" WHERE (${condition})`;
+
+            if(rawOrderings) {
+                sql += ` ORDER BY ${rawOrderings}`;
+
+            }
 
             if(readLimit) {
                 sql += ` LIMIT ${readLimit}`;
@@ -1604,8 +1621,16 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                         console.error("handleReadOperation Error: readOperation:",readOperation, "rawDataOperation: ",rawDataOperation, "error: ",err);
 
                         if(err.name === "BadRequestException") {
-                            console.log("------------------> readOperation.criteria.expression:",readOperation.criteria.expression);
-                            console.log("------------------> rawDataOperation.sql:",rawDataOperation.sql);
+
+                            if(err.message.startsWith("ERROR: relation ")
+                            && (err.message.indexOf(" does not exist") !== -1)) {
+                                err.name = DataOperationErrorNames.ObjectStoreMissing;
+                            }
+
+                            if(readOperation.criteria && readOperation.criteria.expression) {
+                                console.log("------------------> readOperation.criteria.expression:",readOperation.criteria.expression);
+                                console.log("------------------> rawDataOperation.sql:",rawDataOperation.sql);
+                            }
                         }
                     }
                     // else if(readOperation.target.name === "Event" || readOperation.target.name === "Organization") {
@@ -1674,6 +1699,12 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                             if(err) {
                                 console.error("handleReadOperation Error",readOperation,rawDataOperation,err);
+                                if(err.name === "BadRequestException") {
+                                    if(err.message.startsWith("ERROR: relation ")
+                                    && (err.message.indexOf(" does not exist") !== -1)) {
+                                        err.name = DataOperationErrorNames.ObjectStoreMissing;
+                                    }
+                                }
                             }
 
                             // if(objectDescriptor.name === "RespondentQuestionnaire") {
@@ -3895,7 +3926,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                     var response = this;
 
                     if (err) {
-                        console.error("_executeBatchStatement Error:",appendTransactionOperation, startIndex, endIndex, batchedOperations, rawDataOperation, rawOperationRecords, responseOperations);
+                        console.error("_executeBatchStatement Error:",err, appendTransactionOperation, startIndex, endIndex, batchedOperations, rawDataOperation, rawOperationRecords, responseOperations);
                         reject(err);
                     }
                     else {
@@ -4121,14 +4152,31 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
         }
    },
 
+
+
     handleAppendTransactionOperation: {
         value: function (appendTransactionOperation) {
+            /*
+                Right now we're receiving this twice for saveChanges happening from inside the Worker.
+
+                1. From Observing ourselves as participant in handling mainService transactions events,
+                2. From that same event bubbling to the mainService which we listen to as well when handling handleAppendTransactionOperation that are sent by a client of the DataWorker.
+
+                This needs to be cleaned up, one possibility is with our Liaison RawDataService on the client dispatching the transaction events directly in the worker, which would eliminate for RawDataServiced in the DataWorker differences between the transaction being initiated from outside vs from inside of it.
+
+                In the meantime, if the target is ourselves and the currentTarget is not, then it means we've already done the job.
+            */
+            if(appendTransactionOperation.target === this && appendTransactionOperation.currentTarget !== this) {
+                return;
+            }
+
 
             var transactionId = appendTransactionOperation.data.rawTransactions[this.identifier];
-
             if(!transactionId) {
                 return;
             }
+
+            console.log("handleAppendTransactionOperation: "+appendTransactionOperation.referrerId);
 
             var self = this,
                 operations = appendTransactionOperation.data.operations,
@@ -4328,6 +4376,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
 
                         //}
 
+                        // console.log("handleAppendTransactionOperation: "+appendTransactionOperation.referrerId+".dispatchEvent",operation);
 
                         operation.target.dispatchEvent(operation);
                         //console.debug("handleAppendTransactionOperation done");
@@ -4474,6 +4523,21 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
     handleCommitTransactionOperation: {
         value: function (commitTransactionOperation) {
 
+            /*
+                Right now we're receiving this twice for saveChanges happening from inside the Worker.
+
+                1. From Observing ourselves as participant in handling mainService transactions events,
+                2. From that same event bubbling to the mainService which we listen to as well when handling handleAppendTransactionOperation that are sent by a client of the DataWorker.
+
+                This needs to be cleaned up, one possibility is with our Liaison RawDataService on the client dispatching the transaction events directly in the worker, which would eliminate for RawDataServiced in the DataWorker differences between the transaction being initiated from outside vs from inside of it.
+
+                In the meantime, if the target is ourselves and the currentTarget is not, then it means we've already done the job.
+            */
+            if(commitTransactionOperation.target === this && commitTransactionOperation.currentTarget !== this) {
+                return;
+            }
+
+
             //New addition: a 1 shot transaction
             if(!commitTransactionOperation.referrerId) {
                 var self = this,
@@ -4518,7 +4582,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
 
 
             } else {
-                var transactionId = commitTransactionOperation.data.rawTransactions[this.identifier];
+                var transactionId = commitTransactionOperation.data.rawTransactions?.[this.identifier];
 
                 if(!transactionId) {
                     return;
