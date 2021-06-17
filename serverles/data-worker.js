@@ -147,7 +147,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
             var base64EncodedSerializedIdentity = event.queryStringParameters.identity,
                 serializedIdentity,
-                identityPromise, authorizeConnectionOperatio,
+                identityPromise, authorizeConnectionOperation,
                 self = this;
 
 
@@ -241,8 +241,10 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                     return self.responseForEventAuthorization(event, serializedAuthorizedIdentity, true, null);
 
                 }).catch((error) => {
+                    var serializedAuthorizedIdentity = self._serializer.serializeObject(identity);
+
                     console.error("this.operationCoordinator.handleOperation error:",error);
-                    return self.responseForEventAuthorization(event, null, false, error);
+                    return self.responseForEventAuthorization(event, serializedAuthorizedIdentity, false, error);
 
                     // callback(failedResponse(500, JSON.stringify(err)))
                 });
@@ -371,6 +373,8 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                 console.error("No deserialization for ",serializedOperation);
                 return Promise.reject("Unknown message: ",serializedOperation);
             }
+
+            //console.debug("DataWorker received: ",deserializedOperation);
 
             if(deserializedOperation && !deserializedOperation.target && deserializedOperation.dataDescriptor) {
                 deserializedOperation.target = this.mainService.objectDescriptorWithModuleId(deserializedOperation.dataDescriptor);
