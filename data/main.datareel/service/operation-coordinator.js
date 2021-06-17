@@ -389,7 +389,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 So until then, if target is null, it's meant for the coordinaator, needed for transactions that could contain object descriptors that are handled by different data services and the OperationCoordinator will have to handle that himself first to triage, before distributing to the relevant data services by creating nested transactions with the subset of dataoperations/types they deal with.
             */
             if(!deserializedOperation.target) {
-                deserializedOperation.target = this;
+                deserializedOperation.target = this.mainService;
             }
 
             if(
@@ -481,8 +481,19 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
     handleCreateTransactionOperation: {
         value: function (createTransactionOperation) {
+
+            /*
+                To avoid handling transactions that are created by the worker, we're going to only look at the one dispatched on mainService itself:
+            */
+
+            if(createTransactionOperation.target !== this.mainService) {
+                return;
+            }
+
             //Need to analyze the array of object descriptors:
-            var objectDescriptorModuleIds = createTransactionOperation.data.objectDescriptors,
+            var objectDescriptorModuleIds = createTransactionOperation.data.objectDescriptors
+                ? createTransactionOperation.data.objectDescriptors
+                : createTransactionOperation.data, //Older format
                 i, countI, iObjectDescriptorModuleId, iObjectDescriptor, iObjectDescriptorDataService, iOperation, iObjectDescriptors
                 objectDescriptorByDataService = new Map();
 
