@@ -5,7 +5,8 @@
             "name": "Position",
             "propertyDescriptors": [
                 {"@": "name"},
-                {"@": "role"}
+                {"@": "role"},
+                {"@": "employmentPositions"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/position.mjson"
@@ -52,6 +53,19 @@
     },
     "role_descriptor": {
         "object": "data/main.datareel/model/role.mjson"
+    },
+    "employmentPositions": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "employmentPositions",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "employmentPositionDescriptor"}
+        }
+    },
+    "employmentPositionDescriptor": {
+        "object": "data/main.datareel/model/employment-position.mjson"
     }
+
 
 }

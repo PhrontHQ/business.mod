@@ -3,9 +3,7 @@
         "prototype": "montage/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "UserPoolClientDescriptor"},
-            "primaryKeyPropertyDescriptors": [
-                {"@": "ApplicationIdDescriptor"}
-            ],
+            "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
                     "name": {"<->": "name"},
@@ -16,11 +14,11 @@
                         "converter": {"@": "userPool-converter"}
                     },
                     "application": {
-                        "<-": "applicationId",
+                        "<->": "applicationId",
                         "converter": {"@": "applicationForeignKeyConverter"}
                     },
                     "cognitoUserPoolClient": {
-                        "<->": "{ClientId: identifier, UserPoolId: cognitoUserPoolId}",
+                        "<-": "{ClientId: identifier, UserPoolId: cognitoUserPoolId}",
                         "converter": {"@": "cognitoAppClient-converter"}
                     }
                 }
@@ -39,13 +37,6 @@
         "object": "data/main.datareel/model/app/user-pool-client.mjson"
     },
 
-    "ApplicationIdDescriptor": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "id",
-            "valueType": "string"
-        }
-    },
     "userPool-converter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {

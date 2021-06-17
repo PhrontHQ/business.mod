@@ -9,18 +9,19 @@
             ],
             "objectMapping": {
                 "rules": {
-                    "ClientId": {"<->": "ClientId"},
-                    "UserPoolId": {"<->": "UserPoolId"},
-                    "UserPool": {
+                    "clientId": {"<->": "ClientId"},
+                    "userPoolId": {"<->": "UserPoolId"},
+                    "userPool": {
                         "<->": "UserPoolId",
                         "converter": {"@": "userPool-converter"}
                     },
-                    "ClientName": {"<->": "ClientName"},
-                    "ClientSecret": {"<->": "ClientSecret"},
-                    "RefreshTokenValidity": {"<->": "RefreshTokenValidity"},
-                    "AccessTokenValidity": {"<->": "AccessTokenValidity"},
-                    "IdTokenValidity": {"<->": "IdTokenValidity"},
-                    "TokenValidityUnits": {"<->": "TokenValidityUnits"}
+                    "clientName": {"<->": "ClientName"},
+                    "generateSecret": {"<->": "ClientSecret.defined()"},
+                    "clientSecret": {"<->": "ClientSecret"},
+                    "refreshTokenValidity": {"<->": "RefreshTokenValidity"},
+                    "accessTokenValidity": {"<->": "AccessTokenValidity"},
+                    "idTokenValidity": {"<->": "IdTokenValidity"},
+                    "tokenValidityUnits": {"<->": "TokenValidityUnits"}
                 }
             },
             "rawDataMapping": {

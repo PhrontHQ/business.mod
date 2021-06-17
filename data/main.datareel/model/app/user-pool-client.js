@@ -15,7 +15,12 @@ var DataObject = require("../data-object").DataObject;
  */
 
 exports.UserPoolClient = DataObject.specialize(/** @lends Application.prototype */ {
-
+    constructor: {
+        value: function UserPoolClient() {
+            this.super();
+            return this;
+        }
+    },
     name: {
         value: undefined
     },
@@ -25,10 +30,7 @@ exports.UserPoolClient = DataObject.specialize(/** @lends Application.prototype 
     credentials: {
         value: undefined
     },
-    controllingParty: {
-        value: undefined
-    },
-    cognitouserPoolClient: {
+    cognitoUserPoolClient: {
         value: undefined
     },
     userPool: {

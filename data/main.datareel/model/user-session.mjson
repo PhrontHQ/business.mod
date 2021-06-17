@@ -1,0 +1,200 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "UserSession",
+            "propertyDescriptors": [
+                {"@": "identity"},
+                {"@": "person"},
+                {"@": "environment"},
+                {"@": "connectionId"},
+                {"@": "connectionTimeRange"}
+            ],
+            "objectDescriptorModule": {
+                "%": "data/main.datareel/model/user-session.mjson"
+            },
+            "exportName": "UserSession",
+            "module": {
+                "%": "data/main.datareel/model/user-session"
+            },
+            "object":{"@": "user-session"},
+            "parent":{"@": "DataObjectDescriptor"}
+        }
+    },
+    "user-session": {
+        "object": "data/main.datareel/model/user-session"
+    },
+
+    "DataObjectDescriptor": {
+        "object": "data/main.datareel/model/data-object.mjson"
+    },
+
+    "identity": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "username",
+            "valueType": "string"
+        }
+    },
+    "person": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "person",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "person_descriptor"}
+       }
+    },
+    "person_descriptor": {
+        "object": "data/main.datareel/model/person.mjson"
+    },
+
+    "password": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "password",
+            "valueType": "string"
+        }
+    },
+    "session": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "session",
+            "valueType": "object"
+        }
+    },
+    "accountConfirmationCode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "accountConfirmationCode",
+            "isSerializable": false,
+            "valueType": "string"
+        }
+    },
+    "isAccountConfirmed": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "isAccountConfirmed",
+            "isSerializable": false,
+            "defaultValue": false,
+            "valueType": "boolean"
+        }
+    },
+    "needsNewConfirmationCode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "needsNewConfirmationCode",
+            "isSerializable": false,
+            "defaultValue": false,
+            "valueType": "boolean"
+        }
+    },
+    "isAuthenticated": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "isAuthenticated",
+            "serializable": false,
+            "defaultValue": false,
+            "valueType": "boolean"
+        }
+    },
+    "isMfaEnabled": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "isMfaEnabled",
+            "valueType": "boolean",
+            "defaultValue": false
+        }
+    },
+    "firstName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "firstName",
+            "valueType": "string"
+        }
+    },
+    "lastName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "lastName",
+            "valueType": "string"
+        }
+    },
+    "email": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "email",
+            "valueType": "string"
+        }
+    },
+    "phone": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "phone",
+            "valueType": "string"
+        }
+    },
+    "images": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "images",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "image_descriptor"}
+        }
+    },
+    "image_descriptor": {
+        "object": "data/main.datareel/model/image.mjson"
+    },
+    "tags": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "tags",
+            "valueType": "string",
+            "cardinality": -1
+       }
+    },
+    "mfaCode": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "mfaCode",
+            "valueType": "string"
+       }
+    },
+    "person": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "person",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "personDescriptor"},
+            "inversePropertyName": "userIdentities"
+       }
+    },
+    "personDescriptor": {
+        "object": "data/main.datareel/model/person.mjson"
+    },
+    "locale": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "locale",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "localeDescriptor"}
+       }
+    },
+    "localeDescriptor": {
+        "object": "montage/core/locale.mjson"
+    },
+    "timeZone": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "timeZone",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "timeZoneDescriptor"}
+       }
+    },
+    "timeZoneDescriptor": {
+        "object": "montage/core/date/time-zone.mjson"
+    }
+}

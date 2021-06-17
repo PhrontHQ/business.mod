@@ -17,6 +17,12 @@ var DataObject = require("../data-object").DataObject;
  */
 
 exports.Application = DataObject.specialize(/** @lends Application.prototype */ {
+    constructor: {
+        value: function Application() {
+            this.super();
+            return this;
+        }
+    },
 
     name: {
         value: undefined

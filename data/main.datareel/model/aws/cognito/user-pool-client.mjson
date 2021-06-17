@@ -4,15 +4,16 @@
         "values": {
             "name": "UserPoolClient",
             "propertyDescriptors": [
-                {"@": "ClientId"},
-                {"@": "UserPoolId"},
-                {"@": "UserPool"},
-                {"@": "ClientName"},
-                {"@": "ClientSecret"},
-                {"@": "RefreshTokenValidity"},
-                {"@": "AccessTokenValidity"},
-                {"@": "IdTokenValidity"},
-                {"@": "TokenValidityUnits"}
+                {"@": "clientId"},
+                {"@": "userPoolId"},
+                {"@": "userPool"},
+                {"@": "clientName"},
+                {"@": "generateSecret"},
+                {"@": "clientSecret"},
+                {"@": "refreshTokenValidity"},
+                {"@": "accessTokenValidity"},
+                {"@": "idTokenValidity"},
+                {"@": "tokenValidityUnits"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/aws/cognito/user-pool-client.mjson"
@@ -27,24 +28,24 @@
     "UserPoolClient": {
         "object": "data/main.datareel/model/aws/cognito/user-pool-client"
     },
-    "ClientId": {
+    "clientId": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "ClientId",
+            "name": "clientId",
             "valueType": "string"
         }
     },
-    "UserPoolId": {
+    "userPoolId": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "UserPoolId",
+            "name": "userPoolId",
             "valueType": "string"
         }
     },
-    "UserPool": {
+    "userPool": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "UserPool",
+            "name": "userPool",
             "cardinality": 1,
             "valueType": "object",
             "valueDescriptor": {"@": "UserPoolDescriptor"},
@@ -54,45 +55,52 @@
     "UserPoolDescriptor": {
         "object": "data/main.datareel/model/aws/cognito/user-pool.mjson"
     },
-    "ClientName": {
+    "clientName": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "ClientName",
+            "name": "clientName",
             "valueType": "string"
         }
     },
-    "ClientSecret": {
+    "generateSecret": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "ClientSecret",
+            "name": "generateSecret",
+            "valueType": "boolean"
+        }
+    },
+    "clientSecret": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "clientSecret",
             "valueType": "string"
         }
     },
-    "RefreshTokenValidity": {
+    "refreshTokenValidity": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "RefreshTokenValidity",
+            "name": "refreshTokenValidity",
             "valueType": "number"
         }
     },
-    "AccessTokenValidity": {
+    "accessTokenValidity": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "AccessTokenValidity",
+            "name": "accessTokenValidity",
             "valueType": "number"
         }
     },
-    "IdTokenValidity": {
+    "idTokenValidity": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "IdTokenValidity",
+            "name": "idTokenValidity",
             "valueType": "number"
         }
     },
-    "TokenValidityUnits": {
+    "tokenValidityUnits": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "TokenValidityUnits",
+            "name": "tokenValidityUnits",
             "cardinality": -1,
             "valueDescriptor": {"@": "MapDescriptor"}
        }

@@ -8,10 +8,19 @@
             ],
             "objectMapping": {
                 "rules": {
-                    "name": {"<->": "name"},
+                    "id": {"<->": "Id"},
+                    "name": {"<->": "Name"},
                     "appClients": {
                         "<->": "Id",
                         "converter": {"@": "userPool-converter"}
+                    },
+                    "modificationDate": {
+                        "<->": "LastModifiedDate",
+                        "converter": {"@": "string-to-date-converter"}
+                    },
+                    "creationDate": {
+                        "<->": "CreationDate",
+                        "converter": {"@": "string-to-date-converter"}
                     }
                 }
             },
@@ -41,6 +50,9 @@
         "values": {
             "convertExpression": "UserPoolId == $"
         }
+    },
+    "string-to-date-converter": {
+        "prototype": "../../../converter/ISO-date-string-to-date-converter"
     }
 
 }

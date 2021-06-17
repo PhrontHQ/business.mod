@@ -4,11 +4,14 @@
         "values": {
             "name": "UserPool",
             "propertyDescriptors": [
+                {"@": "id"},
                 {"@": "name"},
+                {"@": "creationDate"},
+                {"@": "modificationDate"},
                 {"@": "appClients"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/aws/cognito/app-client.mjson"
+                "%": "data/main.datareel/model/aws/cognito/user-pool.mjson"
             },
             "exportName": "UserPool",
             "module": {
@@ -20,6 +23,13 @@
     "UserPool": {
         "object": "data/main.datareel/model/aws/cognito/user-pool"
     },
+    "id": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "id",
+            "valueType": "string"
+        }
+    },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -27,6 +37,23 @@
             "valueType": "string"
         }
     },
+    "creationDate": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "creationDate",
+            "valueDescriptor": {"@": "DateDescriptor"},
+            "mandatory": true
+        }
+    },
+    "modificationDate": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "modificationDate",
+            "valueDescriptor": {"@": "DateDescriptor"},
+             "mandatory": true
+       }
+    },
+
     "appClients": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -36,8 +63,13 @@
             "valueDescriptor": {"@": "AppClientDescriptor"}
        }
     },
+
     "AppClientDescriptor": {
         "object": "data/main.datareel/model/aws/cognito/user-pool-client.mjson"
+    },
+
+    "DateDescriptor": {
+        "object": "montage/core/date.mjson"
     }
 
 }

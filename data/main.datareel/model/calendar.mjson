@@ -13,6 +13,10 @@
                 {"@": "events"},
                 {"@": "color"},
                 {"@": "owner"},
+                {"@": "organizationOwner"},
+                {"@": "personOwner"},
+                {"@": "resourceOwner"},
+                {"@": "employmentPositionStaffingOwner"},
                 {"@": "serviceEngagements"}
             ],
             "objectDescriptorModule": {
@@ -117,6 +121,66 @@
     "PartyDescriptor": {
         "object": "data/main.datareel/model/party.mjson"
     },
+    "organizationOwner": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "organizationOwner",
+            "valueType": "object",
+            "description": "The object owning this calendar",
+            "cardinality": 1,
+            "inversePropertyName": "calendars",
+            "valueDescriptor": {"@": "OrganizationDescriptor"}
+        }
+    },
+    "OrganizationDescriptor": {
+        "object": "data/main.datareel/model/organization.mjson"
+    },
+
+    "personOwner": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "personOwner",
+            "valueType": "object",
+            "description": "The object owning this calendar",
+            "cardinality": 1,
+            "inversePropertyName": "calendars",
+            "valueDescriptor": {"@": "PersonDescriptor"}
+        }
+    },
+    "PersonDescriptor": {
+        "object": "data/main.datareel/model/person.mjson"
+    },
+
+    "resourceOwner": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "resourceOwner",
+            "valueType": "object",
+            "description": "The object owning this calendar",
+            "cardinality": 1,
+            "inversePropertyName": "calendars",
+            "valueDescriptor": {"@": "ResourceDescriptor"}
+        }
+    },
+    "ResourceDescriptor": {
+        "object": "data/main.datareel/model/resource.mjson"
+    },
+
+    "employmentPositionStaffingOwner": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "employmentPositionStaffingOwner",
+            "valueType": "object",
+            "description": "The object owning this calendar",
+            "cardinality": 1,
+            "inversePropertyName": "calendars",
+            "valueDescriptor": {"@": "EmploymentPositionStaffingOwnerDescriptor"}
+        }
+    },
+    "EmploymentPositionStaffingOwnerDescriptor": {
+        "object": "data/main.datareel/model/employment-position-staffing.mjson"
+    },
+
     "serviceEngagements": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {

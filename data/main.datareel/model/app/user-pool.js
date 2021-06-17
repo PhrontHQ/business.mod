@@ -15,7 +15,12 @@ var DataObject = require("../data-object").DataObject;
  */
 
 exports.UserPool = DataObject.specialize(/** @lends UserPool.prototype */ {
-
+    constructor: {
+        value: function UserPool() {
+            this.super();
+            return this;
+        }
+    },
     name: {
         value: undefined
     },

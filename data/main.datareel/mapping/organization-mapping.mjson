@@ -37,10 +37,10 @@
                     "name": {"<->": "name"},
                     "type": {"<->": "type"},
                     "parent": {
-                        "<->": "parent",
+                        "<->": "parentId",
                         "converter": {"@": "parentConverter"}
                     },
-                    "suborganizations": {"<->": "suborganizations",
+                    "suborganizations": {"<->": "suborganizationIds",
                                     "converter": {"@": "suborganizationsConverter"}},
                     "tags": {"<->": "tags"},
                     "mainContact": {

@@ -7,7 +7,8 @@
             "propertyDescriptors": [
                 {"@": "email"},
                 {"@": "userName"},
-                {"@": "domain"}
+                {"@": "domain"},
+                {"@": "partyEmailAddresses"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/messaging-channel/email-address.mjson"
@@ -49,6 +50,18 @@
             "valueType": "string",
             "definition": "email.split('@').1"
         }
+    },
+    "partyEmailAddresses": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "partyEmailAddresses",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "PartyEmailAddressDescriptor"}
+       }
+    },
+    "PartyEmailAddressDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-email-address.mjson"
     }
 
 }

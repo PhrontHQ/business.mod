@@ -19,7 +19,9 @@
                 {"@": "supportsVideoConferencing"},
                 {"@": "supportsPaging"},
                 {"@": "supportsTextphone"},
-                {"@": "supportsRealTimeText"}
+                {"@": "supportsRealTimeText"},
+                {"@": "partyPhoneNumbers"},
+                {"@": "partySMSNumbers"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/messaging-channel/phone-number.mjson"
@@ -176,6 +178,30 @@
             "defaultValue": "false",
             "description": "Indicates a telephone number with the capabilities to handle Real Time Text (RTT)."
         }
+    },
+    "partyPhoneNumbers": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "partyPhoneNumbers",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "PartyPhoneNumberDescriptor"}
+       }
+    },
+    "PartyPhoneNumberDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-phone-number.mjson"
+    },
+    "partySMSNumbers": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "partySMSNumbers",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "PartySMSNumberDescriptor"}
+       }
+    },
+    "PartySMSNumberDescriptor": {
+        "object": "data/main.datareel/model/messaging-channel/party-s-m-s-number.mjson"
     }
 
 }

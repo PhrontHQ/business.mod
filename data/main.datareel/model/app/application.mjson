@@ -6,7 +6,7 @@
             "propertyDescriptors": [
                 {"@": "name"},
                 {"@": "userPoolClients"},
-                {"@": "controllingParty"}
+                {"@": "controllingOrganization"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/app/application.mjson"
@@ -45,19 +45,19 @@
     "UserPoolClientDescriptor": {
         "object": "data/main.datareel/model/app/user-pool-client.mjson"
     },
-    "controllingParty": {
+    "controllingOrganization": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "controllingParty",
+            "name": "controllingOrganization",
             "cardinality": 1,
             "valueType": "object",
-            "valueDescriptor": {"@": "PartyDescriptor"},
+            "valueDescriptor": {"@": "OrganizationDescriptor"},
             "inversePropertyName": "applications",
-            "description": "The party owning the application. Important for security, analytics, etc... Could be a Person, an organiation, any Party subclass"
+            "description": "The party owning the application. Important for security, analytics, etc... Could be a Person, an organization, any Party subclass"
        }
     },
-    "PartyDescriptor": {
-        "object": "data/main.datareel/model/party.mjson"
+    "OrganizationDescriptor": {
+        "object": "data/main.datareel/model/organization.mjson"
     }
 
 }

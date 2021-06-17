@@ -10,6 +10,14 @@
                         "<-": "this",
                         "converter": {"@": "partyConverter"}
                     },
+                    "organizationParty": {
+                        "<-": "organizationId",
+                        "converter": {"@": "organizationPartyConverter"}
+                    },
+                    "personParty": {
+                        "<-": "personId",
+                        "converter": {"@": "personPartyConverter"}
+                    },
                     "label": {"<->": "label"},
                     "messagingChannel": {
                         "<->": "messagingChannelId",
@@ -124,6 +132,20 @@
                 {"@": "employmentPositionStaffingPartyForeignKeyMapping"},
                 {"@": "b2cCustomerSupplierRelationshipDescriptorForeignKeyMapping"}
             ]
+        }
+    },
+
+    "organizationPartyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+    "personPartyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
         }
     },
 

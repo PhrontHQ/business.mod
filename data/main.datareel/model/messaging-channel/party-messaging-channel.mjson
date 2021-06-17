@@ -5,6 +5,8 @@
             "name": "PartyMessagingChannel",
             "propertyDescriptors": [
                 {"@": "party"},
+                {"@": "organizationParty"},
+                {"@": "personParty"},
                 {"@": "label"},
                 {"@": "messagingChannel"},
                 {"@": "description"},
@@ -42,6 +44,32 @@
     "PartyDescriptor": {
         "object": "data/main.datareel/model/party.mjson"
     },
+    "organizationParty": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "organizationParty",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "OrganizationDescriptor"}
+        }
+    },
+    "OrganizationDescriptor": {
+        "object": "data/main.datareel/model/organization.mjson"
+    },
+
+    "personParty": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "personParty",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "OrganizationDescriptor"}
+        }
+    },
+    "PersonDescriptor": {
+        "object": "data/main.datareel/model/person.mjson"
+    },
+
     "label": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {

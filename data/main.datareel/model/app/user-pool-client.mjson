@@ -5,12 +5,11 @@
             "name": "UserPoolClient",
             "propertyDescriptors": [
                 {"@": "name"},
-                {"@": "application"},
+                {"@": "applicationProperty"},
                 {"@": "identifier"},
                 {"@": "credentials"},
                 {"@": "userPool"},
-                {"@": "cognitoUserPoolClient"},
-                {"@": "controllingParty"}
+                {"@": "cognitoUserPoolClient"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/app/user-pool-client.mjson"
@@ -36,7 +35,7 @@
             "valueType": "string"
         }
     },
-    "application": {
+    "applicationProperty": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "application",
@@ -89,20 +88,6 @@
     },
     "CognitoUserPoolClientDescriptor": {
         "object": "data/main.datareel/model/aws/cognito/user-pool-client.mjson"
-    },
-    "controllingParty": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "controllingParty",
-            "cardinality": 1,
-            "valueType": "object",
-            "valueDescriptor": {"@": "PartyDescriptor"},
-            "inversePropertyName": "applications",
-            "description": "The party owning the application. Important for security, analytics, etc... Could be a Person, an organiation, any Party subclass"
-       }
-    },
-    "PartyDescriptor": {
-        "object": "data/main.datareel/model/party.mjson"
     }
 
 }

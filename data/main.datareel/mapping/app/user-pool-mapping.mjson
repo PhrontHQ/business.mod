@@ -3,9 +3,7 @@
         "prototype": "montage/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "UserPoolDescriptor"},
-            "primaryKeyPropertyDescriptors": [
-                {"@": "UserPoolIdDescriptor"}
-            ],
+            "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
                     "name": {"<->": "name"},
@@ -37,13 +35,6 @@
         "object": "data/main.datareel/model/app/user-pool.mjson"
     },
 
-    "UserPoolIdDescriptor": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "id",
-            "valueType": "string"
-        }
-    },
     "userPoolClients-converter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {

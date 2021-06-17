@@ -12,6 +12,10 @@
                     "role": {
                         "<->":"roleId",
                         "converter": {"@": "roleConverter"}
+                    },
+                    "employmentPositions": {
+                        "<->":"id",
+                        "converter": {"@": "employmentPositionsConverter"}
                     }
                }
             },
@@ -31,6 +35,12 @@
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
+        }
+    },
+    "employmentPositionsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "positionId == $"
         }
     }
 
