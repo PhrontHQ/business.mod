@@ -16,7 +16,20 @@ exports.Worker = Target.specialize( /** @lends Worker.prototype */{
             this.eventManager = defaultEventManager;
             Montage.application = this;
             defaultEventManager.application = this;
+            this.cache = global.cache;
         }
+    },
+
+    /**
+     * Cache that is only available to a container. Can't be relied on to be available
+     * as more containers get created.
+     *
+     * @property
+     * @returns {Map} - a Map to be used as a cache.
+     */
+
+    cache: {
+        value: undefined
     },
     name: {
         value: undefined

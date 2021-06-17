@@ -3,6 +3,9 @@ var Montage = require('montage/montage');
 var PATH = require("path");
 var workerPromise;
 
+if(!global.cache) {
+    global.cache = new Map();
+}
 
 //console.log("module:",module,"filename:",__filename,"dirname",__dirname);
 //Load Montage and Phront dependencies
