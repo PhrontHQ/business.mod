@@ -686,6 +686,11 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 operation = createTransactionCompletedOperation;
             }
 
+            if(!operation.clientId) {
+                console.log("handleCreateTransactionCompletedOperation: set clientId on operation");
+                operation.clientId = rootCreateTransaction.clientId;
+            }
+
             //To dispatch to client:
             this.handleEvent(operation);
 
