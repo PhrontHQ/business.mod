@@ -141,6 +141,13 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
             //     console.log("OperationCoordinator: dispatchOperationToConnectionClientId()",operation, connection, clientId)
             // }
 
+            //Add clientId. Though we should fix how it get there. If we set the referrer correctly, as we do, we should get the clientId from it:
+            if(!operation.clientId) {
+                console.warn("Investigate: operation:",operation, "missing a clientId, setting clientId to: ",clientId);
+                operation.clientId = clientId;
+            } else if(operation.clientId !== clientId) {
+                console.warn("Investigate: operation:",operation, "had the wrong clientId, should have been: ",clientId);
+            }
 
 
             //remove _target & _currentTarget as it creates a pbm? and we don't need to send it
@@ -171,11 +178,9 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
             //serialize
             var operationSerialization = this._serializer.serializeObject(operation);
 
-            console.log("dispatchOperationToConnectionClientId: operation is: ", operation);
-            console.log("dispatchOperationToConnectionClientId: operationSerialization is: ", operationSerialization);
-
             //Set it back for local use now that we've serialized it:
             operation.currentTarget = _currentTarget;
+            operation.context = _context;
             if(errorStack) {
                 operation.data.stack = errorStack;
             }
