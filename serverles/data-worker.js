@@ -436,8 +436,13 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             */
             deserializedOperation.context = event;
 
-            //Set the clientId (in API already)
-            deserializedOperation.clientId = event.requestContext.connectionId;
+            /*
+                Set the clientId (in API already), if it's there. If we come here from an http post sidekick,
+                there won't be one and we'll use the one sent by the client.
+            */
+            if(event.requestContext && event.requestContext.connectionId) {
+                deserializedOperation.clientId = event.requestContext.connectionId;
+            }
 
             //this.operationCoordinator.handleMessage(event, context, callback, this.apiGateway)
             this.authorizerIdentityFromEvent(event, deserializedOperation)
