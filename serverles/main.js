@@ -80,6 +80,25 @@ module.parent.exports.handlePerformTransaction = exports.handlePerformTransactio
 
 };
 
+module.parent.exports.httpDefault = exports.httpDefault  = async function (event, context, callback) {
+    console.log("httpDefault event:",event,"context:",context);
+
+    const worker = await workerPromise;
+    if(typeof worker.handleMessage === "function") {
+        await worker.handleMessage(event, context, callback);
+    }
+
+    callback(null, {
+        statusCode: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*', // Required for CORS support to work
+          'Access-Control-Allow-Credentials': true // Required for cookies, authorization headers with HTTPS
+        },
+        body: 'Sent.'
+    });
+
+  };
+
 module.parent.exports.disconnect = exports.disconnect = (event, context, callback) => {
   workerPromise.then(function(worker) {
 
@@ -125,6 +144,12 @@ module.parent.exports.disconnect = exports.disconnect = (event, context, callbac
   ]
 }
 
+*/
+
+/*
+    http example:
+
+    https://github.com/awslabs/aws-apigateway-lambda-authorizer-blueprints/blob/master/blueprints/nodejs/index.js
 */
 
 
