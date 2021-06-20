@@ -145,6 +145,8 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
     handleAuthorize: {
         value: async function(event, context, callback) {
 
+            console.log("handleAuthorize: event:", event, " context:", context, "callback: ", callback);
+
             var base64EncodedSerializedIdentity = event.queryStringParameters.identity,
                 serializedIdentity,
                 identityPromise, authorizeConnectionOperation,
@@ -174,6 +176,8 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
                 }
 
+            } else {
+                identityPromise = Promise.resolve(null);
             }
 
             return identityPromise.then(function(identity) {
@@ -275,17 +279,56 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
      * @return {Promise<Identity>} a Promise of the identity
      */
     authorizerIdentityFromEvent: {
-        value: function(event) {
+        value: function(event, dataOperation) {
 
-            this.deserializer.init(event.requestContext.authorizer.principalId, this.require, /*objectRequires*/undefined, /*module*/undefined, /*isSync*/false);
-            try {
-                return this.deserializer.deserializeObject();
-            } catch (error) {
-                /*
-                    If there's a serializedIdentity and we can't deserialize it, we're the ones triggering the fail.
-                */
-                console.error("Error: ",error, " Deserializing ",serializedIdentity);
-                return Promise.reject(error);
+            console.log("authorizerIdentityFromEvent:", event, dataOperation);
+
+            if(event.httpMethod && event.httpMethod === "POST") {
+                //Get the clientId from the dataOperation:
+                var clientId = dataOperation.clientId,
+                    identity = dataOperation.identity;
+
+                if(!clientId) {
+                    throw new Error("Could not find a clientId");
+                }
+                if(!identity) {
+                    throw new Error("Could not find an identity");
+                }
+
+                var self = this;
+                return new Promise(function(resolve, reject) {
+
+                    var params = {
+                            ConnectionId: clientId
+                        };
+
+                    self.apiGateway.getConnection(params, function(err, data) {
+                        if (err) {
+                            // an error occurred
+                            console.log(err, err.stack);
+                            reject(err);
+                        }
+                        else {
+                            // successful response, we found a connection.
+                            console.log("valid connection <"+clientId+"> found, using operation's identity: ",identity);
+                            resolve(identity);
+                        }
+                    });
+
+                });
+
+
+            } else {
+                this.deserializer.init(event.requestContext.authorizer.principalId, this.require, /*objectRequires*/undefined, /*module*/undefined, /*isSync*/false);
+                try {
+                    return this.deserializer.deserializeObject();
+                } catch (error) {
+                    /*
+                        If there's a serializedIdentity and we can't deserialize it, we're the ones triggering the fail.
+                    */
+                    console.error("Error: ",error, " Deserializing ",serializedIdentity);
+                    return Promise.reject(error);
+                }
             }
         }
     },
@@ -320,7 +363,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                 That's what shpould probably happen client side as well, where the opertions are dispatched locally and the caught by an object that just push them on the WebSocket.
             */
 
-            this.authorizerIdentityFromEvent(event)
+            this.authorizerIdentityFromEvent(event, connectOperation)
             .then(function(identity) {
                 connectOperation.identity = identity;
                 return self.operationCoordinator.handleOperation(connectOperation, event, context, callback, self.apiGateway);
@@ -397,9 +440,18 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             deserializedOperation.clientId = event.requestContext.connectionId;
 
             //this.operationCoordinator.handleMessage(event, context, callback, this.apiGateway)
-            this.authorizerIdentityFromEvent(event)
+            this.authorizerIdentityFromEvent(event, deserializedOperation)
             .then(function(identity) {
                 deserializedOperation.identity = identity;
+
+                /*
+                    If we come from http, we're not going to have it from the gateway,
+                    But we expect the client to have it
+                */
+                if(!currentEnvironment.clientId) {
+                    currentEnvironment.clientId = deserializedOperation.clientId;
+                }
+
                 return self.operationCoordinator.handleOperation(deserializedOperation, event, context, callback, self.apiGateway);
             })
             .then(() => {
