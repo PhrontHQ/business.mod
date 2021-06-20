@@ -171,11 +171,11 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
             //serialize
             var operationSerialization = this._serializer.serializeObject(operation);
 
-            console.log("dispatchOperationToConnectionClientId: operationSerialization is: ",operationSerialization);
+            console.log("dispatchOperationToConnectionClientId: operation is: ", operation);
+            console.log("dispatchOperationToConnectionClientId: operationSerialization is: ", operationSerialization);
 
             //Set it back for local use now that we've serialized it:
             operation.currentTarget = _currentTarget;
-            operation.context = _context;
             if(errorStack) {
                 operation.data.stack = errorStack;
             }
