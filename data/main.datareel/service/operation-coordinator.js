@@ -171,6 +171,8 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
             //serialize
             var operationSerialization = this._serializer.serializeObject(operation);
 
+            console.log("dispatchOperationToConnectionClientId: operationSerialization is: ",operationSerialization);
+
             //Set it back for local use now that we've serialized it:
             operation.currentTarget = _currentTarget;
             operation.context = _context;
@@ -684,13 +686,6 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
             } else {
                 operation = createTransactionCompletedOperation;
-            }
-
-            console.log("handleCreateTransactionCompletedOperation: operation.clientId is "+operation.clientId);
-
-            if(!operation.clientId) {
-                console.log("handleCreateTransactionCompletedOperation: set clientId on operation");
-                operation.clientId = rootCreateTransaction.clientId;
             }
 
             //To dispatch to client:
