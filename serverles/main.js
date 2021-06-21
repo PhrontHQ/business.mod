@@ -82,60 +82,8 @@ module.parent.exports.handlePerformTransaction = exports.handlePerformTransactio
 
 
 module.parent.exports.httpAuthorize = module.exports.httpAuthorize = async (event, context, callback) => {
-
-
-    const worker = await workerPromise;
-    var authResponse;
-
-    if(typeof worker.handleAuthorize === "function") {
-        authResponse = await worker.handleAuthorize(event, context, callback);
-    }
-
-    if(authResponse === undefined) {
-
-        // return policy statement that allows to invoke the connect function.
-        // in a real world application, you'd verify that the header in the event
-        // object actually corresponds to a user, and return an appropriate statement accordingly
-        authResponse = {
-            "principalId": "me",
-            "policyDocument": {
-                "Version": "2012-10-17",
-                "Statement": [
-                    {
-                    "Action": "execute-api:Invoke",
-                    "Effect": "Allow",
-                    "Resource": event.methodArn
-                    }
-                ]
-            }
-            /*,
-            context: {
-                "A": "a",
-                "OneTwoThree": 123,
-                "true": true
-            }
-            */
-        };
-
-    }
-
-    var statements = authResponse.policyDocument.Statement,
-        iStatement,
-        countI = statements.length,
-        i = 0;
-
-    for(; ( i < countI); i++ ) {
-        if(statements[i].Effect !== "Allow") {
-            console.log("main authorize authResponse Deny:",authResponse);
-            callback("Unauthorized");
-            return;
-        }
-    }
-
-    console.log("main authorize authResponse Allow:",authResponse);
-    callback(null, authResponse);
-
-};
+    _authorize(event, context, callback);
+  };
 
 module.parent.exports.httpDefault = exports.httpDefault  = async function (event, context, callback) {
     console.log("httpDefault event:",event,"context:",context);
@@ -210,7 +158,7 @@ module.parent.exports.disconnect = exports.disconnect = (event, context, callbac
 */
 
 
-module.parent.exports.authorize = module.exports.authorize = async (event, context, callback) => {
+const _authorize = async (event, context, callback) => {
 
 
     const worker = await workerPromise;
@@ -266,7 +214,9 @@ module.parent.exports.authorize = module.exports.authorize = async (event, conte
 
   };
 
-
+  module.parent.exports.authorize = module.exports.authorize = async (event, context, callback) => {
+    _authorize(event, context, callback);
+  }
 
 /*
 //From https://docs.amazonaws.cn/en_us/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html
