@@ -425,7 +425,6 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                         throw new Error("HTTP Post: Could not find a clientId");
                     }
 
-                    var self = this;
                     connectionPromise = new Promise(function(resolve, reject) {
 
                         var params = {
