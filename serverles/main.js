@@ -82,7 +82,8 @@ module.parent.exports.handlePerformTransaction = exports.handlePerformTransactio
 
 
 module.parent.exports.httpAuthorize = module.exports.httpAuthorize = async (event, context, callback) => {
-    _authorize(event, context, callback);
+    console.log("httpAuthorize:","event:", event, "context:", context, "callback:", callback , "_authorize:", _authorize);
+    return _authorize.call(this, event, context, callback);
   };
 
 module.parent.exports.httpDefault = exports.httpDefault  = async function (event, context, callback) {
@@ -160,6 +161,7 @@ module.parent.exports.disconnect = exports.disconnect = (event, context, callbac
 
 const _authorize = async (event, context, callback) => {
 
+    console.log("_authorize:","event:", event, "context:", context, "callback:", callback);
 
     const worker = await workerPromise;
     var authResponse;
@@ -215,7 +217,8 @@ const _authorize = async (event, context, callback) => {
   };
 
   module.parent.exports.authorize = module.exports.authorize = async (event, context, callback) => {
-    _authorize(event, context, callback);
+    console.log("authorize:","event:", event, "context:", context, "callback:", callback, "_authorize:", _authorize );
+    return _authorize.call(this, event, context, callback);
   }
 
 /*
