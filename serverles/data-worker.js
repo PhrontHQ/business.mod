@@ -283,52 +283,15 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
             console.log("authorizerIdentityFromEvent:", event, dataOperation);
 
-            if(event.httpMethod && event.httpMethod === "POST") {
-                //Get the clientId from the dataOperation:
-                var clientId = dataOperation.clientId,
-                    identity = dataOperation.identity;
-
-                if(!clientId) {
-                    throw new Error("Could not find a clientId");
-                }
-                if(!identity) {
-                    throw new Error("Could not find an identity");
-                }
-
-                var self = this;
-                return new Promise(function(resolve, reject) {
-
-                    var params = {
-                            ConnectionId: clientId
-                        };
-
-                    self.apiGateway.getConnection(params, function(err, data) {
-                        if (err) {
-                            // an error occurred
-                            console.log(err, err.stack);
-                            reject(err);
-                        }
-                        else {
-                            // successful response, we found a connection.
-                            console.log("valid connection <"+clientId+"> found, using operation's identity: ",identity);
-                            resolve(identity);
-                        }
-                    });
-
-                });
-
-
-            } else {
-                this.deserializer.init(event.requestContext.authorizer.principalId, this.require, /*objectRequires*/undefined, /*module*/undefined, /*isSync*/false);
-                try {
-                    return this.deserializer.deserializeObject();
-                } catch (error) {
-                    /*
-                        If there's a serializedIdentity and we can't deserialize it, we're the ones triggering the fail.
-                    */
-                    console.error("Error: ",error, " Deserializing ",serializedIdentity);
-                    return Promise.reject(error);
-                }
+            this.deserializer.init(event.requestContext.authorizer.principalId, this.require, /*objectRequires*/undefined, /*module*/undefined, /*isSync*/false);
+            try {
+                return this.deserializer.deserializeObject();
+            } catch (error) {
+                /*
+                    If there's a serializedIdentity and we can't deserialize it, we're the ones triggering the fail.
+                */
+                console.error("Error: ",error, " Deserializing ",serializedIdentity);
+                return Promise.reject(error);
             }
         }
     },
@@ -385,7 +348,6 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
     /* default implementation is just echo */
     handleMessage: {
         value: function(event, context, callback) {
-
 
             /*
                 Add a check if the message isn't coming from the socket, the only other is through the handleCommitTransaction lambda.
@@ -447,16 +409,77 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             //this.operationCoordinator.handleMessage(event, context, callback, this.apiGateway)
             this.authorizerIdentityFromEvent(event, deserializedOperation)
             .then(function(identity) {
+                var connectionPromise;
+
+                if(!identity) {
+                    throw new Error("Could not find an identity");
+                }
+
                 deserializedOperation.identity = identity;
 
+                if(event.httpMethod && event.httpMethod === "POST") {
+                    //Get the clientId from the dataOperation:
+                    var clientId = deserializedOperation.clientId;
+
+                    if(!clientId) {
+                        throw new Error("HTTP Post: Could not find a clientId");
+                    }
+
+                    var self = this;
+                    connectionPromise = new Promise(function(resolve, reject) {
+
+                        var params = {
+                                ConnectionId: clientId
+                            };
+
+                        self.apiGateway.getConnection(params, function(err, data) {
+                            if (err) {
+                                // an error occurred
+                                console.log(err, err.stack);
+                                reject(err);
+                            }
+                            else {
+                                /*
+                                    data (Object) — the de-serialized data returned from the request. Set to null if a request error occurs. The data object has the following properties:
+                                    ConnectedAt — (Date)
+                                    The time in ISO 8601 format for when the connection was established.
+
+                                    Identity — (map)
+                                    SourceIp — required — (String)
+                                    The source IP address of the TCP connection making the request to API Gateway.
+
+                                    UserAgent — required — (String)
+                                    The User Agent of the API caller.
+
+                                    LastActiveAt — (Date)
+                                    The time in ISO 8601 format for when the connection was last active.
+                                */
+                                // successful response, we found a connection. We set it on the environment
+                                currentEnvironment.clientId = deserializedOperation.clientId;
+                                console.log("valid connection found using operation's clientId "+clientId+": ",data);
+
+                                resolve(clientId);
+                            }
+                        });
+
+                    });
+                } else {
+                    if(!currentEnvironment.clientId) {
+                        throw new Error("Could not find an comnectionId in currentEnvironment.clientId");
+                    }
+                    connectionPromise = Promise.resolve(currentEnvironment.clientId);
+                }
+
+                return connectionPromise;
+            })
+            .then(function(clientId) {
                 /*
                     If we come from http, we're not going to have it from the gateway,
                     But we expect the client to have it
                 */
-                if(!currentEnvironment.clientId) {
-                    currentEnvironment.clientId = deserializedOperation.clientId;
-                }
-
+                // if(!currentEnvironment.clientId) {
+                //     currentEnvironment.clientId = deserializedOperation.clientId;
+                // }
                 return self.operationCoordinator.handleOperation(deserializedOperation, event, context, callback, self.apiGateway);
             })
             .then(() => {
