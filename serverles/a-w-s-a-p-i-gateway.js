@@ -42,6 +42,44 @@ const model = {
         required: ['ConnectionId', 'Data'],
         payload: 'Data'
       }
+    },
+    getConnection: {
+        http: {
+            requestUri: "/@connections/{connectionId}",
+            responseCode: 200,
+            method: "GET"
+        },
+        input: {
+            type: "structure",
+            members: {
+                ConnectionId: {
+                    location: "uri",
+                    locationName: "connectionId"
+                }
+            },
+            required: [
+                "ConnectionId"
+            ]
+        }
+    },
+    DeleteConnection: {
+        http: {
+            requestUri: "/@connections/{connectionId}",
+            responseCode: 200,
+            method: "DELETE"
+        },
+        input: {
+            type: "structure",
+            members: {
+                ConnectionId: {
+                    location: "uri",
+                    locationName: "connectionId"
+                }
+            },
+            required: [
+                "ConnectionId"
+            ]
+        }
     }
   },
   paginators: {},
