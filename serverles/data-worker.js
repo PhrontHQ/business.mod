@@ -281,7 +281,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
     authorizerIdentityFromEvent: {
         value: function(event, dataOperation) {
 
-            console.log("authorizerIdentityFromEvent:", event, dataOperation);
+            //console.log("authorizerIdentityFromEvent:", event, dataOperation);
 
             this.deserializer.init(event.requestContext.authorizer.principalId, this.require, /*objectRequires*/undefined, /*module*/undefined, /*isSync*/false);
             try {
