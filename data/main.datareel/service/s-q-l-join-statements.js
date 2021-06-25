@@ -37,17 +37,20 @@
      add: {
          value: function (join) {
 
-            var value = this._joinMap.get(join.qualifiedRightDataSet);
-            if(!value) {
-                value = new Set();
-                this._joinMap.set(join.qualifiedRightDataSet, value);
+            if(!this.hasJoinEqualTo(join)) {
+                var value = this._joinMap.get(join.qualifiedRightDataSet);
+                if(!value) {
+                    value = new Set();
+                    this._joinMap.set(join.qualifiedRightDataSet, value);
+                }
+                value.add(join);
+                this._joinIndexMap.set(join,this._addOrderedJoins.length);
+                this._addOrderedJoins.add(join);
+                this._joinDependencyMap.set(join,join.qualifiedLeftDataSet);
+                // console.log("------> SQLJoinStatements add "+join.toString() );
+                // console.log("------> this._addOrderedJoins is "+this._addOrderedJoins.join(", ") );
+
             }
-            value.add(join);
-            this._joinIndexMap.set(join,this._addOrderedJoins.length);
-            this._addOrderedJoins.add(join);
-            this._joinDependencyMap.set(join,join.qualifiedLeftDataSet);
-            // console.log("------> SQLJoinStatements add "+join.toString() );
-            // console.log("------> this._addOrderedJoins is "+this._addOrderedJoins.join(", ") );
          }
      },
 
