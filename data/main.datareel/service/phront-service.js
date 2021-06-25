@@ -3927,6 +3927,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
 
                     if (err) {
                         console.error("_executeBatchStatement Error:",err, appendTransactionOperation, startIndex, endIndex, batchedOperations, rawDataOperation, rawOperationRecords, responseOperations);
+                        console.error("_executeBatchStatement Error SQL:", rawDataOperation.sql);
                         reject(err);
                     }
                     else {
