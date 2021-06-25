@@ -1237,14 +1237,21 @@ module.exports = {
 
         not: function (syntax, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements, currentAliasPrefix) {
             if (syntax.args[0].type === "equals") {
-                var left = dataService.stringify(syntax.args[0].args[0], scope, dataMappings, locales, rawExpressionJoinStatements, {type: "equals"}, currentAliasPrefix),
-                    right = dataService.stringify(syntax.args[0].args[1], scope, dataMappings, locales, rawExpressionJoinStatements, {type: "equals"}, currentAliasPrefix);
+                /*
+                    equals now takes care of looking at the parent to see if it's a not and do the rigth thing.
 
-                if(right === "null") {
-                    return `${left} is not NULL`;
-                } else {
-                    return `${left} != ${right}`;
-                }
+                    Otherwise we'd had to parse and do string substitution to fix it after the equals is generated.
+                */
+                return dataService.stringify(syntax.args[0], scope, dataMappings, locales, rawExpressionJoinStatements, syntax, currentAliasPrefix);
+
+                // var left = dataService.stringify(syntax.args[0].args[0], scope, dataMappings, locales, rawExpressionJoinStatements, {type: "equals"}, currentAliasPrefix),
+                //     right = dataService.stringify(syntax.args[0].args[1], scope, dataMappings, locales, rawExpressionJoinStatements, {type: "equals"}, currentAliasPrefix);
+
+                // if(right === "null") {
+                //     return `${left} is not NULL`;
+                // } else {
+                //     return `${left} != ${right}`;
+                // }
 
             } else {
                 return '!' + dataService.stringify(syntax.args[0], scope, dataMappings, locales, rawExpressionJoinStatements, syntax, currentAliasPrefix)
@@ -1704,21 +1711,25 @@ module.exports = {
             if(dataMappings.aliases) {
                 dataMappings.aliases.splice(dataMappingStartLength);
             }
-            return `${argsZeroValue} ${dataService.mapTokenToRawTokenForValue(EqualsToken,argsZeroValue)} ${argsOneValue}`;
+            return `${argsZeroValue} ${dataService.mapTokenToRawTokenForValue(EqualsToken,argsOneValue, parent)} ${argsOneValue}`;
         }
 
     },
 
     tokenMappers: {
-        "&&": function() {
+        "&&": function(value, parentSyntax) {
             return "AND";
         },
-        "||": function() {
+        "||": function(value, parentSyntax) {
             return "OR";
         },
-        "==": function(value) {
-            if(arguments.length === 1 && (value === null || value === undefined)) {
-                return "IS";
+        "==": function(value, parentSyntax) {
+            if(arguments.length > 0 && (value === null || value === undefined || value === "null")) {
+                if(parentSyntax && parentSyntax.type === "not") {
+                    return "IS NOT";
+                } else {
+                    return "IS";
+                }
             } else {
                 return "=";
             }
@@ -1735,10 +1746,10 @@ module.exports = {
         */
     },
 
-    mapTokenToRawTokenForValue: function(token, value) {
+    mapTokenToRawTokenForValue: function(token, value, parentSyntax) {
         var tokenMapper = this.tokenMappers[token];
         if(tokenMapper) {
-            return tokenMapper(value);
+            return tokenMapper(value, parentSyntax);
         } else {
             return token;
         }
