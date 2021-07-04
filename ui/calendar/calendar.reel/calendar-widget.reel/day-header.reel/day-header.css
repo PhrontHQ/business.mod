@@ -1,1 +1,7 @@
-.DayHeader.is-today{background:#222b35}.DayHeader:not(:last-child){border-right:1px solid #16171a}
+.DayHeader.is-today {
+    background: #222b35
+}
+
+.DayHeader:not(:last-child) {
+    border-right: 1px solid #16171a
+}

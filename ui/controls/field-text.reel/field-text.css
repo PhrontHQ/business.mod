@@ -1,1 +1,14 @@
-.FieldText .Field{min-height:auto}.FieldText .Field-title{padding-top:0}.FieldText .control{color:#fff;max-width:320px;max-width:20rem;word-wrap:break-word}
+.FieldText .Field {
+    min-height: auto
+}
+
+.FieldText .Field-title {
+    padding-top: 0
+}
+
+.FieldText .control {
+    color: #fff;
+    max-width: 320px;
+    max-width: 20rem;
+    word-wrap: break-word
+}

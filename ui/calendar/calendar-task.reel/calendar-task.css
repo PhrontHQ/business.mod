@@ -1,1 +1,11 @@
-.CalendarTask{width:384px;width:24rem;color:inherit}.CalendarTask-monthOptionDays .MultipleSelectGrid-option{min-width:12.5%!important;height:2.25em!important;line-height:1.25em!important}
+.CalendarTask {
+    width: 384px;
+    width: 24rem;
+    color: inherit
+}
+
+.CalendarTask-monthOptionDays .MultipleSelectGrid-option {
+    min-width: 12.5% !important;
+    height: 2.25em !important;
+    line-height: 1.25em !important
+}

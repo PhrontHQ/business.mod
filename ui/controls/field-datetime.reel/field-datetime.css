@@ -1,1 +1,3 @@
-.FieldDatetime .disabled input[type=datetime]{opacity:.5}
+.FieldDatetime .disabled input[type=datetime] {
+    opacity: .5
+}

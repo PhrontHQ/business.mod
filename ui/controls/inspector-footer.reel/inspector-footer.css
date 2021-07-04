@@ -1,1 +1,49 @@
-.ScrollviewFooterWrapper .InspectorFooter{background:#181e25;border-top:1px solid hsla(0,0%,100%,.1)}.InspectorFooter{border-top:1px solid #384049;padding:16px;padding:1rem;display:-ms-flexbox;display:flex;-ms-flex-negative:0;flex-shrink:0;-ms-flex-pack:justify;justify-content:space-between}.InspectorFooter-right{display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;-ms-flex:1;flex:1}.InspectorFooter-right button+button{margin-left:.5em}.InspectorFooter button{display:none;overflow:hidden}.Inspector-optionalButtons button{display:block}.InspectorFooter.is-visible{display:-ms-flexbox;display:flex}.InspectorFooter-delete.is-visible,.InspectorFooter-revert.is-visible,.InspectorFooter-save.is-visible{display:block}
+.ScrollviewFooterWrapper .InspectorFooter {
+    background: #181e25;
+    border-top: 1px solid hsla(0, 0%, 100%, .1)
+}
+
+.InspectorFooter {
+    border-top: 1px solid #384049;
+    padding: 16px;
+    padding: 1rem;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -ms-flex-pack: justify;
+    justify-content: space-between
+}
+
+.InspectorFooter-right {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    -ms-flex: 1;
+    flex: 1
+}
+
+.InspectorFooter-right button+button {
+    margin-left: .5em
+}
+
+.InspectorFooter button {
+    display: none;
+    overflow: hidden
+}
+
+.Inspector-optionalButtons button {
+    display: block
+}
+
+.InspectorFooter.is-visible {
+    display: -ms-flexbox;
+    display: flex
+}
+
+.InspectorFooter-delete.is-visible,
+.InspectorFooter-revert.is-visible,
+.InspectorFooter-save.is-visible {
+    display: block
+}
