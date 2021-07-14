@@ -20,7 +20,11 @@
                     "supportsVideoMessage": {"<->": "supportsVideoMessage"},
                     "supportsPaging": {"<->": "supportsPaging"},
                     "supportsTextphone": {"<->": "supportsTextphone"},
-                    "supportsRealTimeText": {"<->": "supportsRealTimeText"}
+                    "supportsRealTimeText": {"<->": "supportsRealTimeText"},
+                    "partyPhoneNumbers": {
+                        "<->": "id",
+                         "converter": {"@": "partyPhoneNumbersConverter"}
+                    }
                 }
             },
             "rawDataMapping": {
@@ -35,5 +39,12 @@
 
     "PhoneNumber": {
         "object": "data/main.datareel/model/messaging-channel/phone-number.mjson"
+    },
+
+    "partyPhoneNumbersConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "messagingChannelId == $"
+        }
     }
 }
