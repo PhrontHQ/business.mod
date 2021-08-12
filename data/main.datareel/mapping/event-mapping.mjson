@@ -171,7 +171,7 @@
         }
     },
     "eventURLConverter": {
-        "prototype": "montage/core/converter/string-to-URL-converter"
+        "prototype": "montage/core/converter/string-to-u-r-l-converter"
     },
 
     "DateToStringConverter": {
