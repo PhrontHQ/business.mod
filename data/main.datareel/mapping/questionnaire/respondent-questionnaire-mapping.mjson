@@ -79,7 +79,7 @@
     },
 
     "string-to-date-converter": {
-        "prototype": "../../converter/ISO-date-string-to-date-converter"
+        "prototype": "../../converter/i-s-o-date-string-to-date-converter"
     },
 
     "pdfExportConverter": {
