@@ -175,7 +175,7 @@
     },
 
     "DateToStringConverter": {
-        "prototype": "montage/core/converter/RFC3339UTC-string-to-date-converter"
+        "prototype": "montage/core/converter/r-f-c-3339-u-t-c-string-to-date-converter"
     },
 
     "participationStatusLogValuesConverter": {
@@ -229,7 +229,7 @@
     },
 
     "string-to-range-converter": {
-        "prototype": "../converter/RFC3339UTC-range-string-to-date-range-converter"
+        "prototype": "../converter/r-f-c-3339-u-t-c-range-string-to-date-range-converter"
     },
 
     "event-conferenceData-converter": {
@@ -239,7 +239,7 @@
     },
 
     "RFC3339UTCStringToDateConverter": {
-        "prototype": "montage/core/converter/RFC3339UTC-string-to-date-converter",
+        "prototype": "montage/core/converter/r-f-c-3339-u-t-c-string-to-date-converter",
         "values": {
         }
     },

@@ -14,11 +14,11 @@
             "propertyDescriptorGroups": {},
             "propertyValidationRules": {},
             "objectDescriptorModule": {
-                "%": "core/converter/RFC3339UTC-range-string-to-calendar-date-range-converter.mjson"
+                "%": "core/converter/r-f-c-3339-u-t-c-range-string-to-calendar-date-range-converter.mjson"
             },
             "exportName": "RFC3339UTCRangeStringToCalendarDateRangeConverter",
             "module": {
-                "%": "data/converter/RFC3339UTC-range-string-to-calendar-date-range-converter"
+                "%": "data/converter/r-f-c-3339-u-t-c-range-string-to-calendar-date-range-converter"
             }
         }
     }

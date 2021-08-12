@@ -1,8 +1,8 @@
 /**
- * @module data/main.datareel/converter/RFC3339UTC-range-string-to-date-range-converter
+ * @module data/main.datareel/converter/r-f-c-3339-u-t-c-range-string-to-date-range-converter
  * @requires montage/core/converter/converter
  */
-var RFC3339UTCRangeStringToDateRangeConverter = require("./RFC3339UTC-range-string-to-date-range-converter").RFC3339UTCRangeStringToDateRangeConverter,
+var RFC3339UTCRangeStringToDateRangeConverter = require("./r-f-c-3339-u-t-c-range-string-to-date-range-converter").RFC3339UTCRangeStringToDateRangeConverter,
     CalendarDate = require("montage/core/date/calendar-date").CalendarDate,
     Range = require("montage/core/range").Range,
     TimeZone = require("montage/core/date/time-zone").TimeZone,

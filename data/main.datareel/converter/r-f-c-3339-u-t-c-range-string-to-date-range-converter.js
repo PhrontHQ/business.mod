@@ -1,5 +1,5 @@
 /**
- * @module data/main.datareel/converter/RFC3339UTC-range-string-to-date-range-converter
+ * @module data/main.datareel/converter/r-f-c-3339-u-t-c-range-string-to-date-range-converter
  * @requires montage/core/converter/converter
  */
 var Converter = require("montage/core/converter/converter").Converter,

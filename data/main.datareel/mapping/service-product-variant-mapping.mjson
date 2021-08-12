@@ -45,7 +45,7 @@
     },
 
     "string-to-range-converter": {
-        "prototype": "../converter/RFC3339UTC-range-string-to-date-range-converter"
+        "prototype": "../converter/r-f-c-3339-u-t-c-range-string-to-date-range-converter"
     },
 
     "providersForeignKeyConverter": {

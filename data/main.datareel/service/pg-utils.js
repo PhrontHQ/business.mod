@@ -12,7 +12,7 @@
  */
 
 var Range = require("montage/core/range").Range,
-RFC3339UTCRangeStringToRangeConverter = require("montage/core/converter/RFC3339UTC-range-string-to-range-converter").singleton;
+RFC3339UTCRangeStringToRangeConverter = require("montage/core/converter/r-f-c-3339-u-t-c-range-string-to-range-converter").singleton;
 
 
 const parseInputDatesAsUTC = false;
