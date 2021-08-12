@@ -4,7 +4,7 @@
  */
 var Converter = require("montage/core/converter/converter").Converter,
     Range = require("montage/core/range").Range,
-    PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter = require("./postgresql-ISO8601-date-string-to-date-component-values-callback-converter").PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter,
+    PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter = require("./postgresql-i-s-o-8601-date-string-to-date-component-values-callback-converter").PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter,
     singleton;
 
     //ISO 8601

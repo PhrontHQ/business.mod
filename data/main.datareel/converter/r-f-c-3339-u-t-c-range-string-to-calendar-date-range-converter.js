@@ -6,7 +6,7 @@ var RFC3339UTCRangeStringToDateRangeConverter = require("./r-f-c-3339-u-t-c-rang
     CalendarDate = require("montage/core/date/calendar-date").CalendarDate,
     Range = require("montage/core/range").Range,
     TimeZone = require("montage/core/date/time-zone").TimeZone,
-    PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter = require("./postgresql-ISO8601-date-string-to-date-component-values-callback-converter").PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter,
+    PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter = require("./postgresql-i-s-o-8601-date-string-to-date-component-values-callback-converter").PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter,
     singleton;
 
 /**

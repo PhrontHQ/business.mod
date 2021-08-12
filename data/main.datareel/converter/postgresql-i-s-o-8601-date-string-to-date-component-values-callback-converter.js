@@ -1,5 +1,5 @@
 /**
- * @module data/main.datareel/converter/postgresql-ISO8601-date-string-to-date-component-values-callback-converter
+ * @module data/main.datareel/converter/postgresql-i-s-o-8601-date-string-to-date-component-values-callback-converter
  * @requires montage/core/converter/converter
  */
 var Converter = require("montage/core/converter/converter").Converter;

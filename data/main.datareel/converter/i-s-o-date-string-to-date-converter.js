@@ -1,8 +1,8 @@
 /**
  * @module data/main.datareel/converter/i-s-o-date-string-to-date-converter
- * @requires data/main.datareel/converter/postgresql-ISO8601-date-string-to-date-component-values-callback-converter
+ * @requires data/main.datareel/converter/postgresql-i-s-o-8601-date-string-to-date-component-values-callback-converter
  */
-var PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter = require("./postgresql-ISO8601-date-string-to-date-component-values-callback-converter").PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter,
+var PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter = require("./postgresql-i-s-o-8601-date-string-to-date-component-values-callback-converter").PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter,
     singleton;
 
     //ISO 8601
