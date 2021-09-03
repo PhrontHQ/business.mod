@@ -66,7 +66,7 @@ class Timer {
     // Automatically starts the timer
     constructor(name = 'Benchmark') {
         this.NS_PER_SEC = 1e9;
-        this.MS_PER_NS = 1e-6
+        this.MS_PER_NS = 1e-6;
         this.name = name;
         this.startTime = process.hrtime();
     }
@@ -359,7 +359,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                             enumerable: false,
                             configurable: true,
                             writable: true
-                        })
+                        });
                     }
 
                     if((owner = value.owner)) {
@@ -369,7 +369,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                             enumerable: false,
                             configurable: true,
                             writable: true
-                        })
+                        });
                     }
                 }
 
@@ -473,7 +473,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         value: function (criteria, mapping, locales, rawExpressionJoinStatements) {
             var rawCriteria,
                 rawExpression,
-                rawParameters
+                rawParameters;
 
             if (!criteria) return undefined;
 
@@ -775,7 +775,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                         result = 'jsonb_build_object(';
                         for(var i=0, countI = operationLocales.length;(i<countI);i++) {
                                 language = operationLocales[i].language;
-                                result += `'${language}',"${tableName}".${escapedExpression}::jsonb->'${language}'`
+                                result += `'${language}',"${tableName}".${escapedExpression}::jsonb->'${language}'`;
                                 if(i+2 < countI) result += ",";
                         }
                         result += `) as "${tableName}".${escapedExpression}`;
@@ -812,7 +812,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             //under the DataServiceUserLocales criteria parameters entry:
             if(criteria && (typeof criteria.parameters === "object")) {
                 if("DataServiceUserLocales" in criteria.parameters) {
-                    return criteria.parameters.DataServiceUserLocales
+                    return criteria.parameters.DataServiceUserLocales;
                 } else {
                     return null;
                     /*
