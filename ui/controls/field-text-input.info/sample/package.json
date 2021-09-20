@@ -5,9 +5,10 @@
         "phront": "*",
         "montage": "*"
     },
-        "mappings": {
-        "montage": "../../../node_modules/montage",
-        "phront": "../../../"
+    "mappings": {
+        "montage": "../../../../node_modules/montage",
+        "phront": "../../../../"
+
     }
 }
 
