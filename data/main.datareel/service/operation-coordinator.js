@@ -59,6 +59,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
             mainService.addEventListener(DataOperation.Type.NoOp,this,false);
             mainService.addEventListener(DataOperation.Type.ReadFailedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.ReadUpdateOperation,this,false);
             mainService.addEventListener(DataOperation.Type.ReadCompletedOperation,this,false);
             mainService.addEventListener(DataOperation.Type.UpdateFailedOperation,this,false);
             mainService.addEventListener(DataOperation.Type.UpdateCompletedOperation,this,false);
