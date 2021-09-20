@@ -151,6 +151,7 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
 
                         if(global.location.hostname === "localhost" && currentEnvironment.isAndroidDevice && websocketURL.hostname.endsWith(".local")) {
                             websocketURL.hostname = "localhost";
+                            websocketURL.port = Number(websocketURL.port)+1;
                             connection.websocketURL = websocketURL.toString();
                         }
                     }
