@@ -45,7 +45,7 @@
                 }
                 value.add(join);
                 this._joinIndexMap.set(join,this._addOrderedJoins.length);
-                this._addOrderedJoins.add(join);
+                this._addOrderedJoins.push(join);
                 this._joinDependencyMap.set(join,join.qualifiedLeftDataSet);
                 // console.log("------> SQLJoinStatements add "+join.toString() );
                 // console.log("------> this._addOrderedJoins is "+this._addOrderedJoins.join(", ") );
@@ -117,6 +117,12 @@
     entries: {
         value: function() {
             return this._joinMap.entries();
+        }
+    },
+
+    orderedJoins: {
+        value: function() {
+            return this._addOrderedJoins;
         }
     },
 
