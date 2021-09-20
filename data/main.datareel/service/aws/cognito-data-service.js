@@ -1,6 +1,7 @@
 var AWS = require('aws-sdk'),
     CognitoIdentityServiceProvider =  AWS.CognitoIdentityServiceProvider,
     DataService = require("montage/data/service/data-service").DataService,
+    Criteria = require("montage/core/criteria").Criteria,
     RawDataService = require("montage/data/service/raw-data-service").RawDataService,
     SyntaxInOrderIterator = require("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
@@ -96,34 +97,254 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
         }
     },
 
+    mapCriteriaToRawCriteria: {
+        value: function (criteria, mapping, locales, iteratorCallback) {
+            var rawCriteria,
+                rawCriteriaSyntax = Object.clone(criteria.syntax),
+                rawCriteriaParameters = Object.clone(criteria.parameters,1),
+                iterator, currentSyntax, propertyName, rawPropertyName, propertyValue, firstArgSyntax, secondArgSyntax,
+                criteriaParameters = criteria.parameters,
+                isCurrentSyntaxParameter,
+                rawExpression,
+                rawParameters
+
+            if (!criteria) return undefined;
+
+            /*
+                Iterating to find property will only allow us to find property values that are in the parameters. If one were to bake the value in the expression string, not sure what will happen, needs to find out, I don't think this will work. The only alternative is to go though the whole tree so we can know that there's an operator above a property when one is found and find the other argument that is "baked in"
+            */
+            iterator = new SyntaxInOrderIterator(rawCriteriaSyntax, "equals");
+
+            while ((currentSyntax = iterator.next("equals").value)) {
+                firstArgSyntax = currentSyntax.args[0];
+                secondArgSyntax = currentSyntax.args[1];
+
+                if(firstArgSyntax.type === "property" && firstArgSyntax.args[0].type === "value") {
+                    propertyName = firstArgSyntax.args[1].value;
+                    rawPropertyName = firstArgSyntax.args[1].value = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
+                    if(secondArgSyntax.args) {
+                        propertyValue = criteriaParameters[secondArgSyntax.args[1].value];
+                    } else {
+                        propertyValue = criteriaParameters;
+                    }
+                } else {
+                    propertyName = secondArgSyntax.args[1].value;
+                    rawPropertyName = secondArgSyntax.args[1].value = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
+                    propertyValue = criteriaParameters[firstArgSyntax.args[1].value];
+                }
+
+                if(iteratorCallback && rawPropertyName && propertyValue) {
+                    iteratorCallback(rawPropertyName, propertyValue);
+                }
+            }
+
+            // iterator = new SyntaxInOrderIterator(rawCriteriaSyntax, "property");
+
+            // while ((currentSyntax = iterator.next("property").value)) {
+
+            //     if((currentSyntax.args[0].type === "value") || (isCurrentSyntaxParameter = (currentSyntax.args[0].type === "parameters"))) {
+            //         propertyName = currentSyntax.args[1].value;
+            //         rawPropertyName = currentSyntax.args[1].value = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
+
+            //         if(isCurrentSyntaxParameter && rawCriteriaParameters.hasOwnProperty(propertyName)) {
+            //             propertyValue = rawCriteriaParameters[currentSyntax.args[1].value] = rawCriteriaParameters[propertyName];
+            //             delete rawCriteriaParameters[propertyName];
+            //         }
+
+            //         if(iteratorCallback && rawPropertyName && propertyValue) {
+            //             iteratorCallback(rawPropertyName, propertyValue);
+            //         }
+
+            //     } else {
+            //         throw "Couldn't find property name"
+            //     }
+            // }
+
+            rawCriteria = new Criteria().initWithSyntax(rawCriteriaSyntax, criteria.parameters ? rawCriteriaParameters : null);
+
+            return rawCriteria;
+        }
+    },
+
+    _describeObjectPromiseForParams: {
+        value: function(params, describeFunction) {
+            var self = this;
+
+            new Promise(function(resolve, reject) {
+
+                describeFunction(params, function describeCallback(err, data) {
+                    if (err) {
+                        console.error(err, err.stack); // an error occurred
+                        reject(err);
+                    }
+                    else {
+                        //console.log(data);           // successful response
+                        resolve(data[objectDescriptor.name]);
+                    }
+                })
+            })
+        }
+    },
+
+    callbackForDataPropertyNamed: {
+        value: function callbackForDataPropertyNamed(objectDescriptor, readOperation, dataPropertyName, criteria, params, nextBatchFunction, describeFunction, qualifiedPropertySet) {
+            var self = this;
+
+            return function callback(err, data) {
+                var error,
+                    rawData,
+                    rawDataPromise,
+                    aRawData,
+                    needsToDescribeRawData = false,
+                    nextToken;
+                if (err) {
+                    console.error(err, err.stack); // an error occurred
+                    error = err;
+                    rawData = null;
+                }
+                else {
+                    //console.log(data);           // successful response
+                    error = null;
+                    rawData = data[dataPropertyName];
+                }
+
+                nextToken =  data.NextToken;
+
+                if(criteria) {
+                    /*
+                        Check that all properties involved in criteria are on rawData, if not, we need to get the detail of each object before being able to apply the criteria
+                    */
+                    if(rawData.length > 0) {
+                        aRawData = rawData[0];
+                        var iterator = qualifiedPropertySet.values(), iRawProperty;
+
+                        while(iRawProperty = iterator.next().value) {
+                            if(!aRawData.hasOwnProperty(iRawProperty)) {
+                                needsToDescribeRawData = true;
+                                break;
+                            }
+                        }
+
+                        if(needsToDescribeRawData) {
+                            var describeObjectPromises = [],
+                                mapping = self.mappingForObjectDescriptor(objectDescriptor),
+                                primaryKeyPropertyDescriptors = mapping.primaryKeyPropertyDescriptors;
+
+                            for (var i=0, countI = rawData.length, iRawData, iParam, j, countJ; (i<countI); i++) {
+
+                                iRawData = rawData[i];
+                                iParam = {};
+                                for(j=0, countJ = primaryKeyPropertyDescriptors.length ;(j<countJ); j++) {
+                                    iParam[primaryKeyPropertyDescriptors[j]] = iRawData[primaryKeyPropertyDescriptors[j]];
+                                }
+
+                                describeObjectPromises.push(this._describeObjectPromiseForParams(iParam, describeFunction));
+                            }
+                            rawDataPromise = Promise.all(describeObjectPromises);
+
+                        } else {
+                            rawDataPromise = Promise.resolve(rawData);
+                        }
+                    }
+                    else {
+                        rawDataPromise = Promise.resolve(rawData);
+                    }
+
+                    rawDataPromise = rawDataPromise.then(function(resolvedRawData) {
+                        return resolvedRawData.filter(criteria.predicateFunction);
+                    });
+
+                } else {
+                    rawDataPromise = Promise.resolve(rawData);
+                }
+
+                rawDataPromise.then(function(resolvedRawData) {
+                    operation = self.responseOperationForReadOperation(readOperation, error, resolvedRawData, !!nextToken/*isNotLast*/);
+                    if(operation) {
+                        objectDescriptor.dispatchEvent(operation);
+                    }
+
+                    if(nextToken) {
+                        params.NextToken = nextToken;
+                        nextBatchFunction(params, callback);
+                    }
+                });
+
+            }
+
+        }
+    },
+
+    _handleReadOperation: {
+        value: function (readOperation, readFunction, params, mandatoryParamRawProperties, dataPropertyName, describeFunction) {
+            console.log(readOperation);
+
+            var self = this,
+                objectDescriptor = readOperation.target,
+                criteria = readOperation.criteria,
+                params = params || {},
+                mapping = this.mappingForObjectDescriptor(objectDescriptor),
+                operationLocales = readOperation.locales,
+                qualifiedProperties = new Set,
+                rawCriteria = criteria ? this.mapCriteriaToRawCriteria(criteria, mapping, operationLocales, function(rawProperty, rawPropertyValue) {
+                    if(mandatoryParamRawProperties && mandatoryParamRawProperties.indexOf(rawProperty) !== -1) {
+                        params[rawProperty] = rawPropertyValue;
+                    }
+                    qualifiedProperties.add(rawProperty);
+                }) : null,
+                callback = this.callbackForDataPropertyNamed(objectDescriptor, readOperation, dataPropertyName || objectDescriptor.name, rawCriteria, params, readFunction, describeFunction, qualifiedProperties);
+
+            params.MaxResults = `${readOperation.data.readLimit ? readOperation.data.readLimit : 10}`; // required
+
+            readFunction(params, callback);
+        }
+    },
+
 
     handleUserPoolReadOperation: {
         value: function (readOperation) {
             var self = this,
-                objectDescriptor = readOperation.target;
+                objectDescriptor = readOperation.target,
+                criteria = readOperation.criteria,
+                qualifiedProperties = criteria && criteria.qualifiedProperties;
 
             console.log(readOperation);
 
 
-            function callbackForDataPropertyNamed(objectDescriptor, readOperation, dataPropertyName) {
-                return function callback(err, data) {
-                    var error, rawData;
-                    if (err) {
-                        console.error(err, err.stack); // an error occurred
-                        error = err;
-                        rawData = null;
-                    }
-                    else {
-                        //console.log(data);           // successful response
-                        error = null;
-                        rawData = data;
-                    }
+            // function callbackForDataPropertyNamed(objectDescriptor, readOperation, dataPropertyName, criteria, params, nextBatchFunction) {
+            //     return function callback(err, data) {
+            //         var error,
+            //             rawData,
+            //             nextToken;
+            //         if (err) {
+            //             console.error(err, err.stack); // an error occurred
+            //             error = err;
+            //             rawData = null;
+            //         }
+            //         else {
+            //             //console.log(data);           // successful response
+            //             error = null;
+            //             rawData = data[dataPropertyName];
+            //         }
 
-                    operation = self.responseOperationForReadOperation(readOperation, error, rawData[dataPropertyName], false/*isNotLast*/);
-                    objectDescriptor.dispatchEvent(operation);
-                }
+            //         nextToken =  data.NextToken;
 
-            }
+            //         if(criteria) {
+            //             rawData = rawData.filter(criteria.predicateFunction);
+            //         }
+
+            //         operation = self.responseOperationForReadOperation(readOperation, error, rawData, !!nextToken/*isNotLast*/);
+            //         if(operation) {
+            //             objectDescriptor.dispatchEvent(operation);
+            //         }
+
+            //         if(nextToken) {
+            //             params.NextToken = nextToken;
+            //             nextBatchFunction(params, callback);
+            //         }
+            //     }
+
+            // }
 
 
             /*
@@ -156,39 +377,54 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
             */
 
             /*
-                    Will need to add support for bactch fetch
+                    Will need to add support for batch fetch
             */
-           if(!readOperation.criteria) {
-                var params = {
-                    MaxResults: `${readOperation.data.readLimit ? readOperation.data.readLimit : 10}` // required
-                };
-                this._cognitoIdentityServiceProvider.listUserPools(params, callbackForDataPropertyNamed(objectDescriptor, readOperation, "UserPools"));
-            } else {
-                var qualifiedProperties = readOperation.criteria.qualifiedProperties;
-
-                if(qualifiedProperties.has("Id")) {
-                    /*
-                        For getting a UserPool's properties not returned by default by listUserPools:
-
-                        var params = {
-                            UserPoolId: 'STRING_VALUE' //required
-                        };
-                        cognitoidentityserviceprovider.describeUserPool(params, function(err, data) {
-                        if (err) console.log(err, err.stack); // an error occurred
-                        else     console.log(data);           // successful response
-                        });
-                    */
-
-                    let UserPoolId = readOperation.criteria.parameters.Id;
+           if(qualifiedProperties && qualifiedProperties.size === 1 && qualifiedProperties.has("Id")) {
+                /*
+                    For getting a UserPool's properties not returned by default by listUserPools:
 
                     var params = {
-                        UserPoolId: UserPoolId /* required */
+                        UserPoolId: 'STRING_VALUE' //required
                     };
+                    cognitoidentityserviceprovider.describeUserPool(params, function(err, data) {
+                    if (err) console.log(err, err.stack); // an error occurred
+                    else     console.log(data);           // successful response
+                    });
+                */
 
-                    this._cognitoIdentityServiceProvider.describeUserPool(params, callbackForDataPropertyNamed(objectDescriptor, readOperation,"UserPool"));
-                } else {
-                    throw new Error("handleUserPoolReadOperation: criteria not handled: "+ JSON.stringify(readOperation.criteria));
-                }
+                let UserPoolId = readOperation.criteria.parameters.Id;
+
+                var params = {
+                    UserPoolId: UserPoolId /* required */
+                };
+
+                this._cognitoIdentityServiceProvider.describeUserPool(params, this.callbackForDataPropertyNamed(objectDescriptor, readOperation, "UserPool"));
+
+           } else {
+
+            /*
+                watchout for criteria npt being mapped to raw model
+            */
+
+                var params = {
+                    MaxResults: `${readOperation.data.readLimit ? readOperation.data.readLimit : 10}` // required
+                },
+                mapping = this.mappingForObjectDescriptor(objectDescriptor),
+                operationLocales = readOperation.locales,
+                rawCriteria = criteria ? this.mapCriteriaToRawCriteria(criteria, mapping, operationLocales) : null,
+                listUserPools = (params, callback) => {
+                    this._cognitoIdentityServiceProvider.listUserPools(params, callback);
+                },
+                callback = this.callbackForDataPropertyNamed(objectDescriptor, readOperation, "UserPools", rawCriteria, params, listUserPools);
+
+                var describeUserPool = (params, callback) => {
+                    this._cognitoIdentityServiceProvider.describeUserPool(params, callback);
+                };
+
+                this._handleReadOperation(readOperation, listUserPools, params, null, "UserPools", describeUserPool);
+
+                //listUserPools(params, callback);
+                //this._cognitoIdentityServiceProvider.listUserPools(params, callback);
             }
         }
     },
@@ -413,9 +649,9 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
 
             //console.log(readOperation);
 
-            if(qualifiedProperties.has("UserPoolId") && qualifiedProperties.has("ClientId")) {
-                let UserPoolId = readOperation.criteria.parameters.UserPoolId,
-                    ClientId = readOperation.criteria.parameters.ClientId;
+            if((qualifiedProperties.has("userPoolId") && qualifiedProperties.has("clientId")) || (qualifiedProperties.has("UserPoolId") && qualifiedProperties.has("ClientId"))) {
+                let UserPoolId = readOperation.criteria.parameters.userPoolId || readOperation.criteria.parameters.UserPoolId,
+                    ClientId = readOperation.criteria.parameters.clientId || readOperation.criteria.parameters.ClientId;
 
                 /*
                 var params = {
@@ -451,7 +687,10 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
                 };
                 cognitoidentityserviceprovider.describeUserPoolClient(params, callback);
             }
-            else if(qualifiedProperties.length === 1 && qualifiedProperties[0] === "UserPoolId") {
+            /*
+                There's something going on where we get both object-level properties ("userPoolId") and raw level ones ("UserPoolId")
+            */
+            else if(qualifiedProperties.length === 1 && (qualifiedProperties[0] === "userPoolId" || qualifiedProperties[0] === "UserPoolId")) {
                 /*
                     Careful if that changes, but that's how we have mapping setup
                 */
@@ -506,7 +745,16 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
 
 
             } else {
-                throw new Error("Unable to perform readOperation: ", readOperation);
+                var listUserPoolClients = (params, callback) => {
+                    this._cognitoIdentityServiceProvider.listUserPoolClients(params, callback);
+                };
+
+                var describeUserPoolClient = (params, callback) => {
+                    this._cognitoIdentityServiceProvider.describeUserPoolClient(params, callback);
+                };
+
+
+                this._handleReadOperation(readOperation, listUserPoolClients, params, ["UserPoolId"], "UserPoolClients");
             }
 
         }
