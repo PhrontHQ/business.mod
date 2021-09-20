@@ -1,0 +1,61 @@
+Steps to create local stuff, inside dev/local-ssl-certificate-authority:
+
+1. Create LocalCA.key:
+    genrsa -des3 -out LocalCA.key 2048
+    Enter "Local" as password
+
+2. Generate the  generate a root certificate for  LocalCA:
+    Important, for the CA certificate to work on Android properly, the -reqexts v3_req -extensions v3_ca options need to be used when generating CA.
+
+    It turns out that on MacOS the default OpenSSL config does not include the configuration for v3_ca certificate generation. To solve this, an openssl-with-ca.cnf file is included to solve this (based on https://github.com/jetstack/cert-manager/issues/279) and (https://gist.github.com/fntlnz/cf14feb5a46b2eda428e000157447309)
+
+
+    openssl req -x509 -new -nodes -key LocalCA.key -sha256 -days 1825 -out LocalCA.pem -reqexts v3_req -extensions v3_ca -config openssl-with-ca.cnf
+
+3. Create Combined root Certificate for Android
+
+    openssl pkcs12 -export -in LocalCA.pem  -inkey LocalCA.key -out LocalCA-cert-key-combined.p12 -name "LocalCA"
+
+        Enter Password "Local"
+
+4. Adding the Root Certificate to devices
+    4.1 First on the hosting MacOS Keychain
+
+        4.1.1 via terminal
+
+            sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" LocalCA.pem
+
+        4.1.2 via UI
+            https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development/#installing-root-cert-ui
+
+    4.2 To iOS devices
+        https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development/#adding-root-cert-ios
+
+    4.3 To Android Devices
+        email the *combined.p12 file to an account available on the android device. On download, the phone will prompt to enter the password ("Local" with the committed files).
+
+
+
+5. Create CA-Signed Certificate for phront.local
+
+    openssl x509 -req -in phront.local.csr -CA LocalCA.pem -CAkey LocalCA.key -CAcreateserial \
+-out phront.local.crt -days 825 -sha256 -extfile phront.local.ext
+
+
+6. Create Combined Certificate for Android
+
+    openssl pkcs12 -export -in phront.local.crt  -inkey phront.local.key -out phront.local-cert-key-combined.p12 -name "phront.local"
+
+        Enter Password "Local"
+
+7. Create CA-Signed Certificate for localhost
+
+    openssl x509 -req -in localhost.csr -CA LocalCA.pem -CAkey LocalCA.key -CAcreateserial \
+-out localhost.crt -days 825 -sha256 -extfile localhost.ext
+
+
+8. Create Combined Certificate for Android
+
+    openssl pkcs12 -export -in localhost.crt  -inkey localhost.key -out localhost-cert-key-combined.p12 -name "localhost"
+
+        Enter Password "Local"
