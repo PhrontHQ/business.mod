@@ -2502,7 +2502,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 //}
             }
             else {
-                console.error("mapPropertyDescriptorToRawType: unable to map " + propertyDescriptorType + " to RawType");
+                console.warn("mapPropertyDescriptorToRawType: unable to map " + propertyDescriptorType + " to RawType - using 'text'");
                 return "text";
             }
         }
