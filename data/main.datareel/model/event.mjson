@@ -15,6 +15,7 @@
                 {"@": "participationRoles"},
                 {"@": "participationStatus"},
                 {"@": "participationStatusLog"},
+                {"@": "participationStatusExpectedTimeOffsets"},
                 {"@": "reminders"},
                 {"@": "eventURL"},
                 {"@": "summary"},
@@ -70,7 +71,8 @@
             "isSearchable": true,
             "cardinality": 1,
             "description": "The object for which the time is booked. Typically a Person, or a resource like afacility or equipment",
-            "valueDescriptor": {"@": "PartyDescriptor"}
+            "valueDescriptor": {"@": "PartyDescriptor"},
+            "inversePropertyName": "eventsParticipatingIn"
         }
     },
     "PartyDescriptor": {
@@ -98,8 +100,8 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "scheduledTimeRange",
-            "valueType": "range",
-            "collectionValueType": "date",
+            "valueType": "date",
+            "collectionValueType": "range",
             "isSearchable": true
         }
     },
@@ -107,8 +109,8 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "actualTimeRange",
-            "valueType": "range",
-            "collectionValueType": "date"
+            "valueType": "date",
+            "collectionValueType": "range"
         }
     },
     "parent": {
@@ -190,6 +192,7 @@
                 "Rescheduled",
                 "Missed",
                 "NoShow",
+                "AdmittanceRequirementsCompleted",
                 "Arrived",
                 "InvitedIn",
                 "CheckedIn",
@@ -232,6 +235,30 @@
 
     "DateDescriptor": {
         "object": "montage/core/date.mjson"
+    },
+
+    "participationStatusExpectedTimeOffsets": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "participationStatusExpectedTimeOffsets",
+            "keyType": "string",
+            "keyDescriptor": {"@": "participationStatusEmum"},
+            "valueDescriptor": {"@": "DurationRangeDescriptor"},
+            "valueType": "duration",
+            "collectionValueType": "map",
+            "cardinality": -1,
+            "isSearchable": true,
+            "defaultExpressions": ["calendar.b2cCustomerSupplierRelationshipOwner.supplier.parent.b2cCustomerRelationships.filter{(isTemplate == true) && (templateName == 'PracticePatientRelationshipTemplate') && calendars.filter{events.filter{isTemplate == true && participationRoles.some{(name == 'Patient') || (name == 'Attendee')}}}}.only().participationStatusExpectedTimeOffsets"],
+            "description": "A range of durations to be applied to the event's scheduledTimeRange that can set expectations for when a participationStatus value should be set."
+        }
+    },
+
+    "DurationRangeDescriptor": {
+        "object": "montage/core/duration-range.mjson"
+    },
+
+    "DurationDescriptor": {
+        "object": "montage/core/duration.mjson"
     },
 
     "reminders": {

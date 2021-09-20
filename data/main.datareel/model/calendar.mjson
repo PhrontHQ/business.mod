@@ -11,12 +11,14 @@
                 {"@": "timeZone"},
                 {"@": "conferenceProperties"},
                 {"@": "events"},
+                {"@": "templateEvents"},
                 {"@": "color"},
                 {"@": "owner"},
                 {"@": "organizationOwner"},
                 {"@": "personOwner"},
                 {"@": "resourceOwner"},
                 {"@": "employmentPositionStaffingOwner"},
+                {"@": "b2cCustomerSupplierRelationshipOwner"},
                 {"@": "serviceEngagements"}
             ],
             "objectDescriptorModule": {
@@ -92,6 +94,16 @@
             "valueDescriptor": {"@": "event-descriptor"}
         }
     },
+    "templateEvents": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "templateEvents",
+            "valueType": "array",
+            "cardinality": -1,
+            "definition": "events.filter{isTemplate == true}"
+        }
+    },
+
     "event-descriptor": {
         "object": "data/main.datareel/model/event.mjson"
     },
@@ -177,8 +189,25 @@
             "valueDescriptor": {"@": "EmploymentPositionStaffingOwnerDescriptor"}
         }
     },
+
     "EmploymentPositionStaffingOwnerDescriptor": {
         "object": "data/main.datareel/model/employment-position-staffing.mjson"
+    },
+
+    "b2cCustomerSupplierRelationshipOwner": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "b2cCustomerSupplierRelationshipOwner",
+            "valueType": "object",
+            "description": "The object owning this calendar",
+            "cardinality": 1,
+            "inversePropertyName": "calendars",
+            "valueDescriptor": {"@": "B2CCustomerSupplierRelationshipDescriptor"}
+        }
+    },
+
+    "B2CCustomerSupplierRelationshipDescriptor": {
+        "object": "data/main.datareel/model/b-2-c-customer-supplier-relationship.mjson"
     },
 
     "serviceEngagements": {

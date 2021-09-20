@@ -21,6 +21,26 @@
                         "<-": "this",
                         "converter": {"@": "ownerConverter"}
                     },
+                    "personOwner": {
+                        "<-": "ownerPersonId",
+                        "converter": {"@": "personOwnerConverter"}
+                    },
+                    "organizationOwner": {
+                        "<-": "ownerOrganizationId",
+                        "converter": {"@": "organizationOwnerConverter"}
+                    },
+                    "resourceOwner": {
+                        "<-": "ownerResourceId",
+                        "converter": {"@": "resourceOwnerConverter"}
+                    },
+                    "employmentPositionStaffingOwner": {
+                        "<-": "ownerEmploymentPositionStaffingId",
+                        "converter": {"@": "employmentPositionStaffingOwnerConverter"}
+                    },
+                    "b2cCustomerSupplierRelationshipOwner": {
+                        "<-": "ownerB2cCustomerSupplierRelationshipId",
+                        "converter": {"@": "b2cCustomerSupplierRelationshipOwnerConverter"}
+                    },
                     "color": {
                         "<->": "colorId",
                         "converter": {"@": "color-converter"}
@@ -30,19 +50,23 @@
 
             "rawDataMapping": {
                 "rules": {
-                    "personId": {
+                    "ownerPersonId": {
                         "<-": "owner",
                         "reverter": {"@": "ownerConverter"}
                     },
-                    "resourceId": {
+                    "ownerResourceId": {
                         "<-": "owner",
                         "reverter": {"@": "ownerConverter"}
                     },
-                    "organizationId": {
+                    "ownerOrganizationId": {
                         "<-": "owner",
                         "reverter": {"@": "ownerConverter"}
                     },
-                    "employmentPositionStaffingId": {
+                    "ownerEmploymentPositionStaffingId": {
+                        "<-": "owner",
+                        "reverter": {"@": "ownerConverter"}
+                    },
+                    "ownerB2cCustomerSupplierRelationshipId": {
                         "<-": "owner",
                         "reverter": {"@": "ownerConverter"}
                     }
@@ -69,11 +93,47 @@
             "convertExpression": "id == $"
         }
     },
+
+    "personOwnerConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+    "organizationOwnerConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+    "resourceOwnerConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+    "employmentPositionStaffingOwnerConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+    "b2cCustomerSupplierRelationshipOwnerConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
     "ownerPersonForeignKeyMapping": {
         "prototype": "montage/data/service/raw-data-type-mapping",
         "values": {
             "type": {"@": "PersonDescriptor"},
-            "expression": "personId.defined()"
+            "expression": "ownerPersonId.defined()"
         }
     },
     "PersonDescriptor": {
@@ -84,7 +144,7 @@
         "prototype": "montage/data/service/raw-data-type-mapping",
         "values": {
             "type": {"@": "OrganizationDescriptor"},
-            "expression": "organizationId.defined()"
+            "expression": "ownerOrganizationId.defined()"
         }
     },
     "OrganizationDescriptor": {
@@ -95,7 +155,7 @@
         "prototype": "montage/data/service/raw-data-type-mapping",
         "values": {
             "type": {"@": "ResourceDescriptor"},
-            "expression": "resourceId.defined()"
+            "expression": "ownerResourceId.defined()"
         }
     },
     "ResourceDescriptor": {
@@ -106,11 +166,22 @@
         "prototype": "montage/data/service/raw-data-type-mapping",
         "values": {
             "type": {"@": "EmploymentPositionStaffingDescriptor"},
-            "expression": "employmentPositionStaffingId.defined()"
+            "expression": "ownerEmploymentPositionStaffingId.defined()"
         }
     },
     "EmploymentPositionStaffingDescriptor": {
         "object": "data/main.datareel/model/employment-position-staffing.mjson"
+    },
+
+    "b2cCustomerSupplierRelationshipForeignKeyMapping": {
+        "prototype": "montage/data/service/raw-data-type-mapping",
+        "values": {
+            "type": {"@": "B2CCustomerSupplierRelationshipDescriptor"},
+            "expression": "ownerB2cCustomerSupplierRelationshipId.defined()"
+        }
+    },
+    "B2CCustomerSupplierRelationshipDescriptor": {
+        "object": "data/main.datareel/model/b-2-c-customer-supplier-relationship.mjson"
     },
 
     "ownerConverter": {
@@ -121,7 +192,8 @@
                 {"@": "ownerPersonForeignKeyMapping"},
                 {"@": "ownerOrganizationForeignKeyMapping"},
                 {"@": "ownerResourceForeignKeyMapping"},
-                {"@": "ownerEmploymentPositionStaffingForeignKeyMapping"}
+                {"@": "ownerEmploymentPositionStaffingForeignKeyMapping"},
+                {"@": "b2cCustomerSupplierRelationshipForeignKeyMapping"}
             ]
         }
     }

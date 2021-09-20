@@ -4,8 +4,7 @@
         "values": {
             "name": "Resource",
             "propertyDescriptors": [
-                {"@": "name"},
-                {"@": "events"}
+                {"@": "name"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/resource.mjson"
@@ -45,18 +44,6 @@
             "valueType": "string",
             "isSearchable": true
         }
-    },
-    "events": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "events",
-            "valueType": "object",
-            "cardinality": -1,
-            "valueDescriptor": {"@": "event_descriptor"}
-       }
-    },
-    "event_descriptor": {
-        "object": "data/main.datareel/model/event.mjson"
     }
 
 }

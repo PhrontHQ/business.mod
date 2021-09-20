@@ -139,8 +139,8 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "timeRangeValue",
-            "valueType": "range",
-            "collectionValueType": "date",
+            "valueType": "date",
+            "collectionValueType": "range",
             "description": "to be numrange in postgresql"
         }
     },

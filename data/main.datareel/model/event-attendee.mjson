@@ -37,8 +37,8 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "scheduledTimeRange",
-            "valueType": "range",
-            "collectionValueType": "date",
+            "valueType": "date",
+            "collectionValueType": "range",
             "isSearchable": true
         }
     },
@@ -46,8 +46,8 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "actualTimeRange",
-            "valueType": "range",
-            "collectionValueType": "date",
+            "valueType": "date",
+            "collectionValueType": "range",
             "isSearchable": true
         }
     },

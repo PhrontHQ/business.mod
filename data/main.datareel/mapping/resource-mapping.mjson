@@ -34,7 +34,11 @@
                         "<->": "id",
                         "converter": {"@": "calendarsConverter"}
                     },
-                    "name": {"<->": "name"}
+                    "name": {"<->": "name"},
+                    "eventsParticipatingIn": {
+                        "<->": "id",
+                        "converter": {"@": "eventsParticipatingInConverter"}
+                    }
                 }
             },
             "rawDataMapping": {
@@ -91,7 +95,14 @@
     "calendarsConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
-            "convertExpression": "resourceId == $"
+            "convertExpression": "resourceOwnerConverter == $"
+        }
+    },
+
+    "eventsParticipatingInConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "participatingResourceId == $"
         }
     }
 }

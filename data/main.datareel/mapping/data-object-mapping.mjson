@@ -7,6 +7,9 @@
             "objectMapping": {
                 "rules": {
                     "originId": {"<->": "originId"},
+                    "isTemplate": {"<->": "isTemplate"},
+                    "templateName": {"<->": "templateName"},
+                    "templateDescription": {"<->": "templateDescription"},
                     "creationDate": {
                         "<->": "creationDate",
                         "converter": {"@": "string-to-date-converter"}

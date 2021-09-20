@@ -11,13 +11,12 @@
                 {"@": "tags"},
                 {"@": "userIdentities"},
                 {"@": "employmentHistory"},
-                {"@": "services"},
+                {"@": "serviceProductVariantsProvided"},
                 {"@": "firstName"},
                 {"@": "lastName"},
                 {"@": "email"},
                 {"@": "phone"},
                 {"@": "addresses"},
-                {"@": "events"},
                 {"@": "respondentQuestionnaires"},
                 {"@": "supplierRelationships"},
                 {"@": "customerSupplierResponsibilities"},
@@ -134,18 +133,6 @@
     "addresses_descriptor": {
         "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
     },
-    "events": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "events",
-            "valueType": "object",
-            "cardinality": -1,
-            "valueDescriptor": {"@": "event_descriptor"}
-       }
-    },
-    "event_descriptor": {
-        "object": "data/main.datareel/model/event.mjson"
-    },
 
     "respondentQuestionnaires": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -196,19 +183,19 @@
         "object": "data/main.datareel/model/employment-position-staffing.mjson"
     },
 
-    "services": {
+    "serviceProductVariantsProvided": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "services",
+            "name": "serviceProductVariantsProvided",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "serviceDescriptor"},
+            "valueDescriptor": {"@": "serviceProductVariantsDescriptor"},
             "inversePropertyName": "providers"
         }
     },
 
-    "serviceDescriptor": {
-        "object": "data/main.datareel/model/service.mjson"
+    "serviceProductVariantsDescriptor": {
+        "object": "data/main.datareel/model/service-product-variant.mjson"
     },
 
     "supplierRelationships": {

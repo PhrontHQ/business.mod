@@ -107,7 +107,7 @@
     "calendarsConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
-            "convertExpression": "employmentPositionStaffingId == $"
+            "convertExpression": "ownerEmploymentPositionStaffingId == $"
         }
     },
 

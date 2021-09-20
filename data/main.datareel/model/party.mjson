@@ -14,6 +14,7 @@
                 {"@": "contactForms"},
                 {"@": "socialProfiles"},
                 {"@": "calendars"},
+                {"@": "eventsParticipatingIn"},
                 {"@": "images"}
             ],
             "objectDescriptorModule": {
@@ -158,12 +159,28 @@
             "name": "calendars",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "calendar_descriptor"}
+            "valueDescriptor": {"@": "calendar_descriptor"},
+            "inversePropertyName": "owner"
         }
     },
     "calendar_descriptor": {
         "object": "data/main.datareel/model/calendar.mjson"
     },
+
+    "eventsParticipatingIn": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "eventsParticipatingIn",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "event_descriptor"},
+            "inversePropertyName": "participatingParty"
+        }
+    },
+    "event_descriptor": {
+        "object": "data/main.datareel/model/event.mjson"
+    },
+
     "images": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {

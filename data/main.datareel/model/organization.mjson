@@ -163,7 +163,7 @@
             "name": "supplierRelationships",
             "valueType": "array",
             "cardinality": -1,
-            "valueDescriptor": {"@": "root"}
+            "valueDescriptor": {"@": "B2BCustomerSupplierRelationship"}
        }
     },
 
@@ -188,7 +188,7 @@
             "name": "customerEngagementQuestionnaires",
             "valueType": "array",
             "cardinality": -1,
-            "inversePropertyName": "organizations",
+            "inversePropertyName": "organization",
             "valueDescriptor": {"@": "customerEngagementQuestionnaireDescriptor"}
        }
     },

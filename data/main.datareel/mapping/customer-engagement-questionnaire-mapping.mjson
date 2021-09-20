@@ -10,8 +10,8 @@
                         "<->": "id",
                         "converter": {"@": "servicesForeignKeyConverter"}
                     },
-                    "organizations": {
-                        "<->": "id",
+                    "organization": {
+                        "<->": "organizationId",
                         "converter": {"@": "organizationsForeignKeyConverter"}
                     },
                     "questionnaire": {
@@ -25,7 +25,9 @@
                     "rolesOptionalToComplete": {
                         "<->": "roleIdsOptionalToComplete",
                         "converter": {"@": "rolesOptionalToCompleteForeignKeyConverter"}
-                    }
+                    },
+                    "participationStatusRequiredByEvent": {"<->": "participationStatusRequiredByEvent"},
+                    "participationStatusOptionalForEvent": {"<->": "participationStatusOptionalForEvent"}
                 }
             },
             "rawDataMapping": {
@@ -52,7 +54,7 @@
     "organizationsForeignKeyConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
-            "convertExpression": "customerEngagementQuestionnaireIds.has($)"
+            "convertExpression": "id == $"
         }
     },
 

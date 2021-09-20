@@ -12,7 +12,7 @@
                     "name": {"<->": "Name"},
                     "appClients": {
                         "<->": "Id",
-                        "converter": {"@": "userPool-converter"}
+                        "converter": {"@": "appClients-converter"}
                     },
                     "modificationDate": {
                         "<->": "LastModifiedDate",
@@ -45,7 +45,7 @@
             "valueType": "string"
         }
     },
-    "userPool-converter": {
+    "appClients-converter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "UserPoolId == $"

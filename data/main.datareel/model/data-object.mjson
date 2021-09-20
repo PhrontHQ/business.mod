@@ -5,6 +5,10 @@
             "name": "DataObject",
             "propertyDescriptors": [
                 {"@": "originId"},
+                {"@": "isTemplate"},
+                {"@": "templateName"},
+                {"@": "templateDescription"},
+                {"@": "isTemplate"},
                 {"@": "creationDate"},
                 {"@": "modificationDate"},
                 {"@": "publicationDate"}
@@ -22,6 +26,7 @@
     "object": {
         "object": "data/main.datareel/model/data-object"
     },
+
     "originId": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -30,6 +35,36 @@
             "isSearchable": true
         }
     },
+
+    "isTemplate": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "isTemplate",
+            "valueType": "boolean",
+            "defaultValue": false,
+            "isSearchable": true
+        }
+    },
+
+    "templateName": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "templateName",
+            "isLocalizable": true,
+            "isUnique": true,
+            "valueType": "string"
+        }
+    },
+
+    "templateDescription": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "templateDescription",
+            "isLocalizable": true,
+            "valueType": "string"
+        }
+    },
+
     "creationDate": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {

@@ -30,6 +30,10 @@
                         "<->": "id",
                         "converter": {"@": "contactForms-value-converter"}
                     },
+                    "calendars": {
+                        "<->": "id",
+                        "converter": {"@": "calendarsConverter"}
+                    },
                     "customer": {
                         "<->":"customerId",
                         "converter": {"@": "customerConverter"}
@@ -96,6 +100,12 @@
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "b2cCustomerSupplierRelationshipId == $"
+        }
+    },
+    "calendarsConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "ownerB2cCustomerSupplierRelationshipId == $"
         }
     },
 

@@ -4,11 +4,13 @@
         "values": {
             "name": "CustomerEngagementQuestionnaire",
             "propertyDescriptors": [
-                {"@": "organizations"},
+                {"@": "organization"},
                 {"@": "services"},
                 {"@": "questionnaire"},
                 {"@": "rolesRequiredToComplete"},
-                {"@": "rolesOptionalToComplete"}
+                {"@": "rolesOptionalToComplete"},
+                {"@": "participationStatusRequiredByEvent"},
+                {"@": "participationStatusOptionalForEvent"}
             ],
             "objectDescriptorModule": {
                 "%": "data/main.datareel/model/customer-engagement-questionnaire.mjson"
@@ -41,12 +43,12 @@
         "object": "data/main.datareel/model/customer-engagement-questionnaire"
     },
 
-    "organizations": {
+    "organization": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "organizations",
+            "name": "organization",
             "valueType": "object",
-            "cardinality": -1,
+            "cardinality": 1,
             "inversePropertyName": "customerEngagementQuestionnaires",
             "valueDescriptor": {"@": "organizationDescriptor"}
         }
@@ -102,6 +104,26 @@
     },
     "roleDescriptor": {
         "object": "data/main.datareel/model/role.mjson"
+    },
+    "EventType": {
+        "object": "data/main.datareel/model/event"
+    },
+    "participationStatusRequiredByEvent": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "participationStatusRequiredByEvent",
+            "valueType": "string",
+            "cardinality": 1,
+            "valueDescriptor": {"=": "@EventType.participationStatusEmum"}
+        }
+    },
+    "participationStatusOptionalForEvent": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "participationStatusOptionalForEvent",
+            "valueType": "string",
+            "cardinality": 1,
+            "valueDescriptor": {"=": "@EventType.participationStatusEmum"}
+        }
     }
-
 }

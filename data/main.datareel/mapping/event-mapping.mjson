@@ -42,6 +42,10 @@
                         "<-": "{keys: participationStatusLogKeys, values: participationStatusLogValues}",
                         "converter": {"@": "participationStatusLogConverter"}
                     },
+                    "participationStatusExpectedTimeOffsets": {
+                        "<-": "{keys: participationStatusExpectedTimeOffsetsKeys, values: participationStatusExpectedTimeOffsetsValues}",
+                        "converter": {"@": "participationStatusExpectedTimeOffsetsConverter"}
+                    },
                     "eventURL": {
                         "<->": "eventURL",
                         "converter": {"@": "eventURLConverter"}
@@ -115,6 +119,13 @@
                     "participationStatusLogValues": {
                         "<-": "participationStatusLog.valuesArray()",
                         "reverter": {"@": "participationStatusLogValuesConverter"}
+                    },
+                    "participationStatusExpectedTimeOffsetsKeys": {
+                        "<-": "participationStatusExpectedTimeOffsets.keysArray()"
+                    },
+                    "participationStatusExpectedTimeOffsetsValues": {
+                        "<-": "participationStatusExpectedTimeOffsets.valuesArray()",
+                        "reverter": {"@": "participationStatusExpectedTimeOffsetsValuesConverter"}
                     }
 
                 }
@@ -185,16 +196,39 @@
         }
     },
 
+    "participationStatusExpectedTimeOffsetsValuesConverter": {
+        "prototype": "montage/core/converter/collection-iteration-converter",
+        "values": {
+            "mapConverter": {"@": "postgresql-interval-range-to-duration-range-converter"}
+        }
+    },
+
+    "ISODateStringToDateConverter": {
+        "prototype": "../converter/i-s-o-date-string-to-date-converter"
+    },
+
     "participationStatusLogConverter": {
         "prototype": "montage/core/converter/key-value-array-to-map-converter",
         "values": {
             "convertedValueDescriptor": {"@": "MapObjectDescriptor"},
-            "valuesConverter": {"@": "DateToStringConverter"}
+            "valuesConverter": {"@": "ISODateStringToDateConverter"}
         }
     },
     "MapObjectDescriptor": {
         "object": "montage/core/collections/map.mjson"
     },
+
+    "participationStatusExpectedTimeOffsetsConverter": {
+        "prototype": "montage/core/converter/key-value-array-to-map-converter",
+        "values": {
+            "convertedValueDescriptor": {"@": "MapObjectDescriptor"},
+            "valuesConverter": {"@": "postgresql-interval-range-to-duration-range-converter"}
+        }
+    },
+    "postgresql-interval-range-to-duration-range-converter": {
+        "prototype": "../converter/postgresql-interval-range-to-duration-range-converter"
+    },
+
 
     "location-converter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
