@@ -39,6 +39,7 @@
                 {"@": "partyMapping"},
                 {"@": "imageMapping"},
                 {"@": "personMapping"},
+                {"@": "resourceMapping"},
                 {"@": "personNameMapping"},
                 {"@": "personal-relationshipMapping"},
                 {"@": "calendar-mapping"},
@@ -109,6 +110,7 @@
                 {"@": "partyPostalAddress"},
                 {"@": "image"},
                 {"@": "person"},
+                {"@": "resource"},
                 {"@": "person-name"},
                 {"@": "personal-relationship"},
                 {"@": "event"},
@@ -420,6 +422,14 @@
 
     "personMapping": {
         "object": "data/main.datareel/mapping/person-mapping.mjson"
+    },
+
+    "resource": {
+        "object": "data/main.datareel/model/resource.mjson"
+    },
+
+    "resourceMapping": {
+        "object": "data/main.datareel/mapping/resource-mapping.mjson"
     },
 
     "person-name": {
