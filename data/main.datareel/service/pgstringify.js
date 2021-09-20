@@ -714,6 +714,10 @@ module.exports = {
                 joinType = SQLJoinType.Join,
                 result;
 
+            if(!propertyDescriptor && !objectRule && !dataMapping.rawDataMappingRules.get(propertyName) && !dataMapping.isPrimaryKeyComponent(propertyName)) {
+                throw "Can't stringify Unknown property `"+propertyName+"', no propertyDescriptor nor objectMappingRules found for objectDescriptor '"+objectDescriptor.name+"' in expression qualifying '"+dataMappings[0].objectDescriptor.name+"'";
+            }
+
             if(locales) {
                 language = locales[0].language;
                 region = locales[0].region;
@@ -777,8 +781,14 @@ module.exports = {
                 resultJoin = new SQLJoin();
                 resultJoin.leftDataSetSchema = schemaName;
                 resultJoin.leftDataSet = tableName;
+                resultJoin.leftDataSetObjecDescriptor = objectDescriptor;
                 resultJoin.leftDataSetAlias = leftDataSetAlias;
                 resultJoin.rightDataSet = propertyDescriptorValueDescriptor.name;
+                /*
+                    needs rightDataSetObjecDescriptor later, would be better to just put propertyDescriptorValueDescriptor in rightDataSet and get the name,
+                    but in SQL, a dataSet could be a full statement, for which we don't have an object model, yet...
+                */
+                resultJoin.rightDataSetObjecDescriptor = propertyDescriptorValueDescriptor;
                 resultJoin.rightDataSetAlias = propertyDescriptorValueDescriptorAlias;
                 resultJoin.rightDataSetSchema = schemaName;
                 resultJoin.type = joinType;
@@ -829,23 +839,23 @@ module.exports = {
 
 
                                 /*
-                                    Previous string based implementation, the LEFT JOIN here was added as an attempt to handle a JOIN wiuth an OR node that wouldn't work without. With the new SQLJoin object, the OR can do that himself if needed now if we don't have a local reason to do so here.
+                                    Previous string based implementation, the LEFT JOIN here was added as an attempt to handle a JOIN with an OR node that wouldn't work without. With the new SQLJoin object, the OR can do that himself if needed now if we don't have a local reason to do so here.
                                 */
-                                resultJoinString = propertyDescriptorValueDescriptorAlias
-                                    ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${propertyDescriptorValueDescriptorAlias}".id = ${joinConditionLeftSide}`
-                                    : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = ${joinConditionLeftSide}`;
-                                console.log("resultJoinString: ",resultJoinString);
+                                // resultJoinString = propertyDescriptorValueDescriptorAlias
+                                //     ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${propertyDescriptorValueDescriptorAlias}".id = ${joinConditionLeftSide}`
+                                //     : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = ${joinConditionLeftSide}`;
+                                // console.log("resultJoinString: ",resultJoinString);
 
                             } else {
 
                                 result = joinConditionLeftSide = `COALESCE("${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
                                 joinCondition = `"${resultJoin.rightDataSetAlias ? propertyDescriptorValueDescriptorAlias : resultJoin.rightDataSet}".id = ${joinConditionLeftSide}`;
 
-                                resultJoinString = propertyDescriptorValueDescriptorAlias
-                                    ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${propertyDescriptorValueDescriptorAlias}".id = COALESCE("${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},*}')`
-                                    : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${leftDataSetAlias}".id = COALESCE("${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
+                                // resultJoinString = propertyDescriptorValueDescriptorAlias
+                                //     ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${propertyDescriptorValueDescriptorAlias}".id = COALESCE("${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},*}')`
+                                //     : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${leftDataSetAlias}".id = COALESCE("${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
 
-                                console.log("resultJoinString: ",resultJoinString);
+                                // console.log("resultJoinString: ",resultJoinString);
 
                             }
 
@@ -859,9 +869,9 @@ module.exports = {
                                 result = joinConditionLeftSide = `ANY ("${leftDataSetAlias}"."${rawPropertyValue}")`;
                                 joinCondition = `"${resultJoin.rightDataSetAlias ? propertyDescriptorValueDescriptorAlias : resultJoin.rightDataSet}".id = ${joinConditionLeftSide}`;
 
-                                resultJoinString = propertyDescriptorValueDescriptorAlias
-                                    ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${propertyDescriptorValueDescriptorAlias}".id = ANY ("${leftDataSetAlias}"."${rawPropertyValue}")`
-                                    : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = ANY ("${leftDataSetAlias}"."${rawPropertyValue}")`;
+                                // resultJoinString = propertyDescriptorValueDescriptorAlias
+                                //     ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${propertyDescriptorValueDescriptorAlias}".id = ANY ("${leftDataSetAlias}"."${rawPropertyValue}")`
+                                //     : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = ANY ("${leftDataSetAlias}"."${rawPropertyValue}")`;
 
                                 //console.log("resultJoinString: ",resultJoinString);
 
@@ -870,9 +880,9 @@ module.exports = {
                                 result = joinConditionLeftSide = `"${leftDataSetAlias}"."${rawPropertyValue}"`;
                                 joinCondition = `"${resultJoin.rightDataSetAlias ? propertyDescriptorValueDescriptorAlias : resultJoin.rightDataSet}".id = ${joinConditionLeftSide}`;
 
-                                resultJoinString = propertyDescriptorValueDescriptorAlias
-                                    ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${propertyDescriptorValueDescriptorAlias}".id = "${leftDataSetAlias}"."${rawPropertyValue}"`
-                                    : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = "${leftDataSetAlias}"."${rawPropertyValue}"`;
+                                // resultJoinString = propertyDescriptorValueDescriptorAlias
+                                //     ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${propertyDescriptorValueDescriptorAlias}".id = "${leftDataSetAlias}"."${rawPropertyValue}"`
+                                //     : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${propertyDescriptorValueDescriptor.name}".id = "${leftDataSetAlias}"."${rawPropertyValue}"`;
 
                                 //console.log("resultJoinString: ",resultJoinString);
 
@@ -926,22 +936,22 @@ module.exports = {
                                 result = joinConditionLeftSide = `ANY (COALESCE("${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},*}'))`;
                                 joinCondition = `"${resultJoin.leftDataSetAlias}".id = ${joinConditionLeftSide}`;
 
-                                resultJoinString = propertyDescriptorValueDescriptorAlias
-                                    ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${leftDataSetAlias}".id = ANY (COALESCE("${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},*}'))`
-                                    : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${leftDataSetAlias}".id = ANY (COALESCE("${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},*}'))`;
+                                // resultJoinString = propertyDescriptorValueDescriptorAlias
+                                //     ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${leftDataSetAlias}".id = ANY (COALESCE("${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},*}'))`
+                                //     : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${leftDataSetAlias}".id = ANY (COALESCE("${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},*}'))`;
 
-                                console.log("resultJoinString: ",resultJoinString);
+                                // console.log("resultJoinString: ",resultJoinString);
 
                             } else {
 
                                 result = joinConditionLeftSide = `COALESCE("${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
                                 joinCondition = `"${resultJoin.leftDataSetAlias}".id = ${joinConditionLeftSide}`;
 
-                                resultJoinString = propertyDescriptorValueDescriptorAlias
-                                    ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${leftDataSetAlias}".id = COALESCE("${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},*}')`
-                                    : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${leftDataSetAlias}".id = COALESCE("${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
+                                // resultJoinString = propertyDescriptorValueDescriptorAlias
+                                //     ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${leftDataSetAlias}".id = COALESCE("${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},*}')`
+                                //     : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${leftDataSetAlias}".id = COALESCE("${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
 
-                                console.log("resultJoinString: ",resultJoinString);
+                                // console.log("resultJoinString: ",resultJoinString);
 
                             }
 
@@ -957,9 +967,9 @@ module.exports = {
 
                             //if(converterSyntax && converterSyntax.type === "has") {
                             // if(inversePropertyDescriptor && inversePropertyDescriptor.cardinality > 1) {
-                                resultJoinString = propertyDescriptorValueDescriptorAlias
-                                    ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${leftDataSetAlias}".id = ANY ("${propertyDescriptorValueDescriptorAlias}"."${rawPropertyValue}")`
-                                    : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${leftDataSetAlias}".id = ANY ("${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}")`;
+                                // resultJoinString = propertyDescriptorValueDescriptorAlias
+                                //     ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${leftDataSetAlias}".id = ANY ("${propertyDescriptorValueDescriptorAlias}"."${rawPropertyValue}")`
+                                //     : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${leftDataSetAlias}".id = ANY ("${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}")`;
 
                                 //console.log("resultJoinString: ",resultJoinString);
 
@@ -968,9 +978,9 @@ module.exports = {
                                 result = joinConditionLeftSide = `"${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}"`;
                                 joinCondition = `"${resultJoin.leftDataSetAlias}".id = ${joinConditionLeftSide}`;
 
-                                resultJoinString = propertyDescriptorValueDescriptorAlias
-                                    ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${leftDataSetAlias}".id = "${propertyDescriptorValueDescriptorAlias}"."${rawPropertyValue}"`
-                                    : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${leftDataSetAlias}".id = "${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}"`;
+                                // resultJoinString = propertyDescriptorValueDescriptorAlias
+                                //     ? `LEFT JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" "${propertyDescriptorValueDescriptorAlias}" ON "${leftDataSetAlias}".id = "${propertyDescriptorValueDescriptorAlias}"."${rawPropertyValue}"`
+                                //     : `JOIN "${schemaName}"."${propertyDescriptorValueDescriptor.name}" ON "${leftDataSetAlias}".id = "${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}"`;
 
                                 //console.log("resultJoinString: ",resultJoinString);
 
@@ -1175,59 +1185,59 @@ module.exports = {
                     lastDataMapping,
                     result;
 
-                    argZeroStringified =  dataService.stringify(syntax.args[0], scope, dataMappings, locales, rawExpressionJoinStatements, {
-                        type: "scope"
-                    }, currentAliasPrefix);
+                argZeroStringified =  dataService.stringify(syntax.args[0], scope, dataMappings, locales, rawExpressionJoinStatements, {
+                    type: "scope"
+                }, currentAliasPrefix);
 
-                    // argOneStringified =  _propertyNameStringifier(syntax.args[1].value, scope, {
-                    //     type: "scope"
-                    // }, dataService, dataMappings, locales, rawExpressionJoinStatements);
-                    /*
-                        Changes to make multiple joins work. I think passing parent vs {type: "scope"} allows us to know in _propertyNameStringifier that that part is the end before an actual operator.
-                    */
-                    argOneStringified =  _propertyNameStringifier(syntax.args[1].value, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements, currentAliasPrefix);
+                // argOneStringified =  _propertyNameStringifier(syntax.args[1].value, scope, {
+                //     type: "scope"
+                // }, dataService, dataMappings, locales, rawExpressionJoinStatements);
+                /*
+                    Changes to make multiple joins work. I think passing parent vs {type: "scope"} allows us to know in _propertyNameStringifier that that part is the end before an actual operator.
+                */
+                argOneStringified =  _propertyNameStringifier(syntax.args[1].value, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements, currentAliasPrefix);
 
-                    lastDataMapping = dataMappings[dataMappings.length - 1];
+                lastDataMapping = dataMappings[dataMappings.length - 1];
 
 
-                    /*
-                        Here the behavior is different if we go from a property/relation in [0] that requires a join
-                        to a property that is a column of the last table joined to. If 2 relations across tables follow
-                        on the 2 slots, we need to just chain the join
+                /*
+                    Here the behavior is different if we go from a property/relation in [0] that requires a join
+                    to a property that is a column of the last table joined to. If 2 relations across tables follow
+                    on the 2 slots, we need to just chain the join
 
-                        otherwise, we need to add an "and". Right now we look at the produced syntax, which isn't great
-                        and we might need to bring the processing of the 2 sides in one place where we'd generate both sides
-                        and be in a better position looking at the model to make the right decision than looking at the striong result.
-                    */
-                   if(argZeroStringified.length && argOneStringified.length) {
-                        if(argOneStringified.indexOf("JOIN") !== 0) {
-                            result = `${argZeroStringified} AND ${argOneStringified}`;
-                        } else {
-                            result = `${argZeroStringified} ${argOneStringified}`;
-                        }
-                   } else if(argZeroStringified.length) {
-                        result = argZeroStringified;
-                   } else if(argOneStringified.length) {
-                        result = argOneStringified;
-                   } else {
-                        result = "";
-                   }
-
-                    //Needs to remove what nested property syntax may have added:
-                    if(dataMappings && parent.type !== "scope") {
-                        dataMappings.splice(dataMappingStartLength);
-                        if(dataMappings.aliases) {
-                            dataMappings.aliases.splice(dataMappingStartLength);
-                        }
+                    otherwise, we need to add an "and". Right now we look at the produced syntax, which isn't great
+                    and we might need to bring the processing of the 2 sides in one place where we'd generate both sides
+                    and be in a better position looking at the model to make the right decision than looking at the striong result.
+                */
+                if(argZeroStringified.length && argOneStringified.length) {
+                    if(argOneStringified.indexOf("JOIN") !== 0) {
+                        result = `${argZeroStringified} AND ${argOneStringified}`;
+                    } else {
+                        result = `${argZeroStringified} ${argOneStringified}`;
                     }
-
-                    //return argZeroStringified + '.' + syntax.args[1].value;
-                    return result;
+                } else if(argZeroStringified.length) {
+                    result = argZeroStringified;
+                } else if(argOneStringified.length) {
+                    result = argOneStringified;
                 } else {
-                    return dataService.stringify(syntax.args[0], {
-                        type: "scope"
-                    }, dataMappings, locales, rawExpressionJoinStatements, scope, currentAliasPrefix) + '[' + dataService.stringify(syntax.args[1], scope, dataMappings, locales, rawExpressionJoinStatements, undefined, currentAliasPrefix) + ']';
+                    result = "";
                 }
+
+                //Needs to remove what nested property syntax may have added:
+                if(dataMappings && parent && parent.type !== "scope") {
+                    dataMappings.splice(dataMappingStartLength);
+                    if(dataMappings.aliases) {
+                        dataMappings.aliases.splice(dataMappingStartLength);
+                    }
+                }
+
+                //return argZeroStringified + '.' + syntax.args[1].value;
+                return result;
+            } else {
+                return dataService.stringify(syntax.args[0], {
+                    type: "scope"
+                }, dataMappings, locales, rawExpressionJoinStatements, scope, currentAliasPrefix) + '[' + dataService.stringify(syntax.args[1], scope, dataMappings, locales, rawExpressionJoinStatements, undefined, currentAliasPrefix) + ']';
+            }
         },
 
         "with": function (syntax, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements, currentAliasPrefix) {
@@ -1543,6 +1553,13 @@ module.exports = {
                                 if(!mergedJoins.has(dependencyJoin)) {
                                     mergedJoins.add(dependencyJoin);
                                     // if(!rawExpressionJoinStatements.hasJoinEqualTo(dependencyJoin)) {
+                                        /*
+                                            TODO FIXME REVIEW
+                                            In the contex of Event's access control for service-engagemrnt originId, there's an or involved that doesn't work unless left joins are used.
+
+                                            I wasn't able to find a way to assess a logic to decide which ones of the joins may be the ones who need it, so for now, let's add it to all:
+                                        */
+                                        dependencyJoin.type = SQLJoinType.LeftJoin;
                                         rawExpressionJoinStatements.add(dependencyJoin);
                                     // }
                                 }
@@ -1579,6 +1596,14 @@ module.exports = {
                                 if(!mergedJoins.has(dependencyJoin)) {
                                     mergedJoins.add(dependencyJoin);
                                     // if(!rawExpressionJoinStatements.hasJoinEqualTo(dependencyJoin)) {
+                                    /*
+                                        TODO FIXME REVIEW
+                                        In the contex of Event's access control for service-engagemrnt originId, there's an or involved that doesn't work unless left joins are used.
+
+                                        I wasn't able to find a way to assess a logic to decide which ones of the joins may be the ones who need it, so for now, let's add it to all:
+                                    */
+                                        dependencyJoin.type = SQLJoinType.LeftJoin;
+
                                         rawExpressionJoinStatements.add(dependencyJoin);
                                     // }
                                 }
@@ -1592,6 +1617,15 @@ module.exports = {
                 } else {
                     mergedJoins.add(liJoin);
                     // if(!rawExpressionJoinStatements.hasJoinEqualTo(liJoin)) {
+
+                        /*
+                            TODO FIXME REVIEW
+                            In the contex of Event's access control for service-engagemrnt originId, there's an or involved that doesn't work unless left joins are used.
+
+                            I wasn't able to find a way to assess a logic to decide which ones of the joins may be the ones who need it, so for now, let's add it to all:
+                        */
+                        liJoin.type = SQLJoinType.LeftJoin;
+
                         rawExpressionJoinStatements.add(liJoin);
                     // }
                 }
@@ -1624,6 +1658,15 @@ module.exports = {
                                     if(!mergedJoins.has(dependencyJoin)) {
                                         mergedJoins.add(dependencyJoin);
                                         // if(!rawExpressionJoinStatements.hasJoinEqualTo(dependencyJoin)) {
+
+                                        /*
+                                            TODO FIXME REVIEW
+                                            In the contex of Event's access control for service-engagemrnt originId, there's an or involved that doesn't work unless left joins are used.
+
+                                            I wasn't able to find a way to assess a logic to decide which ones of the joins may be the ones who need it, so for now, let's add it to all:
+                                        */
+                                            dependencyJoin.type = SQLJoinType.LeftJoin;
+
                                             rawExpressionJoinStatements.add(dependencyJoin);
                                         // }
                                     }
@@ -1637,6 +1680,15 @@ module.exports = {
                     } else {
                         mergedJoins.add(riJoin);
                         // if(!rawExpressionJoinStatements.hasJoinEqualTo(riJoin)) {
+
+                            /*
+                                TODO FIXME REVIEW
+                                In the contex of Event's access control for service-engagemrnt originId, there's an or involved that doesn't work unless left joins are used.
+
+                                I wasn't able to find a way to assess a logic to decide which ones of the joins may be the ones who need it, so for now, let's add it to all:
+                            */
+                            riJoin.type = SQLJoinType.LeftJoin;
+
                             rawExpressionJoinStatements.add(riJoin);
                         // }
                     }
@@ -1644,7 +1696,7 @@ module.exports = {
             }
 
             if(left && right && left !== right) {
-                result = `${left} OR ${right}`;
+                result = `(${left} OR ${right})`;
             } else if(left) {
                 result = left;
             } else if(right) {
