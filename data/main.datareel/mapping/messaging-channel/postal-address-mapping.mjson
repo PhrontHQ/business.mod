@@ -34,7 +34,10 @@
                         "<->": "location",
                          "converter": {"@": "locationConverter"}
                     },
-                    "timeZone": {"<->": "timeZone"},
+                    "timeZone": {
+                        "<->": "timeZone",
+                        "converter":  {"@": "timeZoneConverter"}
+                   },
                     "partyPostalAddresses": {
                         "<->": "id",
                          "converter": {"@": "partyPostalAddressesConverter"}
@@ -53,6 +56,10 @@
 
     "PostalAddressDescriptor": {
         "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
+    },
+
+    "timeZoneConverter": {
+        "prototype": "montage/data/converter/time-zone-identifier-to-time-zone-converter"
     },
 
     "phoneNumberConverter": {

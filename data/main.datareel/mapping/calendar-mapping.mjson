@@ -11,7 +11,10 @@
                     "name": {"<->": "name"},
                     "description": {"<->": "description"},
                     "location": {"<->": "location"},
-                    "timeZone": {"<->": "timeZone"},
+                    "timeZone": {
+                        "<->": "timeZone",
+                        "converter":  {"@": "timeZoneConverter"}
+                    },
                     "conferenceProperties": {"<->": "conferenceProperties"},
                     "events": {
                         "<->": "id",
@@ -77,6 +80,11 @@
             ]
         }
     },
+
+    "timeZoneConverter": {
+        "prototype": "montage/data/converter/time-zone-identifier-to-time-zone-converter"
+    },
+
     "CalendarDescriptor": {
         "object": "data/main.datareel/model/calendar.mjson"
     },

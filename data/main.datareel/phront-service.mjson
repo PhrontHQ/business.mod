@@ -6,6 +6,7 @@
             "name": "PhrontService",
             "exportName": "PhrontService",
             "mappings": [
+                {"@": "TimeZoneMapping"},
                 {"@": "DataObjectMapping"},
                 {"@": "assetMapping"},
                 {"@": "expiringAssetDownloadMapping"},
@@ -75,6 +76,7 @@
 
             ],
             "types": [
+                {"@": "TimeZone"},
                 {"@": "DataObject"},
                 {"@": "asset"},
                 {"@": "expiringAssetDownload"},
@@ -150,6 +152,14 @@
                 {"@": "cognitoIdentityService"}
             ]
         }
+    },
+
+    "TimeZone": {
+        "object": "montage/core/date/time-zone.mjson"
+    },
+
+    "TimeZoneMapping": {
+        "object": "data/main.datareel/mapping/time-zone-mapping.mjson"
     },
 
     "DataObject": {

@@ -23,7 +23,10 @@ var RFC3339UTCRangeStringToCalendarDateRangeConverter = exports.RFC3339UTCRangeS
                     this._stringConverter = new PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter();
 
                     this._stringConverter.callback = function dateConverter(year, month, day, hours, minutes, seconds, milliseconds) {
-                        return new CalendarDate.withUTCComponentValuesInTimeZone(year, month, day, hours, minutes, seconds, milliseconds, TimeZone.systemTimeZone);
+                        return TimeZone.systemTimeZone
+                        .then(function(systemTimeZone) {
+                            return new CalendarDate.withUTCComponentValuesInTimeZone(year, month, day, hours, minutes, seconds, milliseconds, systemTimeZone);
+                        });
                     };
 
                     this._rangeParser = this._stringConverter.convert.bind(this._stringConverter);

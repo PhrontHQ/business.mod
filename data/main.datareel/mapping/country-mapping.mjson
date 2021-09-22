@@ -16,7 +16,10 @@
                     "officialStateName": {"<->": "officialStateName"},
                     "name": {"<->": "name"},
                     "phoneCode": {"<->": "phoneCode"},
-                    "timeZones": {"<->": "timeZones"}
+                    "timeZones": {
+                        "<->": "timeZones",
+                        "converter":  {"@": "timeZonesConverter"}
+                    }
                 }
             },
             "rawDataMapping": {
@@ -39,6 +42,17 @@
             "convertingSRID": "4326",
             "revertsSRID": true,
             "convertingGeometryLayout":"XYZ"
+        }
+    },
+
+    "timeZoneConverter": {
+        "prototype": "montage/data/converter/time-zone-identifier-to-time-zone-converter"
+    },
+
+    "timeZonesConverter": {
+        "prototype": "montage/core/converter/collection-iteration-converter",
+        "values": {
+            "mapConverter": {"@": "timeZoneConverter"}
         }
     }
 

@@ -16,7 +16,10 @@
                     "phone": {"<->": "phone_number"},
                     "tags": {"<->": "tags"},
                     "locale": {"<->": "locale"},
-                    "timeZone": {"<->": "zoneinfo"},
+                    "timeZone": {
+                        "<->": "zoneinfo",
+                        "converter":  {"@": "timeZoneConverter"}
+                    },
                     "person": {
                         "<->": "id",
                         "converter": {"@": "person-converter"}
@@ -34,6 +37,10 @@
                 "username","isAuthenticated","email"
             ]
         }
+    },
+
+    "timeZoneConverter": {
+        "prototype": "montage/data/converter/time-zone-identifier-to-time-zone-converter"
     },
 
     "UserIdentityDescriptor": {
