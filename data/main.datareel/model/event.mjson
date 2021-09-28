@@ -26,6 +26,8 @@
                 {"@": "isAllDay"},
                 {"@": "recurrenceRule"},
                 {"@": "recurringEvent"},
+                {"@": "rescheduledEvent"},
+                {"@": "rescheduledEventReferrer"},
                 {"@": "visibility"},
                 {"@": "iCalUID"},
                 {"@": "sequence"},
@@ -358,6 +360,27 @@
             "cardinality": 1,
             "valueDescriptor": {"@": "root"}
 
+        }
+    },
+    "rescheduledEvent": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "rescheduledEvent",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "rescheduledEventReferrer",
+            "valueDescriptor": {"@": "root"}
+
+        }
+    },
+    "rescheduledEventReferrer": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "rescheduledEventReferrer",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "rescheduledEvent",
+            "valueDescriptor": {"@": "root"}
         }
     },
     "visibility": {

@@ -68,7 +68,14 @@
                     "endTimeUnspecified": {"<->": "endTimeUnspecified"},
                     "recurrenceRule": {"<->": "recurrenceRule"},
                     "recurringEvent": {"<->": "recurringEventId",
-                        "converter": {"@": "recurringEventForeignKeyConverter"}},
+                        "converter": {"@": "recurringEventForeignKeyConverter"}
+                    },
+                    "rescheduledEvent": {"<->": "rescheduledEventId",
+                        "converter": {"@": "recurringEventForeignKeyConverter"}
+                    },
+                    "rescheduledEventReferrer": {"<->": "id",
+                        "converter": {"@": "rescheduledEventReferrerForeignKeyConverter"}
+                    },
                     "originalTimeRange": {
                         "<->": "originalTimeRange",
                         "converter": {"@": "string-to-range-converter"}
@@ -259,6 +266,20 @@
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
+        }
+    },
+
+    "rescheduledEventForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "id == $"
+        }
+    },
+
+    "rescheduledEventReferrerForeignKeyConverter": {
+        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "rescheduledEventId == $"
         }
     },
 
