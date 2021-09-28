@@ -764,7 +764,7 @@ module.exports = {
                     if(currentAliasPrefix) {
                         propertyDescriptorValueDescriptorAlias = `${currentAliasPrefix}_${rawPropertyValue}${tableName}`;
                     } else {
-                        propertyDescriptorValueDescriptorAlias = `${rawPropertyValue}${tableName}`;
+                        propertyDescriptorValueDescriptorAlias = `${propertyName}_${rawPropertyValue}_${tableName}`;
                     }
                 }
                 // else if(currentAliasPrefix) {
@@ -933,7 +933,7 @@ module.exports = {
                         if(locales && isLocalizable) {
                             if(inversePropertyDescriptor.cardinality > 1) {
 
-                                result = joinConditionLeftSide = `ANY (COALESCE("${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},*}'))`;
+                                result = joinConditionLeftSide = `ANY (COALESCE("${resultJoin.rightDataSetAlias ? propertyDescriptorValueDescriptorAlias : resultJoin.rightDataSet}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${resultJoin.rightDataSetAlias ? propertyDescriptorValueDescriptorAlias : resultJoin.rightDataSet}".${rawPropertyValue}::jsonb #>> '{${language},*}'))`;
                                 joinCondition = `"${resultJoin.leftDataSetAlias}".id = ${joinConditionLeftSide}`;
 
                                 // resultJoinString = propertyDescriptorValueDescriptorAlias
@@ -944,7 +944,7 @@ module.exports = {
 
                             } else {
 
-                                result = joinConditionLeftSide = `COALESCE("${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${leftDataSetAlias}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
+                                result = joinConditionLeftSide = `COALESCE("${resultJoin.rightDataSetAlias ? propertyDescriptorValueDescriptorAlias : resultJoin.rightDataSet}".${rawPropertyValue}::jsonb #>> '{${language},${region}}', "${resultJoin.rightDataSetAlias ? propertyDescriptorValueDescriptorAlias : resultJoin.rightDataSet}".${rawPropertyValue}::jsonb #>> '{${language},*}')`;
                                 joinCondition = `"${resultJoin.leftDataSetAlias}".id = ${joinConditionLeftSide}`;
 
                                 // resultJoinString = propertyDescriptorValueDescriptorAlias
@@ -961,7 +961,7 @@ module.exports = {
                         } else {
                             if((converterSyntax && converterSyntax.type === "has") || (inversePropertyDescriptor && inversePropertyDescriptor.cardinality > 1)) {
 
-                                result = joinConditionLeftSide = `ANY ("${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}")`;
+                                result = joinConditionLeftSide = `ANY ("${resultJoin.rightDataSetAlias ? propertyDescriptorValueDescriptorAlias : resultJoin.rightDataSet}"."${rawPropertyValue}")`;
                                 joinCondition = `"${resultJoin.leftDataSetAlias}".id = ${joinConditionLeftSide}`;
 
 
@@ -975,7 +975,7 @@ module.exports = {
 
                             } else {
 
-                                result = joinConditionLeftSide = `"${propertyDescriptorValueDescriptor.name}"."${rawPropertyValue}"`;
+                                result = joinConditionLeftSide = `"${resultJoin.rightDataSetAlias ? propertyDescriptorValueDescriptorAlias : resultJoin.rightDataSet}"."${rawPropertyValue}"`;
                                 joinCondition = `"${resultJoin.leftDataSetAlias}".id = ${joinConditionLeftSide}`;
 
                                 // resultJoinString = propertyDescriptorValueDescriptorAlias
@@ -1504,7 +1504,7 @@ module.exports = {
                             dependencyArray.push(iterationJoin);
                             addJoinDependenciesToArray(sqlJoinStatements, iterationJoin, dependencyArray);
                         }
-                }
+                    }
                 }
             };
 
