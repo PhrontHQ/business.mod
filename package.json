@@ -28,7 +28,7 @@
     "id128": "^1.5.0"
   },
   "devDependencies": {
-    "aws-sdk": "^2.546.0",
+    "aws-sdk": "^2.952.0",
     "concurrently": "^3.4.0",
     "http-server": "^0.9.0",
     "jasmine-console-reporter": "^1.2.7",
