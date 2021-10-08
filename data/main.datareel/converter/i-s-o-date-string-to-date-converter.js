@@ -53,7 +53,7 @@ var ISODateStringToDateConverter = exports.ISODateStringToDateConverter = Postgr
                         ? ((typeof v.toJSDate === "function")
                             ? v.toJSDate().toISOString()
                             : v.toISOString())
-                        : "-infinity"
+                        : null
             );
         }
     }
