@@ -189,7 +189,7 @@
                 "Declined",
                 "TentativelyAccepted",
                 "Delegated",
-                "Cancelled",
+                "Canceled",
                 "Waitlisted",
                 "Rescheduled",
                 "Missed",
