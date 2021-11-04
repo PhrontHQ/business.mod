@@ -56,6 +56,8 @@ var DataService = require("montage/data/service/data-service").DataService,
     pgstringify = require('./pgstringify'),
     parse = require("montage/core/frb/parse"),
     DataTrigger = require("./data-trigger").DataTrigger,
+    path = require("path"),
+    fs = require('fs'),
     PhrontService;
 
 //Set our DataTrigger custom subclass:
@@ -234,67 +236,67 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         }
     },
 
-    databaseClusterAuthorization: {
-        value: {
-            resourceArn: "arn:aws:rds:us-west-2:537014313177:cluster:storephront-database", /* required */
-            secretArn: "arn:aws:secretsmanager:us-west-2:537014313177:secret:storephront-database-postgres-user-access-QU2fSB" /* required */
-        }
-    },
+    // databaseClusterAuthorization: {
+    //     value: {
+    //         resourceArn: "arn:aws:rds:us-west-2:537014313177:cluster:storephront-database", /* required */
+    //         secretArn: "arn:aws:secretsmanager:us-west-2:537014313177:secret:storephront-database-postgres-user-access-QU2fSB" /* required */
+    //     }
+    // },
 
-    __databaseAuthorizationBySchema: {
-        value: undefined
-    },
+    // __databaseAuthorizationBySchema: {
+    //     value: undefined
+    // },
 
-    _databaseAuthorizationBySchema: {
-        get: function () {
-            if (!this.__databaseAuthorizationBySchema) {
-                this.__databaseAuthorizationBySchema = new Map();
-            }
-            return this.__databaseAuthorizationBySchema;
-        }
-    },
+    // _databaseAuthorizationBySchema: {
+    //     get: function () {
+    //         if (!this.__databaseAuthorizationBySchema) {
+    //             this.__databaseAuthorizationBySchema = new Map();
+    //         }
+    //         return this.__databaseAuthorizationBySchema;
+    //     }
+    // },
 
-    _databaseAuthorizationsForSchema: {
-        value: function (schemaName) {
-            var dbAuthorizations = this._databaseAuthorizationBySchema.get(schemaName);
-            if (!dbAuthorizations) {
-                this._databaseAuthorizationBySchema.set(schemaName, dbAuthorizations = new Map());
-            }
-            return dbAuthorizations;
-        }
-    },
+    // _databaseAuthorizationsForSchema: {
+    //     value: function (schemaName) {
+    //         var dbAuthorizations = this._databaseAuthorizationBySchema.get(schemaName);
+    //         if (!dbAuthorizations) {
+    //             this._databaseAuthorizationBySchema.set(schemaName, dbAuthorizations = new Map());
+    //         }
+    //         return dbAuthorizations;
+    //     }
+    // },
 
-    authorizationForDatabaseInSchema: {
-        value: function (databaseName, schemaName) {
-            var schemaDBAuthorizations = this._databaseAuthorizationsForSchema(schemaName);
-            var dbAuthorization = schemaDBAuthorizations.get(databaseName);
+    // authorizationForDatabaseInSchema: {
+    //     value: function (databaseName, schemaName) {
+    //         var schemaDBAuthorizations = this._databaseAuthorizationsForSchema(schemaName);
+    //         var dbAuthorization = schemaDBAuthorizations.get(databaseName);
 
-            if (!dbAuthorization) {
-                var databaseClusterAuthorization = this.databaseClusterAuthorization;
-                dbAuthorization = {};
-                for (var key in databaseClusterAuthorization) {
-                    dbAuthorization[key] = databaseClusterAuthorization[key];
-                }
-                dbAuthorization.database = databaseName;
-                dbAuthorization.schema = schemaName;
-                schemaDBAuthorizations.set(databaseName, dbAuthorization);
-            }
-            return dbAuthorization;
-        }
-    },
+    //         if (!dbAuthorization) {
+    //             var databaseClusterAuthorization = this.databaseClusterAuthorization;
+    //             dbAuthorization = {};
+    //             for (var key in databaseClusterAuthorization) {
+    //                 dbAuthorization[key] = databaseClusterAuthorization[key];
+    //             }
+    //             dbAuthorization.database = databaseName;
+    //             dbAuthorization.schema = schemaName;
+    //             schemaDBAuthorizations.set(databaseName, dbAuthorization);
+    //         }
+    //         return dbAuthorization;
+    //     }
+    // },
 
-    rawDataOperationForDatabaseSchema: {
-        value: function (databaseName, schemaName) {
-            var rawDataOperation = {},
-                dbAuthorization = this.authorizationForDatabaseInSchema(databaseName, schemaName);
+    // rawDataOperationForDatabaseSchema: {
+    //     value: function (databaseName, schemaName) {
+    //         var rawDataOperation = {},
+    //             dbAuthorization = this.authorizationForDatabaseInSchema(databaseName, schemaName);
 
-            for (var key in dbAuthorization) {
-                rawDataOperation[key] = dbAuthorization[key];
-            }
+    //         for (var key in dbAuthorization) {
+    //             rawDataOperation[key] = dbAuthorization[key];
+    //         }
 
-            return rawDataOperation;
-        }
-    },
+    //         return rawDataOperation;
+    //     }
+    // },
 
     __rdsDataService: {
         value: undefined
@@ -703,12 +705,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                     ["name.fr.CA" or "name.fr.*","description.fr.CA or description.fr.*","tags.fr.CA or tags.fr.*"], where it's more natural/less hard coded to implement as a coalesce(), and there's also nothing to know about locale.
 
-
                 So PhrontClientService needs to transform property names to object Expressions. Today, we only transform string to string for criteria.
                 ["name","description","tags"] -> ["name.fr.CA" or "name.fr.*","description.fr.CA or description.fr.*","tags.fr.CA or tags.fr.*"]
-
-
-
 
                 we'll have a mapping for name with a LocalizedStringConverter.
                 LocalizedStringConverter:
@@ -743,8 +741,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             */
 
-                var syntax = typeof anExpression === "string" ? parse(anExpression) : anExpressions,
-                    rawParameters = null,
+                // var syntax = typeof anExpression === "string" ? parse(anExpression) : anExpressions,
+                var rawParameters = null,
                     rawExpression = this.stringify(syntax, rawParameters, [mapping]);
 
                 return rawExpression;
@@ -775,7 +773,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                             jsonb_build_object('fr',column->'fr','en',column->'en')
                         */
                         result = 'jsonb_build_object(';
-                        for(var i=0, countI = operationLocales.length;(i<countI);i++) {
+                        for(let i=0, countI = operationLocales.length;(i<countI);i++) {
                                 language = operationLocales[i].language;
                                 result += `'${language}',"${tableName}".${escapedExpression}::jsonb->'${language}'`;
                                 if(i+2 < countI) result += ",";
@@ -847,8 +845,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                                 destinationColumnNames,
                                 firstJoinLeftDataSet,
                                 firstJoinLeftDataSetAlias,
-                                firstJoinLeftDataSetObjecDescriptor,
-                                lastJoinRightDataSetObjecDescriptor;
+                                firstJoinLeftDataSetObjecDescriptor;
 
 
                             if(lastJoinRightDataSetObjecDescriptor) {
@@ -1314,8 +1311,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                                     destinationColumnNames,
                                     firstJoinLeftDataSet,
                                     firstJoinLeftDataSetAlias,
-                                    firstJoinLeftDataSetObjecDescriptor,
-                                    lastJoinRightDataSetObjecDescriptor;
+                                    firstJoinLeftDataSetObjecDescriptor;
 
                                 /*
                                     We're hijacking the main query if there's only one readExpressions,
@@ -1812,12 +1808,14 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             readOperationExecutionPromises = [];
             readOperationsCount = readOperations?.length || 0;
 
-            //if(readOperation.target.name === "Event") {
+            // if(readOperation.target.name === "ServiceEngagement") {
             //     if(readOperation.criteria && readOperation.criteria.expression) {
             //         console.log("------------------> readOperation.criteria.expression:",readOperation.criteria.expression);
             //     }
             //   console.log("------------------> rawDataOperation.sql:",rawDataOperation.sql);
-            //}
+            // }
+
+            console.log("------------------> rawDataOperation:",rawDataOperation);
 
             firstPromise = new Promise(function (resolve, reject) {
 
@@ -1936,7 +1934,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                             }
                             responseOperation.target.dispatchEvent(responseOperation);
 
-                        })
+                        });
 
                         // iRawDataOperation = {};
 
@@ -2271,7 +2269,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     else if(propertyDescriptorValueType === "number") {
                         rawType = "numrange";
                     } else if(propertyDescriptorValueType === "duration") {
-                        rawType = "intervalrange";
+                        rawType = `${this.connection.schema}.intervalrange`;
                     } else {
                         throw new Error("Unable to mapPropertyDescriptorToRawType",propertyDescriptor,rawDataMappingRule);
                     }
@@ -2361,7 +2359,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                             We need to find a way in mappings to be able to execute that kind of sql when we create the storage for an ObjectDescriptor.
                         */
-                        rawType = "intervalrange";
+                        rawType = `${this.connection.schema}.intervalrange`;
                     } else {
                         throw new Error("Unable to mapPropertyDescriptorToRawType",propertyDescriptor,rawDataMappingRule);
                     }
@@ -2855,7 +2853,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                     //If cardinality is 1, we need to create a uuid columne, if > 1 a uuid[]
                     var cardinality = iPropertyDescriptor.cardinality,
-                        j, countJ, jRawProperty,
+                        jRawProperty,
                         k, countK, kPropertyDescriptor;
 
                     for(j=0, countJ = converterforeignDescriptorMappings.length;(j<countJ);j++) {
@@ -3024,354 +3022,472 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     //We need a mapping to go from model(schema?)/ObjectDescriptor to schema/table
     mapToRawCreateObjectDescriptorOperation: {
         value: function (dataOperation) {
-            var objectDescriptor = dataOperation.data,
-                mapping = objectDescriptor && this.mappingForType(objectDescriptor),
-                parentDescriptor,
-                tableName = this.tableForObjectDescriptor(objectDescriptor),
-                schemaDescriptor = this.schemaDescriptorForObjectDescriptor(objectDescriptor),
-                propertyDescriptors = Array.from(schemaDescriptor.propertyDescriptors),
-                i, countI, iPropertyDescriptor, iPropertyDescriptorValueDescriptor, iDescendantDescriptors, iObjectRule, iRule, iIndex,
-                //Hard coded for now, should be derived from a mapping telling us n which databaseName that objectDescriptor is stored
-                databaseName = this.connection.database,
-               schemaName = this.connection.schema,
-                rawDataOperation = {},
-                sql = "",
-                indexSQL = "",
-                columnSQL = ',\n',
-                /*
-                        parameters: [
-                    {
-                        name: "id",
-                        value: {
-                            "stringValue": 1
+
+            return this.createSchemaIfNeededForCreateObjectDescriptorOperation(dataOperation)
+            .then(() => {
+
+                var objectDescriptor = dataOperation.data,
+                    mapping = objectDescriptor && this.mappingForType(objectDescriptor),
+                    parentDescriptor,
+                    tableName = this.tableForObjectDescriptor(objectDescriptor),
+                    schemaDescriptor = this.schemaDescriptorForObjectDescriptor(objectDescriptor),
+                    propertyDescriptors = Array.from(schemaDescriptor.propertyDescriptors),
+                    i, countI, iPropertyDescriptor, iPropertyDescriptorValueDescriptor, iDescendantDescriptors, iObjectRule, iRule, iIndex,
+                    //Hard coded for now, should be derived from a mapping telling us n which databaseName that objectDescriptor is stored
+                    databaseName = this.connection.database,
+                    schemaName = this.connection.schema,
+                    rawDataOperation = {},
+                    sql = "",
+                    indexSQL = "",
+                    columnSQL = ',\n',
+                    /*
+                            parameters: [
+                        {
+                            name: "id",
+                            value: {
+                                "stringValue": 1
+                            }
                         }
+                    ]
+                    */
+                    parameters = null,
+                    continueAfterTimeout = false,
+                    includeResultMetadata = true,
+                    columnName,
+                    colunmns = new Set(),
+                    colunmnStrings = [],
+                    colunmnIndexStrings = [],
+                    propertyValueDescriptor,
+                    columnType,
+                    converterforeignDescriptorMappings,
+                    iObjectRuleSourcePathSyntax,
+                    owner = this.connection.owner,
+                    // createSchema = `CREATE SCHEMA IF NOT EXISTS "${schemaName}";`,
+                    // createExtensionPgcryptoSchema = `CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA "${schemaName}";   `,
+                    createTableTemplatePrefix = `CREATE TABLE "${schemaName}"."${tableName}"
+    (
+        id uuid NOT NULL DEFAULT phront.gen_random_uuid(),
+        CONSTRAINT "${tableName}_pkey" PRIMARY KEY (id)`,
+                    createTableTemplateSuffix = `
+    )
+    WITH (
+        OIDS = FALSE
+    )
+    TABLESPACE pg_default;
+
+    ALTER TABLE ${schemaName}."${tableName}"
+        OWNER to ${owner};
+    CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id);
+    `;
+
+                this.mapOperationToRawOperationConnection(dataOperation, rawDataOperation);
+
+                for (i = propertyDescriptors.length - 1; (i > -1); i--) {
+                    iPropertyDescriptor = propertyDescriptors[i];
+
+                    //Handled already
+                    if(iPropertyDescriptor.name === "id") {
+                        continue;
                     }
-                ]
-                */
-                parameters = null,
-                continueAfterTimeout = false,
-                includeResultMetadata = true,
-                columnName,
-                colunmns = new Set(),
-                colunmnStrings = [],
-                colunmnIndexStrings = [],
-                propertyValueDescriptor,
-                columnType,
-                converterforeignDescriptorMappings,
-                iObjectRuleSourcePathSyntax,
-                owner = this.connection.owner,
-                createSchema = `CREATE SCHEMA IF NOT EXISTS "${schemaName}";`,
-                createExtensionPgcryptoSchema = `CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA "${schemaName}";   `,
-                createTableTemplatePrefix = `CREATE TABLE "${schemaName}"."${tableName}"
-(
-    id uuid NOT NULL DEFAULT phront.gen_random_uuid(),
-    CONSTRAINT "${tableName}_pkey" PRIMARY KEY (id)`,
-                createTableTemplateSuffix = `
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
 
-ALTER TABLE ${schemaName}."${tableName}"
-    OWNER to ${owner};
-CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id);
-`;
+                    //.valueDescriptor still returns a promise
+                    iPropertyDescriptorValueDescriptor = iPropertyDescriptor._valueDescriptorReference;
+                    iDescendantDescriptors = iPropertyDescriptorValueDescriptor ? iPropertyDescriptorValueDescriptor.descendantDescriptors : null;
+                    iObjectRule = mapping.objectMappingRules.get(iPropertyDescriptor.name);
+                    iRule = iObjectRule && mapping.rawDataMappingRules.get(iObjectRule.sourcePath);
+                    converterforeignDescriptorMappings = iObjectRule && iObjectRule.converter && iObjectRule.converter.foreignDescriptorMappings;
+                    iObjectRuleSourcePathSyntax = iObjectRule && iObjectRule.sourcePathSyntax;
 
-            this.mapOperationToRawOperationConnection(dataOperation, rawDataOperation);
+                    columnType = iPropertyDescriptor.valueType;
 
-            for (i = propertyDescriptors.length - 1; (i > -1); i--) {
-                iPropertyDescriptor = propertyDescriptors[i];
+                    /*
+                        iPropertyDescriptor is now raw data level, we'll need to clean up
+                    */
+                    this._buildObjectDescriptorColumnAndIndexString(objectDescriptor, iPropertyDescriptor.name, columnType, iPropertyDescriptor, iRule, colunmns, colunmnStrings, colunmnIndexStrings);
 
-                //Handled already
-                if(iPropertyDescriptor.name === "id") {
-                    continue;
+                    /*
+                        We may have to add some specical constructions for supporting map and enforcing unique arrays:
+                        See:
+                            https://stackoverflow.com/questions/64982146/postgresql-optimal-way-to-store-and-index-unique-array-field
+
+                            https://stackoverflow.com/questions/8443716/postgres-unique-constraint-for-array
+
+                    */
+
                 }
 
-                //.valueDescriptor still returns a promise
-                iPropertyDescriptorValueDescriptor = iPropertyDescriptor._valueDescriptorReference;
-                iDescendantDescriptors = iPropertyDescriptorValueDescriptor ? iPropertyDescriptorValueDescriptor.descendantDescriptors : null;
-                iObjectRule = mapping.objectMappingRules.get(iPropertyDescriptor.name);
-                iRule = iObjectRule && mapping.rawDataMappingRules.get(iObjectRule.sourcePath);
-                converterforeignDescriptorMappings = iObjectRule && iObjectRule.converter && iObjectRule.converter.foreignDescriptorMappings;
-                iObjectRuleSourcePathSyntax = iObjectRule && iObjectRule.sourcePathSyntax;
 
-                columnType = iPropertyDescriptor.valueType;
-
+                // sql += createSchema;
                 /*
-                    iPropertyDescriptor is now raw data level, we'll need to clean up
+                    Creating tables isn't frequent, but we'll need to refactor this so it's one when we programmatically create the database.
+
+                    That said, some ObjectDescriptor mappings expect some extensions to be there, like PostGIS, so we'll need to add these dependencies somewhere in teh mapping so we can include them in create extensions here.
                 */
-                this._buildObjectDescriptorColumnAndIndexString(objectDescriptor, iPropertyDescriptor.name, columnType, iPropertyDescriptor, iRule, colunmns, colunmnStrings, colunmnIndexStrings);
+                // sql += createExtensionPgcryptoSchema;
+                sql += createTableTemplatePrefix;
 
-                /*
-                    We may have to add some specical constructions for supporting map and enforcing unique arrays:
-                    See:
-                        https://stackoverflow.com/questions/64982146/postgresql-optimal-way-to-store-and-index-unique-array-field
+                if (colunmnStrings.length > 0) {
+                    sql += ',\n';
+                    sql += colunmnStrings.join(',\n');
+                }
+                sql += createTableTemplateSuffix;
 
-                        https://stackoverflow.com/questions/8443716/postgres-unique-constraint-for-array
+                //Now add indexes:
+                if(colunmnIndexStrings.length > 0) {
+                    sql += colunmnIndexStrings.join('\n');
+                }
 
-                */
+                rawDataOperation.sql = sql;
+                rawDataOperation.continueAfterTimeout = continueAfterTimeout;
+                rawDataOperation.includeResultMetadata = includeResultMetadata;
+                //rawDataOperation.parameters = parameters;
 
-            }
+                return rawDataOperation;
+            });
 
-
-            sql += createSchema;
-            /*
-                Creating tables isn't frequent, but we'll need to refactor this so it's one when we programmatically create the database.
-
-                That said, some ObjectDescriptor mappings expect some extensions to be there, like PostGIS, so we'll need to add these dependencies somewhere in teh mapping so we can include them in create extensions here.
-            */
-            sql += createExtensionPgcryptoSchema;
-            sql += createTableTemplatePrefix;
-
-            if (colunmnStrings.length > 0) {
-                sql += ',\n';
-                sql += colunmnStrings.join(',\n');
-            }
-            sql += createTableTemplateSuffix;
-
-            //Now add indexes:
-            if(colunmnIndexStrings.length > 0) {
-                sql += colunmnIndexStrings.join('\n');
-            }
-
-            rawDataOperation.sql = sql;
-            rawDataOperation.continueAfterTimeout = continueAfterTimeout;
-            rawDataOperation.includeResultMetadata = includeResultMetadata;
-            //rawDataOperation.parameters = parameters;
-
-            return rawDataOperation;
         }
     },
 
     //We need a mapping to go from model(schema?)/ObjectDescriptor to schema/table
-    mapToRawCreateObjectDescriptorOperation_old: {
+//     mapToRawCreateObjectDescriptorOperation_old: {
+//         value: function (dataOperation) {
+//             var objectDescriptor = dataOperation.data,
+//                 mapping = objectDescriptor && this.mappingForType(objectDescriptor),
+//                 parentDescriptor,
+//                 tableName = this.tableForObjectDescriptor(objectDescriptor),
+//                 propertyDescriptors = Array.from(objectDescriptor.propertyDescriptors),
+//                 columnNames = this.columnNamesForObjectDescriptor(objectDescriptor),/* triggers the creation of mapping.schemaDescriptor for now*/
+//                 i, countI, iPropertyDescriptor, iPropertyDescriptorValueDescriptor, iDescendantDescriptors, iObjectRule, iRule, iIndex,
+//                 //Hard coded for now, should be derived from a mapping telling us n which databaseName that objectDescriptor is stored
+//                 databaseName = this.connection.database,
+//                 //Hard coded for now, should be derived from a mapping telling us n which schemaName that objectDescriptor is stored
+//                 schemaName = this.connection.schema,
+//                 rawDataOperation = {},
+//                 sql = "",
+//                 indexSQL = "",
+//                 columnSQL = ',\n',
+//                 /*
+//                         parameters: [
+//                     {
+//                         name: "id",
+//                         value: {
+//                             "stringValue": 1
+//                         }
+//                     }
+//                 ]
+//               */
+//                 parameters = null,
+//                 continueAfterTimeout = false,
+//                 includeResultMetadata = true,
+//                 columnName,
+//                 colunmns = new Set(),
+//                 colunmnStrings = [],
+//                 colunmnIndexStrings = [],
+//                 propertyValueDescriptor,
+//                 columnType,
+//                 owner = this.connection.owner,
+//                 createSchema = `CREATE SCHEMA IF NOT EXISTS "${schemaName}";`,
+//                 createExtensionPgcryptoSchema = `CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA "${schemaName}";   `,
+//                 createTableTemplatePrefix = `CREATE TABLE "${schemaName}"."${tableName}"
+// (
+//     id uuid NOT NULL DEFAULT phront.gen_random_uuid(),
+//     CONSTRAINT "${tableName}_pkey" PRIMARY KEY (id)`,
+//                 createTableTemplateSuffix = `
+// )
+// WITH (
+//     OIDS = FALSE
+// )
+// TABLESPACE pg_default;
+
+// ALTER TABLE ${schemaName}."${tableName}"
+//     OWNER to ${owner};
+// CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id);
+// `;
+
+//             this.mapOperationToRawOperationConnection(dataOperation, rawDataOperation);
+
+//             // parameters.push({
+//             //   name:"schema",
+//             //   value: {
+//             //     "stringValue": schemaName
+//             // }
+//             // });
+//             // parameters.push({
+//             //   name:"table",
+//             //   value: {
+//             //     "stringValue": tableName
+//             // }
+//             // });
+//             // parameters.push({
+//             //   name:"owner",
+//             //   value: {
+//             //     "stringValue": "postgres"
+//             // }
+//             // });
+
+//             //Cummulate inherited propertyDescriptors:
+//             parentDescriptor = objectDescriptor.parent;
+//             while ((parentDescriptor)) {
+//                 if (parentDescriptor.propertyDescriptors && propertyDescriptors.length) {
+//                     propertyDescriptors.concat(parentDescriptor.propertyDescriptors);
+//                 }
+//                 parentDescriptor = parentDescriptor.parent;
+//             }
+
+//             //Before we start the loop, we add the primaryKey:
+//             colunmns.add("id");
+
+
+//             for (i = propertyDescriptors.length - 1; (i > -1); i--) {
+//                 iPropertyDescriptor = propertyDescriptors[i];
+
+//                 //If iPropertyDescriptor isDerived, it has an expresssion
+//                 //that make it dynamic based on other properties, it doesn't
+//                 //need a materialized/concrete storage in a column.
+//                 if(iPropertyDescriptor.isDerived) continue;
+
+//                 //.valueDescriptor still returns a promise
+//                 iPropertyDescriptorValueDescriptor = iPropertyDescriptor._valueDescriptorReference;
+//                 iDescendantDescriptors = iPropertyDescriptorValueDescriptor ? iPropertyDescriptorValueDescriptor.descendantDescriptors : null;
+//                 iObjectRule = mapping.objectMappingRules.get(iPropertyDescriptor.name);
+//                 iRule = iObjectRule && mapping.rawDataMappingRules.get(iObjectRule.sourcePath);
+//                 converterforeignDescriptorMappings = iObjectRule && iObjectRule.converter && iObjectRule.converter.foreignDescriptorMappings;
+//                 iObjectRuleSourcePathSyntax = iObjectRule && iObjectRule.sourcePathSyntax;
+
+//                 /*
+//                     If it's a property points to an object descriptor with descendants,
+//                     we need to implement the support for a polymorphic Associations implementation
+//                     with the Exclusive Belongs To (AKA Exclusive Arc) strategy.
+
+//                     Details at:
+//                     https://hashrocket.com/blog/posts/modeling-polymorphic-associations-in-a-relational-database#exclusive-belongs-to-aka-exclusive-arc-
+
+//                     many resources about this, another one:
+//                     https://www.slideshare.net/billkarwin/practical-object-oriented-models-in-sql/30-Polymorphic_Assocations_Exclusive_ArcsCREATE_TABLE
+
+//                     this means creating a column/foreignKEy for each possible destination in descendants
+
+
+//                 */
+
+//                 columnType = this.mapPropertyDescriptorToRawType(iPropertyDescriptor, iRule);
+
+
+//                 //if(iPropertyDescriptorValueDescriptor && iDescendantDescriptors && iObjectRuleSourcePathSyntax && iObjectRuleSourcePathSyntax.type === "record") {
+//                 if(converterforeignDescriptorMappings) {
+
+//                     //If cardinality is 1, we need to create a uuid columne, if > 1 a uuid[]
+//                     var cardinality = iPropertyDescriptor.cardinality,
+//                         j, countJ, jRawProperty;
+
+//                     for(j=0, countJ = converterforeignDescriptorMappings.length;(j<countJ);j++) {
+//                         jRawProperty = converterforeignDescriptorMappings[j].rawDataProperty;
+//                         this._buildObjectDescriptorColumnAndIndexString(objectDescriptor, jRawProperty, columnType, iPropertyDescriptor, iRule, colunmns, colunmnStrings, colunmnIndexStrings);
+//                     }
+
+//                 } else {
+
+//                     if (iRule) {
+//                         //In another place we used the object Rule and therefore it's sourcePath
+//                         //Should streamline at some point
+//                         columnName = iRule.targetPath;
+//                     } else {
+//                         columnName = iPropertyDescriptor.name;
+//                     }
+
+//                     if(!columnNames.has(columnName)) {
+//                         continue;
+//                     }
+
+//                     this._buildObjectDescriptorColumnAndIndexString(objectDescriptor, columnName, columnType, iPropertyDescriptor, iRule, colunmns, colunmnStrings, colunmnIndexStrings);
+
+//                 }
+
+//                 /*
+//                     Some many-to-many use the primary key as a way
+//                     to find other rows in other table that have either an embedded foreign key (1-n), or an array of them (n-n). In which case the id is used in the right side, with a converter. So if
+//                     we're in that situation, let's move on and avoid
+//                     re-creating another column "id".
+
+//                     We've been stretching the use of expression-data-mapping, we might need
+//                     another mapping for the sake of storage, with a bunch of default, but can be overriden.
+
+//                     So as a better check, once we created a column, we track it so if somehow multiple mappings use it,
+//                     we won't create it multiple times.
+//                 */
+//                 // if(!colunmns.has(columnName)) {
+
+//                 //     colunmns.add(columnName);
+
+
+//                 //     columnSQL += this._buildColumnString(columnName, columnType);
+
+//                 //     if (i > 0) {
+//                 //         columnSQL += ',\n';
+//                 //     }
+
+
+//                 //     iIndex = this.mapSearchablePropertyDescriptorToRawIndex(iPropertyDescriptor, iRule);
+//                 //     if(iIndex) {
+//                 //         if (indexSQL.length) {
+//                 //             indexSQL += "\n";
+//                 //         }
+//                 //         indexSQL += iIndex;
+//                 //     }
+//                 // }
+
+//             }
+
+
+//             sql += createSchema;
+//             /*
+//                 Creating tables isn't frequent, but we'll need to refactor this so it's one when we programmatically create the database.
+
+//                 That said, some ObjectDescriptor mappings expect some extensions to be there, like PostGIS, so we'll need to add these dependencies somewhere in teh mapping so we can include them in create extensions here.
+//             */
+//             sql += createExtensionPgcryptoSchema;
+//             sql += createTableTemplatePrefix;
+
+//             if (colunmnStrings.length > 0) {
+//                 sql += ',\n';
+//                 sql += colunmnStrings.join(',\n');
+//             }
+//             sql += createTableTemplateSuffix;
+
+//             //Now add indexes:
+//             if(colunmnIndexStrings.length > 0) {
+//                 sql += colunmnIndexStrings.join('\n');
+//             }
+
+//             rawDataOperation.sql = sql;
+//             rawDataOperation.continueAfterTimeout = continueAfterTimeout;
+//             rawDataOperation.includeResultMetadata = includeResultMetadata;
+//             //rawDataOperation.parameters = parameters;
+
+//             return rawDataOperation;
+//         }
+//     },
+
+    _createSchemaPromise: {
+        value: new Map()
+    },
+
+    createSchemaForCreateObjectDescriptorOperation: {
         value: function (dataOperation) {
-            var objectDescriptor = dataOperation.data,
-                mapping = objectDescriptor && this.mappingForType(objectDescriptor),
-                parentDescriptor,
-                tableName = this.tableForObjectDescriptor(objectDescriptor),
-                propertyDescriptors = Array.from(objectDescriptor.propertyDescriptors),
-                columnNames = this.columnNamesForObjectDescriptor(objectDescriptor),/* triggers the creation of mapping.schemaDescriptor for now*/
-                i, countI, iPropertyDescriptor, iPropertyDescriptorValueDescriptor, iDescendantDescriptors, iObjectRule, iRule, iIndex,
-                //Hard coded for now, should be derived from a mapping telling us n which databaseName that objectDescriptor is stored
+            var self = this,
                 databaseName = this.connection.database,
-                //Hard coded for now, should be derived from a mapping telling us n which schemaName that objectDescriptor is stored
                 schemaName = this.connection.schema,
-                rawDataOperation = {},
-                sql = "",
-                indexSQL = "",
-                columnSQL = ',\n',
-                /*
-                        parameters: [
-                    {
-                        name: "id",
-                        value: {
-                            "stringValue": 1
-                        }
-                    }
-                ]
-              */
-                parameters = null,
-                continueAfterTimeout = false,
-                includeResultMetadata = true,
-                columnName,
-                colunmns = new Set(),
-                colunmnStrings = [],
-                colunmnIndexStrings = [],
-                propertyValueDescriptor,
-                columnType,
-                owner = this.connection.owner,
-                createSchema = `CREATE SCHEMA IF NOT EXISTS "${schemaName}";`,
-                createExtensionPgcryptoSchema = `CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA "${schemaName}";   `,
-                createTableTemplatePrefix = `CREATE TABLE "${schemaName}"."${tableName}"
-(
-    id uuid NOT NULL DEFAULT phront.gen_random_uuid(),
-    CONSTRAINT "${tableName}_pkey" PRIMARY KEY (id)`,
-                createTableTemplateSuffix = `
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
+                createSchemaPromise = this._createSchemaPromise.get(schemaName);
 
-ALTER TABLE ${schemaName}."${tableName}"
-    OWNER to ${owner};
-CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id);
-`;
+            if(!createSchemaPromise) {
+                var createSchema = `CREATE SCHEMA IF NOT EXISTS "${schemaName}";`,
+                createExtensionPgcryptoSchema = `CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA "${schemaName}";`,
+                instalPostGISSQL = fs.readFileSync(path.resolve(__dirname, "../raw-model/install-postGIS.sql"), 'utf8');
 
-            this.mapOperationToRawOperationConnection(dataOperation, rawDataOperation);
+                createSchemaPromise = Promise.all([
+                    require.async("../raw-model/install-postgresql-anyarray_remove-sql-format"),
+                    require.async("../raw-model/install-postgresql-anyarray_concat_uniq-sql-format"),
+                    require.async("../raw-model/install-postgresql-intervalrange-sql-format")
+                ])
+                .then(function(resolvedValues) {
+                    var rawDataOperation = {},
+                        sql = `${createSchema}
+                    ${createExtensionPgcryptoSchema}
+                    ${instalPostGISSQL}
+                    ${resolvedValues[0].format(schemaName)}
+                    ${resolvedValues[1].format(schemaName)}
+                    ${resolvedValues[2].format(schemaName)}`;
 
-            // parameters.push({
-            //   name:"schema",
-            //   value: {
-            //     "stringValue": schemaName
-            // }
-            // });
-            // parameters.push({
-            //   name:"table",
-            //   value: {
-            //     "stringValue": tableName
-            // }
-            // });
-            // parameters.push({
-            //   name:"owner",
-            //   value: {
-            //     "stringValue": "postgres"
-            // }
-            // });
+                    self.mapOperationToRawOperationConnection(dataOperation, rawDataOperation);
+                    rawDataOperation.sql = sql;
 
-            //Cummulate inherited propertyDescriptors:
-            parentDescriptor = objectDescriptor.parent;
-            while ((parentDescriptor)) {
-                if (parentDescriptor.propertyDescriptors && propertyDescriptors.length) {
-                    propertyDescriptors.concat(parentDescriptor.propertyDescriptors);
-                }
-                parentDescriptor = parentDescriptor.parent;
+                    return new Promise(function(resolve, reject) {
+                        self.performRawDataOperation(rawDataOperation, function (err, data) {
+                            if (err) {
+                                // an error occurred
+                                console.log(err, err.stack, rawDataOperation);
+                                reject(err);
+                            }
+                            else {
+                                resolve(true);
+                            }
+
+                        });
+                    });
+                });
+
+                this._createSchemaPromise.set(schemaName,createSchemaPromise);
             }
 
-            //Before we start the loop, we add the primaryKey:
-            colunmns.add("id");
+            return createSchemaPromise;
 
-
-            for (i = propertyDescriptors.length - 1; (i > -1); i--) {
-                iPropertyDescriptor = propertyDescriptors[i];
-
-                //If iPropertyDescriptor isDerived, it has an expresssion
-                //that make it dynamic based on other properties, it doesn't
-                //need a materialized/concrete storage in a column.
-                if(iPropertyDescriptor.isDerived) continue;
-
-                //.valueDescriptor still returns a promise
-                iPropertyDescriptorValueDescriptor = iPropertyDescriptor._valueDescriptorReference;
-                iDescendantDescriptors = iPropertyDescriptorValueDescriptor ? iPropertyDescriptorValueDescriptor.descendantDescriptors : null;
-                iObjectRule = mapping.objectMappingRules.get(iPropertyDescriptor.name);
-                iRule = iObjectRule && mapping.rawDataMappingRules.get(iObjectRule.sourcePath);
-                converterforeignDescriptorMappings = iObjectRule && iObjectRule.converter && iObjectRule.converter.foreignDescriptorMappings;
-                iObjectRuleSourcePathSyntax = iObjectRule && iObjectRule.sourcePathSyntax;
-
-                /*
-                    If it's a property points to an object descriptor with descendants,
-                    we need to implement the support for a polymorphic Associations implementation
-                    with the Exclusive Belongs To (AKA Exclusive Arc) strategy.
-
-                    Details at:
-                    https://hashrocket.com/blog/posts/modeling-polymorphic-associations-in-a-relational-database#exclusive-belongs-to-aka-exclusive-arc-
-
-                    many resources about this, another one:
-                    https://www.slideshare.net/billkarwin/practical-object-oriented-models-in-sql/30-Polymorphic_Assocations_Exclusive_ArcsCREATE_TABLE
-
-                    this means creating a column/foreignKEy for each possible destination in descendants
-
-
-                */
-
-                columnType = this.mapPropertyDescriptorToRawType(iPropertyDescriptor, iRule);
-
-
-                //if(iPropertyDescriptorValueDescriptor && iDescendantDescriptors && iObjectRuleSourcePathSyntax && iObjectRuleSourcePathSyntax.type === "record") {
-                if(converterforeignDescriptorMappings) {
-
-                    //If cardinality is 1, we need to create a uuid columne, if > 1 a uuid[]
-                    var cardinality = iPropertyDescriptor.cardinality,
-                        j, countJ, jRawProperty;
-
-                    for(j=0, countJ = converterforeignDescriptorMappings.length;(j<countJ);j++) {
-                        jRawProperty = converterforeignDescriptorMappings[j].rawDataProperty;
-                        this._buildObjectDescriptorColumnAndIndexString(objectDescriptor, jRawProperty, columnType, iPropertyDescriptor, iRule, colunmns, colunmnStrings, colunmnIndexStrings);
-                    }
-
-                } else {
-
-                    if (iRule) {
-                        //In another place we used the object Rule and therefore it's sourcePath
-                        //Should streamline at some point
-                        columnName = iRule.targetPath;
-                    } else {
-                        columnName = iPropertyDescriptor.name;
-                    }
-
-                    if(!columnNames.has(columnName)) {
-                        continue;
-                    }
-
-                    this._buildObjectDescriptorColumnAndIndexString(objectDescriptor, columnName, columnType, iPropertyDescriptor, iRule, colunmns, colunmnStrings, colunmnIndexStrings);
-
-                }
-
-                /*
-                    Some many-to-many use the primary key as a way
-                    to find other rows in other table that have either an embedded foreign key (1-n), or an array of them (n-n). In which case the id is used in the right side, with a converter. So if
-                    we're in that situation, let's move on and avoid
-                    re-creating another column "id".
-
-                    We've been stretching the use of expression-data-mapping, we might need
-                    another mapping for the sake of storage, with a bunch of default, but can be overriden.
-
-                    So as a better check, once we created a column, we track it so if somehow multiple mappings use it,
-                    we won't create it multiple times.
-                */
-                // if(!colunmns.has(columnName)) {
-
-                //     colunmns.add(columnName);
-
-
-                //     columnSQL += this._buildColumnString(columnName, columnType);
-
-                //     if (i > 0) {
-                //         columnSQL += ',\n';
-                //     }
-
-
-                //     iIndex = this.mapSearchablePropertyDescriptorToRawIndex(iPropertyDescriptor, iRule);
-                //     if(iIndex) {
-                //         if (indexSQL.length) {
-                //             indexSQL += "\n";
-                //         }
-                //         indexSQL += iIndex;
-                //     }
-                // }
-
-            }
-
-
-            sql += createSchema;
-            /*
-                Creating tables isn't frequent, but we'll need to refactor this so it's one when we programmatically create the database.
-
-                That said, some ObjectDescriptor mappings expect some extensions to be there, like PostGIS, so we'll need to add these dependencies somewhere in teh mapping so we can include them in create extensions here.
-            */
-            sql += createExtensionPgcryptoSchema;
-            sql += createTableTemplatePrefix;
-
-            if (colunmnStrings.length > 0) {
-                sql += ',\n';
-                sql += colunmnStrings.join(',\n');
-            }
-            sql += createTableTemplateSuffix;
-
-            //Now add indexes:
-            if(colunmnIndexStrings.length > 0) {
-                sql += colunmnIndexStrings.join('\n');
-            }
-
-            rawDataOperation.sql = sql;
-            rawDataOperation.continueAfterTimeout = continueAfterTimeout;
-            rawDataOperation.includeResultMetadata = includeResultMetadata;
-            //rawDataOperation.parameters = parameters;
-
-            return rawDataOperation;
         }
     },
-    performCreateObjectDescriptorOperation: {
-        value: function (dataOperation, callback) {
-            return this._executeStatement(dataOperation, callback);
+
+    _verifySchemaPromise: {
+        value: new Map()
+    },
+    createSchemaIfNeededForCreateObjectDescriptorOperation: {
+        value: function (dataOperation) {
+            var self = this,
+                databaseName = this.connection.database,
+                schemaName = this.connection.schema,
+                verifySchemaPromise = this._verifySchemaPromise.get(schemaName);
+
+
+            if(!verifySchemaPromise) {
+                var rawDataOperation = {},
+                    checkIfSchemaExistStatement = `SELECT schema_name FROM information_schema.schemata WHERE schema_name = '${schemaName}'`;
+
+
+
+                this.mapOperationToRawOperationConnection(dataOperation, rawDataOperation);
+                rawDataOperation.sql = checkIfSchemaExistStatement;
+                verifySchemaPromise = new Promise(function(resolve, reject) {
+                    self.performRawDataOperation(rawDataOperation, function (err, data) {
+                        if (err) {
+                            // an error occurred
+                            console.log(err, err.stack, rawDataOperation);
+                            reject(err);
+                        }
+                        else {
+                            // successful response
+                            console.log(data);
+                            var hasSchema = (data.records.length === 1);
+
+                            if(!hasSchema) {
+                                self.createSchemaForCreateObjectDescriptorOperation(dataOperation)
+                                .then(() => {
+                                    resolve(true);
+                                })
+                                .catch((error) => {
+                                    reject(error);
+                                });
+                            } else {
+                                resolve(true);
+                            }
+                        }
+                    });
+
+                });
+
+                this._verifySchemaPromise.set(schemaName, verifySchemaPromise);
+            }
+
+            return verifySchemaPromise;
+
+        }
+    },
+
+    performRawDataOperation: {
+        value: function (rawDataOperation, callback) {
+            return this._executeStatement(rawDataOperation, callback);
         }
     },
 
     /**
      * Handles the mapping and execution of a DataOperation to create.
-     * an ObectDescriptor.
+     * an ObjectDescriptor.
      *
      * @method
      * @argument {DataOperation} dataOperation - The dataOperation to execute
@@ -3379,10 +3495,12 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
      */
     handleCreateObjectDescriptorOperation: {
         value: function (createOperation) {
-            var self = this,
-                rawDataOperation = this.mapToRawCreateObjectDescriptorOperation(createOperation);
-            //console.log("rawDataOperation: ",rawDataOperation);
-                self.performCreateObjectDescriptorOperation(rawDataOperation, function (err, data) {
+            var self = this;
+
+            this.mapToRawCreateObjectDescriptorOperation(createOperation)
+            .then((rawDataOperation) => {
+                //console.log("rawDataOperation: ",rawDataOperation);
+                self.performRawDataOperation(rawDataOperation, function (err, data) {
                     var operation = new DataOperation();
                     operation.target = createOperation.target;
                     operation.referrerId = createOperation.id;
@@ -3406,6 +3524,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                     operation.target.dispatchEvent(operation);
 
                 });
+            });
         }
     },
 
@@ -3829,8 +3948,7 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                 condition,
                 operationLocales = updateOperation.locales,
                 rawExpressionJoinStatements,
-                hasRawExpressionJoinStatements,
-                sql;
+                hasRawExpressionJoinStatements;
 
 
             //We need to transform the criteria into a SQL equivalent. Hard-coded for a single object for now
@@ -3900,11 +4018,11 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
 
                     if (iHasAddedValue) {
                         iMappedValue = this.mapPropertyValueToRawTypeExpression(iKey, iValue.addedValues, iRawType);
-                        iAssignment = `${iKeyEscaped} = anyarray_concat_uniq(${iKeyEscaped}, ${iMappedValue})`;
+                        iAssignment = `${iKeyEscaped} = ${schemaName}.anyarray_concat_uniq(${iKeyEscaped}, ${iMappedValue})`;
                     }
                     if (iHasRemovedValues) {
                         iMappedValue = this.mapPropertyValueToRawTypeExpression(iKey, iValue.removedValues, iRawType);
-                        iAssignment = `${iKeyEscaped} = anyarray_remove(${iKeyEscaped}, ${iMappedValue})`;
+                        iAssignment = `${iKeyEscaped} = ${schemaName}.anyarray_remove(${iKeyEscaped}, ${iMappedValue})`;
                     }
                 } else if (iValue === null) {
                     iAssignment = `${iKeyEscaped} = NULL`;
@@ -4429,13 +4547,13 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
                     iOperationsByType = operations[iObjectDescriptorModuleId];
 
                     if(iOperationsByType.createOperations) {
-                        push.apply((createOperations || (createOperations = [])), iOperationsByType.createOperations)
+                        push.apply((createOperations || (createOperations = [])), iOperationsByType.createOperations);
                     }
                     if(iOperationsByType.updateOperations) {
-                        push.apply((updateOperations || (updateOperations = [])), iOperationsByType.updateOperations)
+                        push.apply((updateOperations || (updateOperations = [])), iOperationsByType.updateOperations);
                     }
                     if(iOperationsByType.deleteOperations) {
-                        push.apply((deleteOperations || (deleteOperations = [])), iOperationsByType.deleteOperations)
+                        push.apply((deleteOperations || (deleteOperations = [])), iOperationsByType.deleteOperations);
                     }
                 }
             }
@@ -4748,13 +4866,14 @@ CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id)
     _handleTransactionEndOperation: {
         value: function (transactionEndOperation, transactionId) {
             var self = this,
-                rawDataOperation = {},
+                rawDataOperation = {};
                 // firstObjectDescriptor,
-                transactionId = transactionId
-                    ? transactionId
-                    : transactionEndOperation.data.rawTransactions
-                        ? transactionEndOperation.data.rawTransactions[this.identifier]
-                        : null;
+
+            transactionId = transactionId
+                ? transactionId
+                : transactionEndOperation.data.rawTransactions
+                    ? transactionEndOperation.data.rawTransactions[this.identifier]
+                    : null;
 
             //This adds the right access key, db name. etc... to the RawOperation.
             //Right now we assume that all ObjectDescriptors in the transaction goes to the same DB
