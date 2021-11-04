@@ -141,7 +141,7 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
     connection: {
         get: function() {
             if(!this._connection) {
-                var stage = currentEnvironment.stage || "prod",
+                var stage = currentEnvironment.stage || "production",
                     connection = this.connectionForIdentifier(stage),
                         websocketURL;
 
