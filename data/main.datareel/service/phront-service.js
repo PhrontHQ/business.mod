@@ -1815,7 +1815,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             //   console.log("------------------> rawDataOperation.sql:",rawDataOperation.sql);
             // }
 
-            console.log("------------------> rawDataOperation:",rawDataOperation);
+            //console.debug("------------------> rawDataOperation:",rawDataOperation);
 
             firstPromise = new Promise(function (resolve, reject) {
 
