@@ -4012,9 +4012,9 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 iValue = dataChanges[iKey];
                 iRawType = this.mapObjectDescriptorRawPropertyToRawType(objectDescriptor, iKey, mapping);
 
-                if((iHasAddedValue = iValue.hasOwnProperty("addedValues")) || (iHasRemovedValues = iValue.hasOwnProperty("removedValues")) ) {
-
-
+                if (iValue === null) {
+                    iAssignment = `${iKeyEscaped} = NULL`;
+                } else if((iHasAddedValue = iValue.hasOwnProperty("addedValues")) || (iHasRemovedValues = iValue.hasOwnProperty("removedValues")) ) {
 
                     if (iHasAddedValue) {
                         iMappedValue = this.mapPropertyValueToRawTypeExpression(iKey, iValue.addedValues, iRawType);
@@ -4024,14 +4024,14 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                         iMappedValue = this.mapPropertyValueToRawTypeExpression(iKey, iValue.removedValues, iRawType);
                         iAssignment = `${iKeyEscaped} = ${schemaName}.anyarray_remove(${iKeyEscaped}, ${iMappedValue})`;
                     }
-                } else if (iValue === null) {
-                    iAssignment = `${iKeyEscaped} = NULL`;
+
                 } else {
 
                     iMappedValue = this.mapPropertyValueToRawTypeExpression(iKey, iValue, iRawType);
                     //iAssignment = `${iKey} = '${iValue}'`;
                     iAssignment = `${iKeyEscaped} = ${iMappedValue}`;
                 }
+
                 setRecordKeys[i] = iAssignment;
             }
 
