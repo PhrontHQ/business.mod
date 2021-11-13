@@ -41,7 +41,10 @@ var DataService = require("montage/data/service/data-service").DataService,
     //  https://www.npmjs.com/package/@aws-sdk/client-rds-data-node
 
     //Benoit, these 2 are node.js specific, we need to see how to deal with that.
-    AWS = require('aws-sdk'),
+    // AWS = require('aws-sdk'),
+    fromIni = require("@aws-sdk/credential-providers").fromIni,
+    RDSDataService = require("@aws-sdk/client-rds-data").RDSData,
+
     https = require('https'),
     // //For browser
     // https = null,
@@ -59,6 +62,9 @@ var DataService = require("montage/data/service/data-service").DataService,
     path = require("path"),
     fs = require('fs'),
     PhrontService;
+
+    // const { RDSDataClient, BatchExecuteStatementCommand, BeginTransactionCommand, CommitTransactionCommand } = require("@aws-sdk/client-rds-data");
+
 
 //Set our DataTrigger custom subclass:
 //DataService.prototype.DataTrigger = DataTrigger;
@@ -314,12 +320,21 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                         region: region
                     };
 
-                    var credentials = new AWS.SharedIniFileCredentials({profile: connection.profile});
-                    if(credentials && credentials.accessKeyId !== undefined && credentials.secretAccessKey !== undefined) {
+                    //var credentialsOld = new AWS.SharedIniFileCredentials({profile: connection.profile});
+                    var credentials = fromIni({profile: connection.profile});
+
+                    // if(credentialsOld && credentialsOld.accessKeyId !== undefined && credentialsOld.secretAccessKey !== undefined) {
+                    //     RDSDataServiceOptions.credentials = credentialsOld;
+                    // }
+                    console.log("credentials: ", credentials);
+
+                    if(credentials) {
                         RDSDataServiceOptions.credentials = credentials;
                     }
 
-                    this.__rdsDataService = new AWS.RDSDataService(RDSDataServiceOptions);
+
+                    //this.__rdsDataServiceOld = new AWS.RDSDataService(RDSDataServiceOptions);
+                    this.__rdsDataService = new RDSDataService(RDSDataServiceOptions);
                 } else {
                     throw "Could not find a database connection for stage - "+this.currentEnvironment.stage+" -";
                 }
