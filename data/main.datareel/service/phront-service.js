@@ -43,6 +43,7 @@ var DataService = require("montage/data/service/data-service").DataService,
     //Benoit, these 2 are node.js specific, we need to see how to deal with that.
     // AWS = require('aws-sdk'),
     fromIni = require("@aws-sdk/credential-providers").fromIni,
+    defaultProvider = require("@aws-sdk/credential-provider-node").defaultProvider,
     RDSDataService = require("@aws-sdk/client-rds-data").RDSData,
 
     https = require('https'),
@@ -321,15 +322,22 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     };
 
                     //var credentialsOld = new AWS.SharedIniFileCredentials({profile: connection.profile});
-                    var credentials = fromIni({profile: connection.profile});
+                    //var credentials = fromIni({profile: connection.profile});
+                    //var credentials;
+                    const credentialDefaultProvider = defaultProvider({
+                        profile: connection.profile
+                      });
 
                     // if(credentialsOld && credentialsOld.accessKeyId !== undefined && credentialsOld.secretAccessKey !== undefined) {
                     //     RDSDataServiceOptions.credentials = credentialsOld;
                     // }
-                    console.log("credentials: ", credentials);
+                    console.log("credentialDefaultProvider: ", credentialDefaultProvider);
 
-                    if(credentials) {
-                        RDSDataServiceOptions.credentials = credentials;
+                    // if(credentials) {
+                    //     RDSDataServiceOptions.credentials = credentials;
+                    // }
+                    if(credentialDefaultProvider) {
+                        RDSDataServiceOptions.credentialDefaultProvider = credentialDefaultProvider;
                     }
 
 
