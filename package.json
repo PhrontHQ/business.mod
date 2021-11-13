@@ -27,6 +27,7 @@
     "object-sizeof": "^1.5.2",
     "id128": "^1.5.0",
     "@aws-sdk/credential-providers": "^3.41.0",
+    "@aws-sdk/credential-provider-node": "^3.41.0",
     "@aws-sdk/client-cognito-identity-provider": "^3.41.0",
     "@aws-sdk/client-secrets-manager": "^3.41.0",
     "@aws-sdk/client-s3": "^3.41.0",
