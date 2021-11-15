@@ -42,6 +42,15 @@ var DataService = require("montage/data/service/data-service").DataService,
 
     //Benoit, these 2 are node.js specific, we need to see how to deal with that.
     // AWS = require('aws-sdk'),
+
+    //import {Credentials} from "@aws-sdk/types";
+    Credentials = require("@aws-sdk/types").Credentials,
+
+    //import {AssumeRoleParams} from "@aws-sdk/credential-provider-ini";
+    AssumeRoleParams = require("@aws-sdk/credential-provider-ini").AssumeRoleParams,
+    //import {STS} from "@aws-sdk/client-sts";
+    STS = require("@aws-sdk/client-sts").STS,
+
     fromIni = require("@aws-sdk/credential-providers").fromIni,
     defaultProvider = require("@aws-sdk/credential-provider-node").defaultProvider,
     RDSDataService = require("@aws-sdk/client-rds-data").RDSData,
@@ -324,25 +333,44 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     //var credentialsOld = new AWS.SharedIniFileCredentials({profile: connection.profile});
                     //var credentials = fromIni({profile: connection.profile});
                     //var credentials;
-                    const credentialDefaultProvider = defaultProvider({
-                        profile: connection.profile
-                      });
+                    // const credentialDefaultProvider = defaultProvider({
+                    //     profile: connection.profile
+                    //   });
 
                     // if(credentialsOld && credentialsOld.accessKeyId !== undefined && credentialsOld.secretAccessKey !== undefined) {
                     //     RDSDataServiceOptions.credentials = credentialsOld;
                     // }
-                    console.log("credentialDefaultProvider: ", credentialDefaultProvider);
+                    //console.log("credentialDefaultProvider: ", credentialDefaultProvider);
+
+
+                    // assume a role using the sourceCreds
+                    async function assume(sourceCreds /*Credentials*/, params /*AssumeRoleParams*/) {
+                        const sts = new STS({credentials: sourceCreds});
+                        const result = await sts.assumeRole(params);
+                        if(!result.Credentials) {
+                            throw new Error("unable to assume credentials - empty credential object");
+                        }
+                        return {
+                            accessKeyId: String(result.Credentials.AccessKeyId),
+                            secretAccessKey: String(result.Credentials.SecretAccessKey),
+                            sessionToken: result.Credentials.SessionToken
+                        }
+                    }
+
 
                     // if(credentials) {
                     //     RDSDataServiceOptions.credentials = credentials;
                     // }
-                    if(credentialDefaultProvider) {
-                        RDSDataServiceOptions.credentialDefaultProvider = credentialDefaultProvider;
-                    }
+                    // if(credentialDefaultProvider) {
+                    //     RDSDataServiceOptions.credentialDefaultProvider = credentialDefaultProvider;
+                    // }
 
 
                     //this.__rdsDataServiceOld = new AWS.RDSDataService(RDSDataServiceOptions);
-                    this.__rdsDataService = new RDSDataService(RDSDataServiceOptions);
+                    //this.__rdsDataService = new RDSDataService(RDSDataServiceOptions);
+                    // this.__rdsDataService = new RDSDataService({credentials: defaultProvider({roleAssumer: assume})});
+                    this.__rdsDataService = new RDSDataService({credentials: defaultProvider({profile: connection.profile})});
+
                 } else {
                     throw "Could not find a database connection for stage - "+this.currentEnvironment.stage+" -";
                 }
