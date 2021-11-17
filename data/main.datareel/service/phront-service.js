@@ -43,19 +43,10 @@ var DataService = require("montage/data/service/data-service").DataService,
     //Benoit, these 2 are node.js specific, we need to see how to deal with that.
     // AWS = require('aws-sdk'),
 
-    //import {Credentials} from "@aws-sdk/types";
-    Credentials = require("@aws-sdk/types").Credentials,
-
-    //import {AssumeRoleParams} from "@aws-sdk/credential-provider-ini";
-    AssumeRoleParams = require("@aws-sdk/credential-provider-ini").AssumeRoleParams,
-    //import {STS} from "@aws-sdk/client-sts";
-    STS = require("@aws-sdk/client-sts").STS,
-
     fromIni = require("@aws-sdk/credential-providers").fromIni,
-    defaultProvider = require("@aws-sdk/credential-provider-node").defaultProvider,
     RDSDataService = require("@aws-sdk/client-rds-data").RDSData,
 
-    https = require('https'),
+    //https = require('https'),
     // //For browser
     // https = null,
 
@@ -105,18 +96,18 @@ class Timer {
 
 
 //Node.js specific
-if (https) {
-    /**********************************************************************/
-    /** Enable HTTP Keep-Alive per https://vimeo.com/287511222          **/
-    /** This dramatically increases the speed of subsequent HTTP calls  **/
-    /**********************************************************************/
-    const sslAgent = new https.Agent({
-        keepAlive: true,
-        maxSockets: 50, // same as aws-sdk
-        rejectUnauthorized: true  // same as aws-sdk
-    });
-    sslAgent.setMaxListeners(0); // same as aws-sdk
-}
+// if (https) {
+//     /**********************************************************************/
+//     /** Enable HTTP Keep-Alive per https://vimeo.com/287511222          **/
+//     /** This dramatically increases the speed of subsequent HTTP calls  **/
+//     /**********************************************************************/
+//     const sslAgent = new https.Agent({
+//         keepAlive: true,
+//         maxSockets: 50, // same as aws-sdk
+//         rejectUnauthorized: true  // same as aws-sdk
+//     });
+//     sslAgent.setMaxListeners(0); // same as aws-sdk
+// }
 
 /*
     var params = {
@@ -314,6 +305,30 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     //     }
     // },
 
+    __useLocalFileCredentials: {
+        value: false
+    },
+
+    _useLocalFileCredentials: {
+        get: function() {
+            return this.__useLocalFileCredentials;
+        },
+        set: function(value) {
+
+            if(value !== this.__useLocalFileCredentials) {
+                this.__useLocalFileCredentials = !!value;
+
+                /*
+                   Running in AWSGateway, this won't be triggered, it's for dealing with local development
+                */
+                if(this.__useLocalFileCredentials) {
+                    this.__rdsDataService = null;
+                }
+
+            }
+        }
+    },
+
     __rdsDataService: {
         value: undefined
     },
@@ -324,52 +339,21 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 var connection = this.connection;
 
                 if(connection) {
-                    var region = connection.resourceArn.split(":")[3],
-                    RDSDataServiceOptions =  {
-                        apiVersion: '2018-08-01',
-                        region: region
-                    };
+                    var credentials,
+                        region = connection.resourceArn.split(":")[3],
+                        RDSDataServiceOptions =  {
+                            apiVersion: '2018-08-01',
+                            region: region
+                        };
 
-                    //var credentialsOld = new AWS.SharedIniFileCredentials({profile: connection.profile});
-                    //var credentials = fromIni({profile: connection.profile});
-                    //var credentials;
-                    // const credentialDefaultProvider = defaultProvider({
-                    //     profile: connection.profile
-                    //   });
-
-                    // if(credentialsOld && credentialsOld.accessKeyId !== undefined && credentialsOld.secretAccessKey !== undefined) {
-                    //     RDSDataServiceOptions.credentials = credentialsOld;
-                    // }
-                    //console.log("credentialDefaultProvider: ", credentialDefaultProvider);
-
-
-                    // assume a role using the sourceCreds
-                    async function assume(sourceCreds /*Credentials*/, params /*AssumeRoleParams*/) {
-                        const sts = new STS({credentials: sourceCreds});
-                        const result = await sts.assumeRole(params);
-                        if(!result.Credentials) {
-                            throw new Error("unable to assume credentials - empty credential object");
-                        }
-                        return {
-                            accessKeyId: String(result.Credentials.AccessKeyId),
-                            secretAccessKey: String(result.Credentials.SecretAccessKey),
-                            sessionToken: result.Credentials.SessionToken
-                        }
+                    if(this._useLocalFileCredentials) {
+                        credentials = fromIni({profile: connection.profile});
                     }
 
-
-                    // if(credentials) {
-                    //     RDSDataServiceOptions.credentials = credentials;
-                    // }
-                    // if(credentialDefaultProvider) {
-                    //     RDSDataServiceOptions.credentialDefaultProvider = credentialDefaultProvider;
-                    // }
-
-
-                    //this.__rdsDataServiceOld = new AWS.RDSDataService(RDSDataServiceOptions);
-                    //this.__rdsDataService = new RDSDataService(RDSDataServiceOptions);
-                    // this.__rdsDataService = new RDSDataService({credentials: defaultProvider({roleAssumer: assume})});
-                    this.__rdsDataService = new RDSDataService({credentials: defaultProvider({profile: connection.profile})});
+                    if(credentials) {
+                        RDSDataServiceOptions.credentials = credentials;
+                    }
+                    this.__rdsDataService = new RDSDataService(RDSDataServiceOptions);
 
                 } else {
                     throw "Could not find a database connection for stage - "+this.currentEnvironment.stage+" -";
@@ -1871,7 +1855,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             firstPromise = new Promise(function (resolve, reject) {
 
                 if(rawDataOperation.sql) {
-                    self._executeStatement(rawDataOperation, function (err, data) {
+                    self.executeStatement(rawDataOperation, function (err, data) {
                         var isNotLast;
 
                         readOperationExecutedCount++;
@@ -1998,7 +1982,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                         // self.mapReadOperationToRawStatement(iReadOperation, iRawDataOperation);
 
 
-                        // self._executeStatement(iRawDataOperation, function (err, data) {
+                        // self.executeStatement(iRawDataOperation, function (err, data) {
                         //     var isNotLast
 
                         //     readOperationExecutedCount++;
@@ -2717,7 +2701,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             rawDataOperation.sql = this._mapCreateOperationToSQL(createOperation, rawDataOperation, record);
             //console.log(sql);
             return new Promise(function (resolve, reject) {
-                self._executeStatement(rawDataOperation, function (err, data) {
+                self.executeStatement(rawDataOperation, function (err, data) {
                     var operation = self.mapHandledCreateResponseToOperation(createOperation, err, data, record);
                     resolve(operation);
                 });
@@ -3532,7 +3516,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
     performRawDataOperation: {
         value: function (rawDataOperation, callback) {
-            return this._executeStatement(rawDataOperation, callback);
+            return this.executeStatement(rawDataOperation, callback);
         }
     },
 
@@ -3883,7 +3867,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     */
                     rawDataOperation.sql = this._mapCreateOperationToSQL(createOperation, rawDataOperation, record);
                     //console.log(sql);
-                    self._executeStatement(rawDataOperation, function (err, data) {
+                    self.executeStatement(rawDataOperation, function (err, data) {
                         if(err) {
                             console.error("handleCreateOperation Error",createOperation,rawDataOperation,err);
                         }
@@ -4148,7 +4132,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                         rawDataOperation.sql = SQL;
 
                         //console.log(sql);
-                        self._executeStatement(rawDataOperation, function (err, data) {
+                        self.executeStatement(rawDataOperation, function (err, data) {
                             if(err) {
                                 console.error("handleUpdateOperation Error",updateOperation,rawDataOperation,err);
                             }
@@ -4276,7 +4260,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                 rawDataOperation.sql = this._mapDeleteOperationToSQL(deleteOperation, rawDataOperation, record);
                 //console.log(sql);
-                self._executeStatement(rawDataOperation, function (err, data) {
+                self.executeStatement(rawDataOperation, function (err, data) {
                     var operation = self.mapHandledDeleteResponseToOperation(deleteOperation, err, data, record);
                     operation.target.dispatchEvent(operation);
                 });
@@ -4333,7 +4317,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             // return new Promise(function (resolve, reject) {
             try {
 
-                self._rdsDataService.beginTransaction(rawDataOperation, function (err, data) {
+                self.beginTransaction(rawDataOperation, function (err, data) {
                     var operation = new DataOperation();
                     operation.referrerId = createTransactionOperation.id;
                     operation.clientId = createTransactionOperation.clientId;
@@ -4393,7 +4377,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             return new Promise(function (resolve, reject) {
                 //rawDataOperation.parameterSets = [[]]; //as a work-around for batch...
                 self._rdsDataService.executeStatement(rawDataOperation, function (err, data) {
-                    var response = this;
+                    //var response = this;
 
                     if (err) {
                         console.error("_executeBatchStatement Error:",err, appendTransactionOperation, startIndex, endIndex, batchedOperations, rawDataOperation, rawOperationRecords, responseOperations);
@@ -4438,13 +4422,13 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
 
 
-                        if(response.hasNextPage()) {
-                            response.nextPage(arguments.callee);
-                        }
-                        else {
+                        // if(response.hasNextPage()) {
+                        //     response.nextPage(arguments.callee);
+                        // }
+                        // else {
                             //Nothing more to do, we resolve
                             resolve(true);
-                        }
+                        //}
 
                         // executeStatementData.push(data);
                         // successful response
@@ -4956,7 +4940,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             */
             //method = "rollbackTransaction";
 
-            self._rdsDataService[method](rawDataOperation, function (err, data) {
+            self[method](rawDataOperation, function (err, data) {
                 var operation = new DataOperation();
                 operation.referrerId = transactionEndOperation.id;
                 operation.clientId = transactionEndOperation.clientId;
@@ -5019,7 +5003,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                 this.mapOperationToRawOperationConnection(commitTransactionOperation, rawDataOperation);
 
-                self._rdsDataService.beginTransaction(rawDataOperation, function (err, data) {
+                self.beginTransaction(rawDataOperation, function (err, data) {
                     var operation = new DataOperation();
                     operation.referrerId = commitTransactionOperation.id;
                     operation.clientId = commitTransactionOperation.clientId;
@@ -5073,55 +5057,49 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
     // Export promisified versions of the RDSDataService methods
     batchExecuteStatement: {
-        value: function (params) {
-            this._rdsDataService.batchExecuteStatement(params, function (err, data) {
-                if (err) {
-                    console.log(err, err.stack); // an error occurred
-                }
-                else {
-                } console.log(data);           // successful response
-            });
+        value: function (params, callback) {
+            this._rdsDataService.batchExecuteStatement(params, this.retryAuthorizingRDSDataServiceCallback(arguments.callee, params, callback));
         }
     },
 
     beginTransaction: {
-        value: function (params) {
-            this._rdsDataService.beginTransaction(params, function (err, data) {
-                if (err) {
-                    console.log(err, err.stack); // an error occurred
-                }
-                else {
-                } console.log(data);           // successful response
-            });
+        value: function (params, callback) {
+            this._rdsDataService.beginTransaction(params, this.retryAuthorizingRDSDataServiceCallback(arguments.callee, params, callback));
         }
     },
 
     commitTransaction: {
-        value: function (params) {
-            this._rdsDataService.commitTransaction(params, function (err, data) {
-                if (err) {
-                    console.log(err, err.stack); // an error occurred
-                }
-                else {
-                } console.log(data);           // successful response
-            });
+        value: function (params, callback) {
+            this._rdsDataService.commitTransaction(params, this.retryAuthorizingRDSDataServiceCallback(arguments.callee, params, callback));
         }
     },
-    _executeStatement: {
+    executeStatement: {
         value: function (params, callback) {
-            this._rdsDataService.executeStatement(params, callback);
+            this._rdsDataService.executeStatement(params, this.retryAuthorizingRDSDataServiceCallback(arguments.callee, params, callback));
         }
     },
     rollbackTransaction: {
-        value: function (params) {
-            this._rdsDataService.rollbackTransaction(params, function (err, data) {
-                if (err) {
-                    console.log(err, err.stack); // an error occurred
+        value: function (params, callback) {
+            this._rdsDataService.rollbackTransaction(params, this.retryAuthorizingRDSDataServiceCallback(arguments.callee, params, callback));
+        }
+    },
+
+    retryAuthorizingRDSDataServiceCallback: {
+        value: function (method, params, callback) {
+
+            return (err, data) => {
+                if(err) {
+                    if(err.message.indexOf(" does not belong to the calling account id ") !== -1) {
+                        this._useLocalFileCredentials = true;
+                        method.call(this, params, callback);
+                                } else {
+                        callback(err, data);
+                    }
+                } else {
+                    callback(err, data);
                 }
-                else {
-                    console.log(data);           // successful response
-                }
-            });
+            };
+
         }
     }
 
