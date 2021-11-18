@@ -1,3 +1,5 @@
+// "use strict";
+
 var DataService = require("montage/data/service/data-service").DataService,
     RawDataService = require("montage/data/service/raw-data-service").RawDataService,
     Criteria = require("montage/core/criteria").Criteria,
@@ -43,7 +45,13 @@ var DataService = require("montage/data/service/data-service").DataService,
     //Benoit, these 2 are node.js specific, we need to see how to deal with that.
     // AWS = require('aws-sdk'),
 
+    defaultProvider = require("@aws-sdk/credential-provider-node").defaultProvider,
     fromIni = require("@aws-sdk/credential-providers").fromIni,
+    getDefaultRoleAssumer =  require("@aws-sdk/client-sts").getDefaultRoleAssumer,
+
+    SharedIniFileLoader = require("@aws-sdk/shared-ini-file-loader"),
+    //loadConfig = require("@aws-sdk/node-config-provider").loadConfig,
+    loadSharedConfigFiles = require("@aws-sdk/shared-ini-file-loader").loadSharedConfigFiles,
     RDSDataService = require("@aws-sdk/client-rds-data").RDSData,
 
     //https = require('https'),
@@ -348,11 +356,30 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                     if(this._useLocalFileCredentials) {
                         credentials = fromIni({profile: connection.profile});
+
+                        credentials().then((value) => {
+                            console.log("credentials: ",value);
+                        });
                     }
 
-                    if(credentials) {
-                        RDSDataServiceOptions.credentials = credentials;
+                    // credentials = loadSharedConfigFiles({profile: connection.profile}).then((credentials) => {
+                    //     console.log("credentials:", credentials);
+                    //     return credentials;
+                    // });
+
+                    var credentialsProvider = defaultProvider({
+                            profile: connection.profile,
+                            roleAssumer: getDefaultRoleAssumer
+                        });
+
+
+                    if(credentialsProvider) {
+                        RDSDataServiceOptions.credentials = credentialsProvider;
                     }
+                    // else if(credentials) {
+                    //     RDSDataServiceOptions.credentials = credentials;
+                    // }
+
                     this.__rdsDataService = new RDSDataService(RDSDataServiceOptions);
 
                 } else {
