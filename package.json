@@ -27,6 +27,7 @@
     "object-sizeof": "^1.5.2",
     "id128": "^1.5.0",
     "@aws-sdk/node-config-provider": "^3.40.0",
+    "@aws-sdk/shared-ini-file-loader": "^3.37.0",
     "@aws-sdk/types": "^3.40.0",
     "@aws-sdk/client-sts": "^3.41.0",
     "@aws-sdk/credential-provider-ini": "^3.41.0",
