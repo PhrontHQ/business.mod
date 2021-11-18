@@ -1,4 +1,3 @@
-// "use strict";
 
 var DataService = require("montage/data/service/data-service").DataService,
     RawDataService = require("montage/data/service/raw-data-service").RawDataService,
@@ -45,13 +44,18 @@ var DataService = require("montage/data/service/data-service").DataService,
     //Benoit, these 2 are node.js specific, we need to see how to deal with that.
     // AWS = require('aws-sdk'),
 
-    defaultProvider = require("@aws-sdk/credential-provider-node").defaultProvider,
+    // defaultProvider = require("@aws-sdk/credential-provider-node").defaultProvider,
     fromIni = require("@aws-sdk/credential-providers").fromIni,
-    getDefaultRoleAssumer =  require("@aws-sdk/client-sts").getDefaultRoleAssumer,
+    // getDefaultRoleAssumer =  require("@aws-sdk/client-sts").getDefaultRoleAssumer,
 
-    SharedIniFileLoader = require("@aws-sdk/shared-ini-file-loader"),
+    // Credentials =  require("@aws-sdk/types").Credentials,
+    // AssumeRoleParams = require("@aws-sdk/credential-provider-ini").AssumeRoleParams,
+    // STS = require("@aws-sdk/client-sts").STS,
+
+
+    // SharedIniFileLoader = require("@aws-sdk/shared-ini-file-loader"),
     //loadConfig = require("@aws-sdk/node-config-provider").loadConfig,
-    loadSharedConfigFiles = require("@aws-sdk/shared-ini-file-loader").loadSharedConfigFiles,
+    // loadSharedConfigFiles = require("@aws-sdk/shared-ini-file-loader").loadSharedConfigFiles,
     RDSDataService = require("@aws-sdk/client-rds-data").RDSData,
 
     //https = require('https'),
@@ -77,6 +81,25 @@ var DataService = require("montage/data/service/data-service").DataService,
 
 //Set our DataTrigger custom subclass:
 //DataService.prototype.DataTrigger = DataTrigger;
+
+// assume a role using the sourceCreds
+// async function assume(sourceCreds, params) {
+//     console.log("assume:",sourceCreds, params);
+// 	const sts = new STS({credentials: sourceCreds});
+// 	const result = await sts.assumeRole(params);
+// 	if(!result.Credentials) {
+// 		throw new Error("unable to assume credentials - empty credential object");
+// 	}
+//     console.log("accessKeyId:"+String(result.Credentials.AccessKeyId));
+//     console.log("secretAccessKey:"+String(result.Credentials.SecretAccessKey));
+//     console.log("sessionToken:"+String(result.Credentials.SessionToken));
+
+// 	return {
+// 		accessKeyId: String(result.Credentials.AccessKeyId),
+// 		secretAccessKey: String(result.Credentials.SecretAccessKey),
+// 		sessionToken: result.Credentials.SessionToken
+// 	};
+// }
 
 
 class Timer {
@@ -179,6 +202,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
     constructor: {
         value: function PhrontService() {
+            "use strict";
+
             RawDataService.call(this);
 
 
@@ -313,30 +338,6 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     //     }
     // },
 
-    __useLocalFileCredentials: {
-        value: false
-    },
-
-    _useLocalFileCredentials: {
-        get: function() {
-            return this.__useLocalFileCredentials;
-        },
-        set: function(value) {
-
-            if(value !== this.__useLocalFileCredentials) {
-                this.__useLocalFileCredentials = !!value;
-
-                /*
-                   Running in AWSGateway, this won't be triggered, it's for dealing with local development
-                */
-                if(this.__useLocalFileCredentials) {
-                    this.__rdsDataService = null;
-                }
-
-            }
-        }
-    },
-
     __rdsDataService: {
         value: undefined
     },
@@ -354,32 +355,15 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                             region: region
                         };
 
-                    if(this._useLocalFileCredentials) {
+                    if(!process.env.aws_access_key_id || !process.env.aws_secret_access_key) {
+                        //console.log("fromIni");
                         credentials = fromIni({profile: connection.profile});
-
-                        credentials().then((value) => {
-                            console.log("credentials: ",value);
-                        });
                     }
 
-                    // credentials = loadSharedConfigFiles({profile: connection.profile}).then((credentials) => {
-                    //     console.log("credentials:", credentials);
-                    //     return credentials;
-                    // });
-
-                    var credentialsProvider = defaultProvider({
-                            profile: connection.profile,
-                            roleAssumer: getDefaultRoleAssumer
-                        });
-
-
-                    if(credentialsProvider) {
-                        RDSDataServiceOptions.credentials = credentialsProvider;
+                    if(credentials) {
+                        RDSDataServiceOptions.credentials = credentials;
                     }
-                    // else if(credentials) {
-                    //     RDSDataServiceOptions.credentials = credentials;
-                    // }
-
+                    // console.log("RDSDataServiceOptions:",RDSDataServiceOptions);
                     this.__rdsDataService = new RDSDataService(RDSDataServiceOptions);
 
                 } else {
@@ -732,6 +716,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
     mapPropertyDescriptorRawReadExpressionToSelectExpression: {
         value: function (aPropertyDescriptor, anExpression, mapping, operationLocales, tableName) {
+            "use strict";
             //If anExpression isn't a Property, aPropertyDescriptor should be null/undefined and we'll need to walk anExpression syntactic tree to transform it into valid SQL in select statement.
             var result,
                 syntax = typeof anExpression === "string" ? parse(anExpression) : anExpression,
@@ -5085,50 +5070,32 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     // Export promisified versions of the RDSDataService methods
     batchExecuteStatement: {
         value: function (params, callback) {
-            this._rdsDataService.batchExecuteStatement(params, this.retryAuthorizingRDSDataServiceCallback(arguments.callee, params, callback));
+            this._rdsDataService.batchExecuteStatement(params, callback);
         }
     },
 
     beginTransaction: {
         value: function (params, callback) {
-            this._rdsDataService.beginTransaction(params, this.retryAuthorizingRDSDataServiceCallback(arguments.callee, params, callback));
+            this._rdsDataService.beginTransaction(params, callback);
         }
     },
 
     commitTransaction: {
         value: function (params, callback) {
-            this._rdsDataService.commitTransaction(params, this.retryAuthorizingRDSDataServiceCallback(arguments.callee, params, callback));
+            this._rdsDataService.commitTransaction(params, callback);
         }
     },
     executeStatement: {
         value: function (params, callback) {
-            this._rdsDataService.executeStatement(params, this.retryAuthorizingRDSDataServiceCallback(arguments.callee, params, callback));
+            this._rdsDataService.executeStatement(params, callback);
         }
     },
     rollbackTransaction: {
         value: function (params, callback) {
-            this._rdsDataService.rollbackTransaction(params, this.retryAuthorizingRDSDataServiceCallback(arguments.callee, params, callback));
-        }
-    },
-
-    retryAuthorizingRDSDataServiceCallback: {
-        value: function (method, params, callback) {
-
-            return (err, data) => {
-                if(err) {
-                    if(err.message.indexOf(" does not belong to the calling account id ") !== -1) {
-                        this._useLocalFileCredentials = true;
-                        method.call(this, params, callback);
-                                } else {
-                        callback(err, data);
-                    }
-                } else {
-                    callback(err, data);
-                }
-            };
-
+            this._rdsDataService.rollbackTransaction(params, callback);
         }
     }
+
 
 });
 
