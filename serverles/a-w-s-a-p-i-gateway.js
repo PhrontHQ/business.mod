@@ -1,7 +1,7 @@
 'use strict';
 
 //const AWS = require('aws-sdk');
-const ApiGatewayManagementApiClient = require("@aws-sdk/client-apigatewaymanagementapi").ApiGatewayManagementApiClient;
+const ApiGatewayManagementApi = require("@aws-sdk/client-apigatewaymanagementapi").ApiGatewayManagementApi;
 
 
 
@@ -110,9 +110,10 @@ Object.defineProperty(apiLoader.services['apigatewaymanagementapi'], '2018-11-29
 // });
 
 
-exports.AWSAPIGateway = new ApiGatewayManagementApiClient({
+exports.AWSAPIGateway = new ApiGatewayManagementApi({
     apiVersion: '2018-11-29',
-    endpoint: (process.env.IS_OFFLINE === "true") ? 'http://localhost:3001' : ("wss://"+process.env.APIG_ENDPOINT),
+    //endpoint: (process.env.IS_OFFLINE === "true") ? 'http://localhost:3001' : ("wss://"+process.env.APIG_ENDPOINT),
+    endpoint: (process.env.IS_OFFLINE === "true") ? 'http://localhost:3001' : (process.env.APIG_ENDPOINT),
     convertResponseTypes: false
   });
 
