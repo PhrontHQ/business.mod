@@ -34,28 +34,7 @@ var DataService = require("montage/data/service/data-service").DataService,
     DataOperationType = require("montage/data/service/data-operation").DataOperationType,
     PGClass = require("../model/p-g-class").PGClass,
 
-
-    // Require the aws-sdk. This is a dev dependency, so if being used
-    // outside of a Lambda execution environment, it must be manually installed.
-    // Todo check the new version of the SDK coming at:
-    //  https://github.com/aws/aws-sdk-js-v3/tree/master/clients/node/client-rds-data-node
-    //  https://www.npmjs.com/package/@aws-sdk/client-rds-data-node
-
-    //Benoit, these 2 are node.js specific, we need to see how to deal with that.
-    // AWS = require('aws-sdk'),
-
-    // defaultProvider = require("@aws-sdk/credential-provider-node").defaultProvider,
     fromIni = require("@aws-sdk/credential-providers").fromIni,
-    // getDefaultRoleAssumer =  require("@aws-sdk/client-sts").getDefaultRoleAssumer,
-
-    // Credentials =  require("@aws-sdk/types").Credentials,
-    // AssumeRoleParams = require("@aws-sdk/credential-provider-ini").AssumeRoleParams,
-    // STS = require("@aws-sdk/client-sts").STS,
-
-
-    // SharedIniFileLoader = require("@aws-sdk/shared-ini-file-loader"),
-    //loadConfig = require("@aws-sdk/node-config-provider").loadConfig,
-    // loadSharedConfigFiles = require("@aws-sdk/shared-ini-file-loader").loadSharedConfigFiles,
     RDSDataService = require("@aws-sdk/client-rds-data").RDSData,
 
     //https = require('https'),
@@ -356,14 +335,13 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                         };
 
                     if(!process.env.aws_access_key_id || !process.env.aws_secret_access_key) {
-                        //console.log("fromIni");
                         credentials = fromIni({profile: connection.profile});
                     }
 
                     if(credentials) {
                         RDSDataServiceOptions.credentials = credentials;
                     }
-                    // console.log("RDSDataServiceOptions:",RDSDataServiceOptions);
+
                     this.__rdsDataService = new RDSDataService(RDSDataServiceOptions);
 
                 } else {

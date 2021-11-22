@@ -1,11 +1,15 @@
 'use strict';
 
-const AWS = require('aws-sdk');
+//const AWS = require('aws-sdk');
+const ApiGatewayManagementApiClient = require("@aws-sdk/client-apigatewaymanagementapi").ApiGatewayManagementApiClient;
+
+
 
 // the following section injects the new ApiGatewayManagementApi service
 // into the Lambda AWS SDK, otherwise you'll have to deploy the entire new version of the SDK
 
 /* START ApiGatewayManagementApi injection */
+/*
 const { Service, apiLoader } = AWS
 
 apiLoader.services['apigatewaymanagementapi'] = {}
@@ -95,11 +99,21 @@ Object.defineProperty(apiLoader.services['apigatewaymanagementapi'], '2018-11-29
   enumerable: true,
   configurable: true
 });
+*/
 /* END ApiGatewayManagementApi injection */
 
 
-exports.AWSAPIGateway = new AWS.ApiGatewayManagementApi({
-  apiVersion: '2018-11-29',
-  endpoint: (process.env.IS_OFFLINE === "true") ? 'http://localhost:3001' : process.env.APIG_ENDPOINT,
-  convertResponseTypes: false
-});
+// exports.AWSAPIGateway = new AWS.ApiGatewayManagementApi({
+//   apiVersion: '2018-11-29',
+//   endpoint: (process.env.IS_OFFLINE === "true") ? 'http://localhost:3001' : process.env.APIG_ENDPOINT,
+//   convertResponseTypes: false
+// });
+
+
+exports.AWSAPIGateway = new ApiGatewayManagementApiClient({
+    apiVersion: '2018-11-29',
+    endpoint: (process.env.IS_OFFLINE === "true") ? 'http://localhost:3001' : process.env.APIG_ENDPOINT,
+    convertResponseTypes: false
+  });
+
+  console.log("exports.AWSAPIGateway: ",exports.AWSAPIGateway);

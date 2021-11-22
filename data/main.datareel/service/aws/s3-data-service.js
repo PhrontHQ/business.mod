@@ -1,5 +1,8 @@
-var AWS = require('aws-sdk'),
-    S3 =  AWS.S3,
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { S3Client, GetObjectCommand, PutObjectCommand, HeadObjectCommand, S3 } = require("@aws-sdk/client-s3");
+
+var fromIni = require("@aws-sdk/credential-providers").fromIni,
+    // S3 =  require("@aws-sdk/client-s3").S3,
     DataService = require("montage/data/service/data-service").DataService,
     RawDataService = require("montage/data/service/raw-data-service").RawDataService,
     SyntaxInOrderIterator = require("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
@@ -98,7 +101,8 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                 var connection = this.connection;
 
                 if(connection) {
-                    var region;
+                    var region,
+                        credentials;
 
                     if(connection.bucketRegion) {
                         region = connection.bucketRegion;
@@ -111,18 +115,19 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                         region: region
                     };
 
-                    var credentials = new AWS.SharedIniFileCredentials({profile: connection.profile});
-                    if(credentials && credentials.accessKeyId !== undefined && credentials.secretAccessKey !== undefined) {
-                        S3DataServiceOptions.credentials = credentials;
-                    } else {
-                        S3DataServiceOptions.accessKeyId = process.env.aws_access_key_id;
-                        S3DataServiceOptions.secretAccessKey = process.env.aws_secret_access_key;
+                    if(!process.env.aws_access_key_id || !process.env.aws_secret_access_key) {
+                        credentials = fromIni({profile: connection.profile});
                     }
 
-                    this.__S3Client = new AWS.S3(S3DataServiceOptions);
+                    if(credentials) {
+                        S3DataServiceOptions.credentials = credentials;
+                    }
+
+                    // this.__S3ClientOld = new AWS.S3(S3DataServiceOptions);
+                    this.__S3Client = new S3Client(S3DataServiceOptions);
 
                 } else {
-                    throw "S3DtaService could not find a connection for stage - "+this.currentEnvironment.stage+" -";
+                    throw "S3DataService could not find a connection for stage - "+this.currentEnvironment.stage+" -";
                 }
 
             }
@@ -184,19 +189,36 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                             }
                         }
                         (promises || (promises = [])).push(new Promise(function(resolve, reject) {
-                            self._S3Client.getSignedUrl('getObject', params, function (err, url) {
-                                if (err) {
-                                    console.error(err, err.stack); // an error occurred
-                                    (rawData || (rawData = {}))["signedUrl"] = err;
-                                    reject(err);
-                                }
-                                else {
-                                    //console.log('signedURL is', url);
-                                    (rawData || (rawData = {}))["signedUrl"] = url;
 
-                                    resolve(url);
-                                }       // successful
+                            const command = new GetObjectCommand(params);
+                            getSignedUrl(self._S3Client, command, { expiresIn: 3600 })
+                            .then((url) => {
+                                //console.log('signedURL is', url);
+                                (rawData || (rawData = {}))["signedUrl"] = url;
+
+                                resolve(url);
+                            })
+                            .catch((err) => {
+                                console.error(err, err.stack); // an error occurred
+                                (rawData || (rawData = {}))["signedUrl"] = err;
+                                reject(err);
+
                             });
+
+
+                            // self._S3Client.getSignedUrl('getObject', params, function (err, url) {
+                            //     if (err) {
+                            //         console.error(err, err.stack); // an error occurred
+                            //         (rawData || (rawData = {}))["signedUrl"] = err;
+                            //         reject(err);
+                            //     }
+                            //     else {
+                            //         //console.log('signedURL is', url);
+                            //         (rawData || (rawData = {}))["signedUrl"] = url;
+
+                            //         resolve(url);
+                            //     }       // successful
+                            // });
 
                         }));
                     }
@@ -293,15 +315,34 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                     if(readExpressions.indexOf("content") !== -1) {
 
                         /*
+                            aws-sdk v3
+                            https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/getobjectcommand.html
+
+                            Command style
+                        */
+                        const getObjectCommand = new GetObjectCommand(params);
+                        this._S3Client.send(getObjectCommand, callback);
+
+                        /*
+                            aws-sdk v2
                             https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property
                         */
-                        this._S3Client.getObject(params, callback);
+                        //this._S3Client.getObject(params, callback);
+
                     } else if(params.hasOwnProperty("Key") && params.hasOwnProperty("Bucket") && Object.keys(params).length > 2) {
+                        /*
+                            aws-sdk v3
+                            https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/headobjectcommand.html
+                            Command style
+                        */
                         //No point to do even a head if nothing more is asked but Key and Bucket...
+                        const headObjectCommand = new HeadObjectCommand(params);
+                        this._S3Client.send(headObjectCommand, callback);
+
                         /*
                             https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#headObject-property
                         */
-                        this._S3Client.headObject(params, callback);
+                        //this._S3Client.headObject(params, callback);
                     } else {
                         operation = this.responseOperationForReadOperation(readOperation, null, [params], false/*isNotLast*/);
                         objectDescriptor.dispatchEvent(operation);
@@ -324,7 +365,20 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
 
                 } else {
                     //If no expression, we return the default
-                    this._S3Client.headObject(params, callback);
+                    /*
+                        aws-sdk v3
+                        https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/headobjectcommand.html
+                        Command style
+                    */
+
+                    //No point to do even a head if nothing more is asked but Key and Bucket...
+                    const headObjectCommand = new HeadObjectCommand(params);
+                    this._S3Client.send(headObjectCommand, callback);
+
+                    /*
+                        https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#headObject-property
+                    */
+                    //this._S3Client.headObject(params, callback);
                     // operation = this.responseOperationForReadOperation(readOperation, null, [params], false/*isNotLast*/);
                     // objectDescriptor.dispatchEvent(operation);
                 }
@@ -362,45 +416,84 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                 params["ContentMD5"] = contentMD5;
             }
 
-            this._S3Client.putObject(params, function (err, data) {
+            const command = new PutObjectCommand(params);
+            var operation = new DataOperation();
+            operation.referrerId = createOperation.id;
+            operation.clientId = createOperation.clientId;
 
-                var operation = new DataOperation();
-                operation.referrerId = createOperation.id;
-                operation.clientId = createOperation.clientId;
+            operation.target = createOperation.target;
 
-                operation.target = createOperation.target;
+            this._S3Client.send(command)
+            .then(function(data) {
+                /*
+                    data is like:
+                    data = {
+                    ETag: "\"6805f2cfc46c0f04559748bb039d69ae\"",
+                    VersionId: "Bvq0EDKxOcXLJXNo_Lkz37eM3R4pfzyQ"
+                    }
+                */
+                // console.log(data);           // successful response
+                operation.type = DataOperation.Type.CreateCompletedOperation;
+                var bucketName = params["Bucket"],
+                    bucketRegion = self.connection.bucketRegion,
+                    key = params["Key"];
 
-                if (err) {
-                    console.error(err, err.stack); // an error occurred
-                    operation.type = DataOperation.Type.CreateFailedOperation;
-                    operation.data = err;
-                }
-                else {
-                    /*
-                        data is like:
-                        data = {
-                        ETag: "\"6805f2cfc46c0f04559748bb039d69ae\"",
-                        VersionId: "Bvq0EDKxOcXLJXNo_Lkz37eM3R4pfzyQ"
-                        }
-                    */
-                    // console.log(data);           // successful response
-                    operation.type = DataOperation.Type.CreateCompletedOperation;
-                    var bucketName = params["Bucket"],
-                        bucketRegion = self.connection.bucketRegion,
-                        key = params["Key"];
+                operation.data = {
+                    Bucket: bucketName,
+                    Key: key,
+                    ETag: data.ETag,
+                    Location: `https://${bucketName}.s3-${bucketRegion}.amazonaws.com/${key}`
+                };
 
-                    operation.data = {
-                        Bucket: bucketName,
-                        Key: key,
-                        ETag: data.ETag,
-                        Location: `https://${bucketName}.s3-${bucketRegion}.amazonaws.com/${key}`
-                    };
-
-                }
-
+            })
+            .catch(function(err) {
+                console.error(err, err.stack); // an error occurred
+                operation.type = DataOperation.Type.CreateFailedOperation;
+                operation.data = err;
+            })
+            .finally(function() {
                 operation.target.dispatchEvent(operation);
-
             });
+
+            // this._S3Client.putObject(params, function (err, data) {
+
+            //     var operation = new DataOperation();
+            //     operation.referrerId = createOperation.id;
+            //     operation.clientId = createOperation.clientId;
+
+            //     operation.target = createOperation.target;
+
+            //     if (err) {
+            //         console.error(err, err.stack); // an error occurred
+            //         operation.type = DataOperation.Type.CreateFailedOperation;
+            //         operation.data = err;
+            //     }
+            //     else {
+            //         /*
+            //             data is like:
+            //             data = {
+            //             ETag: "\"6805f2cfc46c0f04559748bb039d69ae\"",
+            //             VersionId: "Bvq0EDKxOcXLJXNo_Lkz37eM3R4pfzyQ"
+            //             }
+            //         */
+            //         // console.log(data);           // successful response
+            //         operation.type = DataOperation.Type.CreateCompletedOperation;
+            //         var bucketName = params["Bucket"],
+            //             bucketRegion = self.connection.bucketRegion,
+            //             key = params["Key"];
+
+            //         operation.data = {
+            //             Bucket: bucketName,
+            //             Key: key,
+            //             ETag: data.ETag,
+            //             Location: `https://${bucketName}.s3-${bucketRegion}.amazonaws.com/${key}`
+            //         };
+
+            //     }
+
+            //     operation.target.dispatchEvent(operation);
+
+            // });
 
         }
     },

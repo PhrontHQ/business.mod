@@ -1,4 +1,5 @@
-var AWS = require('aws-sdk'),
+var fromIni = require("@aws-sdk/credential-providers").fromIni,
+    SecretsManager = require("@aws-sdk/client-secrets-manager").SecretsManager,
     DataService = require("montage/data/service/data-service").DataService,
     RawDataService = require("montage/data/service/raw-data-service").RawDataService,
     SyntaxInOrderIterator = require("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
@@ -7,6 +8,9 @@ var AWS = require('aws-sdk'),
     // secretObjectDescriptor = require("phront/data/main.datareel/model/aws/secret.mjson").montageObject,
     S3DataService;
 
+    /*
+        https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-secrets-manager/index.html#usage
+    */
 
 
 /**
@@ -86,7 +90,8 @@ exports.SecretManagerDataService = SecretManagerDataService = RawDataService.spe
                 var connection = this.connection;
 
                 if(connection) {
-                    var region;
+                    var region,
+                        credentials;
 
                     if(connection.region) {
                         region = connection.region;
@@ -99,15 +104,15 @@ exports.SecretManagerDataService = SecretManagerDataService = RawDataService.spe
                         region: region
                     };
 
-                    var credentials = new AWS.SharedIniFileCredentials({profile: connection.profile});
-                    if(credentials && credentials.accessKeyId !== undefined && credentials.secretAccessKey !== undefined) {
-                        SecretsManagerOptions.credentials = credentials;
-                    } else {
-                        SecretsManagerOptions.accessKeyId = process.env.aws_access_key_id;
-                        SecretsManagerOptions.secretAccessKey = process.env.aws_secret_access_key;
+                    if(!process.env.aws_access_key_id || !process.env.aws_secret_access_key) {
+                        credentials = fromIni({profile: connection.profile});
                     }
 
-                    this.__SecretsManager = new AWS.SecretsManager(SecretsManagerOptions);;
+                    if(credentials) {
+                        SecretsManagerOptions.credentials = credentials;
+                    }
+
+                    this.__SecretsManager = new SecretsManager(SecretsManagerOptions);
 
                 } else {
                     throw "SecretsManager could not find a connection for stage - "+this.currentEnvironment.stage+" -";

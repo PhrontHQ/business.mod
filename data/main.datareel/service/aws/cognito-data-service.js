@@ -1,5 +1,5 @@
-var AWS = require('aws-sdk'),
-    CognitoIdentityServiceProvider =  AWS.CognitoIdentityServiceProvider,
+var fromIni = require("@aws-sdk/credential-providers").fromIni,
+    {CognitoIdentityProvider, CognitoIdentityProviderClient, ListUserPoolsCommand} = require("@aws-sdk/client-cognito-identity-provider"),
     DataService = require("montage/data/service/data-service").DataService,
     Criteria = require("montage/core/criteria").Criteria,
     RawDataService = require("montage/data/service/raw-data-service").RawDataService,
@@ -8,6 +8,11 @@ var AWS = require('aws-sdk'),
     crypto = require("crypto"),
     CognitoUserPoolDescriptor = require("../../model/aws/cognito/user-pool.mjson").montageObject,
     CognitoUserPoolClientDescriptor = require("../../model/aws/cognito/user-pool-client.mjson").montageObject;
+
+
+/*
+    https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-cognito-identity-provider/index.htmls
+*/
 
 /**
 * TODO: Document
@@ -55,6 +60,32 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
         }
     },
 
+
+    __credentials: {
+        value: undefined
+    },
+    _credentials: {
+        get: function() {
+            var connection = this.connection,
+                credentials;
+
+            if(connection) {
+
+                if(!process.env.aws_access_key_id || !process.env.aws_secret_access_key) {
+                    credentials = fromIni({profile: connection.profile});
+
+                    credentials = credentials().then((value) => {
+                        console.log("credentials value:", value);
+                        return value;
+                    });
+                }
+            }
+
+            return credentials;
+
+        }
+    },
+
     __cognitoIdentityServiceProvider: {
         value: undefined
     },
@@ -65,7 +96,8 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
                 var connection = this.connection;
 
                 if(connection) {
-                    var region;
+                    var region,
+                        credentials = this._credentials;
 
                     if(connection.region) {
                         region = connection.region;
@@ -78,15 +110,22 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
                         region: region
                     };
 
-                    var credentials = new AWS.SharedIniFileCredentials({profile: connection.profile});
-                    if(credentials && credentials.accessKeyId !== undefined && credentials.secretAccessKey !== undefined) {
+                    // if(!process.env.aws_access_key_id || !process.env.aws_secret_access_key) {
+                    //     credentials = fromIni({profile: connection.profile});
+
+                    //     credentials = credentials().then((value) => {
+                    //         console.log("credentials value:", value);
+                    //         return value;
+                    //     });
+                    // }
+
+                    if(credentials) {
                         cognitoIdentityServiceProviderOptions.credentials = credentials;
-                    } else {
-                        cognitoIdentityServiceProviderOptions.accessKeyId = process.env.aws_access_key_id;
-                        cognitoIdentityServiceProviderOptions.secretAccessKey = process.env.aws_secret_access_key;
                     }
 
-                    this.__cognitoIdentityServiceProvider = new CognitoIdentityServiceProvider(cognitoIdentityServiceProviderOptions);
+                    // this.__cognitoIdentityServiceProviderOld = new CognitoIdentityServiceProvider(cognitoIdentityServiceProviderOptions);
+                    this.__cognitoIdentityServiceProvider = new CognitoIdentityProvider(cognitoIdentityServiceProviderOptions);
+
 
                 } else {
                     throw "CognitoDataService could not find a connection for stage - "+this.currentEnvironment.stage+" -";
@@ -96,6 +135,56 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
             return this.__cognitoIdentityServiceProvider;
         }
     },
+
+    __cognitoIdentityServiceProviderClient: {
+        value: undefined
+    },
+    _cognitoIdentityServiceProviderClient: {
+        get: function () {
+            if (!this.__cognitoIdentityServiceProviderClient) {
+                var connection = this.connection;
+
+                if(connection) {
+                    var region,
+                        credentials = this._credentials;
+
+                    if(connection.region) {
+                        region = connection.region;
+                    } else if(connection.resourceArn) {
+                        region = connection.resourceArn.split(":")[3];
+                    }
+
+                    var cognitoIdentityServiceProviderOptions =  {
+                        apiVersion: '2016-04-18',
+                        region: region
+                    };
+
+                    // if(!process.env.aws_access_key_id || !process.env.aws_secret_access_key) {
+                    //     credentials = fromIni({profile: connection.profile});
+
+                    //     credentials = credentials().then((value) => {
+                    //         console.log("credentials value:", value);
+                    //         return value;
+                    //     });
+                    // }
+
+                    if(credentials) {
+                        cognitoIdentityServiceProviderOptions.credentials = credentials;
+                    }
+
+                    // this.__cognitoIdentityServiceProviderOld = new CognitoIdentityServiceProvider(cognitoIdentityServiceProviderOptions);
+                    this.__cognitoIdentityServiceProviderClient = new CognitoIdentityProviderClient(cognitoIdentityServiceProviderOptions);
+
+
+                } else {
+                    throw "CognitoDataService could not find a connection for stage - "+this.currentEnvironment.stage+" -";
+                }
+
+            }
+            return this.__cognitoIdentityServiceProviderClient;
+        }
+    },
+
 
     mapCriteriaToRawCriteria: {
         value: function (criteria, mapping, locales, iteratorCallback) {
@@ -294,7 +383,8 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
                 }) : null,
                 callback = this.callbackForDataPropertyNamed(objectDescriptor, readOperation, dataPropertyName || objectDescriptor.name, rawCriteria, params, readFunction, describeFunction, qualifiedProperties);
 
-            params.MaxResults = `${readOperation.data.readLimit ? readOperation.data.readLimit : 10}`; // required
+            //params.MaxResults = `${readOperation.data.readLimit ? readOperation.data.readLimit : 10}`; // required
+            params.MaxResults = readOperation.data.readLimit ? Number(readOperation.data.readLimit) : 10; // required
 
             readFunction(params, callback);
         }
@@ -403,17 +493,17 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
            } else {
 
             /*
-                watchout for criteria npt being mapped to raw model
+                watchout for criteria not being mapped to raw model
             */
 
                 var params = {
-                    MaxResults: `${readOperation.data.readLimit ? readOperation.data.readLimit : 10}` // required
                 },
                 mapping = this.mappingForObjectDescriptor(objectDescriptor),
                 operationLocales = readOperation.locales,
                 rawCriteria = criteria ? this.mapCriteriaToRawCriteria(criteria, mapping, operationLocales) : null,
                 listUserPools = (params, callback) => {
-                    this._cognitoIdentityServiceProvider.listUserPools(params, callback);
+                    this._cognitoIdentityServiceProviderClient.send(new ListUserPoolsCommand(params), callback);
+                    //this._cognitoIdentityServiceProvider.listUserPools(params, callback);
                 },
                 callback = this.callbackForDataPropertyNamed(objectDescriptor, readOperation, "UserPools", rawCriteria, params, listUserPools);
 
@@ -710,7 +800,7 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
                 };
 
                 if(readLimit) {
-                    params.MaxResults = readLimit.toString();
+                    params.MaxResults = Number(readLimit);
                 }
 
 
