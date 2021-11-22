@@ -112,8 +112,8 @@ Object.defineProperty(apiLoader.services['apigatewaymanagementapi'], '2018-11-29
 
 exports.AWSAPIGateway = new ApiGatewayManagementApi({
     apiVersion: '2018-11-29',
-    //endpoint: (process.env.IS_OFFLINE === "true") ? 'http://localhost:3001' : ("wss://"+process.env.APIG_ENDPOINT),
-    endpoint: (process.env.IS_OFFLINE === "true") ? 'http://localhost:3001' : (process.env.APIG_ENDPOINT),
+    endpoint: (process.env.IS_OFFLINE === "true") ? 'http://localhost:3001' : ("wss://"+process.env.APIG_ENDPOINT),
+    //endpoint: (process.env.IS_OFFLINE === "true") ? 'http://localhost:3001' : (process.env.APIG_ENDPOINT),
     convertResponseTypes: false
   });
 
