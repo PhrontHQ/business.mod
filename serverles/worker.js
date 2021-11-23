@@ -124,7 +124,7 @@ exports.Worker = Target.specialize( /** @lends Worker.prototype */{
             await this.apiGateway.postToConnection({
                 ConnectionId: event.requestContext.connectionId,
                 Data: event.body
-            }).promise();
+            });
 
             cb(null, {
                 statusCode: 200,

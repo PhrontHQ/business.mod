@@ -117,7 +117,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                             return postToConnectionPromise = connection.postToConnection({
                                 ConnectionId: clientId,
                                 Data: data
-                            }).promise();
+                            });
                         } catch (e) {
                             console.log("OperationCoordinator: _sendData postToConnection error:", e, connection, clientId, data);
 
@@ -200,8 +200,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 // .postToConnection({
                 //     ConnectionId: clientId,
                 //     Data: this._serializer.serializeObject(operation)
-                // })
-                // .promise();
+                // });
             }
             else if(operation.type === DataOperation.Type.ReadCompletedOperation || operation.type === DataOperation.Type.ReadUpdateOperation) {
                 /*
