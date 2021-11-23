@@ -1,5 +1,7 @@
-var fromIni = require("@aws-sdk/credential-providers").fromIni,
-    SecretsManager = require("@aws-sdk/client-secrets-manager").SecretsManager,
+var fromIni = require("@aws-sdk/credential-provider-ini").fromIni,
+    // SecretsManager = require("@aws-sdk/client-secrets-manager").SecretsManager,
+    SecretsManagerClient = require("@aws-sdk/client-secrets-manager/dist-cjs/SecretsManagerClient").SecretsManagerClient,
+    GetSecretValueCommand = require("@aws-sdk/client-secrets-manager/dist-cjs/commands/GetSecretValueCommand").GetSecretValueCommand,
     DataService = require("montage/data/service/data-service").DataService,
     RawDataService = require("montage/data/service/raw-data-service").RawDataService,
     SyntaxInOrderIterator = require("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
@@ -80,7 +82,7 @@ exports.SecretManagerDataService = SecretManagerDataService = RawDataService.spe
         }
     },
 
-    __SecretsManager: {
+    __SecretsManagerClient: {
         value: undefined
     },
 
@@ -112,14 +114,14 @@ exports.SecretManagerDataService = SecretManagerDataService = RawDataService.spe
                         SecretsManagerOptions.credentials = credentials;
                     }
 
-                    this.__SecretsManager = new SecretsManager(SecretsManagerOptions);
+                    this.__SecretsManagerClient = new SecretsManagerClient(SecretsManagerOptions);
 
                 } else {
                     throw "SecretsManager could not find a connection for stage - "+this.currentEnvironment.stage+" -";
                 }
 
             }
-            return this.__SecretsManager;
+            return this.__SecretsManagerClient;
         }
     },
 
@@ -155,9 +157,10 @@ exports.SecretManagerDataService = SecretManagerDataService = RawDataService.spe
                 */
 
                 (promises || (promises = [])).push(new Promise(function(resolve, reject) {
-                    self._SecretsManager.getSecretValue({
+                    const getSecretValueCommand = new GetSecretValueCommand({
                         SecretId: secretId
-                    }, function (err, data) {
+                    });
+                    self._SecretsManager.send(getSecretValueCommand, function (err, data) {
                         if (err) {
                             /*
 

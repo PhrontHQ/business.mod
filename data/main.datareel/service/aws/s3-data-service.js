@@ -1,7 +1,12 @@
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const { S3Client, GetObjectCommand, PutObjectCommand, HeadObjectCommand, S3 } = require("@aws-sdk/client-s3");
+// const { S3Client, GetObjectCommand, PutObjectCommand, HeadObjectCommand, S3 } = require("@aws-sdk/client-s3");
 
-var fromIni = require("@aws-sdk/credential-providers").fromIni,
+const S3Client = require("@aws-sdk/client-s3/dist-cjs/S3Client").S3Client;
+const HeadObjectCommand = require("@aws-sdk/client-s3/dist-cjs/commands/HeadObjectCommand").HeadObjectCommand;
+const PutObjectCommand = require("@aws-sdk/client-s3/dist-cjs/commands/PutObjectCommand").PutObjectCommand;
+const GetObjectCommand = require("@aws-sdk/client-s3/dist-cjs/commands/GetObjectCommand").GetObjectCommand;
+
+var fromIni = require("@aws-sdk/credential-provider-ini").fromIni,
     // S3 =  require("@aws-sdk/client-s3").S3,
     DataService = require("montage/data/service/data-service").DataService,
     RawDataService = require("montage/data/service/raw-data-service").RawDataService,
@@ -123,7 +128,6 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                         S3DataServiceOptions.credentials = credentials;
                     }
 
-                    // this.__S3ClientOld = new AWS.S3(S3DataServiceOptions);
                     this.__S3Client = new S3Client(S3DataServiceOptions);
 
                 } else {

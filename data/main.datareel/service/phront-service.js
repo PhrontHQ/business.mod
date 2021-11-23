@@ -34,7 +34,7 @@ var DataService = require("montage/data/service/data-service").DataService,
     DataOperationType = require("montage/data/service/data-operation").DataOperationType,
     PGClass = require("../model/p-g-class").PGClass,
 
-    fromIni = require("@aws-sdk/credential-providers").fromIni,
+    fromIni = require("@aws-sdk/credential-provider-ini").fromIni,
     RDSDataService = require("@aws-sdk/client-rds-data").RDSData,
 
     //https = require('https'),
