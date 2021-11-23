@@ -118,4 +118,7 @@ exports.AWSAPIGateway = new ApiGatewayManagementApi({
   });
 
   console.log("endpoint: ", ("wss://"+process.env.APIG_ENDPOINT+"/"));
+
+  console.log("GITHUB endpoint:"+ `${process.env.WEBSOCKET_API}.execute-api.${process.env.AWS_REGION}.amazonaws.com/${process.env.STAGE}`);
+
   console.log("exports.AWSAPIGateway: ",exports.AWSAPIGateway);
