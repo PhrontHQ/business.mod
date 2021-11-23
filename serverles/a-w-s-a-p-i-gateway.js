@@ -117,4 +117,4 @@ exports.AWSAPIGateway = new ApiGatewayManagementApi({
     convertResponseTypes: false
   });
 
-  console.log("exports.AWSAPIGateway: ",exports.AWSAPIGateway);
+  //console.log("exports.AWSAPIGateway: ",exports.AWSAPIGateway);
