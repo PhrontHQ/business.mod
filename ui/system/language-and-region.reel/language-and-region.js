@@ -1,6 +1,6 @@
 var AbstractInspector = require("ui/controls/abstract/abstract-inspector").AbstractInspector,
     // SystemService = require('core/service/system-service').SystemService,
-    moment = require("moment-timezone"),
+    // moment = require("moment-timezone"),
     _      = require("lodash");
 
 exports.LanguageAndRegion = AbstractInspector.specialize({
@@ -106,6 +106,7 @@ exports.LanguageAndRegion = AbstractInspector.specialize({
                 // this.timeFormatShortOptions = this.generateDateFormatConvertedList(today, SystemService.SHORT_TIME_FORMATS);
                 // this.timeFormatMediumOptions = this.generateDateFormatConvertedList(today, SystemService.MEDIUM_TIME_FORMATS);
                 // this.timeFormatLongOptions = this.generateDateFormatConvertedList(today, SystemService.LONG_TIME_FORMATS);
+                throw "moment was removed as a dependency, needs to implemnt the equivalent of moment.weekdays()"
                 this.firstDayOfWeekOptions = _.map(moment.weekdays(), function(day, index) {
                     return {
                         label: day,
@@ -121,6 +122,7 @@ exports.LanguageAndRegion = AbstractInspector.specialize({
             var formattedDateList = [];
             for (var i = 0,length = dateOptionList.length; i < length; i++) {
                 var pattern = dateOptionList[i];
+                throw "moment was removed as a dependency, needs to implemnt the equivalent of moment(today).format(pattern) using montage/core/converter/international-date-to-string-formatter"
                 formattedDateList.push({label: "'" + moment(today).format(pattern) + "'", value: pattern});
             }
             return formattedDateList;
