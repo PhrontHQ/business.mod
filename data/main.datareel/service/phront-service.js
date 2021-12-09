@@ -23,12 +23,6 @@ var DataService = require("montage/data/service/data-service").DataService,
     SyntaxInOrderIterator = require("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
 
 
-    //Not needed at all as not used
-    // XMLHttpRequest = require("xhr2"),
-    // querystring = require('querystring'),
-    // Require sqlstring to add additional escaping capabilities
-    //sqlString = require('sqlstring'),
-
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     DataOperationErrorNames = require("montage/data/service/data-operation").DataOperationErrorNames,
     DataOperationType = require("montage/data/service/data-operation").DataOperationType,
@@ -36,11 +30,6 @@ var DataService = require("montage/data/service/data-service").DataService,
 
     fromIni = require("@aws-sdk/credential-provider-ini").fromIni,
     RDSDataService = require("@aws-sdk/client-rds-data").RDSData,
-
-    //https = require('https'),
-    // //For browser
-    // https = null,
-
 
     pgutils = require('./pg-utils'),
     prepareValue = pgutils.prepareValue,
@@ -103,21 +92,6 @@ class Timer {
     }
 }
 
-
-
-//Node.js specific
-// if (https) {
-//     /**********************************************************************/
-//     /** Enable HTTP Keep-Alive per https://vimeo.com/287511222          **/
-//     /** This dramatically increases the speed of subsequent HTTP calls  **/
-//     /**********************************************************************/
-//     const sslAgent = new https.Agent({
-//         keepAlive: true,
-//         maxSockets: 50, // same as aws-sdk
-//         rejectUnauthorized: true  // same as aws-sdk
-//     });
-//     sslAgent.setMaxListeners(0); // same as aws-sdk
-// }
 
 /*
     var params = {
