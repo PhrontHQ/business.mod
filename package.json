@@ -46,8 +46,7 @@
     "montage-testing": "git://github.com/montagejs/montage-testing.git#master",
     "open": "0.0.5",
     "tiny-worker": "github:marchant/tiny-worker#master",
-    "serverless": "~1.75.0",
-    "v8-profiler": "^5.7.0"
+    "serverless": "~1.75.0"
   },
   "scripts": {
     "jsdoc": "jsdoc -c jsdoc.json",
