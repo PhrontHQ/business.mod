@@ -1,11 +1,9 @@
 const   Worker = require("./worker").Worker,
-        defaultEventManager = require("montage/core/event/event-manager").defaultEventManager,
         Identity = require("montage/data/model/identity").Identity,
         IdentityDescriptor = require("montage/data/model/identity.mjson").montageObject,
         AuthorizationPolicy = require("montage/data/service/authorization-policy").AuthorizationPolicy,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     OperationCoordinator = require("../data/main.datareel/service/operation-coordinator").OperationCoordinator,
-    uuid = require("montage/core/uuid"),
     Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
     MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
 
@@ -22,6 +20,13 @@ const failedResponse = (statusCode, error) => ({
         body: error
     });
 
+
+function sleep(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
+}
+
 /**
  * A Worker is any object that can handle messages from a serverless function
  * to implement custom businsess logic
@@ -34,7 +39,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
         value: function DataWorker() {
             this.super();
 
-            this._serializer = new MontageSerializer().initWithRequire(require);
+            this._serializer = new MontageSerializer().initWithRequire(this.require);
 
         }
     },
@@ -146,6 +151,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
         value: async function(event, context, callback) {
 
             console.log("handleAuthorize: event:", event, " context:", context, "callback: ", callback);
+            // await sleep(6000)
 
             var base64EncodedSerializedIdentity = event.queryStringParameters.identity,
                 serializedIdentity,
@@ -163,14 +169,6 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                         If there's a serializedIdentity and we can't deserialize it, we're the ones triggering the fail.
                     */
                     console.error("Error: ",error, " Deserializing ",serializedIdentity);
-                    // return Promise.reject("Unknown message: ",serializedOperation);
-
-                    // var authorizeConnectionFailedOperation = new DataOperation();
-                    // authorizeConnectionFailedOperation.id = uuid.generate();
-                    // authorizeConnectionFailedOperation.referrerId = event.requestContext.requestId;
-                    // authorizeConnectionFailedOperation.type = DataOperation.Type.AuthorizeConnectionFailedOperation;
-
-                    // authorizeConnectionFailedOperation.target = this;
 
                     return Promise.resolve(this.responseForEventAuthorization(event, null, false, /*responseContext*/error));
 
@@ -371,7 +369,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             isSync = true,
             self = this;
 
-            this.deserializer.init(serializedOperation, require, objectRequires, module, isSync);
+            this.deserializer.init(serializedOperation, this.require, objectRequires, module, isSync);
             try {
                 deserializedOperation = this.deserializer.deserializeObject();
             } catch (ex) {
