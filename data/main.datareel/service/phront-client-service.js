@@ -4,7 +4,7 @@ var DataService = require("montage/data/service/data-service").DataService,
     ObjectDescriptor = require("montage/core/meta/object-descriptor").ObjectDescriptor,
     DataQuery = require("montage/data/model/data-query").DataQuery,
     DataStream = require("montage/data/service/data-stream").DataStream,
-    Montage = require("montage").Montage,
+    Montage = require("montage/core/core").Montage,
     Promise = require("montage/core/promise").Promise,
     DataOrdering = require("montage/data/model/data-ordering").DataOrdering,
     DESCENDING = DataOrdering.DESCENDING,
@@ -68,13 +68,13 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 // mainService.addEventListener(DataOperation.Type.DeleteOperation,this,false);
                 // mainService.addEventListener(DataOperation.Type.CreateTransactionOperation,this,false);
                 // mainService.addEventListener(DataOperation.Type.BatchOperation,this,false);
-                // mainService.addEventListener(DataOperation.Type.PerformTransactionOperation,this,false);
+                // mainService.addEventListener(DataOperation.Type.CommitTransactionOperation,this,false);
                 // mainService.addEventListener(DataOperation.Type.RollbackTransactionOperation,this,false);
 
 
                 mainService.addEventListener(DataOperation.Type.NoOp,this,false);
-                mainService.addEventListener(DataOperation.Type.ReadFailedOperation,this,false);
-                mainService.addEventListener(DataOperation.Type.ReadCompletedOperation,this,false);
+                // mainService.addEventListener(DataOperation.Type.ReadFailedOperation,this,false);
+                // mainService.addEventListener(DataOperation.Type.ReadCompletedOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.UpdateFailedOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.UpdateCompletedOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.CreateFailedOperation,this,false);
@@ -86,8 +86,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                 mainService.addEventListener(DataOperation.Type.BatchCompletedOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.BatchFailedOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.TransactionUpdatedOperation,this,false);
-                mainService.addEventListener(DataOperation.Type.PerformTransactionFailedOperation,this,false);
-                mainService.addEventListener(DataOperation.Type.PerformTransactionCompletedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.CommitTransactionFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.CommitTransactionCompletedOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.RollbackTransactionFailedOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.RollbackTransactionCompletedOperation,this,false);
                 }
@@ -520,45 +520,45 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
       overriden to efficently counters the data structure
       returned by AWS RDS DataAPI efficently
     */
-   addOneRawData: {
-        value: function (stream, rawData, context) {
-            //Data coming from Postresql
-            if(Array.isArray(rawData)) {
-                return this.super(stream, JSON.parse(rawData[0].stringValue), context);
-            }
-            //Possible others
-            else {
-                return this.super(stream, rawData, context);
-            }
-        }
-    },
+//    addOneRawData: {
+//         value: function (stream, rawData, context) {
+//             //Data coming from Postresql
+//             if(Array.isArray(rawData)) {
+//                 return this.super(stream, JSON.parse(rawData[0].stringValue), context);
+//             }
+//             //Possible others
+//             else {
+//                 return this.super(stream, rawData, context);
+//             }
+//         }
+//     },
 
-    _dispatchReadOperation: {
-        value: function(operation, stream) {
-            this._thenableByOperationId.set(operation.id, stream);
-            this._dispatchOperation(operation);
-        }
-    },
-    _dispatchOperation: {
-        value: function(operation) {
-            this._pendingOperationById.set(operation.id, operation);
+    // _dispatchReadOperation: {
+    //     value: function(operation, stream) {
+    //         this._thenableByOperationId.set(operation.id, stream);
+    //         this._dispatchOperation(operation);
+    //     }
+    // },
+    // _dispatchOperation: {
+    //     value: function(operation) {
+    //         this._pendingOperationById.set(operation.id, operation);
 
-            defaultEventManager.handleEvent(operation);
+    //         defaultEventManager.handleEvent(operation);
 
-            // var serializedOperation = this._serializer.serializeObject(operation);
+    //         // var serializedOperation = this._serializer.serializeObject(operation);
 
-            // // if(operation.type === "batch") {
-            // //     var deserializer = new Deserializer();
-            // //     deserializer.init(serializedOperation, require, undefined, module, true);
-            // //     var deserializedOperation = deserializer.deserializeObject();
+    //         // // if(operation.type === "batch") {
+    //         // //     var deserializer = new Deserializer();
+    //         // //     deserializer.init(serializedOperation, require, undefined, module, true);
+    //         // //     var deserializedOperation = deserializer.deserializeObject();
 
-            // //     console.log(deserializedOperation);
+    //         // //     console.log(deserializedOperation);
 
-            // // }
-            // console.log("----> send operation "+serializedOperation);
-            // this._socket.send(serializedOperation);
-        }
-    },
+    //         // // }
+    //         // console.log("----> send operation "+serializedOperation);
+    //         // this._socket.send(serializedOperation);
+    //     }
+    // },
 
     // handleEvent: {
     //     value: function(operation) {
@@ -816,143 +816,143 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
 
     //This probably isn't right and should be fetchRawData, but switching creates a strange error.
-    fetchData: {
-        value: function (query, stream) {
+    // fetchData: {
+    //     value: function (query, stream) {
 
-            var self = this;
-            stream = stream || new DataStream();
-            stream.query = query;
+    //         var self = this;
+    //         stream = stream || new DataStream();
+    //         stream.query = query;
 
-            // make sure type is an object descriptor or a data object descriptor.
-            // query.type = this.rootService.objectDescriptorForType(query.type);
-
-
-            this._socketOpenPromise.then(function() {
-                var objectDescriptor = query.type,
-                    criteria = query.criteria,
-                    criteriaWithLocale,
-                    parameters,
-                    rawParameters,
-                    readOperation = new DataOperation(),
-                    rawReadExpressions = [],
-                    rawOrderings,
-                    promises;
-                    // localizableProperties = objectDescriptor.localizablePropertyDescriptors;
-
-                /*
-                    We need to turn this into a Read Operation. Difficulty is to turn the query's criteria into
-                    one that doesn't rely on objects. What we need to do before handing an operation over to another context
-                    bieng a worker on the client side or a worker on the server side, is to remove references to live objects.
-                    One way to do this is to replace every object in a criteria's parameters by it's data identifier.
-                    Another is to serialize the criteria.
-                */
-                readOperation.type = DataOperation.Type.ReadOperation;
-                readOperation.target = objectDescriptor;
-                readOperation.data = {};
-
-                //Need to add a check to see if criteria may have more spefific instructions for "locale".
-                /*
-                    1/19/2021 - we were only adding locale when the object descriptor being fetched has some localizableProperties, but a criteria may involve a subgraph and we wou'd have to go through the syntactic tree of the criteria, and readExpressions, to figure out if anywhere in that subgraph, there might be localizable properties we need to include the locales for.
-
-                    Since we're localized by default, we're going to include it no matter what, it's going to be more rare that it is not needed than it is.
-                */
-                /*
-                    WIP Adds locale as needed. Most common case is that it's left to the framework to qualify what Locale to use.
-
-                    A core principle is that each data object (DO) has a locale property behaving in the following way:
-                    locales has 1 locale value, a locale object.
-                    This is the most common use case. The property’s getter returns the user’s locale.
-                    Fetching an object with a criteria asking for a specific locale will return an object in that locale.
-                    Changing the locale property of an object to another locale instance (singleton in Locale’s case), updates all the values of its localizable properties to the new locale set.
-                    locales has either no value, or “*” equivalent, an “All Locale Locale”
-                    This feches the json structure and returns all the values in all the locales
-                    locales has an array of locale instances.
-                    If locale’s cardinality is > 1 then each localized property would return a json/dictionary of locale->value instead of 1 value.
-                */
-
-                readOperation.locales = self.userLocales;
+    //         // make sure type is an object descriptor or a data object descriptor.
+    //         // query.type = this.rootService.objectDescriptorForType(query.type);
 
 
-                if(criteria) {
-                    readOperation.criteria = criteria;
-                }
+    //         this._socketOpenPromise.then(function() {
+    //             var objectDescriptor = query.type,
+    //                 criteria = query.criteria,
+    //                 criteriaWithLocale,
+    //                 parameters,
+    //                 rawParameters,
+    //                 readOperation = new DataOperation(),
+    //                 rawReadExpressions = [],
+    //                 rawOrderings,
+    //                 promises;
+    //                 // localizableProperties = objectDescriptor.localizablePropertyDescriptors;
 
-                if(query.fetchLimit) {
-                    readOperation.data.readLimit = query.fetchLimit;
-                }
+    //             /*
+    //                 We need to turn this into a Read Operation. Difficulty is to turn the query's criteria into
+    //                 one that doesn't rely on objects. What we need to do before handing an operation over to another context
+    //                 bieng a worker on the client side or a worker on the server side, is to remove references to live objects.
+    //                 One way to do this is to replace every object in a criteria's parameters by it's data identifier.
+    //                 Another is to serialize the criteria.
+    //             */
+    //             readOperation.type = DataOperation.Type.ReadOperation;
+    //             readOperation.target = objectDescriptor;
+    //             readOperation.data = {};
 
-                if(query.sortderings && query.sortderings > 0) {
-                    rawOrderings = [];
-                    self._mapObjectDescriptorOrderingsToRawOrderings(objectDescriptor, query.sortderings,rawOrderings);
-                    readOperation.data.orderings = rawOrderings;
-                }
+    //             //Need to add a check to see if criteria may have more spefific instructions for "locale".
+    //             /*
+    //                 1/19/2021 - we were only adding locale when the object descriptor being fetched has some localizableProperties, but a criteria may involve a subgraph and we wou'd have to go through the syntactic tree of the criteria, and readExpressions, to figure out if anywhere in that subgraph, there might be localizable properties we need to include the locales for.
 
-                /*
-                    for a read operation, we already have criteria, shouldn't data contains the array of
-                    expressions that are expected to be returned?
-                */
-                self._mapObjectDescriptorReadExpressionToRawReadExpression(objectDescriptor, query.readExpressions,rawReadExpressions);
-                if(rawReadExpressions.length) {
-                    readOperation.data.readExpressions = rawReadExpressions;
-                }
+    //                 Since we're localized by default, we're going to include it no matter what, it's going to be more rare that it is not needed than it is.
+    //             */
+    //             /*
+    //                 WIP Adds locale as needed. Most common case is that it's left to the framework to qualify what Locale to use.
 
-                /*
+    //                 A core principle is that each data object (DO) has a locale property behaving in the following way:
+    //                 locales has 1 locale value, a locale object.
+    //                 This is the most common use case. The property’s getter returns the user’s locale.
+    //                 Fetching an object with a criteria asking for a specific locale will return an object in that locale.
+    //                 Changing the locale property of an object to another locale instance (singleton in Locale’s case), updates all the values of its localizable properties to the new locale set.
+    //                 locales has either no value, or “*” equivalent, an “All Locale Locale”
+    //                 This feches the json structure and returns all the values in all the locales
+    //                 locales has an array of locale instances.
+    //                 If locale’s cardinality is > 1 then each localized property would return a json/dictionary of locale->value instead of 1 value.
+    //             */
 
-                    this is half-assed, we're mapping full objects to RawData, but not the properties in the expression.
-                    phront-service does it, but we need to stop doing it half way there and the other half over there.
-                    SaveChanges is cleaner, but the job is also easier there.
+    //             readOperation.locales = self.userLocales;
 
-                */
-               parameters = criteria ? criteria.parameters : undefined;
-               rawParameters = parameters;
 
-                if(parameters && typeof criteria.parameters === "object") {
-                    var keys = Object.keys(parameters),
-                        i, countI, iKey, iValue, iRecord;
+    //             if(criteria) {
+    //                 readOperation.criteria = criteria;
+    //             }
 
-                    rawParameters = Array.isArray(parameters) ? [] : {};
+    //             if(query.fetchLimit) {
+    //                 readOperation.data.readLimit = query.fetchLimit;
+    //             }
 
-                    for(i=0, countI = keys.length;(i < countI); i++) {
-                        iKey  = keys[i];
-                        iValue = parameters[iKey];
-                        if(!iValue) {
-                            throw "fetchData: criteria with no value for parameter key "+iKey;
-                        } else {
-                            if(iValue.dataIdentifier) {
-                                /*
-                                    this isn't working because it's causing triggers to fetch properties we don't have
-                                    and somehow fails, but it's wastefull. Going back to just put primary key there.
-                                */
-                                // iRecord = {};
-                                // rawParameters[iKey] = iRecord;
-                                // (promises || (promises = [])).push(
-                                //     self._mapObjectToRawData(iValue, iRecord)
-                                // );
-                                rawParameters[iKey] = iValue.dataIdentifier.primaryKey;
-                            } else {
-                                rawParameters[iKey] = iValue;
-                            }
-                        }
+    //             if(query.sortderings && query.sortderings > 0) {
+    //                 rawOrderings = [];
+    //                 self._mapObjectDescriptorOrderingsToRawOrderings(objectDescriptor, query.sortderings,rawOrderings);
+    //                 readOperation.data.orderings = rawOrderings;
+    //             }
 
-                    }
-                    // if(promises) promises = Promise.all(promises);
-                }
-                if(!promises) promises = Promise.resolve(true);
-                promises.then(function() {
-                    if(criteria) readOperation.criteria.parameters = rawParameters;
-                    //console.log("fetchData operation:",JSON.stringify(readOperation));
-                    self._dispatchReadOperation(readOperation, stream);
-                    if(criteria) readOperation.criteria.parameters = parameters;
+    //             /*
+    //                 for a read operation, we already have criteria, shouldn't data contains the array of
+    //                 expressions that are expected to be returned?
+    //             */
+    //             self._mapObjectDescriptorReadExpressionToRawReadExpression(objectDescriptor, query.readExpressions,rawReadExpressions);
+    //             if(rawReadExpressions.length) {
+    //                 readOperation.data.readExpressions = rawReadExpressions;
+    //             }
 
-                });
-            })
-            .catch(function(error) {
-                stream.dataError(error);
-            });
+    //             /*
 
-          return stream;
-        }
-    },
+    //                 this is half-assed, we're mapping full objects to RawData, but not the properties in the expression.
+    //                 phront-service does it, but we need to stop doing it half way there and the other half over there.
+    //                 SaveChanges is cleaner, but the job is also easier there.
+
+    //             */
+    //            parameters = criteria ? criteria.parameters : undefined;
+    //            rawParameters = parameters;
+
+    //             if(parameters && typeof criteria.parameters === "object") {
+    //                 var keys = Object.keys(parameters),
+    //                     i, countI, iKey, iValue, iRecord;
+
+    //                 rawParameters = Array.isArray(parameters) ? [] : {};
+
+    //                 for(i=0, countI = keys.length;(i < countI); i++) {
+    //                     iKey  = keys[i];
+    //                     iValue = parameters[iKey];
+    //                     if(!iValue) {
+    //                         throw "fetchData: criteria with no value for parameter key "+iKey;
+    //                     } else {
+    //                         if(iValue.dataIdentifier) {
+    //                             /*
+    //                                 this isn't working because it's causing triggers to fetch properties we don't have
+    //                                 and somehow fails, but it's wastefull. Going back to just put primary key there.
+    //                             */
+    //                             // iRecord = {};
+    //                             // rawParameters[iKey] = iRecord;
+    //                             // (promises || (promises = [])).push(
+    //                             //     self._mapObjectToRawData(iValue, iRecord)
+    //                             // );
+    //                             rawParameters[iKey] = iValue.dataIdentifier.primaryKey;
+    //                         } else {
+    //                             rawParameters[iKey] = iValue;
+    //                         }
+    //                     }
+
+    //                 }
+    //                 // if(promises) promises = Promise.all(promises);
+    //             }
+    //             if(!promises) promises = Promise.resolve(true);
+    //             promises.then(function() {
+    //                 if(criteria) readOperation.criteria.parameters = rawParameters;
+    //                 //console.log("fetchData operation:",JSON.stringify(readOperation));
+    //                 self._dispatchReadOperation(readOperation, stream);
+    //                 if(criteria) readOperation.criteria.parameters = parameters;
+
+    //             });
+    //         })
+    //         .catch(function(error) {
+    //             stream.dataError(error);
+    //         });
+
+    //       return stream;
+    //     }
+    // },
 
     // _processObjectChangesForProperty: {
     //     value: function(object, aProperty, aPropertyDescriptor, aPropertyChanges, operationData, snapshot, dataSnapshot, rawDataPrimaryKeys, mapping) {
@@ -1165,12 +1165,12 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
             this.handleOperationFailed(operation);
         }
     },
-    handlePerformTransactionCompletedOperation: {
+    handleCommitTransactionCompletedOperation: {
         value: function (operation) {
             this.handleOperationCompleted(operation);
         }
     },
-    handlePerformTransactionFailedOperation: {
+    handleCommitTransactionFailedOperation: {
         value: function (operation) {
             this.handleOperationFailed(operation);
         }
@@ -1398,8 +1398,8 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         changedDataObjectInvalidity = new Map(),
                         deletedDataObjectInvalidity = new Map(),
                         validityEvaluationPromises = [], validityEvaluationPromise,
-                        performTransactionOperation,
-                        performTransactionOperationPromise,
+                        commitTransactionOperation,
+                        commitTransactionOperationPromise,
                         rollbackTransactionOperation,
                         rollbackTransactionOperationPromise,
                         createTransactionCompletedId;
@@ -1538,7 +1538,9 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                                 So until then, if target is null, it's meant for the coordinaator, needed for transactions that could contain object descriptors that are handled by different data services and the OperationCoordinator will have to handle that himself first to triage, before distributing to the relevant data services by creating nested transactions with the subset of dataoperations/types they deal with.
                             */
-                            createTransaction.data = transactionObjectDescriptors.map((objectDescriptor) => {return objectDescriptor.module.id});
+                            createTransaction.data = {
+                                objectDescriptors: transactionObjectDescriptors.map((objectDescriptor) => {return objectDescriptor.module.id})
+                            };
 
                             _createTransactionPromise = new Promise(function(resolve, reject) {
                                 createTransaction._promiseResolve = resolve;
@@ -1664,29 +1666,29 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
                         if(batchedOperationResult.type === DataOperation.Type.BatchCompletedOperation) {
                             //We proceed to commit:
-                            performTransactionOperation = new DataOperation();
-                            performTransactionOperation.type = DataOperation.Type.PerformTransactionOperation;
-                            performTransactionOperation.target = DataService.mainService;
+                            commitTransactionOperation = new DataOperation();
+                            commitTransactionOperation.type = DataOperation.Type.CommitTransactionOperation;
+                            commitTransactionOperation.target = DataService.mainService;
                             //Not sure we need any data here?
-                            //performTransactionOperation.data = batchedOperations;
+                            //commitTransactionOperation.data = batchedOperations;
 
                             //The createTransactionCompleted.id is the backend transacionId we need.
-                            //It would also make sense to treat the referrerId of the performTransactionOperation
+                            //It would also make sense to treat the referrerId of the commitTransactionOperation
                             //to be the id of the createTransactionCompleted that preceded it.
-                            performTransactionOperation.referrerId = createTransaction.id;
-                            performTransactionOperation.data = {
+                            commitTransactionOperation.referrerId = createTransaction.id;
+                            commitTransactionOperation.data = {
                                 transactionId: createTransactionCompletedId
                             };
 
-                            performTransactionOperationPromise = new Promise(function(resolve, reject) {
-                                performTransactionOperation._promiseResolve = resolve;
-                                performTransactionOperation._promiseReject = reject;
+                            commitTransactionOperationPromise = new Promise(function(resolve, reject) {
+                                commitTransactionOperation._promiseResolve = resolve;
+                                commitTransactionOperation._promiseReject = reject;
                             });
-                            self._thenableByOperationId.set(performTransactionOperation.id,performTransactionOperationPromise);
+                            self._thenableByOperationId.set(commitTransactionOperation.id,commitTransactionOperationPromise);
 
-                            self._dispatchOperation(performTransactionOperation);
+                            self._dispatchOperation(commitTransactionOperation);
 
-                            return performTransactionOperationPromise;
+                            return commitTransactionOperationPromise;
                         } else if(batchedOperationResult.type === DataOperation.Type.BatchFailedOperation) {
                             //We need to rollback:
 
@@ -1722,14 +1724,14 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
                         reject(error);
                     })
                     .then(function(transactionOperationResult) {
-                        if(transactionOperationResult.type === DataOperation.Type.PerformTransactionCompletedOperation) {
+                        if(transactionOperationResult.type === DataOperation.Type.CommitTransactionCompletedOperation) {
                             //We need to do what we did im saveDataObjects, for each created, updated and deleted obect.
                             self.didCreateDataObjects(createdDataObjects, dataOperationsByObject);
                             self.didUpdateDataObjects(changedDataObjects, dataOperationsByObject);
                             self.didDeleteDataObjects(deletedDataObjects, dataOperationsByObject);
 
-                        } else if(transactionOperationResult.type === DataOperation.Type.PerformTransactionFailedOperation) {
-                            console.error("Missing logic for PerformTransactionFailed");
+                        } else if(transactionOperationResult.type === DataOperation.Type.CommitTransactionFailedOperation) {
+                            console.error("Missing logic for CommitTransactionFailed");
 
                         } else if(transactionOperationResult.type === DataOperation.Type.RollbackTransactionCompletedOperation) {
                             console.error("Missing logic for RollbackTransactionCompleted");
@@ -1949,7 +1951,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     },
 
     /**
-     * Creates one save operation for an object, eirher a create, an update or a delete
+     * Creates one save operation for an object, either a create, an update or a delete
      * .
      *
      * @method
