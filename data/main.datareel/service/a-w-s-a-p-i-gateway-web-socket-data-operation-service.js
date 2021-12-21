@@ -1,6 +1,6 @@
 var DataService = require("montage/data/service/data-service").DataService,
     RawDataService = require("montage/data/service/raw-data-service").RawDataService,
-    DataQuery = require("montage/data/model/data-query").DataQuery,
+    //DataQuery = (require) ("montage/data/model/data-query").DataQuery,
     Promise = require("montage/core/promise").Promise,
     evaluate = require("montage/core/frb/evaluate"),
     Set = require("montage/core/collections/set"),
@@ -9,11 +9,11 @@ var DataService = require("montage/data/service/data-service").DataService,
     Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     //We don't use special Ids yet, when/if we do, the goal would be to avoid collision and maybe encode more data like the type in it.
-    // Phluid = require("./phluid").Phluid,
+    // Phluid = (require) ("./phluid").Phluid,
     WebSocket = require("montage/core/web-socket").WebSocket,
     defaultEventManager = require("montage/core/event/event-manager").defaultEventManager,
-    RawEmbeddedValueToObjectConverter = require("montage/data/converter/raw-embedded-value-to-object-converter").RawEmbeddedValueToObjectConverter,
-    ReadEvent = require("montage/data/model/read-event").ReadEvent,
+    //RawEmbeddedValueToObjectConverter = (require) ("montage/data/converter/raw-embedded-value-to-object-converter").RawEmbeddedValueToObjectConverter,
+    //ReadEvent = (require) ("montage/data/model/read-event").ReadEvent,
     currentEnvironment = require("montage/core/environment").currentEnvironment;
 
 
@@ -339,6 +339,17 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
                 objectRequires,
                 module,
                 isSync = false;
+
+                /*
+
+                    Sample:
+
+                    '{"type":"message","data":"{\\"message\\": \\"Internal server error\\", \\"connectionId\\":\\"J8VDPdN7PHcCHnw=\\", \\"requestId\\":\\"J8VDgEAmvHcFueQ=\\"}"}'
+
+                    When we get this, it's typically a timeout error
+
+
+                */
 
                 if(serializedOperation.indexOf('{"message": "Internal server error"') === 0) {
                      console.warn(event.data);

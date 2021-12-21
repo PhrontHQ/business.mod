@@ -1,19 +1,19 @@
 "use strict";
 
-const { result } = require("lodash");
+// const { result } = (require) ("lodash");
 
 var parse = require("montage/core/frb/parse"),
     solve = require("montage/core/frb/algebra"),
     precedence = require("montage/core/frb/language").precedence,
     typeToToken = require("montage/core/frb/language").operatorTypes,
-    tokenToType = require("montage/core/frb/language").operatorTokens,
+    // tokenToType = require ( "montage/core/frb/language" ).operatorTokens,
     pgutils = require('./pg-utils'),
     prepareValue = pgutils.prepareValue,
     escapeIdentifier = pgutils.escapeIdentifier,
     escapeLiteral = pgutils.escapeLiteral,
     literal = pgutils.literal,
     escapeString = pgutils.escapeString,
-    RangeDescriptor = require("montage/core/range.mjson").montageObject,
+    //RangeDescriptor = (require) ("montage/core/range.mjson").montageObject,
     Range = require("montage/core/range").Range,
     EqualsToken = "==",
     DataServiceUserLocales = "DataServiceUserLocales",

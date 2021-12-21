@@ -1,19 +1,17 @@
 
-var DataService = require("montage/data/service/data-service").DataService,
-    RawDataService = require("montage/data/service/raw-data-service").RawDataService,
+var RawDataService = require("montage/data/service/raw-data-service").RawDataService,
     Criteria = require("montage/core/criteria").Criteria,
     ObjectDescriptor = require("montage/core/meta/object-descriptor").ObjectDescriptor,
     RawEmbeddedValueToObjectConverter = require("montage/data/converter/raw-embedded-value-to-object-converter").RawEmbeddedValueToObjectConverter,
-    RawForeignValueToObjectConverter = require("montage/data/converter/raw-foreign-value-to-object-converter").RawForeignValueToObjectConverter,
     KeyValueArrayToMapConverter = require("montage/core/converter/key-value-array-to-map-converter").KeyValueArrayToMapConverter,
     Range = require("montage/core/range").Range,
     WktToGeometryConverter = require("montage-geo/logic/converter/wkt-to-geometry-converter").WktToGeometryConverter,
-    // DataQuery = require("montage/data/model/data-query").DataQuery,
-    DataStream = require("montage/data/service/data-stream").DataStream,
-    //Montage = require("montage").Montage,
+    // DataQuery = (require)("montage/data/model/data-query").DataQuery,
+    // DataStream = (require)("montage/data/service/data-stream").DataStream,
+    //Montage = (require)("montage/core/core").Montage,
     Promise = require("montage/core/promise").Promise,
     uuid = require("montage/core/uuid"),
-    DataOrdering = require("montage/data/model/data-ordering").DataOrdering,
+    //DataOrdering = (require)("montage/data/model/data-ordering").DataOrdering,
     //DESCENDING = DataOrdering.DESCENDING,
     Enum = require("montage/core/enum").Enum,
     Set = require("montage/core/collections/set"),
@@ -26,7 +24,7 @@ var DataService = require("montage/data/service/data-service").DataService,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     DataOperationErrorNames = require("montage/data/service/data-operation").DataOperationErrorNames,
     DataOperationType = require("montage/data/service/data-operation").DataOperationType,
-    PGClass = require("../model/p-g-class").PGClass,
+    //PGClass = (require)("../model/p-g-class").PGClass,
 
     fromIni = require("@aws-sdk/credential-provider-ini").fromIni,
     RDSDataService = require("@aws-sdk/client-rds-data").RDSData,
@@ -39,7 +37,7 @@ var DataService = require("montage/data/service/data-service").DataService,
     escapeString = pgutils.escapeString,
     pgstringify = require('./pgstringify'),
     parse = require("montage/core/frb/parse"),
-    DataTrigger = require("./data-trigger").DataTrigger,
+    //DataTrigger = (require)("./data-trigger").DataTrigger,
     path = require("path"),
     fs = require('fs'),
     PhrontService;
@@ -47,8 +45,6 @@ var DataService = require("montage/data/service/data-service").DataService,
     // const { RDSDataClient, BatchExecuteStatementCommand, BeginTransactionCommand, CommitTransactionCommand } = require("@aws-sdk/client-rds-data");
 
 
-//Set our DataTrigger custom subclass:
-//DataService.prototype.DataTrigger = DataTrigger;
 
 // assume a role using the sourceCreds
 // async function assume(sourceCreds, params) {

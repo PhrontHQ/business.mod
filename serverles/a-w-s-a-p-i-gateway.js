@@ -1,6 +1,5 @@
 'use strict';
 
-//const AWS = require('aws-sdk');
 const ApiGatewayManagementApi = require("@aws-sdk/client-apigatewaymanagementapi").ApiGatewayManagementApi;
 
 

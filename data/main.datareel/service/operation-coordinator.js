@@ -1,11 +1,11 @@
 // if(global && typeof global.XMLHttpRequest === undefined) {
-//     global.XMLHttpRequest = require('xhr2');
+//     global.XMLHttpRequest = (require) ('xhr2');
 // }
 var Target = require("montage/core/target").Target,
 
 MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
 Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
-// mainService = require("data/main.datareel/main.mjson").montageObject,
+// mainService = (require) ("data/main.datareel/main.mjson").montageObject,
 //phrontService = mainService.childServices[0],
 DataOperation = require("montage/data/service/data-operation").DataOperation,
 defaultEventManager = require("montage/core/event/event-manager").defaultEventManager,

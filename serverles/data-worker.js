@@ -9,7 +9,7 @@ const   Worker = require("./worker").Worker,
     Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
     MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
 
-    Montage = require("montage/core/core").Montage,
+    // Montage = (require)("montage/core/core").Montage,
     currentEnvironment = require("montage/core/environment").currentEnvironment;
 
 const successfullResponse = {
