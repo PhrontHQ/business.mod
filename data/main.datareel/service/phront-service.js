@@ -174,7 +174,6 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                 Either each needs to observe each types, kinda kills event delegation optimization, so we need to implement an alterative to Target.nextTarget to be able to either return an array, meaning that it could end up bifurcating, or we add an alternative called composedPath (DOM method name on Event), propagationPath (better) or targetPropagationPath, or nextTargetPath, that includes eveything till the top.
             */
-            //var mainService = DataService.mainService;
             this.addEventListener(DataOperation.Type.ReadOperation,this,false);
             this.addEventListener(DataOperation.Type.UpdateOperation,this,false);
             this.addEventListener(DataOperation.Type.CreateOperation,this,false);
@@ -3653,7 +3652,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                     escapedRecordKeys = recordKeys.map(key => escapeIdentifier(key)),
                     recordKeysValues = Array(recordKeys.length),
                     mapping = objectDescriptor && self.mappingForType(objectDescriptor),
-                    sqlColumns = recordKeys.join(","),
+                    // sqlColumns = recordKeys.join(","),
                     i, countI, iKey, iValue, iMappedValue, iRule, iPropertyName, iPropertyDescriptor, iRawType,
                     rawDataPrimaryKeys = mapping.rawDataPrimaryKeys,
                     sql;
@@ -3934,8 +3933,8 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                 schemaName = rawDataOperation.schema,
                 recordKeys = Object.keys(dataChanges),
                 setRecordKeys = Array(recordKeys.length),
-                sqlColumns = recordKeys.join(","),
-                i, countI, iKey, iKeyEscaped, iValue, iMappedValue, iAssignment, iPrimaryKey,
+                // sqlColumns = recordKeys.join(","),
+                i, countI, iKey, iKeyEscaped, iValue, iMappedValue, iAssignment, iRawType, iPrimaryKey,
                 iHasAddedValue, iHasRemovedValues, iPrimaryKeyValue,
                 iKeyValue,
                 dataSnapshot = updateOperation.snapshot,
@@ -3971,11 +3970,13 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                     iKey = dataSnapshotKeys[i];
                     iValue = dataSnapshot[iKey];
+                    iRawType = this.mapObjectDescriptorRawPropertyToRawType(objectDescriptor, iKey, mapping);
+
                     if(iValue === undefined || iValue === null) {
                         //TODO: this needs to be taken care of in pgstringify as well for criteria. The problem is the operator changes based on value...
-                        condition += `"${tableName}".${escapeIdentifier(iKey)} is ${this.mapPropertyValueToRawTypeExpression(iKey, iValue)}`;
+                        condition += `"${tableName}".${escapeIdentifier(iKey)} is ${this.mapPropertyValueToRawTypeExpression(iKey, iValue, iRawType)}`;
                     } else {
-                        condition += `"${tableName}".${escapeIdentifier(iKey)} = ${this.mapPropertyValueToRawTypeExpression(iKey, iValue)}`;
+                        condition += `"${tableName}".${escapeIdentifier(iKey)} = ${this.mapPropertyValueToRawTypeExpression(iKey, iValue, iRawType)}`;
                     }
                 }
             }
