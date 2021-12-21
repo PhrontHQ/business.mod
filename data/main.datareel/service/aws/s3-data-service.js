@@ -1,16 +1,16 @@
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 // const { S3Client, GetObjectCommand, PutObjectCommand, HeadObjectCommand, S3 } = require("@aws-sdk/client-s3");
 
-const S3Client = require("@aws-sdk/client-s3/dist-cjs/S3Client").S3Client;
-const HeadObjectCommand = require("@aws-sdk/client-s3/dist-cjs/commands/HeadObjectCommand").HeadObjectCommand;
-const PutObjectCommand = require("@aws-sdk/client-s3/dist-cjs/commands/PutObjectCommand").PutObjectCommand;
-const GetObjectCommand = require("@aws-sdk/client-s3/dist-cjs/commands/GetObjectCommand").GetObjectCommand;
 
-var fromIni = require("@aws-sdk/credential-provider-ini").fromIni,
-    // S3 =  require("@aws-sdk/client-s3").S3,
+var fromIni /* = (require) ("@aws-sdk/credential-provider-ini").fromIni */,
+    S3Client /* = (require) ("@aws-sdk/client-s3/dist-cjs/S3Client").S3Client */,
+    HeadObjectCommand /* = (require) ("@aws-sdk/client-s3/dist-cjs/commands/HeadObjectCommand").HeadObjectCommand */,
+    PutObjectCommand /* = (require) ("@aws-sdk/client-s3/dist-cjs/commands/PutObjectCommand").PutObjectCommand */,
+    GetObjectCommand /* = (require) ("@aws-sdk/client-s3/dist-cjs/commands/GetObjectCommand").GetObjectCommand */,
+    getSignedUrl /* = (require) ("@aws-sdk/s3-request-presigner").getSignedUrl */,
+    // S3 =  (require) ("@aws-sdk/client-s3").S3,
     DataService = require("montage/data/service/data-service").DataService,
     RawDataService = require("montage/data/service/raw-data-service").RawDataService,
-    SyntaxInOrderIterator = require("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
+    //SyntaxInOrderIterator = (require) ("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     crypto = require("crypto"),
     BucketDescriptor = require("../../model/aws/s3/bucket.mjson").montageObject,
@@ -138,6 +138,37 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
             return this.__S3Client;
         }
     },
+    __S3ClientPromise: {
+        value: undefined
+    },
+
+    _S3ClientPromise: {
+        get: function () {
+            if (!this.__S3ClientPromise) {
+                this.__S3ClientPromise = Promise.all([
+                    require.async("@aws-sdk/credential-provider-ini"),
+                    require.async("@aws-sdk/client-s3/dist-cjs/S3Client"),
+                    require.async("@aws-sdk/client-s3/dist-cjs/commands/HeadObjectCommand"),
+                    require.async("@aws-sdk/client-s3/dist-cjs/commands/PutObjectCommand"),
+                    require.async("@aws-sdk/client-s3/dist-cjs/commands/GetObjectCommand"),
+                    require.async("@aws-sdk/s3-request-presigner")
+                ])
+                .then((resolvedModules) => {
+                    fromIni = resolvedModules[0].fromIni;
+                    S3Client = resolvedModules[1].S3Client;
+                    HeadObjectCommand = resolvedModules[2].HeadObjectCommand;
+                    PutObjectCommand = resolvedModules[3].PutObjectCommand;
+                    GetObjectCommand = resolvedModules[4].GetObjectCommand;
+                    getSignedUrl = resolvedModules[5].getSignedUrl;
+
+                    return this._S3Client;
+                });
+
+            }
+
+            return this.__S3ClientPromise;
+        }
+    },
 
     handleExpiringObjectDownloadReadOperation: {
         value: function (readOperation) {
@@ -194,35 +225,27 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                         }
                         (promises || (promises = [])).push(new Promise(function(resolve, reject) {
 
-                            const command = new GetObjectCommand(params);
-                            getSignedUrl(self._S3Client, command, { expiresIn: 3600 })
-                            .then((url) => {
-                                //console.log('signedURL is', url);
-                                (rawData || (rawData = {}))["signedUrl"] = url;
+                            /*
+                                For now, _S3ClientPromise gets all dependencies
+                            */
+                            self._S3ClientPromise.then(() => {
 
-                                resolve(url);
-                            })
-                            .catch((err) => {
-                                console.error(err, err.stack); // an error occurred
-                                (rawData || (rawData = {}))["signedUrl"] = err;
-                                reject(err);
+                                const command = new GetObjectCommand(params);
+                                getSignedUrl(self._S3Client, command, { expiresIn: 3600 })
+                                .then((url) => {
+                                    //console.log('signedURL is', url);
+                                    (rawData || (rawData = {}))["signedUrl"] = url;
+
+                                    resolve(url);
+                                })
+                                .catch((err) => {
+                                    console.error(err, err.stack); // an error occurred
+                                    (rawData || (rawData = {}))["signedUrl"] = err;
+                                    reject(err);
+
+                                });
 
                             });
-
-
-                            // self._S3Client.getSignedUrl('getObject', params, function (err, url) {
-                            //     if (err) {
-                            //         console.error(err, err.stack); // an error occurred
-                            //         (rawData || (rawData = {}))["signedUrl"] = err;
-                            //         reject(err);
-                            //     }
-                            //     else {
-                            //         //console.log('signedURL is', url);
-                            //         (rawData || (rawData = {}))["signedUrl"] = url;
-
-                            //         resolve(url);
-                            //     }       // successful
-                            // });
 
                         }));
                     }
@@ -317,36 +340,37 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                             ["AcceptRanges","LastModified","ContentLength","ETag","ContentType","ServerSideEncryption","Metadata","Body"]
                         */
                     if(readExpressions.indexOf("content") !== -1) {
-
                         /*
-                            aws-sdk v3
-                            https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/getobjectcommand.html
-
-                            Command style
+                            For now, _S3ClientPromise gets all dependencies
                         */
-                        const getObjectCommand = new GetObjectCommand(params);
-                        this._S3Client.send(getObjectCommand, callback);
+                        this._S3ClientPromise.then(() => {
+                            /*
+                                aws-sdk v3
+                                https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/getobjectcommand.html
 
-                        /*
-                            aws-sdk v2
-                            https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property
-                        */
-                        //this._S3Client.getObject(params, callback);
+                                Command style
+                            */
+                            const getObjectCommand = new GetObjectCommand(params);
+                            this._S3Client.send(getObjectCommand, callback);
+                        });
 
                     } else if(params.hasOwnProperty("Key") && params.hasOwnProperty("Bucket") && Object.keys(params).length > 2) {
-                        /*
-                            aws-sdk v3
-                            https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/headobjectcommand.html
-                            Command style
-                        */
-                        //No point to do even a head if nothing more is asked but Key and Bucket...
-                        const headObjectCommand = new HeadObjectCommand(params);
-                        this._S3Client.send(headObjectCommand, callback);
 
                         /*
-                            https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#headObject-property
+                            For now, _S3ClientPromise gets all dependencies
                         */
-                        //this._S3Client.headObject(params, callback);
+                        this._S3ClientPromise.then(() => {
+                            /*
+                                aws-sdk v3
+                                https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/headobjectcommand.html
+                                Command style
+                            */
+                            //No point to do even a head if nothing more is asked but Key and Bucket...
+                            const headObjectCommand = new HeadObjectCommand(params);
+                            this._S3Client.send(headObjectCommand, callback);
+                        });
+
+
                     } else {
                         operation = this.responseOperationForReadOperation(readOperation, null, [params], false/*isNotLast*/);
                         objectDescriptor.dispatchEvent(operation);
@@ -368,23 +392,23 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                     // });
 
                 } else {
-                    //If no expression, we return the default
                     /*
-                        aws-sdk v3
-                        https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/headobjectcommand.html
-                        Command style
+                        For now, _S3ClientPromise gets all dependencies
                     */
+                    this._S3ClientPromise.then(() => {
 
-                    //No point to do even a head if nothing more is asked but Key and Bucket...
-                    const headObjectCommand = new HeadObjectCommand(params);
-                    this._S3Client.send(headObjectCommand, callback);
+                        //If no expression, we return the default
+                        /*
+                            aws-sdk v3
+                            https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/headobjectcommand.html
+                            Command style
+                        */
 
-                    /*
-                        https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#headObject-property
-                    */
-                    //this._S3Client.headObject(params, callback);
-                    // operation = this.responseOperationForReadOperation(readOperation, null, [params], false/*isNotLast*/);
-                    // objectDescriptor.dispatchEvent(operation);
+                        //No point to do even a head if nothing more is asked but Key and Bucket...
+                        const headObjectCommand = new HeadObjectCommand(params);
+                        this._S3Client.send(headObjectCommand, callback);
+                    });
+
                 }
 
 
@@ -420,43 +444,50 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                 params["ContentMD5"] = contentMD5;
             }
 
-            const command = new PutObjectCommand(params);
-            var operation = new DataOperation();
-            operation.referrerId = createOperation.id;
-            operation.clientId = createOperation.clientId;
+            /*
+                For now, _S3ClientPromise gets all dependencies
+            */
+            this._S3ClientPromise.then(() => {
 
-            operation.target = createOperation.target;
+                const command = new PutObjectCommand(params);
+                var operation = new DataOperation();
+                operation.referrerId = createOperation.id;
+                operation.clientId = createOperation.clientId;
 
-            this._S3Client.send(command)
-            .then(function(data) {
-                /*
-                    data is like:
-                    data = {
-                    ETag: "\"6805f2cfc46c0f04559748bb039d69ae\"",
-                    VersionId: "Bvq0EDKxOcXLJXNo_Lkz37eM3R4pfzyQ"
-                    }
-                */
-                // console.log(data);           // successful response
-                operation.type = DataOperation.Type.CreateCompletedOperation;
-                var bucketName = params["Bucket"],
-                    bucketRegion = self.connection.bucketRegion,
-                    key = params["Key"];
+                operation.target = createOperation.target;
 
-                operation.data = {
-                    Bucket: bucketName,
-                    Key: key,
-                    ETag: data.ETag,
-                    Location: `https://${bucketName}.s3-${bucketRegion}.amazonaws.com/${key}`
-                };
+                this._S3Client.send(command)
+                .then(function(data) {
+                    /*
+                        data is like:
+                        data = {
+                        ETag: "\"6805f2cfc46c0f04559748bb039d69ae\"",
+                        VersionId: "Bvq0EDKxOcXLJXNo_Lkz37eM3R4pfzyQ"
+                        }
+                    */
+                    // console.log(data);           // successful response
+                    operation.type = DataOperation.Type.CreateCompletedOperation;
+                    var bucketName = params["Bucket"],
+                        bucketRegion = self.connection.bucketRegion,
+                        key = params["Key"];
 
-            })
-            .catch(function(err) {
-                console.error(err, err.stack); // an error occurred
-                operation.type = DataOperation.Type.CreateFailedOperation;
-                operation.data = err;
-            })
-            .finally(function() {
-                operation.target.dispatchEvent(operation);
+                    operation.data = {
+                        Bucket: bucketName,
+                        Key: key,
+                        ETag: data.ETag,
+                        Location: `https://${bucketName}.s3-${bucketRegion}.amazonaws.com/${key}`
+                    };
+
+                })
+                .catch(function(err) {
+                    console.error(err, err.stack); // an error occurred
+                    operation.type = DataOperation.Type.CreateFailedOperation;
+                    operation.data = err;
+                })
+                .finally(function() {
+                    operation.target.dispatchEvent(operation);
+                });
+
             });
 
             // this._S3Client.putObject(params, function (err, data) {

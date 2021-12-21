@@ -1,13 +1,13 @@
-var fromIni = require("@aws-sdk/credential-provider-ini").fromIni,
-    // SecretsManager = require("@aws-sdk/client-secrets-manager").SecretsManager,
-    SecretsManagerClient = require("@aws-sdk/client-secrets-manager/dist-cjs/SecretsManagerClient").SecretsManagerClient,
-    GetSecretValueCommand = require("@aws-sdk/client-secrets-manager/dist-cjs/commands/GetSecretValueCommand").GetSecretValueCommand,
-    DataService = require("montage/data/service/data-service").DataService,
+var fromIni /* = (require) ("@aws-sdk/credential-provider-ini").fromIni */,
+    // SecretsManager = (require) ("@aws-sdk/client-secrets-manager").SecretsManager,
+    SecretsManagerClient /* = (require) ("@aws-sdk/client-secrets-manager/dist-cjs/SecretsManagerClient").SecretsManagerClient */,
+    GetSecretValueCommand /* = (require) ("@aws-sdk/client-secrets-manager/dist-cjs/commands/GetSecretValueCommand").GetSecretValueCommand */,
+    //DataService = (require) ("montage/data/service/data-service").DataService,
     RawDataService = require("montage/data/service/raw-data-service").RawDataService,
     SyntaxInOrderIterator = require("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     //Causes issues
-    // secretObjectDescriptor = require("phront/data/main.datareel/model/aws/secret.mjson").montageObject,
+    // secretObjectDescriptor = (require) ("../model/aws/secret.mjson").montageObject,
     S3DataService;
 
     /*
@@ -124,6 +124,30 @@ exports.SecretManagerDataService = SecretManagerDataService = RawDataService.spe
             return this.__SecretsManagerClient;
         }
     },
+    __SecretsManagerPromise: {
+        value: undefined
+    },
+
+    _SecretsManagerPromise: {
+        get: function () {
+            if (!this.__SecretsManagerPromise) {
+                this.__SecretsManagerPromise = Promise.all([
+                    require.async("@aws-sdk/credential-provider-ini"),
+                    require.async("@aws-sdk/client-secrets-manager/dist-cjs/SecretsManagerClient"),
+                    require.async("@aws-sdk/client-secrets-manager/dist-cjs/commands/GetSecretValueCommand")
+                ])
+                .then((resolvedModules) => {
+                    fromIni = resolvedModules[0].fromIni;
+                    SecretsManagerClient = resolvedModules[1].SecretsManagerClient;
+                    GetSecretValueCommand = resolvedModules[2].GetSecretValueCommand;
+
+                    return this._SecretsManager;
+                });
+            }
+
+            return this.__SecretsManagerPromise;
+        }
+    },
 
     handleSecretReadOperation: {
         value: function (readOperation) {
@@ -157,63 +181,67 @@ exports.SecretManagerDataService = SecretManagerDataService = RawDataService.spe
                 */
 
                 (promises || (promises = [])).push(new Promise(function(resolve, reject) {
-                    const getSecretValueCommand = new GetSecretValueCommand({
-                        SecretId: secretId
-                    });
-                    self._SecretsManager.send(getSecretValueCommand, function (err, data) {
-                        if (err) {
-                            /*
 
-                                if (err.code === 'DecryptionFailureException')
-                                    // Secrets Manager can't decrypt the protected secret text using the provided KMS key.
-                                    // Deal with the exception here, and/or rethrow at your discretion.
-                                    reject(err);
-                                else if (err.code === 'InternalServiceErrorException')
-                                    // An error occurred on the server side.
-                                    // Deal with the exception here, and/or rethrow at your discretion.
-                                    reject(err);
-                                else if (err.code === 'InvalidParameterException')
-                                    // You provided an invalid value for a parameter.
-                                    // Deal with the exception here, and/or rethrow at your discretion.
-                                    reject(err);
-                                else if (err.code === 'InvalidRequestException')
-                                    // You provided a parameter value that is not valid for the current state of the resource.
-                                    // Deal with the exception here, and/or rethrow at your discretion.
-                                    reject(err);
-                                else if (err.code === 'ResourceNotFoundException')
-                                    // We can't find the resource that you asked for.
-                                    // Deal with the exception here, and/or rethrow at your discretion.
-                                    reject(err);
+                    self._SecretsManagerPromise.then(() => {
 
-                            */
-                            console.log(err, err.stack); // an error occurred
-                            (rawData || (rawData = {}))[data] = err;
-                            reject(err);
-                        }
-                        else {
-                            var secret, secretValue;
-                            // Decrypts secret using the associated KMS CMK.
-                            // Depending on whether the secret is a string or binary, one of these fields will be populated.
-                            if ('SecretString' in data) {
-                                secret = data.SecretString;
-                                // console.log("secret:",secret);
-                            } else {
-                                let buff = new Buffer(data.SecretBinary, 'base64');
-                                secret = decodedBinarySecret = buff.toString('ascii');
-                                //console.log("decodedBinarySecret:",decodedBinarySecret);
+                        const getSecretValueCommand = new GetSecretValueCommand({
+                            SecretId: secretId
+                        });
+                        self._SecretsManager.send(getSecretValueCommand, function (err, data) {
+                            if (err) {
+                                /*
+
+                                    if (err.code === 'DecryptionFailureException')
+                                        // Secrets Manager can't decrypt the protected secret text using the provided KMS key.
+                                        // Deal with the exception here, and/or rethrow at your discretion.
+                                        reject(err);
+                                    else if (err.code === 'InternalServiceErrorException')
+                                        // An error occurred on the server side.
+                                        // Deal with the exception here, and/or rethrow at your discretion.
+                                        reject(err);
+                                    else if (err.code === 'InvalidParameterException')
+                                        // You provided an invalid value for a parameter.
+                                        // Deal with the exception here, and/or rethrow at your discretion.
+                                        reject(err);
+                                    else if (err.code === 'InvalidRequestException')
+                                        // You provided a parameter value that is not valid for the current state of the resource.
+                                        // Deal with the exception here, and/or rethrow at your discretion.
+                                        reject(err);
+                                    else if (err.code === 'ResourceNotFoundException')
+                                        // We can't find the resource that you asked for.
+                                        // Deal with the exception here, and/or rethrow at your discretion.
+                                        reject(err);
+
+                                */
+                                console.log(err, err.stack); // an error occurred
+                                (rawData || (rawData = {}))[data] = err;
+                                reject(err);
                             }
+                            else {
+                                var secret, secretValue;
+                                // Decrypts secret using the associated KMS CMK.
+                                // Depending on whether the secret is a string or binary, one of these fields will be populated.
+                                if ('SecretString' in data) {
+                                    secret = data.SecretString;
+                                    // console.log("secret:",secret);
+                                } else {
+                                    let buff = new Buffer(data.SecretBinary, 'base64');
+                                    secret = decodedBinarySecret = buff.toString('ascii');
+                                    //console.log("decodedBinarySecret:",decodedBinarySecret);
+                                }
 
-                            try {
-                                secretValue = JSON.parse(secret);
-                            } catch(parseError) {
-                                //It's not jSON...
-                                secretValue = secret;
+                                try {
+                                    secretValue = JSON.parse(secret);
+                                } catch(parseError) {
+                                    //It's not jSON...
+                                    secretValue = secret;
+                                }
+                                (rawData || (rawData = {}))["name"] = data.Name;
+                                (rawData || (rawData = {}))["value"] = secretValue;
+
+                                resolve(rawData);
                             }
-                            (rawData || (rawData = {}))["name"] = data.Name;
-                            (rawData || (rawData = {}))["value"] = secretValue;
-
-                            resolve(rawData);
-                        }
+                        });
                     });
 
                 }));

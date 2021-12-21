@@ -1,13 +1,13 @@
-var fromIni = require("@aws-sdk/credential-provider-ini").fromIni,
+var fromIni /* = (require) ("@aws-sdk/credential-provider-ini").fromIni*/,
     // {CognitoIdentityProvider, CognitoIdentityProviderClient, ListUserPoolsCommand} = require("@aws-sdk/client-cognito-identity-provider"),
 
-    CognitoIdentityProviderClient = require("@aws-sdk/client-cognito-identity-provider/dist-cjs/CognitoIdentityProviderClient").CognitoIdentityProviderClient,
-    ListUserPoolsCommand = require("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/ListUserPoolsCommand").ListUserPoolsCommand,
-    DescribeUserPoolCommand = require("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/DescribeUserPoolCommand").DescribeUserPoolCommand,
-    ListUserPoolClientsCommand = require("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/ListUserPoolClientsCommand").ListUserPoolClientsCommand,
-    DescribeUserPoolClientCommand = require("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/DescribeUserPoolClientCommand").DescribeUserPoolClientCommand,
+    CognitoIdentityProviderClient /* = (require) ("@aws-sdk/client-cognito-identity-provider/dist-cjs/CognitoIdentityProviderClient").CognitoIdentityProviderClient */,
+    ListUserPoolsCommand /* = (require) ("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/ListUserPoolsCommand").ListUserPoolsCommand */,
+    DescribeUserPoolCommand /* = (require) ("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/DescribeUserPoolCommand").DescribeUserPoolCommand */,
+    ListUserPoolClientsCommand /* = (require) ("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/ListUserPoolClientsCommand").ListUserPoolClientsCommand */,
+    DescribeUserPoolClientCommand /* = (require) ("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/DescribeUserPoolClientCommand").DescribeUserPoolClientCommand */,
 
-    DataService = require("montage/data/service/data-service").DataService,
+    //DataService = (require)("montage/data/service/data-service").DataService,
     Criteria = require("montage/core/criteria").Criteria,
     RawDataService = require("montage/data/service/raw-data-service").RawDataService,
     SyntaxInOrderIterator = require("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
@@ -142,7 +142,6 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
             return this.__cognitoIdentityServiceProvider;
         }
     },
-
     __cognitoIdentityServiceProviderClient: {
         value: undefined
     },
@@ -192,6 +191,36 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
         }
     },
 
+    __cognitoIdentityServiceProviderClientPromise: {
+        value: undefined
+    },
+    _cognitoIdentityServiceProviderClientPromise: {
+        get: function () {
+            if (!this.__cognitoIdentityServiceProviderClientPromise) {
+
+                this.__cognitoIdentityServiceProviderClientPromise = Promise.all([
+                    require.async("@aws-sdk/credential-provider-ini"),
+                    require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/CognitoIdentityProviderClient"),
+                    require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/ListUserPoolsCommand"),
+                    require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/DescribeUserPoolCommand"),
+                    require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/ListUserPoolClientsCommand"),
+                    require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/DescribeUserPoolClientCommand")
+                ])
+                .then((resolvedModules) => {
+                    fromIni = resolvedModules[0].fromIni;
+                    CognitoIdentityProviderClient = resolvedModules[1].CognitoIdentityProviderClient;
+                    ListUserPoolsCommand = resolvedModules[2].ListUserPoolsCommand;
+                    DescribeUserPoolCommand = resolvedModules[3].DescribeUserPoolCommand;
+                    ListUserPoolClientsCommand = resolvedModules[4].ListUserPoolClientsCommand;
+                    DescribeUserPoolClientCommand = resolvedModules[5].DescribeUserPoolClientCommand;
+
+                    return this._cognitoIdentityServiceProviderClient;
+
+                });
+            }
+            return this.__cognitoIdentityServiceProviderClientPromise;
+        }
+    },
 
     mapCriteriaToRawCriteria: {
         value: function (criteria, mapping, locales, iteratorCallback) {
@@ -495,8 +524,10 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
                     UserPoolId: UserPoolId /* required */
                 };
 
-                this._cognitoIdentityServiceProviderClient.send(new DescribeUserPoolCommand(params), this.callbackForDataPropertyNamed(objectDescriptor, readOperation, "UserPool"));
-                // this._cognitoIdentityServiceProvider.describeUserPool(params, this.callbackForDataPropertyNamed(objectDescriptor, readOperation, "UserPool"));
+                this._cognitoIdentityServiceProviderClientPromise.then(() => {
+                    this._cognitoIdentityServiceProviderClient.send(new DescribeUserPoolCommand(params), this.callbackForDataPropertyNamed(objectDescriptor, readOperation, "UserPool"));
+                    // this._cognitoIdentityServiceProvider.describeUserPool(params, this.callbackForDataPropertyNamed(objectDescriptor, readOperation, "UserPool"));
+                });
 
            } else {
 
@@ -510,15 +541,18 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
                 operationLocales = readOperation.locales,
                 rawCriteria = criteria ? this.mapCriteriaToRawCriteria(criteria, mapping, operationLocales) : null,
                 listUserPools = (params, callback) => {
-                    this._cognitoIdentityServiceProviderClient.send(new ListUserPoolsCommand(params), callback);
-                    //this._cognitoIdentityServiceProvider.listUserPools(params, callback);
+                    this._cognitoIdentityServiceProviderClientPromise.then(() => {
+                        this._cognitoIdentityServiceProviderClient.send(new ListUserPoolsCommand(params), callback);
+                        //this._cognitoIdentityServiceProvider.listUserPools(params, callback);
+                    });
                 },
                 callback = this.callbackForDataPropertyNamed(objectDescriptor, readOperation, "UserPools", rawCriteria, params, listUserPools);
 
                 var describeUserPool = (params, callback) => {
-
-                    this._cognitoIdentityServiceProviderClient.send(new DescribeUserPoolCommand(params), callback);
-                    // this._cognitoIdentityServiceProvider.describeUserPool(params, callback);
+                    this._cognitoIdentityServiceProviderClientPromise.then(() => {
+                        this._cognitoIdentityServiceProviderClient.send(new DescribeUserPoolCommand(params), callback);
+                        // this._cognitoIdentityServiceProvider.describeUserPool(params, callback);
+                    });
                 };
 
                 this._handleReadOperation(readOperation, listUserPools, params, null, "UserPools", describeUserPool);
@@ -846,13 +880,17 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
 
             } else {
                 var listUserPoolClients = (params, callback) => {
-                    this._cognitoIdentityServiceProviderClient.send(new ListUserPoolClientsCommand(params), callback);
-                    //this._cognitoIdentityServiceProvider.listUserPoolClients(params, callback);
+                    this._cognitoIdentityServiceProviderClientPromise.then(() => {
+                        this._cognitoIdentityServiceProviderClient.send(new ListUserPoolClientsCommand(params), callback);
+                        //this._cognitoIdentityServiceProvider.listUserPoolClients(params, callback);
+                    });
                 };
 
                 var describeUserPoolClient = (params, callback) => {
-                    this._cognitoIdentityServiceProviderClient.send(new DescribeUserPoolClientCommand(params), callback);
-                    //this._cognitoIdentityServiceProvider.describeUserPoolClient(params, callback);
+                    this._cognitoIdentityServiceProviderClientPromise.then(() => {
+                        this._cognitoIdentityServiceProviderClient.send(new DescribeUserPoolClientCommand(params), callback);
+                        //this._cognitoIdentityServiceProvider.describeUserPoolClient(params, callback);
+                    });
                 };
 
 
