@@ -27,7 +27,7 @@
     },
 
     "EmploymenPositiontRelationshipDescriptor": {
-        "object": "data/main.datareel/model/employment-position-relationship.mjson"
+        "object": "../model/employment-position-relationship.mjson"
     },
     "employmentPositionConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",

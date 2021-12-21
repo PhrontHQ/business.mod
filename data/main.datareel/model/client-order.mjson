@@ -15,18 +15,18 @@
                 {"@": "billTo"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/client-order.mjson"
+                "%": "./client-order.mjson"
             },
             "exportName": "ClientOrder",
             "module": {
-                "%": "data/main.datareel/model/client-order"
+                "%": "./client-order"
             },
             "object":{"@": "clientOrder"}
 
         }
     },
     "clientOrder": {
-        "object": "data/main.datareel/model/client-order"
+        "object": "./client-order"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -95,13 +95,13 @@
         }
     },
     "client_descriptor": {
-        "object": "data/main.datareel/model/client.mjson"
+        "object": "./client.mjson"
     },
     "order-line-item_descriptor": {
-        "object": "data/main.datareel/model/order-line-item.mjson"
+        "object": "./order-line-item.mjson"
     },
     "image_descriptor": {
-        "object": "data/main.datareel/model/image.mjson"
+        "object": "./image.mjson"
     }
 
 }

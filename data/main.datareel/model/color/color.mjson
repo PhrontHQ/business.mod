@@ -9,11 +9,11 @@
                 {"@": "channels"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/color/color.mjson"
+                "%": "./color.mjson"
             },
             "exportName": "Color",
             "module": {
-                "%": "data/main.datareel/model/color/color"
+                "%": "./color"
             },
             "modulePrototype":{"@": "color"},
             "object":{"@": "color"},
@@ -21,10 +21,10 @@
         }
     },
     "color": {
-        "object": "data/main.datareel/model/color/color"
+        "object": "./color"
     },
     "ObjectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "../data-object.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -42,7 +42,7 @@
         }
     },
     "colorSpaceDescriptor": {
-        "object": "data/main.datareel/model/color/color-space.mjson"
+        "object": "./color-space.mjson"
     },
     "channels": {
         "prototype": "montage/core/meta/property-descriptor",

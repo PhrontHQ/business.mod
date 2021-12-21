@@ -9,11 +9,11 @@
                 {"@": "partyPhoneNumber"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/messaging-channel/party-phone-number.mjson"
+                "%":"./messaging-channel/party-phone-number.mjson"
             },
             "exportName": "PartyPhoneNumber",
             "module": {
-                "%": "data/main.datareel/model/messaging-channel/party-phone-number"
+                "%": "./messaging-channel/party-phone-number"
             },
             "modulePrototype":{"@": "PartyPhoneNumber"},
             "object":{"@": "PartyPhoneNumber"},
@@ -21,10 +21,10 @@
         }
     },
     "RoleRankedPartyPhoneNumber": {
-        "object": "data/main.datareel/model/role-ranked-party-phone-number"
+        "object": "./role-ranked-party-phone-number"
     },
     "ObjectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
     "role": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -36,7 +36,7 @@
         }
     },
     "role-descriptor": {
-        "object": "data/main.datareel/model/role.mjson"
+        "object": "./role.mjson"
     },
 
     "ranking": {
@@ -58,7 +58,7 @@
         }
     },
     "PartyPhoneNumberDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-phone-number.mjson"
+        "object": "./messaging-channel/party-phone-number.mjson"
     }
 
 }

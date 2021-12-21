@@ -8,11 +8,11 @@
                 {"@": "messagingChannel"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/messaging-channel/party-contact-form.mjson"
+                "%":"./party-contact-form.mjson"
             },
             "exportName": "PartyContactForm",
             "module": {
-                "%": "data/main.datareel/model/messaging-channel/party-contact-form"
+                "%": "./party-contact-form"
             },
             "modulePrototype":{"@": "PartyContactForm"},
             "object":{"@": "PartyContactForm"},
@@ -20,10 +20,10 @@
         }
     },
     "PartyContactForm": {
-        "object": "data/main.datareel/model/messaging-channel/party-contact-form"
+        "object": "./party-contact-form"
     },
     "PartyMessagingChannelDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-messaging-channel.mjson"
+        "object": "./party-messaging-channel.mjson"
     },
 
     "party": {
@@ -38,7 +38,7 @@
         }
     },
     "PartyDescriptor": {
-        "object": "data/main.datareel/model/party.mjson"
+        "object": "../party.mjson"
     },
 
     "messagingChannel": {
@@ -51,6 +51,6 @@
         }
     },
     "ContactForm": {
-        "object": "data/main.datareel/model/messaging-channel/contact-form.mjson"
+        "object": "./contact-form.mjson"
     }
 }

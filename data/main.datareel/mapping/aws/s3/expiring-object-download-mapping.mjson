@@ -54,7 +54,7 @@
     },
 
     "ExpiringObjectDownload": {
-        "object": "data/main.datareel/model/aws/s3/expiring-object-download.mjson"
+        "object": "../../../model/aws/s3/expiring-object-download.mjson"
     },
     "bucket-converter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",

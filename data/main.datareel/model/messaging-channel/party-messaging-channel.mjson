@@ -14,11 +14,11 @@
                 {"@": "roleRankings"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/messaging-channel/party-messaging-channel.mjson"
+                "%":"./party-messaging-channel.mjson"
             },
             "exportName": "PartyMessagingChannel",
             "module": {
-                "%": "data/main.datareel/model/messaging-channel/party-messaging-channel"
+                "%": "./party-messaging-channel"
             },
             "modulePrototype":{"@": "PartyMessagingChannel"},
             "object":{"@": "PartyMessagingChannel"},
@@ -26,10 +26,10 @@
         }
     },
     "PartyMessagingChannel": {
-        "object": "data/main.datareel/model/messaging-channel/party-messaging-channel"
+        "object": "./party-messaging-channel"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "../data-object.mjson"
     },
     "party": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -42,7 +42,7 @@
         }
     },
     "PartyDescriptor": {
-        "object": "data/main.datareel/model/party.mjson"
+        "object": "../party.mjson"
     },
     "organizationParty": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -54,7 +54,7 @@
         }
     },
     "OrganizationDescriptor": {
-        "object": "data/main.datareel/model/organization.mjson"
+        "object": "../organization.mjson"
     },
 
     "personParty": {
@@ -67,7 +67,7 @@
         }
     },
     "PersonDescriptor": {
-        "object": "data/main.datareel/model/person.mjson"
+        "object": "../person.mjson"
     },
 
     "label": {
@@ -88,7 +88,7 @@
         }
     },
     "MessagingChannel": {
-        "object": "data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+        "object": "./messaging-channel.mjson"
     },
     "description": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -116,6 +116,6 @@
         }
     },
     "RoleRankingDescriptor": {
-        "object": "data/main.datareel/model/role-ranking.mjson"
+        "object": "../role-ranking.mjson"
     }
 }

@@ -7,21 +7,21 @@
                 {"@": "identifier"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/aws/s3/upload-part.mjson"
+                "%": "./upload-part.mjson"
             },
             "exportName": "UploadPart",
             "module": {
-                "%": "data/main.datareel/model/aws/s3/upload-part"
+                "%": "./upload-part"
             },
             "object":{"@": "UploadPart"},
             "parent":{"@": "objectDescriptor"}
         }
     },
     "UploadPart": {
-        "object": "data/main.datareel/model/aws/s3/upload-part"
+        "object": "./upload-part"
     },
     "ObjectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "../../data-object.mjson"
     },
     "identifier": {
         "prototype": "montage/core/meta/property-descriptor",

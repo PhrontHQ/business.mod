@@ -14,11 +14,11 @@
                 {"@": "respondentQuestionnaireAnswers"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/questionnaire/questionnaire-question.mjson"
+                "%":"./questionnaire-question.mjson"
             },
             "exportName": "QuestionnaireQuestion",
             "module": {
-                "%": "data/main.datareel/model/questionnaire/questionnaire-question"
+                "%": "./questionnaire-question"
             },
             "object":{"@": "questionnaireQuestion"},
             "modulePrototype": {"@": "questionnairePrototype"},
@@ -27,13 +27,13 @@
         }
     },
     "questionnaireQuestion": {
-        "object": "data/main.datareel/model/questionnaire/questionnaire-question"
+        "object": "./questionnaire-question"
     },
     "questionnairePrototype": {
-        "object": "data/main.datareel/model/questionnaire/questionnaire-question"
+        "object": "./questionnaire-question"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "../data-object.mjson"
     },
 
     "questionnaire": {
@@ -47,7 +47,7 @@
         }
     },
     "questionnaireDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/questionnaire.mjson"
+        "object": "./questionnaire.mjson"
     },
 
     "question": {
@@ -60,7 +60,7 @@
         }
     },
     "questionDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/question.mjson"
+        "object": "./question.mjson"
     },
 
     "questionnairePosition": {
@@ -106,7 +106,7 @@
     },
 
     "answerDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/answer.mjson"
+        "object": "./answer.mjson"
     },
 
     "respondentQuestionnaireAnswers": {
@@ -121,7 +121,7 @@
     },
 
     "respondentQuestionnaireAnswerDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-answer.mjson"
+        "object": "./respondent-questionnaire-answer.mjson"
     },
 
     "notes": {

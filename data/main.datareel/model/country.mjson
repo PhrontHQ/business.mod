@@ -19,7 +19,7 @@
             },
             "exportName": "Country",
             "module": {
-                "%": "data/main.datareel/model/country"
+                "%": "./country"
             },
             "object":{"@": "country"},
             "modulePrototype": {"@": "countryPrototype"},
@@ -27,14 +27,14 @@
         }
     },
     "country": {
-        "object": "data/main.datareel/model/country"
+        "object": "./country"
     },
     "countryPrototype": {
-        "object": "data/main.datareel/model/country"
+        "object": "./country"
     },
 
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
 
     "iso3166_1_alpha2Ccode": {

@@ -24,11 +24,11 @@
                 {"@": "secondPersonalRelationships"}
            ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/person.mjson"
+                "%": "./person.mjson"
             },
             "exportName": "Person",
             "module": {
-                "%": "data/main.datareel/model/person"
+                "%": "./person"
             },
             "object":{"@": "person"},
             "parent":{"@": "PartyDescriptor"},
@@ -47,10 +47,10 @@
         }
     },
     "person": {
-        "object": "data/main.datareel/model/person"
+        "object": "./person"
     },
     "PartyDescriptor": {
-        "object": "data/main.datareel/model/party.mjson"
+        "object": "./party.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -61,7 +61,7 @@
         }
     },
     "name_descriptor": {
-        "object": "data/main.datareel/model/person-name.mjson"
+        "object": "./person-name.mjson"
     },
     "gender": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -72,7 +72,7 @@
         }
     },
     "gender_descriptor": {
-        "object": "data/main.datareel/model/gender.mjson"
+        "object": "./gender.mjson"
     },
 
     "aliases": {
@@ -131,7 +131,7 @@
        }
     },
     "addresses_descriptor": {
-        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
+        "object": "./messaging-channel/postal-address.mjson"
     },
 
     "respondentQuestionnaires": {
@@ -145,7 +145,7 @@
        }
     },
     "respondentQuestionnairesDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire.mjson"
+        "object": "./questionnaire/respondent-questionnaire.mjson"
     },
 
     "tags": {
@@ -167,7 +167,7 @@
        }
     },
     "userIdentity_descriptor": {
-        "object": "data/main.datareel/model/user-identity.mjson"
+        "object": "./user-identity.mjson"
     },
     "employmentHistory": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -180,7 +180,7 @@
        }
     },
     "employmentPositionStaffingDescriptor": {
-        "object": "data/main.datareel/model/employment-position-staffing.mjson"
+        "object": "./employment-position-staffing.mjson"
     },
 
     "serviceProductVariantsProvided": {
@@ -195,7 +195,7 @@
     },
 
     "serviceProductVariantsDescriptor": {
-        "object": "data/main.datareel/model/service-product-variant.mjson"
+        "object": "./service-product-variant.mjson"
     },
 
     "supplierRelationships": {
@@ -209,7 +209,7 @@
        }
     },
     "B2CCustomerSupplierRelationshipDescriptor": {
-        "object": "data/main.datareel/model/b-2-c-customer-supplier-relationship.mjson"
+        "object": "./b-2-c-customer-supplier-relationship.mjson"
     },
 
 
@@ -224,7 +224,7 @@
        }
     },
     "B2CCustomerSupplierResponsiblePartyDescriptor": {
-        "object": "data/main.datareel/model/b-2-c-customer-supplier-responsible-party.mjson"
+        "object": "./b-2-c-customer-supplier-responsible-party.mjson"
     },
 
     "firstPersonalRelationships": {
@@ -238,7 +238,7 @@
        }
     },
     "PersonalRelationshipDescriptor": {
-        "object": "data/main.datareel/model/personal-relationship.mjson"
+        "object": "./personal-relationship.mjson"
     },
 
     "secondPersonalRelationships": {

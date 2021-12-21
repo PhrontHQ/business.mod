@@ -15,21 +15,21 @@
                 {"@": "cancellationReason"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/order.mjson"
+                "%": "./order.mjson"
             },
             "exportName": "Order",
             "module": {
-                "%": "data/main.datareel/model/order"
+                "%": "./order"
             },
             "object":{"@": "order"},
             "parent":{"@": "Object"}
         }
     },
     "order": {
-        "object": "data/main.datareel/model/order"
+        "object": "./order"
     },
     "Object": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -54,7 +54,7 @@
         }
     },
      "order-line-item_descriptor": {
-        "object": "data/main.datareel/model/order-line-item.mjson"
+        "object": "./order-line-item.mjson"
     },
     "transactions": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -66,7 +66,7 @@
         }
     },
      "order-transaction": {
-        "object": "data/main.datareel/model/order-transaction.mjson"
+        "object": "./order-transaction.mjson"
     },
 
     "billingAddress": {
@@ -86,7 +86,7 @@
         }
     },
     "address_descriptor": {
-        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
+        "object": "./messaging-channel/postal-address.mjson"
     },
     "doesBillingAddressMatchShippingAddress": {
         "prototype": "montage/core/meta/property-descriptor",

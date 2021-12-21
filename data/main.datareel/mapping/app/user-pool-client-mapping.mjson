@@ -34,7 +34,7 @@
     },
 
     "UserPoolClientDescriptor": {
-        "object": "data/main.datareel/model/app/user-pool-client.mjson"
+        "object": "../../model/app/user-pool-client.mjson"
     },
 
     "userPool-converter": {

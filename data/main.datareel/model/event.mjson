@@ -44,11 +44,11 @@
                 {"@": "respondentQuestionnaires"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/event.mjson"
+                "%":"./event.mjson"
             },
             "exportName": "Event",
             "module": {
-                "%": "data/main.datareel/model/event"
+                "%": "./event"
             },
             "modulePrototype":{"@": "EventPrototype"},
             "object":{"@": "EventPrototype"},
@@ -56,14 +56,14 @@
         }
     },
     "EventPrototype": {
-        "object": "data/main.datareel/model/event",
+        "object": "./event",
         "values": {
             "participationEmum": {"=":"@participationEmum"},
             "participationStatusEmum": {"=":"@participationStatusEmum"}
         }
     },
     "ObjectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
     "participatingParty": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -78,11 +78,11 @@
         }
     },
     "PartyDescriptor": {
-        "object": "data/main.datareel/model/party.mjson"
+        "object": "./party.mjson"
     },
 
     "ResourceDescriptor": {
-        "object": "data/main.datareel/model/resource.mjson"
+        "object": "./resource.mjson"
     },
 
     "calendar": {
@@ -96,7 +96,7 @@
         }
     },
     "calendar-descriptor": {
-        "object": "data/main.datareel/model/calendar.mjson"
+        "object": "./calendar.mjson"
     },
     "scheduledTimeRange": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -178,7 +178,7 @@
         }
     },
     "role-descriptor": {
-        "object": "data/main.datareel/model/role.mjson"
+        "object": "./role.mjson"
     },
 
     "participationStatusKeys": {
@@ -275,7 +275,7 @@
         }
     },
     "AlarmsDescriptor": {
-        "object": "data/main.datareel/model/alarm.mjson"
+        "object": "./alarm.mjson"
     },
     "eventURL": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -309,7 +309,7 @@
         }
     },
     "PartyPostalAddressDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-postal-address.mjson"
+        "object": "./messaging-channel/party-postal-address.mjson"
     },
     "color": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -320,7 +320,7 @@
         }
     },
      "ColorDescriptor": {
-        "object": "data/main.datareel/model/color/color.mjson"
+        "object": "./color/color.mjson"
     },
     "organizer": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -333,7 +333,7 @@
         }
     },
     "PersonDescriptor": {
-        "object": "data/main.datareel/model/person.mjson"
+        "object": "./person.mjson"
     },
 
     "isAllDay": {
@@ -424,7 +424,7 @@
         }
     },
     "event-conference-data": {
-        "object": "data/main.datareel/model/event-conference-data.mjson"
+        "object": "./event-conference-data.mjson"
     },
     "anyoneCanAddSelf": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -478,7 +478,7 @@
         }
     },
     "AssetDescriptor": {
-        "object": "data/main.datareel/model/asset.mjson"
+        "object": "./asset.mjson"
     },
     "serviceEngagement": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -492,7 +492,7 @@
         }
     },
     "ServiceEngagement": {
-        "object": "data/main.datareel/model/service-engagement.mjson"
+        "object": "./service-engagement.mjson"
     },
     "respondentQuestionnaires": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -504,6 +504,6 @@
         }
     },
     "respondentQuestionnaireDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire.mjson"
+        "object": "./questionnaire/respondent-questionnaire.mjson"
     }
 }

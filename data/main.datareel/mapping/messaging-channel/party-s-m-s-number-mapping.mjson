@@ -17,6 +17,6 @@
     },
 
     "PartySMSNumberDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-s-m-s-number.mjson"
+        "object": "../../model/messaging-channel/party-s-m-s-number.mjson"
     }
 }

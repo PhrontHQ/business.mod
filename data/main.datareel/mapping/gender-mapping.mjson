@@ -18,7 +18,7 @@
     },
 
     "GenderDescriptor": {
-        "object": "data/main.datareel/model/gender.mjson"
+        "object": "../model/gender.mjson"
     }
 
 }

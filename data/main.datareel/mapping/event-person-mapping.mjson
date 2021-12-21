@@ -24,7 +24,7 @@
     },
 
     "EventPerson": {
-        "object": "data/main.datareel/model/event-person.mjson"
+        "object": "../model/event-person.mjson"
     },
     "person-converter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",

@@ -64,7 +64,7 @@
     },
 
     "ProductObjectDescriptor": {
-        "object": "data/main.datareel/model/product.mjson"
+        "object": "../model/product.mjson"
     },
 
     "templateForeignKeyConverter": {

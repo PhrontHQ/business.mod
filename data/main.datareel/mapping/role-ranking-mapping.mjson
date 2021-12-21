@@ -24,7 +24,7 @@
     },
 
     "RoleRanking": {
-        "object": "data/main.datareel/model/role-ranking.mjson"
+        "object": "../model/role-ranking.mjson"
     },
 
     "roleConverter": {

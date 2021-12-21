@@ -18,21 +18,21 @@
 
            ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/service-product-variant.mjson"
+                "%": "./service-product-variant.mjson"
             },
             "exportName": "ServiceProductVariant",
             "module": {
-                "%": "data/main.datareel/model/service-product-variant"
+                "%": "./service-product-variant"
             },
             "object":{"@": "ServiceProductVariant"},
             "parent":{"@": "ProductVariant"}
         }
     },
     "ServiceProductVariant": {
-        "object": "data/main.datareel/model/service-product-variant"
+        "object": "./service-product-variant"
     },
     "ProductVariant": {
-        "object": "data/main.datareel/model/product-variant.mjson"
+        "object": "./product-variant.mjson"
     },
     "product": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -44,7 +44,7 @@
         }
     },
     "ServiceDescriptor": {
-        "object": "data/main.datareel/model/service.mjson"
+        "object": "./service.mjson"
     },
     "professionalName": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -118,7 +118,7 @@
     },
 
     "ResourceDescriptor": {
-        "object": "data/main.datareel/model/resource.mjson"
+        "object": "./resource.mjson"
     },
 
     "providers": {
@@ -134,7 +134,7 @@
     },
 
     "personDescriptor": {
-        "object": "data/main.datareel/model/person.mjson"
+        "object": "./person.mjson"
     },
 
     "serviceEngagements": {
@@ -149,6 +149,6 @@
         }
     },
     "ServiceEngagement": {
-        "object": "data/main.datareel/model/service-engagement.mjson"
+        "object": "./service-engagement.mjson"
     }
 }

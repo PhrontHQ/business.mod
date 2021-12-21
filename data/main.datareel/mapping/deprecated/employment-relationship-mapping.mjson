@@ -27,7 +27,7 @@
     },
 
     "EmploymentRelationshipDescriptor": {
-        "object": "data/main.datareel/model/employment-relationship.mjson"
+        "object": "../../model/employment-relationship.mjson"
     },
     "addressesConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",

@@ -9,11 +9,11 @@
                 {"@": "customerEngagementQuestionnaires"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/service.mjson"
+                "%": "./service.mjson"
             },
             "exportName": "Service",
             "module": {
-                "%": "data/main.datareel/model/service"
+                "%": "./service"
             },
             "object":{"@": "service"},
             "parent":{"@": "productObjectDescriptor"},
@@ -33,11 +33,11 @@
     },
 
     "productObjectDescriptor": {
-        "object": "data/main.datareel/model/product.mjson"
+        "object": "./product.mjson"
     },
 
     "service": {
-        "object": "data/main.datareel/model/service"
+        "object": "./service"
     },
 
     "template": {
@@ -61,7 +61,7 @@
         }
     },
     "variant_descriptor": {
-        "object": "data/main.datareel/model/service-product-variant.mjson"
+        "object": "./service-product-variant.mjson"
     },
 
     "customerEngagementQuestionnaires": {
@@ -74,6 +74,6 @@
         }
     },
     "engagementQuestionnaire_descriptor": {
-        "object": "data/main.datareel/model/customer-engagement-questionnaire.mjson"
+        "object": "./customer-engagement-questionnaire.mjson"
     }
 }

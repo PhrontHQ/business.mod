@@ -12,21 +12,21 @@
                 {"@": "secondEmploymentPositionRelationships"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/employment-position.mjson"
+                "%": "./employment-position.mjson"
             },
             "exportName": "EmploymentPosition",
             "module": {
-                "%": "data/main.datareel/model/employment-position"
+                "%": "./employment-position"
             },
             "object":{"@": "employment-position"},
             "parent":{"@": "party-party-relationship"}
         }
     },
     "employment-position": {
-        "object": "data/main.datareel/model/employment-position"
+        "object": "./employment-position"
     },
     "party-party-relationship": {
-        "object": "data/main.datareel/model/party-party-relationship.mjson"
+        "object": "./party-party-relationship.mjson"
     },
     "allowedEmploymentTypes": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -39,7 +39,7 @@
         }
     },
     "employment_type_descriptor": {
-        "object": "data/main.datareel/model/employment-type.mjson"
+        "object": "./employment-type.mjson"
     },
     "employer": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -52,7 +52,7 @@
         }
     },
     "organization_descriptor": {
-        "object": "data/main.datareel/model/organization.mjson"
+        "object": "./organization.mjson"
     },
     "position": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -64,7 +64,7 @@
         }
     },
     "position_descriptor": {
-        "object": "data/main.datareel/model/position.mjson"
+        "object": "./position.mjson"
     },
     "staffingHistory": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -77,7 +77,7 @@
         }
     },
     "employment_position_staffing_descriptor": {
-        "object": "data/main.datareel/model/employment-position-staffing.mjson"
+        "object": "./employment-position-staffing.mjson"
     },
     "firstEmploymentPositionRelationships": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -100,7 +100,7 @@
         }
     },
     "employment_position_relationship_descriptor": {
-        "object": "data/main.datareel/model/employment-position-relationship.mjson"
+        "object": "./employment-position-relationship.mjson"
     }
 
 }

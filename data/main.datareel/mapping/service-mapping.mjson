@@ -22,7 +22,7 @@
     },
 
     "ServiceObjectDescriptor": {
-        "object": "data/main.datareel/model/service.mjson"
+        "object": "../model/service.mjson"
     },
 
     "engagementQuestionnairesConverter": {

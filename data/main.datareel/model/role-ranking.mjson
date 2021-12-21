@@ -8,11 +8,11 @@
                 {"@": "ranking"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/role-ranking.mjson"
+                "%":"./role-ranking.mjson"
             },
             "exportName": "RoleRanking",
             "module": {
-                "%": "data/main.datareel/model/role-ranking"
+                "%": "./role-ranking"
             },
             "modulePrototype":{"@": "RoleRanking"},
             "object":{"@": "RoleRanking"},
@@ -20,10 +20,10 @@
         }
     },
     "RoleRanking": {
-        "object": "data/main.datareel/model/role-ranking"
+        "object": "./role-ranking"
     },
     "ObjectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
 
     "role": {
@@ -36,7 +36,7 @@
         }
     },
     "role-descriptor": {
-        "object": "data/main.datareel/model/role.mjson"
+        "object": "./role.mjson"
     },
 
     "ranking": {

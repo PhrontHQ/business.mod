@@ -6,20 +6,20 @@
             "propertyDescriptors": [
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/party-party-relationship.mjson"
+                "%": "./party-party-relationship.mjson"
             },
             "exportName": "PartyPartyRelationship",
             "module": {
-                "%": "data/main.datareel/model/party-party-relationship"
+                "%": "./party-party-relationship"
             },
             "object":{"@": "party-party-relationship"},
             "parent":{"@": "PartyDescriptor"}
         }
     },
     "party-party-relationship": {
-        "object": "data/main.datareel/model/party-party-relationship"
+        "object": "./party-party-relationship"
     },
     "PartyDescriptor": {
-        "object": "data/main.datareel/model/party.mjson"
+        "object": "./party.mjson"
     }
 }

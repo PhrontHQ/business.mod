@@ -12,10 +12,10 @@
     },
 
     "phrontService": {
-        "object": "data/main.datareel/phront-service.mjson"
+        "object": "./phront-service.mjson"
     },
     "S3DataService": {
-        "object": "data/main.datareel/s3-data-service.mjson"
+        "object": "./s3-data-service.mjson"
     }
 
 }

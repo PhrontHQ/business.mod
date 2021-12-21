@@ -9,21 +9,21 @@
                 {"@": "values"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/product-option.mjson"
+                "%": "./product-option.mjson"
             },
             "exportName": "ProductOption",
             "module": {
-                "%": "data/main.datareel/model/product-option"
+                "%": "./product-option"
             },
             "object":{"@": "ProductOption"},
             "parent":{"@": "objectDescriptor"}
         }
     },
     "ProductOption": {
-        "object": "data/main.datareel/model/product-option"
+        "object": "./product-option"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",

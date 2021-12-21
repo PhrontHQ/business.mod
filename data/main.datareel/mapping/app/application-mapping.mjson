@@ -28,7 +28,7 @@
     },
 
     "ApplicationDescriptor": {
-        "object": "data/main.datareel/model/app/application.mjson"
+        "object": "../../model/app/application.mjson"
     },
 
     "userPoolClients-converter": {

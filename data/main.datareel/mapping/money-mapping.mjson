@@ -21,7 +21,7 @@
     },
 
     "Money": {
-        "object": "data/main.datareel/model/money.mjson"
+        "object": "../model/money.mjson"
     }
 
 }

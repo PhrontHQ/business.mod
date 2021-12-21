@@ -8,18 +8,18 @@
                 {"@": "localization"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/localized-string.mjson"
+                "%":"./localized-string.mjson"
             },
             "exportName": "LocalizedString",
             "module": {
-                "%": "data/main.datareel/model/localized-string"
+                "%": "./localized-string"
             },
             "modulePrototype":{"@": "LocalizedStringPrototype"},
             "object":{"@": "LocalizedStringPrototype"}
         }
     },
     "LocalizedStringPrototype": {
-        "object": "data/main.datareel/model/localized-string"
+        "object": "./localized-string"
     },
     "locale": {
         "prototype": "montage/core/meta/property-descriptor",

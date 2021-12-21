@@ -55,7 +55,7 @@
     },
 
     "PostalAddressDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
+        "object": "../../model/messaging-channel/postal-address.mjson"
     },
 
     "timeZoneConverter": {

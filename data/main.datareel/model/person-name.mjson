@@ -15,11 +15,11 @@
 
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/person-name.mjson"
+                "%": "./person-name.mjson"
             },
             "exportName": "PersonName",
             "module": {
-                "%": "data/main.datareel/model/person-name"
+                "%": "./person-name"
             },
             "object":{"@": "personName"},
             "userInterfaceDescriptorModules": {
@@ -28,7 +28,7 @@
         }
     },
     "personName": {
-        "object": "data/main.datareel/model/person-name"
+        "object": "./person-name"
     },
     "namePrefix": {
         "prototype": "montage/core/meta/property-descriptor",

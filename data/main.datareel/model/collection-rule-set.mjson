@@ -8,17 +8,17 @@
                 {"@": "rules"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/collection-rule-set.mjson"
+                "%":"./collection-rule-set.mjson"
             },
             "exportName": "CollectionRuleSet",
             "module": {
-                "%": "data/main.datareel/model/collection-rule-set"
+                "%": "./collection-rule-set"
             },
             "modulePrototype":{"@": "collectionRuleSetPrototype"}
         }
     },
     "collectionRuleSetPrototype": {
-        "object": "data/main.datareel/model/collection-rule-set"
+        "object": "./collection-rule-set"
     },
 
     "appliedDisjunctively": {
@@ -38,7 +38,7 @@
         }
     },
     "CollectionRule_descriptor": {
-        "object": "data/main.datareel/model/collection-rule.mjson"
+        "object": "./collection-rule.mjson"
     }
 
 }

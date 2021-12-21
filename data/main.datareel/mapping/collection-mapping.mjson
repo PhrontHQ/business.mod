@@ -40,6 +40,6 @@
     },
 
     "CollectionDescriptor": {
-        "object": "data/main.datareel/model/collection.mjson"
+        "object": "../model/collection.mjson"
     }
 }

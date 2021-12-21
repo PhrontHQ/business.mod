@@ -9,11 +9,11 @@
                 {"@": "employmentPositions"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/position.mjson"
+                "%": "./position.mjson"
             },
             "exportName": "Position",
             "module": {
-                "%": "data/main.datareel/model/position"
+                "%": "./position"
             },
             "object":{"@": "position"},
             "parent":{"@": "PartyDescriptor"},
@@ -26,11 +26,11 @@
         }
     },
     "position": {
-        "object": "data/main.datareel/model/position"
+        "object": "./position"
     },
 
     "PartyDescriptor": {
-        "object": "data/main.datareel/model/party.mjson"
+        "object": "./party.mjson"
     },
 
     "name": {
@@ -52,7 +52,7 @@
         }
     },
     "role_descriptor": {
-        "object": "data/main.datareel/model/role.mjson"
+        "object": "./role.mjson"
     },
     "employmentPositions": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -64,7 +64,7 @@
         }
     },
     "employmentPositionDescriptor": {
-        "object": "data/main.datareel/model/employment-position.mjson"
+        "object": "./employment-position.mjson"
     }
 
 

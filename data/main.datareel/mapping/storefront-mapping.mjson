@@ -25,7 +25,7 @@
     },
 
     "DesignerDescriptor": {
-        "object": "data/main.datareel/model/designer.mjson"
+        "object": "../model/designer.mjson"
     },
     "productForeignKeyConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",

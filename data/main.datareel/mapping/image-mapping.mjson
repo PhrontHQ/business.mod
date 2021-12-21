@@ -25,7 +25,7 @@
     },
 
     "ImageDescriptor": {
-        "object": "data/main.datareel/model/image.mjson"
+        "object": "../model/image.mjson"
     },
     "jsonbConverter": {
         "prototype": "../converter/postgresql-jsonb-converter"

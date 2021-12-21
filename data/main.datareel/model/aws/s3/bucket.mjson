@@ -7,21 +7,21 @@
                 {"@": "name"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/aws/s3/bucket.mjson"
+                "%": "./bucket.mjson"
             },
             "exportName": "Bucket",
             "module": {
-                "%": "data/main.datareel/model/aws/s3/bucket"
+                "%": "./bucket"
             },
             "object":{"@": "Bucket"},
             "parent":{"@": "ObjectDescriptor"}
         }
     },
     "Bucket": {
-        "object": "data/main.datareel/model/aws/s3/bucket"
+        "object": "./bucket"
     },
     "ObjectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "../../data-object.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",

@@ -10,21 +10,21 @@
                 {"@": "role"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/employment-relationship.mjson"
+                "%": "./employment-relationship.mjson"
             },
             "exportName": "EmploymentRelationship",
             "module": {
-                "%": "data/main.datareel/model/party-party-relationship"
+                "%": "./party-party-relationship"
             },
             "object":{"@": "employment-relationship"},
             "parent":{"@": "party-party-relationship"}
         }
     },
     "employment-relationship": {
-        "object": "data/main.datareel/model/employment-relationship"
+        "object": "./employment-relationship"
     },
     "party-party-relationship": {
-        "object": "data/main.datareel/model/party-party-relationship.mjson"
+        "object": "./party-party-relationship.mjson"
     },
     "employmentType": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -36,7 +36,7 @@
         }
     },
     "employment_type_descriptor": {
-        "object": "data/main.datareel/model/employment-type.mjson"
+        "object": "./employment-type.mjson"
     },
     "employer": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -49,7 +49,7 @@
         }
     },
     "organization_descriptor": {
-        "object": "data/main.datareel/model/organization.mjson"
+        "object": "./organization.mjson"
     },
     "employee": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -62,7 +62,7 @@
         }
     },
     "person_descriptor": {
-        "object": "data/main.datareel/model/person.mjson"
+        "object": "./person.mjson"
     },
     "role": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -74,7 +74,7 @@
         }
     },
     "role_descriptor": {
-        "object": "data/main.datareel/model/role.mjson"
+        "object": "./role.mjson"
     }
 
 }

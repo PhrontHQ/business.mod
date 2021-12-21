@@ -9,21 +9,21 @@
                 {"@": "weightUnit"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/tangible-product-variant.mjson"
+                "%": "./tangible-product-variant.mjson"
             },
             "exportName": "TangibleProductVariant",
             "module": {
-                "%": "data/main.datareel/model/tangible-product-variant"
+                "%": "./tangible-product-variant"
             },
             "object":{"@": "TangibleProductVariant"},
             "parent":{"@": "ProductVariant"}
         }
     },
     "TangibleProductVariant": {
-        "object": "data/main.datareel/model/tangible-product-variant"
+        "object": "./tangible-product-variant"
     },
     "ProductVariant": {
-        "object": "data/main.datareel/model/product-variant.mjson"
+        "object": "./product-variant.mjson"
     },
     "product": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -49,7 +49,7 @@
         }
     },
     "TangibleProductDescriptor": {
-        "object": "data/main.datareel/model/tangible-product.mjson"
+        "object": "./tangible-product.mjson"
     }
 
 }

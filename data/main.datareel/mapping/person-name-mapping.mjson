@@ -25,6 +25,6 @@
     },
 
     "PersonName": {
-        "object": "data/main.datareel/model/person-name.mjson"
+        "object": "../model/person-name.mjson"
     }
 }

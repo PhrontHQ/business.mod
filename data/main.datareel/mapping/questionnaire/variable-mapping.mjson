@@ -34,7 +34,7 @@
     },
 
     "VariableDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/variable.mjson"
+        "object": "../../model/questionnaire/variable.mjson"
     },
 
     "questionnairesForeignKeyConverter": {

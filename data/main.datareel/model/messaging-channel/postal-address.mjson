@@ -27,21 +27,21 @@
                 {"@": "partyPostalAddresses"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/messaging-channel/postal-address.mjson"
+                "%": "./postal-address.mjson"
             },
             "exportName": "PostalAddress",
             "module": {
-                "%": "data/main.datareel/model/messaging-channel/postal-address"
+                "%": "./postal-address"
             },
             "object":{"@": "address"},
             "parent":{"@": "MessagingChannelDescriptor"}
         }
     },
     "address": {
-        "object": "data/main.datareel/model/messaging-channel/postal-address"
+        "object": "./postal-address"
     },
     "MessagingChannelDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+        "object": "./messaging-channel.mjson"
     },
     "addressee": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -80,7 +80,7 @@
         }
     },
     "phoneNumberDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/phone-number.mjson"
+        "object": "./phone-number.mjson"
     },
     "streetAddress": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -185,7 +185,7 @@
        }
     },
     "CountryDescriptor": {
-        "object": "data/main.datareel/model/country.mjson"
+        "object": "../country.mjson"
     },
     "location": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -220,7 +220,7 @@
        }
     },
     "PartyPostalAddressDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-postal-address.mjson"
+        "object": "./party-postal-address.mjson"
     }
 
 }

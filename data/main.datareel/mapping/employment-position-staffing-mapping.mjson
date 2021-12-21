@@ -64,7 +64,7 @@
     },
 
     "EmploymentPositionStaffingDescriptor": {
-        "object": "data/main.datareel/model/employment-position-staffing.mjson"
+        "object": "../model/employment-position-staffing.mjson"
     },
 
     "postalAddresses-value-converter": {

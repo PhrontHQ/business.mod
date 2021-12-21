@@ -12,21 +12,21 @@
                 {"@": "cognitoUserPoolClient"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/app/user-pool-client.mjson"
+                "%": "./user-pool-client.mjson"
             },
             "exportName": "UserPoolClient",
             "module": {
-                "%": "data/main.datareel/model/app/user-pool-client"
+                "%": "./user-pool-client"
             },
             "object":{"@": "UserPoolClient"},
             "parent":{"@": "DataObjectDescriptor"}
         }
     },
     "UserPoolClient": {
-        "object": "data/main.datareel/model/app/user-pool-client"
+        "object": "./user-pool-client"
     },
     "DataObjectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "../data-object.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -47,7 +47,7 @@
        }
     },
     "ApplicationDescriptor": {
-        "object": "data/main.datareel/model/app/application.mjson"
+        "object": "./application.mjson"
     },
 
     "identifier": {
@@ -75,7 +75,7 @@
        }
     },
     "UserPoolDescriptor": {
-        "object": "data/main.datareel/model/app/user-pool.mjson"
+        "object": "./user-pool.mjson"
     },
     "cognitoUserPoolClient": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -87,7 +87,7 @@
        }
     },
     "CognitoUserPoolClientDescriptor": {
-        "object": "data/main.datareel/model/aws/cognito/user-pool-client.mjson"
+        "object": "../aws/cognito/user-pool-client.mjson"
     }
 
 }

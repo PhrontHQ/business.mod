@@ -7,11 +7,11 @@
                 {"@": "name"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/gender.mjson"
+                "%": "./gender.mjson"
             },
             "exportName": "Gender",
             "module": {
-                "%": "data/main.datareel/model/gender"
+                "%": "./gender"
             },
             "modulePrototype":{"@": "Gender"},
             "object":{"@": "Gender"},
@@ -19,10 +19,10 @@
         }
     },
     "Gender": {
-        "object": "data/main.datareel/model/gender"
+        "object": "./gender"
     },
     "ObjectObjectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",

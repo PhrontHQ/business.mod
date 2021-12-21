@@ -8,11 +8,11 @@
                 {"@": "exifMetadata"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/image.mjson"
+                "%":"./image.mjson"
             },
             "exportName": "Image",
             "module": {
-                "%": "data/main.datareel/model/image"
+                "%": "./image"
             },
             "modulePrototype":{"@": "ImagePrototype"},
             "object":{"@": "ImagePrototype"},
@@ -20,10 +20,10 @@
         }
     },
     "ImagePrototype": {
-        "object": "data/main.datareel/model/image"
+        "object": "./image"
     },
     "AssetDescriptor": {
-        "object": "data/main.datareel/model/asset.mjson"
+        "object": "./asset.mjson"
     },
     "transformedSrc": {
         "prototype": "montage/core/meta/property-descriptor",

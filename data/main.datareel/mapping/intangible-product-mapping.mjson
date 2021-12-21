@@ -18,6 +18,6 @@
     },
 
     "IntangibleProductObjectDescriptor": {
-        "object": "data/main.datareel/model/intangible-product.mjson"
+        "object": "../model/intangible-product.mjson"
     }
 }

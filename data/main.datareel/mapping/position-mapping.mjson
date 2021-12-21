@@ -29,7 +29,7 @@
         }
     },
     "PositionDescriptor": {
-        "object": "data/main.datareel/model/position.mjson"
+        "object": "../model/position.mjson"
     },
     "roleConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",

@@ -18,7 +18,7 @@
     },
 
     "PartyContactFormDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-contact-form.mjson"
+        "object": "../../model/messaging-channel/party-contact-form.mjson"
     }
 
 }

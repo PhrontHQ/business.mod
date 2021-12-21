@@ -26,7 +26,7 @@
     },
 
     "Order": {
-        "object": "data/main.datareel/model/order.mjson"
+        "object": "../model/order.mjson"
     },
     "productForeignKeyConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",

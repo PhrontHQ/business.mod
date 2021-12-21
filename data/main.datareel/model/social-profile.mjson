@@ -12,11 +12,11 @@
                 {"@": "provider"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/social-profile.mjson"
+                "%": "./social-profile.mjson"
             },
             "exportName": "SocialProfile",
             "module": {
-                "%": "data/main.datareel/model/social-profile"
+                "%": "./social-profile"
             },
             "modulePrototype":{"@": "SocialProfile"},
             "object": {"@": "SocialProfile"},
@@ -24,10 +24,10 @@
         }
     },
     "SocialProfile": {
-        "object": "data/main.datareel/model/social-profile"
+        "object": "./social-profile"
     },
     "ObjectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
     "serviceName": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -67,7 +67,7 @@
         }
     },
     "OrganizationDescriptor": {
-        "object": "data/main.datareel/model/organization.mjson"
+        "object": "./organization.mjson"
     }
 
 }

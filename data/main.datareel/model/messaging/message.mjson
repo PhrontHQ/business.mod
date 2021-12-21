@@ -7,14 +7,20 @@
                 {"@": "deliveryTimeRange"},
                 {"@": "description"},
                 {"@": "tags"},
-                {"@": "serviceProvider"}
+                {"@": "serviceProvider"},
+                {"@": "sender"},
+                {"@": "recipients"},
+                {"@": "inputComponent"},
+                {"@": "outputComponent"},
+                {"@": "text"},
+                {"@": "context"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/messaging/message.mjson"
+                "%":"./message.mjson"
             },
             "exportName": "MessagingChannel",
             "module": {
-                "%": "data/main.datareel/model/messaging/message"
+                "%": "./message"
             },
             "modulePrototype":{"@": "Message"},
             "object":{"@": "Message"},
@@ -22,15 +28,25 @@
         }
     },
     "Message": {
-        "object": "data/main.datareel/model/messaging/message"
+        "object": "./message"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "../data-object.mjson"
     },
-    "preferredForParties": {
+    "sender": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "preferredForParties",
+            "name": "sender",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "PartyDescriptor"},
+            "isSearchable": true
+        }
+    },
+    "recipients": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "recipients",
             "valueType": "array",
             "cardinality": -1,
             "valueDescriptor": {"@": "PartyDescriptor"},
@@ -38,8 +54,53 @@
         }
     },
     "PartyDescriptor": {
-        "object": "data/main.datareel/model/party.mjson"
+        "object": "../party.mjson"
     },
+    "inputComponent": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "inputComponent",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "ComponentDescriptor"},
+            "isSearchable": true
+        }
+    },
+
+    "outputComponent": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "outputComponent",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "ComponentDescriptor"},
+            "isSearchable": true
+        }
+    },
+
+    "ComponentDescriptor": {
+        "object": "montage/ui/component.mjson"
+    },
+
+    "text": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "text",
+            "isLocalizable": true,
+            "cardinality": 1,
+            "valueType": "string"
+        }
+    },
+    "context": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "context",
+            "isLocalizable": true,
+            "cardinality": 1,
+            "valueType": "object"
+        }
+    },
+
     "description": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -67,6 +128,6 @@
         }
     },
     "OrganizationDescriptor": {
-        "object": "data/main.datareel/model/organization.mjson"
+        "object": "../organization.mjson"
     }
 }

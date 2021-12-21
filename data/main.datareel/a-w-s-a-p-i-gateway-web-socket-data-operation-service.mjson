@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "data/main.datareel/service/a-w-s-a-p-i-gateway-web-socket-data-operation-service",
+        "prototype": "./service/a-w-s-a-p-i-gateway-web-socket-data-operation-service",
         "values": {
             "name": "AWSAPIGatewayWebSocketDataOperationService",
             "exportName": "AWSAPIGatewayWebSocketDataOperationService",
@@ -151,522 +151,522 @@
     },
 
     "DataObject": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./model/data-object.mjson"
     },
 
     "DataObjectMapping": {
-        "object": "data/main.datareel/mapping/data-object-mapping.mjson"
+        "object": "./mapping/data-object-mapping.mjson"
     },
 
     "asset": {
-        "object": "data/main.datareel/model/asset.mjson"
+        "object": "./model/asset.mjson"
     },
 
     "assetMapping": {
-        "object": "data/main.datareel/mapping/asset-mapping.mjson"
+        "object": "./mapping/asset-mapping.mjson"
     },
 
     "expiringAssetDownload": {
-        "object": "data/main.datareel/model/expiring-asset-download.mjson"
+        "object": "./model/expiring-asset-download.mjson"
     },
 
     "expiringAssetDownloadMapping": {
-        "object": "data/main.datareel/mapping/expiring-asset-download-mapping.mjson"
+        "object": "./mapping/expiring-asset-download-mapping.mjson"
     },
 
     "LocalizedString": {
-        "object": "data/main.datareel/model/localized-string.mjson"
+        "object": "./model/localized-string.mjson"
     },
 
     "collection": {
-        "object": "data/main.datareel/model/collection.mjson"
+        "object": "./model/collection.mjson"
     },
 
     "collectionMapping": {
-        "object": "data/main.datareel/mapping/collection-mapping.mjson"
+        "object": "./mapping/collection-mapping.mjson"
     },
 
     "country": {
-        "object": "data/main.datareel/model/country.mjson"
+        "object": "./model/country.mjson"
     },
 
     "countryMapping": {
-        "object": "data/main.datareel/mapping/country-mapping.mjson"
+        "object": "./mapping/country-mapping.mjson"
     },
 
     "product": {
-        "object": "data/main.datareel/model/product.mjson"
+        "object": "./model/product.mjson"
     },
 
     "productMapping": {
-        "object": "data/main.datareel/mapping/product-mapping.mjson"
+        "object": "./mapping/product-mapping.mjson"
     },
 
     "tangibleProduct": {
-        "object": "data/main.datareel/model/tangible-product.mjson"
+        "object": "./model/tangible-product.mjson"
     },
 
     "tangibleProductMapping": {
-        "object": "data/main.datareel/mapping/tangible-product-mapping.mjson"
+        "object": "./mapping/tangible-product-mapping.mjson"
     },
 
     "intangibleProduct": {
-        "object": "data/main.datareel/model/intangible-product.mjson"
+        "object": "./model/intangible-product.mjson"
     },
 
     "intangibleProductMapping": {
-        "object": "data/main.datareel/mapping/intangible-product-mapping.mjson"
+        "object": "./mapping/intangible-product-mapping.mjson"
     },
 
     "service": {
-        "object": "data/main.datareel/model/service.mjson"
+        "object": "./model/service.mjson"
     },
 
     "serviceMapping": {
-        "object": "data/main.datareel/mapping/service-mapping.mjson"
+        "object": "./mapping/service-mapping.mjson"
     },
 
     "serviceEngagement": {
-        "object": "data/main.datareel/model/service-engagement.mjson"
+        "object": "./model/service-engagement.mjson"
     },
 
     "serviceEngagementMapping": {
-        "object": "data/main.datareel/mapping/service-engagement-mapping.mjson"
+        "object": "./mapping/service-engagement-mapping.mjson"
     },
 
     "messagingChannel": {
-        "object": "data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+        "object": "./model/messaging-channel/messaging-channel.mjson"
     },
 
     "messagingChannelMapping": {
-        "object": "data/main.datareel/mapping/messaging-channel/messaging-channel-mapping.mjson"
+        "object": "./mapping/messaging-channel/messaging-channel-mapping.mjson"
     },
 
     "partyMessagingChannel": {
-        "object": "data/main.datareel/model/messaging-channel/party-messaging-channel.mjson"
+        "object": "./model/messaging-channel/party-messaging-channel.mjson"
     },
 
     "partyMessagingChannelMapping": {
-        "object": "data/main.datareel/mapping/messaging-channel/party-messaging-channel-mapping.mjson"
+        "object": "./mapping/messaging-channel/party-messaging-channel-mapping.mjson"
     },
 
     "PhoneNumber": {
-        "object": "data/main.datareel/model/messaging-channel/phone-number.mjson"
+        "object": "./model/messaging-channel/phone-number.mjson"
     },
 
     "PhoneNumberMapping": {
-        "object": "data/main.datareel/mapping/messaging-channel/phone-number-mapping.mjson"
+        "object": "./mapping/messaging-channel/phone-number-mapping.mjson"
     },
 
     "partyPhoneNumber": {
-        "object": "data/main.datareel/model/messaging-channel/party-phone-number.mjson"
+        "object": "./model/messaging-channel/party-phone-number.mjson"
     },
 
     "partyPhoneNumberMapping": {
-        "object": "data/main.datareel/mapping/messaging-channel/party-phone-number-mapping.mjson"
+        "object": "./mapping/messaging-channel/party-phone-number-mapping.mjson"
     },
 
     "partySMSNumber": {
-        "object": "data/main.datareel/model/messaging-channel/party-s-m-s-number.mjson"
+        "object": "./model/messaging-channel/party-s-m-s-number.mjson"
     },
 
     "partySMSNumberMapping": {
-        "object": "data/main.datareel/mapping/messaging-channel/party-s-m-s-number-mapping.mjson"
+        "object": "./mapping/messaging-channel/party-s-m-s-number-mapping.mjson"
     },
 
     "InstantMessageAddress": {
-        "object": "data/main.datareel/model/messaging-channel/instant-message-address.mjson"
+        "object": "./model/messaging-channel/instant-message-address.mjson"
     },
 
     "InstantMessageAddressMapping": {
-        "object": "data/main.datareel/mapping/messaging-channel/instant-message-address-mapping.mjson"
+        "object": "./mapping/messaging-channel/instant-message-address-mapping.mjson"
     },
 
     "partyInstantMessageAddress": {
-        "object": "data/main.datareel/model/messaging-channel/party-instant-message-address.mjson"
+        "object": "./model/messaging-channel/party-instant-message-address.mjson"
     },
 
     "partyInstantMessageAddressMapping": {
-        "object": "data/main.datareel/mapping/messaging-channel/party-instant-message-address-mapping.mjson"
+        "object": "./mapping/messaging-channel/party-instant-message-address-mapping.mjson"
     },
 
     "contactForm": {
-        "object": "data/main.datareel/model/messaging-channel/contact-form.mjson"
+        "object": "./model/messaging-channel/contact-form.mjson"
     },
 
     "contactFormMapping": {
-        "object": "data/main.datareel/mapping/messaging-channel/contact-form-mapping.mjson"
+        "object": "./mapping/messaging-channel/contact-form-mapping.mjson"
     },
 
     "partyContactForm": {
-        "object": "data/main.datareel/model/messaging-channel/party-contact-form.mjson"
+        "object": "./model/messaging-channel/party-contact-form.mjson"
     },
 
     "partyContactFormMapping": {
-        "object": "data/main.datareel/mapping/messaging-channel/party-contact-form-mapping.mjson"
+        "object": "./mapping/messaging-channel/party-contact-form-mapping.mjson"
     },
 
     "EmailAddress": {
-        "object": "data/main.datareel/model/messaging-channel/email-address.mjson"
+        "object": "./model/messaging-channel/email-address.mjson"
     },
 
     "EmailAddressMapping": {
-        "object": "data/main.datareel/mapping/messaging-channel/email-address-mapping.mjson"
+        "object": "./mapping/messaging-channel/email-address-mapping.mjson"
     },
 
     "partyEmailAddress": {
-        "object": "data/main.datareel/model/messaging-channel/party-email-address.mjson"
+        "object": "./model/messaging-channel/party-email-address.mjson"
     },
 
     "partyEmailAddressMapping": {
-        "object": "data/main.datareel/mapping/messaging-channel/party-email-address-mapping.mjson"
+        "object": "./mapping/messaging-channel/party-email-address-mapping.mjson"
     },
 
     "productVariant": {
-        "object": "data/main.datareel/model/product-variant.mjson"
+        "object": "./model/product-variant.mjson"
     },
 
     "productVariantMapping": {
-        "object": "data/main.datareel/mapping/product-variant-mapping.mjson"
+        "object": "./mapping/product-variant-mapping.mjson"
     },
 
     "tangibleProductVariant": {
-        "object": "data/main.datareel/model/tangible-product-variant.mjson"
+        "object": "./model/tangible-product-variant.mjson"
     },
 
     "tangibleProductVariantMapping": {
-        "object": "data/main.datareel/mapping/tangible-product-variant-mapping.mjson"
+        "object": "./mapping/tangible-product-variant-mapping.mjson"
     },
 
     "intangibleProductVariant": {
-        "object": "data/main.datareel/model/intangible-product-variant.mjson"
+        "object": "./model/intangible-product-variant.mjson"
     },
 
     "intangibleProductVariantMapping": {
-        "object": "data/main.datareel/mapping/intangible-product-variant-mapping.mjson"
+        "object": "./mapping/intangible-product-variant-mapping.mjson"
     },
 
     "serviceProductVariant": {
-        "object": "data/main.datareel/model/service-product-variant.mjson"
+        "object": "./model/service-product-variant.mjson"
     },
 
     "serviceProductVariantMapping": {
-        "object": "data/main.datareel/mapping/service-product-variant-mapping.mjson"
+        "object": "./mapping/service-product-variant-mapping.mjson"
     },
 
     "productVariantPricePair": {
-        "object": "data/main.datareel/model/product-variant-price-pair.mjson"
+        "object": "./model/product-variant-price-pair.mjson"
     },
 
     "productVariantPricePairMapping": {
-        "object": "data/main.datareel/mapping/product-variant-price-pair-mapping.mjson"
+        "object": "./mapping/product-variant-price-pair-mapping.mjson"
     },
 
     "money": {
-        "object": "data/main.datareel/model/money.mjson"
+        "object": "./model/money.mjson"
     },
 
     "moneyMapping": {
-        "object": "data/main.datareel/mapping/money-mapping.mjson"
+        "object": "./mapping/money-mapping.mjson"
     },
 
     "party": {
-        "object": "data/main.datareel/model/party.mjson"
+        "object": "./model/party.mjson"
     },
 
     "partyMapping": {
-        "object": "data/main.datareel/mapping/party-mapping.mjson"
+        "object": "./mapping/party-mapping.mjson"
     },
 
     "partyPartyRelationship": {
-        "object": "data/main.datareel/model/party-party-relationship.mjson"
+        "object": "./model/party-party-relationship.mjson"
     },
 
     "organization": {
-        "object": "data/main.datareel/model/organization.mjson"
+        "object": "./model/organization.mjson"
     },
 
     "organizationMapping": {
-        "object": "data/main.datareel/mapping/organization-mapping.mjson"
+        "object": "./mapping/organization-mapping.mjson"
     },
 
     "postalAddress": {
-        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
+        "object": "./model/messaging-channel/postal-address.mjson"
     },
 
     "postalAddressMapping": {
-        "object": "data/main.datareel/mapping/messaging-channel/postal-address-mapping.mjson"
+        "object": "./mapping/messaging-channel/postal-address-mapping.mjson"
     },
 
     "partyPostalAddress": {
-        "object": "data/main.datareel/model/messaging-channel/party-postal-address.mjson"
+        "object": "./model/messaging-channel/party-postal-address.mjson"
     },
 
     "partyPostalAddressMapping": {
-        "object": "data/main.datareel/mapping/messaging-channel/party-postal-address-mapping.mjson"
+        "object": "./mapping/messaging-channel/party-postal-address-mapping.mjson"
     },
 
     "image": {
-        "object": "data/main.datareel/model/image.mjson"
+        "object": "./model/image.mjson"
     },
 
     "imageMapping": {
-        "object": "data/main.datareel/mapping/image-mapping.mjson"
+        "object": "./mapping/image-mapping.mjson"
     },
 
     "person": {
-        "object": "data/main.datareel/model/person.mjson"
+        "object": "./model/person.mjson"
     },
 
     "personMapping": {
-        "object": "data/main.datareel/mapping/person-mapping.mjson"
+        "object": "./mapping/person-mapping.mjson"
     },
 
     "person-name": {
-        "object": "data/main.datareel/model/person-name.mjson"
+        "object": "./model/person-name.mjson"
     },
 
     "personNameMapping": {
-        "object": "data/main.datareel/mapping/person-name-mapping.mjson"
+        "object": "./mapping/person-name-mapping.mjson"
     },
 
     "personal-relationship": {
-        "object": "data/main.datareel/model/personal-relationship.mjson"
+        "object": "./model/personal-relationship.mjson"
     },
 
     "personal-relationshipMapping": {
-        "object": "data/main.datareel/mapping/personal-relationship-mapping.mjson"
+        "object": "./mapping/personal-relationship-mapping.mjson"
     },
 
     "calendar": {
-        "object": "data/main.datareel/model/calendar.mjson"
+        "object": "./model/calendar.mjson"
     },
 
     "calendarMapping": {
-        "object": "data/main.datareel/mapping/calendar-mapping.mjson"
+        "object": "./mapping/calendar-mapping.mjson"
     },
 
     "event": {
-        "object": "data/main.datareel/model/event.mjson"
+        "object": "./model/event.mjson"
     },
 
     "eventMapping": {
-        "object": "data/main.datareel/mapping/event-mapping.mjson"
+        "object": "./mapping/event-mapping.mjson"
     },
 
     "role": {
-        "object": "data/main.datareel/model/role.mjson"
+        "object": "./model/role.mjson"
     },
 
     "role-mapping": {
-        "object": "data/main.datareel/mapping/role-mapping.mjson"
+        "object": "./mapping/role-mapping.mjson"
     },
 
     "conference-entry-point": {
-        "object": "data/main.datareel/model/conference-entry-point.mjson"
+        "object": "./model/conference-entry-point.mjson"
     },
 
     "event-attendee": {
-        "object": "data/main.datareel/model/event-attendee.mjson"
+        "object": "./model/event-attendee.mjson"
     },
 
     "eventAttendeeMapping": {
-        "object": "data/main.datareel/mapping/event-attendee-mapping.mjson"
+        "object": "./mapping/event-attendee-mapping.mjson"
     },
 
     "event-conference-data": {
-        "object": "data/main.datareel/model/event-conference-data.mjson"
+        "object": "./model/event-conference-data.mjson"
     },
 
     "event-person": {
-        "object": "data/main.datareel/model/event-person.mjson"
+        "object": "./model/event-person.mjson"
     },
 
     "eventPersonMapping": {
-        "object": "data/main.datareel/mapping/event-person-mapping.mjson"
+        "object": "./mapping/event-person-mapping.mjson"
     },
 
     "order": {
-        "object": "data/main.datareel/model/order.mjson"
+        "object": "./model/order.mjson"
     },
 
     "orderMapping": {
-        "object": "data/main.datareel/mapping/order-mapping.mjson"
+        "object": "./mapping/order-mapping.mjson"
     },
 
     "orderLineItem": {
-        "object": "data/main.datareel/model/order-line-item.mjson"
+        "object": "./model/order-line-item.mjson"
     },
 
     "orderLineItemMapping": {
-        "object": "data/main.datareel/mapping/order-line-item-mapping.mjson"
+        "object": "./mapping/order-line-item-mapping.mjson"
     },
 
     "orderTransaction": {
-        "object": "data/main.datareel/model/order-transaction.mjson"
+        "object": "./model/order-transaction.mjson"
     },
 
     "orderTransactionMapping": {
-        "object": "data/main.datareel/mapping/order-transaction-mapping.mjson"
+        "object": "./mapping/order-transaction-mapping.mjson"
     },
 
     "position": {
-        "object": "data/main.datareel/model/position.mjson"
+        "object": "./model/position.mjson"
     },
 
     "positionMapping": {
-        "object": "data/main.datareel/mapping/position-mapping.mjson"
+        "object": "./mapping/position-mapping.mjson"
     },
 
     "EmploymentPosition": {
-        "object": "data/main.datareel/model/employment-position.mjson"
+        "object": "./model/employment-position.mjson"
     },
 
     "EmploymentPositionMapping": {
-        "object": "data/main.datareel/mapping/employment-position-mapping.mjson"
+        "object": "./mapping/employment-position-mapping.mjson"
     },
 
     "EmploymentType": {
-        "object": "data/main.datareel/model/employment-type.mjson"
+        "object": "./model/employment-type.mjson"
     },
 
     "EmploymentTypeMapping": {
-        "object": "data/main.datareel/mapping/employment-type-mapping.mjson"
+        "object": "./mapping/employment-type-mapping.mjson"
     },
 
     "EmploymentPositionRelationship": {
-        "object": "data/main.datareel/model/employment-position-relationship.mjson"
+        "object": "./model/employment-position-relationship.mjson"
     },
 
     "EmploymentPositionRelationshipMapping": {
-        "object": "data/main.datareel/mapping/employment-position-relationship-mapping.mjson"
+        "object": "./mapping/employment-position-relationship-mapping.mjson"
     },
 
     "EmploymentPositionStaffing": {
-        "object": "data/main.datareel/model/employment-position-staffing.mjson"
+        "object": "./model/employment-position-staffing.mjson"
     },
 
     "EmploymentPositionStaffingMapping": {
-        "object": "data/main.datareel/mapping/employment-position-staffing-mapping.mjson"
+        "object": "./mapping/employment-position-staffing-mapping.mjson"
     },
 
     "CustomerSupplierRelationship": {
-        "object": "data/main.datareel/model/customer-supplier-relationship.mjson"
+        "object": "./model/customer-supplier-relationship.mjson"
     },
     "CustomerSupplierRelationshipMapping": {
-        "object": "data/main.datareel/mapping/customer-supplier-relationship-mapping.mjson"
+        "object": "./mapping/customer-supplier-relationship-mapping.mjson"
     },
 
     "B2CCustomerSupplierRelationship": {
-        "object": "data/main.datareel/model/b-2-c-customer-supplier-relationship.mjson"
+        "object": "./model/b-2-c-customer-supplier-relationship.mjson"
     },
 
     "B2CCustomerSupplierRelationshipMapping": {
-        "object": "data/main.datareel/mapping/b-2-c-customer-supplier-relationship-mapping.mjson"
+        "object": "./mapping/b-2-c-customer-supplier-relationship-mapping.mjson"
     },
 
     "B2CCustomerSupplierResponsibleParty": {
-        "object": "data/main.datareel/model/b-2-c-customer-supplier-responsible-party.mjson"
+        "object": "./model/b-2-c-customer-supplier-responsible-party.mjson"
     },
 
     "B2CCustomerSupplierResponsiblePartyMapping": {
-        "object": "data/main.datareel/mapping/b-2-c-customer-supplier-responsible-party-mapping.mjson"
+        "object": "./mapping/b-2-c-customer-supplier-responsible-party-mapping.mjson"
     },
 
     "B2BCustomerSupplierRelationship": {
-        "object": "data/main.datareel/model/b-2-b-customer-supplier-relationship.mjson"
+        "object": "./model/b-2-b-customer-supplier-relationship.mjson"
     },
 
     "B2BCustomerSupplierRelationshipMapping": {
-        "object": "data/main.datareel/mapping/b-2-b-customer-supplier-relationship-mapping.mjson"
+        "object": "./mapping/b-2-b-customer-supplier-relationship-mapping.mjson"
     },
 
     "Gender": {
-        "object": "data/main.datareel/model/gender.mjson"
+        "object": "./model/gender.mjson"
     },
 
     "GenderMapping": {
-        "object": "data/main.datareel/mapping/gender-mapping.mjson"
+        "object": "./mapping/gender-mapping.mjson"
     },
 
     "Questionnaire": {
-        "object": "data/main.datareel/model/questionnaire/questionnaire.mjson"
+        "object": "./model/questionnaire/questionnaire.mjson"
     },
 
     "QuestionnaireMapping": {
-        "object": "data/main.datareel/mapping/questionnaire/questionnaire-mapping.mjson"
+        "object": "./mapping/questionnaire/questionnaire-mapping.mjson"
     },
 
     "Question": {
-        "object": "data/main.datareel/model/questionnaire/question.mjson"
+        "object": "./model/questionnaire/question.mjson"
     },
 
     "QuestionMapping": {
-        "object": "data/main.datareel/mapping/questionnaire/question-mapping.mjson"
+        "object": "./mapping/questionnaire/question-mapping.mjson"
     },
 
     "Variable": {
-        "object": "data/main.datareel/model/questionnaire/variable.mjson"
+        "object": "./model/questionnaire/variable.mjson"
     },
 
     "VariableMapping": {
-        "object": "data/main.datareel/mapping/questionnaire/variable-mapping.mjson"
+        "object": "./mapping/questionnaire/variable-mapping.mjson"
     },
 
     "QuestionnaireQuestion": {
-        "object": "data/main.datareel/model/questionnaire/questionnaire-question.mjson"
+        "object": "./model/questionnaire/questionnaire-question.mjson"
     },
 
     "QuestionnaireQuestionMapping": {
-        "object": "data/main.datareel/mapping/questionnaire/questionnaire-question-mapping.mjson"
+        "object": "./mapping/questionnaire/questionnaire-question-mapping.mjson"
     },
 
     "RespondentQuestionnaire": {
-        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire.mjson"
+        "object": "./model/questionnaire/respondent-questionnaire.mjson"
     },
 
     "RespondentQuestionnaireMapping": {
-        "object": "data/main.datareel/mapping/questionnaire/respondent-questionnaire-mapping.mjson"
+        "object": "./mapping/questionnaire/respondent-questionnaire-mapping.mjson"
     },
 
     "Answer": {
-        "object": "data/main.datareel/model/questionnaire/answer.mjson"
+        "object": "./model/questionnaire/answer.mjson"
     },
 
     "AnswerMapping": {
-        "object": "data/main.datareel/mapping/questionnaire/answer-mapping.mjson"
+        "object": "./mapping/questionnaire/answer-mapping.mjson"
     },
 
     "RespondentQuestionnaireAnswer": {
-        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-answer.mjson"
+        "object": "./model/questionnaire/respondent-questionnaire-answer.mjson"
     },
 
     "RespondentQuestionnaireAnswerMapping": {
-        "object": "data/main.datareel/mapping/questionnaire/respondent-questionnaire-answer-mapping.mjson"
+        "object": "./mapping/questionnaire/respondent-questionnaire-answer-mapping.mjson"
     },
 
     "RespondentQuestionnaireVariableValue": {
-        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-variable-value.mjson"
+        "object": "./model/questionnaire/respondent-questionnaire-variable-value.mjson"
     },
 
     "RespondentQuestionnaireVariableValueMapping": {
-        "object": "data/main.datareel/mapping/questionnaire/respondent-questionnaire-variable-value-mapping.mjson"
+        "object": "./mapping/questionnaire/respondent-questionnaire-variable-value-mapping.mjson"
     },
 
     "CustomerEngagementQuestionnaire": {
-        "object": "data/main.datareel/model/customer-engagement-questionnaire.mjson"
+        "object": "./model/customer-engagement-questionnaire.mjson"
     },
 
     "CustomerEngagementQuestionnaireMapping": {
-        "object": "data/main.datareel/mapping/customer-engagement-questionnaire-mapping.mjson"
+        "object": "./mapping/customer-engagement-questionnaire-mapping.mjson"
     },
 
     "RoleRanking": {
-        "object": "data/main.datareel/model/role-ranking.mjson"
+        "object": "./model/role-ranking.mjson"
     },
 
     "RoleRankingMapping": {
-        "object": "data/main.datareel/mapping/role-ranking-mapping.mjson"
+        "object": "./mapping/role-ranking-mapping.mjson"
     },
 
     "Bucket": {
@@ -686,11 +686,11 @@
     },
 
     "ExpiringObjectDownload": {
-        "object": "data/main.datareel/model/aws/s3/expiring-object-download.mjson"
+        "object": "./model/aws/s3/expiring-object-download.mjson"
     },
 
     "ExpiringObjectDownloadMapping": {
-        "object": "data/main.datareel/mapping/aws/s3/expiring-object-download-mapping.mjson"
+        "object": "./mapping/aws/s3/expiring-object-download-mapping.mjson"
     }
 
 }

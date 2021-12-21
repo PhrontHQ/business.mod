@@ -51,6 +51,6 @@
         }
     },
     "ContactInformationDescriptor": {
-        "object": "data/main.datareel/model/contact-information.mjson"
+        "object": "../model/contact-information.mjson"
     }
 }

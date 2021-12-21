@@ -22,11 +22,11 @@
                 {"@": "serviceEngagements"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/calendar.mjson"
+                "%":"./calendar.mjson"
             },
             "exportName": "Calendar",
             "module": {
-                "%": "data/main.datareel/model/calendar"
+                "%": "./calendar"
             },
             "modulePrototype":{"@": "CalendarPrototype"},
             "object":{"@": "CalendarPrototype"},
@@ -34,10 +34,10 @@
         }
     },
     "CalendarPrototype": {
-        "object": "data/main.datareel/model/calendar"
+        "object": "./calendar"
     },
     "Object": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
     "etag": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -105,7 +105,7 @@
     },
 
     "event-descriptor": {
-        "object": "data/main.datareel/model/event.mjson"
+        "object": "./event.mjson"
     },
     "color": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -116,7 +116,7 @@
         }
     },
     "ColorDescriptor": {
-        "object": "data/main.datareel/model/color/color.mjson"
+        "object": "./color/color.mjson"
     },
     "owner": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -131,7 +131,7 @@
         }
     },
     "PartyDescriptor": {
-        "object": "data/main.datareel/model/party.mjson"
+        "object": "./party.mjson"
     },
     "organizationOwner": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -145,7 +145,7 @@
         }
     },
     "OrganizationDescriptor": {
-        "object": "data/main.datareel/model/organization.mjson"
+        "object": "./organization.mjson"
     },
 
     "personOwner": {
@@ -160,7 +160,7 @@
         }
     },
     "PersonDescriptor": {
-        "object": "data/main.datareel/model/person.mjson"
+        "object": "./person.mjson"
     },
 
     "resourceOwner": {
@@ -175,7 +175,7 @@
         }
     },
     "ResourceDescriptor": {
-        "object": "data/main.datareel/model/resource.mjson"
+        "object": "./resource.mjson"
     },
 
     "employmentPositionStaffingOwner": {
@@ -191,7 +191,7 @@
     },
 
     "EmploymentPositionStaffingOwnerDescriptor": {
-        "object": "data/main.datareel/model/employment-position-staffing.mjson"
+        "object": "./employment-position-staffing.mjson"
     },
 
     "b2cCustomerSupplierRelationshipOwner": {
@@ -207,7 +207,7 @@
     },
 
     "B2CCustomerSupplierRelationshipDescriptor": {
-        "object": "data/main.datareel/model/b-2-c-customer-supplier-relationship.mjson"
+        "object": "./b-2-c-customer-supplier-relationship.mjson"
     },
 
     "serviceEngagements": {
@@ -222,6 +222,6 @@
         }
     },
     "ServiceEngagement": {
-        "object": "data/main.datareel/model/service-engagement.mjson"
+        "object": "./service-engagement.mjson"
     }
 }

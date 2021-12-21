@@ -9,21 +9,21 @@
                 {"@": "paymentGateway"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/order-transaction.mjson"
+                "%": "./order-transaction.mjson"
             },
             "exportName": "OrderTransaction",
             "module": {
-                "%": "data/main.datareel/model/order-transaction"
+                "%": "./order-transaction"
             },
             "object":{"@": "OrderTransaction"},
             "parent":{"@": "Object"}
         }
     },
     "OrderTransaction": {
-        "object": "data/main.datareel/model/order-transaction"
+        "object": "./order-transaction"
     },
     "Object": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
     "order": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -36,7 +36,7 @@
         }
     },
     "order_descriptor": {
-        "object": "data/main.datareel/model/order.mjson"
+        "object": "./order.mjson"
     },
     "amount": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -48,7 +48,7 @@
         }
     },
     "money_descriptor": {
-        "object": "data/main.datareel/model/money.mjson"
+        "object": "./money.mjson"
     },
     "paymentGateway": {
         "prototype": "montage/core/meta/property-descriptor",

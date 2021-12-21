@@ -52,7 +52,7 @@
     },
 
     "ResourceDescriptor": {
-        "object": "data/main.datareel/model/resource.mjson"
+        "object": "../model/resource.mjson"
     },
 
     "postalAddresses-value-converter": {

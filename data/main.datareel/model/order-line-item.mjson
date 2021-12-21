@@ -13,17 +13,17 @@
                 {"@": "belongsToOrder"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/order-line-item.mjson"
+                "%": "./order-line-item.mjson"
             },
             "exportName": "OrderLineItem",
             "module": {
-                "%": "data/main.datareel/model/order-line-item"
+                "%": "./order-line-item"
             },
             "object":{"@": "orderLineItem"}
         }
     },
     "orderLineItem": {
-        "object": "data/main.datareel/model/order-line-item"
+        "object": "./order-line-item"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -79,9 +79,9 @@
         }
     },
     "product_descriptor": {
-        "object": "data/main.datareel/model/product.mjson"
+        "object": "./product.mjson"
     },
     "client-order_descriptor": {
-        "object": "data/main.datareel/model/client-order.mjson"
+        "object": "./client-order.mjson"
     }
 }

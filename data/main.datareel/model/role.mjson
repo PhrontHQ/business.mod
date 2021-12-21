@@ -10,11 +10,11 @@
                 {"@": "eventsWithParticipationRole"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/role.mjson"
+                "%":"./role.mjson"
             },
             "exportName": "Role",
             "module": {
-                "%": "data/main.datareel/model/role"
+                "%": "./role"
             },
             "modulePrototype":{"@": "Role"},
             "object":{"@": "Role"},
@@ -22,10 +22,10 @@
         }
     },
     "Role": {
-        "object": "data/main.datareel/model/role"
+        "object": "./role"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -63,6 +63,6 @@
         }
     },
     "EventDescriptor": {
-        "object": "data/main.datareel/model/event.mjson"
+        "object": "./event.mjson"
     }
 }

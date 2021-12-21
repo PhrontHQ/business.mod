@@ -14,21 +14,21 @@
                 {"@": "presentmentPrices"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/product-variant.mjson"
+                "%": "./product-variant.mjson"
             },
             "exportName": "ProductVariant",
             "module": {
-                "%": "data/main.datareel/model/product-variant"
+                "%": "./product-variant"
             },
             "object":{"@": "ProductVariant"},
             "parent":{"@": "objectDescriptor"}
         }
     },
     "ProductVariant": {
-        "object": "data/main.datareel/model/product-variant"
+        "object": "./product-variant"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
     "title": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -92,10 +92,10 @@
         }
     },
     "productDescriptor": {
-        "object": "data/main.datareel/model/product.mjson"
+        "object": "./product.mjson"
     },
     "image_descriptor": {
-        "object": "data/main.datareel/model/image.mjson"
+        "object": "./image.mjson"
     }
 
 }

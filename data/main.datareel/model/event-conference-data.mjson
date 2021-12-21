@@ -13,18 +13,18 @@
                 {"@": "gadget"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/event-conference-data.mjson"
+                "%":"./event-conference-data.mjson"
             },
             "exportName": "EventConferenceData",
             "module": {
-                "%": "data/main.datareel/model/event-conference-data"
+                "%": "./event-conference-data"
             },
             "modulePrototype": {"@": "EventConferenceData"},
             "object": {"@": "EventConferenceData"}
         }
     },
     "EventConferenceData": {
-        "object": "data/main.datareel/model/event-conference-data"
+        "object": "./event-conference-data"
     },
     "createRequest": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -45,7 +45,7 @@
     },
 
     "conference-entry-point": {
-        "object": "data/main.datareel/model/conference-entry-point.mjson"
+        "object": "./conference-entry-point.mjson"
     },
 
     "conferenceSolution": {

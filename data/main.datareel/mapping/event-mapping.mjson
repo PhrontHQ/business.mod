@@ -245,15 +245,15 @@
     },
 
     "EventObjectDescriptor": {
-        "object": "data/main.datareel/model/event.mjson"
+        "object": "../model/event.mjson"
     },
 
     "PersonDescriptor": {
-        "object": "data/main.datareel/model/person.mjson"
+        "object": "../model/person.mjson"
     },
 
     "ResourceDescriptor": {
-        "object": "data/main.datareel/model/resource.mjson"
+        "object": "../model/resource.mjson"
     },
 
     "event-creator-converter": {

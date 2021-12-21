@@ -19,6 +19,6 @@
     },
 
     "EmailAddressDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/email-address.mjson"
+        "object": "../../model/messaging-channel/email-address.mjson"
     }
 }

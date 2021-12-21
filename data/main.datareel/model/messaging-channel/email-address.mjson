@@ -11,11 +11,11 @@
                 {"@": "partyEmailAddresses"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/messaging-channel/email-address.mjson"
+                "%": "./email-address.mjson"
             },
             "exportName": "EmailAddress",
             "module": {
-                "%": "data/main.datareel/model/messaging-channel/email-address"
+                "%": "./email-address"
             },
             "modulePrototype":{"@": "EmailAddress"},
             "object":{"@": "EmailAddress"},
@@ -23,10 +23,10 @@
         }
     },
     "EmailAddress": {
-        "object": "data/main.datareel/model/messaging-channel/email-address"
+        "object": "./email-address"
     },
     "MessagingChannelDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+        "object": "./messaging-channel.mjson"
     },
     "email": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -61,7 +61,7 @@
        }
     },
     "PartyEmailAddressDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-email-address.mjson"
+        "object": "./party-email-address.mjson"
     }
 
 }

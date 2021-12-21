@@ -10,11 +10,11 @@
                 {"@": "name"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/service-engagement.mjson"
+                "%": "./service-engagement.mjson"
             },
             "exportName": "ServiceEngagement",
             "module": {
-                "%": "data/main.datareel/model/service-engagement"
+                "%": "./service-engagement"
             },
             "object":{"@": "ServiceEngagement"},
             "parent":{"@": "objectDescriptor"},
@@ -33,10 +33,10 @@
         }
     },
     "ServiceEngagement": {
-        "object": "data/main.datareel/model/service-engagement"
+        "object": "./service-engagement"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
     "serviceVariant": {
         "prototype": "montage/core/meta/property-descriptor",

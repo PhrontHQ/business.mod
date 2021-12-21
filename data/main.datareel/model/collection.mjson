@@ -12,11 +12,11 @@
                 {"@": "products"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/collection.mjson"
+                "%":"./collection.mjson"
             },
             "exportName": "Collection",
             "module": {
-                "%": "data/main.datareel/model/collection"
+                "%": "./collection"
             },
             "object":{"@": "collection"},
             "modulePrototype": {"@": "collectionPrototype"},
@@ -25,10 +25,10 @@
         }
     },
     "collection": {
-        "object": "data/main.datareel/model/collection"
+        "object": "./collection"
     },
     "collectionPrototype": {
-        "object": "data/main.datareel/model/collection"
+        "object": "./collection"
     },
     "title": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -65,7 +65,7 @@
         }
     },
     "Image_descriptor": {
-        "object": "data/main.datareel/model/image.mjson"
+        "object": "./image.mjson"
     },
     "ruleSet": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -77,7 +77,7 @@
         }
     },
     "CollectionRuleSet_descriptor": {
-        "object": "data/main.datareel/model/collection-rule-set.mjson"
+        "object": "./collection-rule-set.mjson"
     },
 
     "type": {
@@ -98,11 +98,11 @@
     },
 
     "product_descriptor": {
-        "object": "data/main.datareel/model/service.mjson"
+        "object": "./service.mjson"
     },
 
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     }
 
 

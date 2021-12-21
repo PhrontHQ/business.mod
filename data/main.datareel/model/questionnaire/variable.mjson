@@ -12,11 +12,11 @@
                 {"@": "respondentQuestionnaireVariableValues"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/questionnaire/variable.mjson"
+                "%":"./variable.mjson"
             },
             "exportName": "Variable",
             "module": {
-                "%": "data/main.datareel/model/questionnaire/variable"
+                "%": "./variable"
             },
             "object":{"@": "variable"},
             "modulePrototype": {"@": "variablePrototype"},
@@ -25,13 +25,13 @@
         }
     },
     "variable": {
-        "object": "data/main.datareel/model/questionnaire/variable"
+        "object": "./variable"
     },
     "variablePrototype": {
-        "object": "data/main.datareel/model/questionnaire/variable"
+        "object": "./variable"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "../data-object.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -72,7 +72,7 @@
         }
     },
     "questionnaireDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/questionnaire.mjson"
+        "object": "./questionnaire.mjson"
     },
     "questions": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -85,7 +85,7 @@
         }
     },
     "questionDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/question.mjson"
+        "object": "./question.mjson"
     },
     "respondentQuestionnaireVariableValues": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -98,7 +98,7 @@
         }
     },
     "respondentQuestionnaireVariableValuesDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-variable-value.mjson"
+        "object": "./respondent-questionnaire-variable-value.mjson"
     }
 
 }

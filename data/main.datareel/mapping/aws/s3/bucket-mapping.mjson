@@ -22,7 +22,7 @@
     },
 
     "BucketDescriptor": {
-        "object": "data/main.datareel/model/aws/s3/bucket.mjson"
+        "object": "../../../model/aws/s3/bucket.mjson"
     },
 
     "Bucket": {

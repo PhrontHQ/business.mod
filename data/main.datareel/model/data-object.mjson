@@ -14,17 +14,17 @@
                 {"@": "publicationDate"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/data-object.mjson"
+                "%": "./data-object.mjson"
             },
             "exportName": "DataObject",
             "module": {
-                "%": "data/main.datareel/model/data-object"
+                "%": "./data-object"
             },
             "object":{"@": "object"}
         }
     },
     "object": {
-        "object": "data/main.datareel/model/data-object"
+        "object": "./data-object"
     },
 
     "originId": {

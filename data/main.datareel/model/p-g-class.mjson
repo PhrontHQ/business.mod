@@ -10,11 +10,11 @@
                 {"@": "namespace"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/p-g-class.mjson"
+                "%":"./p-g-class.mjson"
             },
             "exportName": "PGClass",
             "module": {
-                "%": "data/main.datareel/model/p-g-class"
+                "%": "./p-g-class"
             },
             "object":{"@": "PGClass"},
             "modulePrototype": {"@": "PGClass"}
@@ -22,7 +22,7 @@
         }
     },
     "PGClass": {
-        "object": "data/main.datareel/model/p-g-class"
+        "object": "./p-g-class"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -55,7 +55,7 @@
         }
     },
     "PGCatalogDescriptor": {
-        "object": "data/main.datareel/model/p-g-catalog.mjson"
+        "object": "./p-g-catalog.mjson"
     }
 
 }

@@ -18,7 +18,7 @@
     },
 
     "ColorSpaceDescriptor": {
-        "object": "data/main.datareel/model/color-space.mjson"
+        "object": "../model/color-space.mjson"
     }
 
 }

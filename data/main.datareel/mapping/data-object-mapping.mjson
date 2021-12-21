@@ -35,7 +35,7 @@
     },
 
     "DataObjectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "../model/data-object.mjson"
     },
 
     "string-to-date-converter": {

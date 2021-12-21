@@ -48,7 +48,7 @@
         }
     },
     "RespondentQuestionnaireDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire.mjson"
+        "object": "../../model/questionnaire/respondent-questionnaire.mjson"
     },
 
     "respondentConverter": {

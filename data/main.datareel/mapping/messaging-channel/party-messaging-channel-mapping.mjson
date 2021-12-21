@@ -63,7 +63,7 @@
     },
 
     "PartyMessagingChannelDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-messaging-channel.mjson"
+        "object": "../../model/messaging-channel/party-messaging-channel.mjson"
     },
 
     "personPartyForeignKeyMapping": {
@@ -74,7 +74,7 @@
         }
     },
     "PersonDescriptor": {
-        "object": "data/main.datareel/model/person.mjson"
+        "object": "../../model/person.mjson"
     },
 
     "organizationPartyForeignKeyMapping": {
@@ -85,7 +85,7 @@
         }
     },
     "OrganizationDescriptor": {
-        "object": "data/main.datareel/model/organization.mjson"
+        "object": "../../model/organization.mjson"
     },
 
     "resourcePartyForeignKeyMapping": {
@@ -96,7 +96,7 @@
         }
     },
     "ResourceDescriptor": {
-        "object": "data/main.datareel/model/resource.mjson"
+        "object": "../../model/resource.mjson"
     },
 
     "employmentPositionStaffingPartyForeignKeyMapping": {
@@ -107,7 +107,7 @@
         }
     },
     "EmploymentPositionStaffingDescriptor": {
-        "object": "data/main.datareel/model/employment-position-staffing.mjson"
+        "object": "../../model/employment-position-staffing.mjson"
     },
 
     "b2cCustomerSupplierRelationshipDescriptorForeignKeyMapping": {
@@ -118,7 +118,7 @@
         }
     },
     "B2CCustomerSupplierRelationshipDescriptor": {
-        "object": "data/main.datareel/model/b-2-c-customer-supplier-relationship.mjson"
+        "object": "../../model/b-2-c-customer-supplier-relationship.mjson"
     },
 
     "partyConverter": {

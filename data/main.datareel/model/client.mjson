@@ -12,17 +12,17 @@
                 {"@": "mapCache"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/client.mjson"
+                "%": "./client.mjson"
             },
             "exportName": "Client",
             "module": {
-                "%": "data/main.datareel/model/client"
+                "%": "./client"
             },
             "object":{"@": "client"}
         }
     },
     "client": {
-        "object": "data/main.datareel/model/client"
+        "object": "./client"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -69,10 +69,10 @@
         }
     },
     "client-order_descriptor": {
-        "object": "data/main.datareel/model/client-order.mjson"
+        "object": "./client-order.mjson"
     },
     "image_descriptor": {
-        "object": "data/main.datareel/model/image.mjson"
+        "object": "./image.mjson"
     }
 
 }

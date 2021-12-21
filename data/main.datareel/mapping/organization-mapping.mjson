@@ -92,7 +92,7 @@
     },
 
     "OrganizationDescriptor": {
-        "object": "data/main.datareel/model/organization.mjson"
+        "object": "../model/organization.mjson"
     },
 
     "postalAddresses-value-converter": {

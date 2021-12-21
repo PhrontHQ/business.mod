@@ -33,7 +33,7 @@
     },
 
     "CountryDescriptor": {
-        "object": "data/main.datareel/model/country.mjson"
+        "object": "../model/country.mjson"
     },
 
     "geometryConverter": {

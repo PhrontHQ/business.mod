@@ -12,21 +12,21 @@
 
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/employment-position-staffing.mjson"
+                "%": "./employment-position-staffing.mjson"
             },
             "exportName": "EmploymentPositionStaffing",
             "module": {
-                "%": "data/main.datareel/model/employment-position-staffing"
+                "%": "./employment-position-staffing"
             },
             "object":{"@": "EmploymentPositionStaffing"},
             "parent":{"@": "party-party-relationship"}
         }
     },
     "EmploymentPositionStaffing": {
-        "object": "data/main.datareel/model/employment-position-staffing"
+        "object": "./employment-position-staffing"
     },
     "party-party-relationship": {
-        "object": "data/main.datareel/model/party-party-relationship.mjson"
+        "object": "./party-party-relationship.mjson"
     },
     "title": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -47,7 +47,7 @@
         }
     },
     "employment_type_descriptor": {
-        "object": "data/main.datareel/model/employment-type.mjson"
+        "object": "./employment-type.mjson"
     },
     "employmentPosition": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -60,7 +60,7 @@
         }
     },
     "employment-position-descriptor": {
-        "object": "data/main.datareel/model/employment-position.mjson"
+        "object": "./employment-position.mjson"
     },
     "employee": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -73,7 +73,7 @@
         }
     },
     "person_descriptor": {
-        "object": "data/main.datareel/model/person.mjson"
+        "object": "./person.mjson"
     },
     "role": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -85,7 +85,7 @@
         }
     },
     "role_descriptor": {
-        "object": "data/main.datareel/model/role.mjson"
+        "object": "./role.mjson"
     },
     "b2cCustomerRelationships": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -98,7 +98,7 @@
         }
     },
     "B2CCustomerSupplierRelationshipDescriptor": {
-        "object": "data/main.datareel/model/b-2-c-customer-supplier-relationship.mjson"
+        "object": "./b-2-c-customer-supplier-relationship.mjson"
     }
 
 

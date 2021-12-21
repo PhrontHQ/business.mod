@@ -14,11 +14,11 @@
                 {"@": "originLocation"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/asset.mjson"
+                "%":"./asset.mjson"
             },
             "exportName": "Asset",
             "module": {
-                "%": "data/main.datareel/model/asset"
+                "%": "./asset"
             },
             "modulePrototype":{"@": "AssetPrototype"},
             "object":{"@": "AssetPrototype"},
@@ -26,10 +26,10 @@
         }
     },
     "AssetPrototype": {
-        "object": "data/main.datareel/model/asset"
+        "object": "./asset"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
     "s3BucketName": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -48,7 +48,7 @@
        }
     },
     "BucketDescriptor": {
-        "object": "data/main.datareel/model/aws/s3/bucket.mjson"
+        "object": "./aws/s3/bucket.mjson"
     },
 
      "s3ObjectKey": {
@@ -67,7 +67,7 @@
         }
     },
     "S3ObjectDescriptor": {
-        "object": "data/main.datareel/model/aws/s3/object.mjson"
+        "object": "./aws/s3/object.mjson"
     },
 
     "description": {

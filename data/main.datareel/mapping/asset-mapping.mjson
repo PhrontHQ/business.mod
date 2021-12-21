@@ -34,7 +34,7 @@
     },
 
     "Asset": {
-        "object": "data/main.datareel/model/asset.mjson"
+        "object": "../model/asset.mjson"
     },
     "s3BucketForeignKeyConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",

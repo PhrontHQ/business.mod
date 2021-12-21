@@ -17,6 +17,6 @@
     },
 
     "PartyInstantMessageAddressDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-instant-message-address.mjson"
+        "object": "../../model/messaging-channel/party-instant-message-address.mjson"
     }
 }

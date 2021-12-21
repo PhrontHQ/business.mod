@@ -41,7 +41,7 @@
     },
 
     "CustomerEngagementQuestionnaireObjectDescriptor": {
-        "object": "data/main.datareel/model/customer-engagement-questionnaire.mjson"
+        "object": "../model/customer-engagement-questionnaire.mjson"
     },
 
     "servicesForeignKeyConverter": {

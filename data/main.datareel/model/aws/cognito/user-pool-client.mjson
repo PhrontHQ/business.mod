@@ -16,17 +16,17 @@
                 {"@": "tokenValidityUnits"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/aws/cognito/user-pool-client.mjson"
+                "%": "./user-pool-client.mjson"
             },
             "exportName": "UserPoolClient",
             "module": {
-                "%": "data/main.datareel/model/aws/cognito/user-pool-client"
+                "%": "./user-pool-client"
             },
             "object":{"@": "UserPoolClient"}
         }
     },
     "UserPoolClient": {
-        "object": "data/main.datareel/model/aws/cognito/user-pool-client"
+        "object": "./user-pool-client"
     },
     "clientId": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -53,7 +53,7 @@
        }
     },
     "UserPoolDescriptor": {
-        "object": "data/main.datareel/model/aws/cognito/user-pool.mjson"
+        "object": "./user-pool.mjson"
     },
     "clientName": {
         "prototype": "montage/core/meta/property-descriptor",

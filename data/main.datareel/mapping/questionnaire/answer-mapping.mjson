@@ -40,7 +40,7 @@
     },
 
     "AnswerDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/answer.mjson"
+        "object": "../../model/questionnaire/answer.mjson"
     },
     "respondentQuestionnaireAnswersConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",

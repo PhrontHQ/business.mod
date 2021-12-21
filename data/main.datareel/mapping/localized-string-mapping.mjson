@@ -25,7 +25,7 @@
     },
 
     "LocalizedStringDescriptor": {
-        "object": "data/main.datareel/model/localized-string.mjson"
+        "object": "../model/localized-string.mjson"
     },
     "jsonbConverter": {
         "prototype": "../converter/postgresql-jsonb-converter"

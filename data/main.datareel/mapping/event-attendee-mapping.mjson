@@ -24,6 +24,6 @@
     },
 
     "EventAttendee": {
-        "object": "data/main.datareel/model/event-attendee.mjson"
+        "object": "../model/event-attendee.mjson"
     }
 }

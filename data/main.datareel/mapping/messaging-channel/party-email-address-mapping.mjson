@@ -18,6 +18,6 @@
     },
 
     "PartyEmailAddressDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-email-address.mjson"
+        "object": "../../model/messaging-channel/party-email-address.mjson"
     }
 }

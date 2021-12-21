@@ -19,6 +19,6 @@
     },
 
     "IntangibleProductVariantObjectDescriptor": {
-        "object": "data/main.datareel/model/intangible-product-variant.mjson"
+        "object": "../model/intangible-product-variant.mjson"
     }
 }

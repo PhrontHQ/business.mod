@@ -14,21 +14,21 @@
 
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/b-2-c-customer-supplier-responsible-party.mjson"
+                "%": "./b-2-c-customer-supplier-responsible-party.mjson"
             },
             "exportName": "B2CCustomerSupplierResponsibleParty",
             "module": {
-                "%": "data/main.datareel/model/b-2-c-customer-supplier-responsible-party"
+                "%": "./b-2-c-customer-supplier-responsible-party"
             },
             "object":{"@": "b-2-c-customer-supplier-responsible-party"},
             "parent":{"@": "party-party-relationship"}
         }
     },
     "b-2-c-customer-supplier-responsible-party": {
-        "object": "data/main.datareel/model/b-2-c-customer-supplier-responsible-party"
+        "object": "./b-2-c-customer-supplier-responsible-party"
     },
     "party-party-relationship": {
-        "object": "data/main.datareel/model/party-party-relationship.mjson"
+        "object": "./party-party-relationship.mjson"
     },
 
     "b2cCustomerSupplierRelationship": {
@@ -42,7 +42,7 @@
         }
     },
     "B2CCustomerSupplierRelationshipDescriptor": {
-        "object": "data/main.datareel/model/b-2-c-customer-supplier-relationship.mjson"
+        "object": "./b-2-c-customer-supplier-relationship.mjson"
     },
 
     "responsibleParty": {
@@ -56,7 +56,7 @@
         }
     },
     "person_descriptor": {
-        "object": "data/main.datareel/model/person.mjson"
+        "object": "./person.mjson"
     },
 
     "roleRankings": {
@@ -69,7 +69,7 @@
         }
     },
     "roleRankingDescriptor": {
-        "object": "data/main.datareel/model/role-ranking.mjson"
+        "object": "./role-ranking.mjson"
     },
 
     "notes": {

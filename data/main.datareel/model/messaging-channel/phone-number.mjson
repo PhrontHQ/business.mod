@@ -24,11 +24,11 @@
                 {"@": "partySMSNumbers"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/messaging-channel/phone-number.mjson"
+                "%": "./phone-number.mjson"
             },
             "exportName": "PhoneNumber",
             "module": {
-                "%": "data/main.datareel/model/messaging-channel/phone-number"
+                "%": "./phone-number"
             },
             "modulePrototype":{"@": "phone-number"},
             "object":{"@": "phone-number"},
@@ -36,10 +36,10 @@
         }
     },
     "phone-number": {
-        "object": "data/main.datareel/model/messaging-channel/phone-number"
+        "object": "./phone-number"
     },
     "MessagingChannelDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+        "object": "./messaging-channel.mjson"
     },
     "countryCode": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -189,7 +189,7 @@
        }
     },
     "PartyPhoneNumberDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-phone-number.mjson"
+        "object": "./party-phone-number.mjson"
     },
     "partySMSNumbers": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -201,7 +201,7 @@
        }
     },
     "PartySMSNumberDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-s-m-s-number.mjson"
+        "object": "./party-s-m-s-number.mjson"
     }
 
 }

@@ -7,17 +7,17 @@
                 {"@": "name"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/storefront.mjson"
+                "%": "./storefront.mjson"
             },
             "exportName": "Storefront",
             "module": {
-                "%": "data/main.datareel/model/storefront"
+                "%": "./storefront"
             },
             "object":{"@": "storefront"}
       }
     },
     "storefront": {
-        "object": "data/main.datareel/model/storefront"
+        "object": "./storefront"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",

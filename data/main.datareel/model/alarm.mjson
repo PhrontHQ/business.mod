@@ -6,11 +6,11 @@
             "propertyDescriptors": [
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/alarm.mjson"
+                "%":"./alarm.mjson"
             },
             "exportName": "Alarm",
             "module": {
-                "%": "data/main.datareel/model/alarm"
+                "%": "./alarm"
             },
             "modulePrototype":{"@": "AlarmPrototype"},
             "object":{"@": "AlarmPrototype"},
@@ -18,10 +18,10 @@
         }
     },
     "AlarmPrototype": {
-        "object": "data/main.datareel/model/alarm"
+        "object": "./alarm"
     },
     "eventDescriptor": {
-        "object": "data/main.datareel/model/event.mjson"
+        "object": "./event.mjson"
     }
 
 }

@@ -10,18 +10,18 @@
                 {"@": "person"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/event-attendee.mjson"
+                "%":"./event-attendee.mjson"
             },
             "exportName": "EventAttendee",
             "module": {
-                "%": "data/main.datareel/model/event-attendee"
+                "%": "./event-attendee"
             },
             "modulePrototype":{"@": "EventPerson"},
             "object":{"@": "EventPerson"}
         }
     },
     "EventPerson": {
-        "object": "data/main.datareel/model/event-person"
+        "object": "./event-person"
     },
     "email": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -54,6 +54,6 @@
         }
     },
     "person-descriptor": {
-        "object": "data/main.datareel/model/person.mjson"
+        "object": "./person.mjson"
     }
 }

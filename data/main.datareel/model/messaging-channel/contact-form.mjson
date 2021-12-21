@@ -9,11 +9,11 @@
                 {"@": "formData"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/messaging-channel/contact-form.mjson"
+                "%": "./contact-form.mjson"
             },
             "exportName": "ContactForm",
             "module": {
-                "%": "data/main.datareel/model/messaging-channel/contact-form"
+                "%": "./contact-form"
             },
             "modulePrototype":{"@": "ContactForm"},
             "object":{"@": "ContactForm"},
@@ -21,10 +21,10 @@
         }
     },
     "ContactForm": {
-        "object": "data/main.datareel/model/messaging-channel/contact-form"
+        "object": "./contact-form"
     },
     "MessagingChannelDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+        "object": "./messaging-channel.mjson"
     },
     "url": {
         "prototype": "montage/core/meta/property-descriptor",

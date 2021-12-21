@@ -43,7 +43,7 @@
     },
 
     "EmploymenPositiontDescriptor": {
-        "object": "data/main.datareel/model/employment-position.mjson"
+        "object": "../model/employment-position.mjson"
     },
     "allowedEmploymentTypesConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",

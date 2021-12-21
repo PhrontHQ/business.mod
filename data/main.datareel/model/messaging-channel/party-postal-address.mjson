@@ -9,11 +9,11 @@
                 {"@": "hostedEvents"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/messaging-channel/party-postal-address.mjson"
+                "%":"./party-postal-address.mjson"
             },
             "exportName": "PartyPostalAddress",
             "module": {
-                "%": "data/main.datareel/model/messaging-channel/party-postal-address"
+                "%": "./party-postal-address"
             },
             "modulePrototype":{"@": "PartyPostalAddress"},
             "object":{"@": "PartyPostalAddress"},
@@ -21,10 +21,10 @@
         }
     },
     "PartyPostalAddress": {
-        "object": "data/main.datareel/model/messaging-channel/party-postal-address"
+        "object": "./party-postal-address"
     },
     "PartyMessagingChannelDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-messaging-channel.mjson"
+        "object": "./party-messaging-channel.mjson"
     },
 
     "party": {
@@ -39,7 +39,7 @@
         }
     },
     "PartyDescriptor": {
-        "object": "data/main.datareel/model/party.mjson"
+        "object": "../party.mjson"
     },
 
     "messagingChannel": {
@@ -52,7 +52,7 @@
         }
     },
     "PostalAddress": {
-        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
+        "object": "./postal-address.mjson"
     },
 
     "hostedEvents": {
@@ -66,6 +66,6 @@
         }
     },
     "EventDescriptor": {
-        "object": "data/main.datareel/model/event.mjson"
+        "object": "../event.mjson"
     }
 }

@@ -15,11 +15,11 @@
                 {"@": "events"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/questionnaire/respondent-questionnaire.mjson"
+                "%":"./respondent-questionnaire.mjson"
             },
             "exportName": "RespondentQuestionnaire",
             "module": {
-                "%": "data/main.datareel/model/questionnaire/respondent-questionnaire"
+                "%": "./respondent-questionnaire"
             },
             "object": {"@": "questionnairePrototype"},
             "modulePrototype": {"@": "questionnairePrototype"},
@@ -27,10 +27,10 @@
         }
     },
     "questionnairePrototype": {
-        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire"
+        "object": "./respondent-questionnaire"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "../data-object.mjson"
     },
 
     "respondent": {
@@ -44,7 +44,7 @@
         }
     },
     "personDescriptor": {
-        "object": "data/main.datareel/model/person.mjson"
+        "object": "../person.mjson"
     },
 
     "questionnaire": {
@@ -58,7 +58,7 @@
         }
     },
     "questionnaireDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/questionnaire.mjson"
+        "object": "./questionnaire.mjson"
     },
 
     "respondentVariableValues": {
@@ -72,7 +72,7 @@
         }
     },
     "respondentQuestionnaireVariableValueDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-variable-value.mjson"
+        "object": "./respondent-questionnaire-variable-value.mjson"
     },
 
     "respondentAnswers": {
@@ -86,7 +86,7 @@
         }
     },
     "respondentQuestionnaireAnswerDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-answer.mjson"
+        "object": "./respondent-questionnaire-answer.mjson"
     },
 
     "completionDate": {
@@ -119,7 +119,7 @@
         }
     },
     "AssetDescriptor": {
-        "object": "data/main.datareel/model/asset.mjson"
+        "object": "../asset.mjson"
     },
 
     "notes": {
@@ -143,7 +143,7 @@
         }
     },
     "eventDescriptor": {
-        "object": "data/main.datareel/model/event.mjson"
+        "object": "../event.mjson"
     }
 
 }

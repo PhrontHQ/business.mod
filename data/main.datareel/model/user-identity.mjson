@@ -25,11 +25,11 @@
                 {"@": "timeZone"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/user-identity.mjson"
+                "%": "./user-identity.mjson"
             },
             "exportName": "UserIdentity",
             "module": {
-                "%": "data/main.datareel/model/user-identity"
+                "%": "./user-identity"
             },
             "object":{"@": "user-identity"},
             "parent":{"@": "IdentityDescriptor"}
@@ -40,7 +40,7 @@
     },
 
     "user-identity": {
-        "object": "data/main.datareel/model/user-identity"
+        "object": "./user-identity"
     },
     "username": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -143,7 +143,7 @@
         }
     },
     "image_descriptor": {
-        "object": "data/main.datareel/model/image.mjson"
+        "object": "./image.mjson"
     },
     "addresses": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -155,7 +155,7 @@
        }
     },
     "addresses_descriptor": {
-        "object": "data/main.datareel/model/messaging-channel/postal-address.mjson"
+        "object": "./messaging-channel/postal-address.mjson"
     },
     "tags": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -183,7 +183,7 @@
        }
     },
     "personDescriptor": {
-        "object": "data/main.datareel/model/person.mjson"
+        "object": "./person.mjson"
     },
     "locale": {
         "prototype": "montage/core/meta/property-descriptor",

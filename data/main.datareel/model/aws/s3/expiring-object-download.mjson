@@ -12,21 +12,21 @@
                 {"@": "expirationDelay"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/aws/s3/expiring-object-download.mjson"
+                "%": "./expiring-object-download.mjson"
             },
             "exportName": "ExpiringObjectDownload",
             "module": {
-                "%": "data/main.datareel/model/aws/s3/expiring-object-download"
+                "%": "./expiring-object-download"
             },
             "object":{"@": "ExpiringObjectDownloadPrototype"},
             "parent":{"@": "DataObjectDescriptor"}
         }
     },
     "ExpiringObjectDownloadPrototype": {
-        "object": "data/main.datareel/model/aws/s3/expiring-object-download"
+        "object": "./expiring-object-download"
     },
     "DataObjectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "../../data-object.mjson"
     },
 
     "key": {
@@ -55,7 +55,7 @@
        }
     },
     "BucketDescriptor": {
-        "object": "data/main.datareel/model/aws/s3/bucket.mjson"
+        "object": "./bucket.mjson"
     },
 
     "object": {
@@ -68,7 +68,7 @@
        }
     },
     "ObjectDescriptor": {
-        "object": "data/main.datareel/model/aws/s3/object.mjson"
+        "object": "./object.mjson"
     },
 
     "signedUrl": {

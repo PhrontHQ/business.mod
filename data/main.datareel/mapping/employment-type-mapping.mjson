@@ -19,6 +19,6 @@
     },
 
     "EmploymentType": {
-        "object": "data/main.datareel/model/employment-type.mjson"
+        "object": "../model/employment-type.mjson"
     }
 }

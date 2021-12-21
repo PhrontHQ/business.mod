@@ -24,22 +24,22 @@
                 {"@": "tags"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/product.mjson"
+                "%": "./product.mjson"
             },
             "exportName": "Product",
             "module": {
-                "%": "data/main.datareel/model/product"
+                "%": "./product"
             },
             "object":{"@": "product"},
             "parent":{"@": "objectDescriptor"}
         }
     },
     "product": {
-        "object": "data/main.datareel/model/product"
+        "object": "./product"
     },
 
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
 
     "template": {
@@ -90,7 +90,7 @@
         }
     },
     "image_descriptor": {
-        "object": "data/main.datareel/model/image.mjson"
+        "object": "./image.mjson"
     },
     "variants": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -202,25 +202,25 @@
 
     },
     "collectionDescriptor": {
-        "object": "data/main.datareel/model/collection.mjson"
+        "object": "./collection.mjson"
     },
     "order_line_item": {
-        "object": "data/main.datareel/model/order-line-item.mjson"
+        "object": "./order-line-item.mjson"
     },
     "organization_descriptor": {
-        "object": "data/main.datareel/model/organization.mjson"
+        "object": "./organization.mjson"
     },
     "storefront_descriptor": {
-        "object": "data/main.datareel/model/storefront.mjson"
+        "object": "./storefront.mjson"
     },
     "variant_descriptor": {
-        "object": "data/main.datareel/model/product-variant.mjson"
+        "object": "./product-variant.mjson"
     },
     "party_address_descriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-postal-address.mjson"
+        "object": "./messaging-channel/party-postal-address.mjson"
     },
     "productOptionDescriptor": {
-        "object": "data/main.datareel/model/product-option.mjson"
+        "object": "./product-option.mjson"
     }
 
 }

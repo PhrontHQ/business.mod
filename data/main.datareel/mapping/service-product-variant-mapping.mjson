@@ -41,7 +41,7 @@
     },
 
     "ServiceProductVariantObjectDescriptor": {
-        "object": "data/main.datareel/model/service-product-variant.mjson"
+        "object": "../model/service-product-variant.mjson"
     },
 
     "string-to-range-converter": {

@@ -38,7 +38,7 @@
     },
 
     "PhoneNumber": {
-        "object": "data/main.datareel/model/messaging-channel/phone-number.mjson"
+        "object": "../../model/messaging-channel/phone-number.mjson"
     },
 
     "partyPhoneNumbersConverter": {

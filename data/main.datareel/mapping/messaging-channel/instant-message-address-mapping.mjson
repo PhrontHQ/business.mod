@@ -20,6 +20,6 @@
     },
 
     "InstantMessageAddressDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/instant-message-address.mjson"
+        "object": "../../model/messaging-channel/instant-message-address.mjson"
     }
 }

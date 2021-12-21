@@ -11,17 +11,17 @@
                 {"@": "email"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/vendor-contact.mjson"
+                "%": "./vendor-contact.mjson"
             },
             "exportName": "VendorContact",
             "module": {
-                "%": "data/main.datareel/model/vendor-contact"
+                "%": "./vendor-contact"
             },
             "object":{"@": "vendorContact"}
         }
     },
     "vendorContact": {
-        "object": "data/main.datareel/model/vendor-contact"
+        "object": "./vendor-contact"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -61,10 +61,10 @@
         }
     },
     "vendor_descriptor": {
-        "object": "data/main.datareel/model/organization.mjson"
+        "object": "./organization.mjson"
     },
     "image_descriptor": {
-        "object": "data/main.datareel/model/image.mjson"
+        "object": "./image.mjson"
     }
 
 }

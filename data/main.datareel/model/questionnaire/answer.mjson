@@ -22,11 +22,11 @@
 
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/questionnaire/answer.mjson"
+                "%":"./answer.mjson"
             },
             "exportName": "Answer",
             "module": {
-                "%": "data/main.datareel/model/questionnaire/answer"
+                "%": "./answer"
             },
             "object":{"@": "answer"},
             "modulePrototype": {"@": "answerPrototype"},
@@ -34,13 +34,13 @@
         }
     },
     "answer": {
-        "object": "data/main.datareel/model/questionnaire/answer"
+        "object": "./answer"
     },
     "answerPrototype": {
-        "object": "data/main.datareel/model/questionnaire/answer"
+        "object": "./answer"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "../data-object.mjson"
     },
     "type": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -163,7 +163,7 @@
     },
 
     "respondentQuestionnaireAnswerDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-answer.mjson"
+        "object": "./respondent-questionnaire-answer.mjson"
     },
 
     "respondentQuestionnaireVariableValues": {
@@ -177,7 +177,7 @@
     },
 
     "respondentQuestionnaireVariableValueDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-variable-value.mjson"
+        "object": "./respondent-questionnaire-variable-value.mjson"
     }
 
 

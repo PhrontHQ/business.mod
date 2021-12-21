@@ -7,21 +7,21 @@
                  {"@": "product"}
            ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/intangible-product-variant.mjson"
+                "%": "./intangible-product-variant.mjson"
             },
             "exportName": "IntangibleProductVariant",
             "module": {
-                "%": "data/main.datareel/model/intangible-product-variant"
+                "%": "./intangible-product-variant"
             },
             "object":{"@": "IntangibleProductVariant"},
             "parent":{"@": "ProductVariant"}
         }
     },
     "IntangibleProductVariant": {
-        "object": "data/main.datareel/model/intangible-product-variant"
+        "object": "./intangible-product-variant"
     },
     "ProductVariant": {
-        "object": "data/main.datareel/model/product-variant.mjson"
+        "object": "./product-variant.mjson"
     },
     "product": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -33,7 +33,7 @@
         }
     },
     "IntangibleProductDescriptor": {
-        "object": "data/main.datareel/model/intangible-product.mjson"
+        "object": "./intangible-product.mjson"
     }
 
 }

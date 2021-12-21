@@ -9,11 +9,11 @@
                 {"@": "userName"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/messaging-channel/instant-message-address.mjson"
+                "%": "./instant-message-address.mjson"
             },
             "exportName": "InstantMessageAddress",
             "module": {
-                "%": "data/main.datareel/model/messaging-channel/instant-message-address"
+                "%": "./instant-message-address"
             },
             "modulePrototype":{"@": "InstantMessageAddress"},
             "object":{"@": "InstantMessageAddress"},
@@ -21,10 +21,10 @@
         }
     },
     "InstantMessageAddress": {
-        "object": "data/main.datareel/model/messaging-channel/instant-message-address"
+        "object": "./instant-message-address"
     },
     "MessagingChannelDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+        "object": "./messaging-channel.mjson"
     },
     "serviceName": {
         "prototype": "montage/core/meta/property-descriptor",

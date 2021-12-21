@@ -8,11 +8,11 @@
                 {"@": "messagingChannel"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/messaging-channel/party-instant-message-address.mjson"
+                "%":"./party-instant-message-address.mjson"
             },
             "exportName": "PartyInstantMessageAddress",
             "module": {
-                "%": "data/main.datareel/model/messaging-channel/party-instant-message-address"
+                "%": "./party-instant-message-address"
             },
             "modulePrototype":{"@": "PartyInstantMessageAddress"},
             "object":{"@": "PartyInstantMessageAddress"},
@@ -20,10 +20,10 @@
         }
     },
     "PartyInstantMessageAddress": {
-        "object": "data/main.datareel/model/messaging-channel/party-instant-message-address"
+        "object": "./party-instant-message-address"
     },
     "PartyMessagingChannelDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-messaging-channel.mjson"
+        "object": "./party-messaging-channel.mjson"
     },
 
     "party": {
@@ -38,7 +38,7 @@
         }
     },
     "PartyDescriptor": {
-        "object": "data/main.datareel/model/party.mjson"
+        "object": "../party.mjson"
     },
 
     "messagingChannel": {
@@ -51,6 +51,6 @@
         }
     },
     "InstantMessageAddress": {
-        "object": "data/main.datareel/model/messaging-channel/instant-message-address.mjson"
+        "object": "./instant-message-address.mjson"
     }
 }

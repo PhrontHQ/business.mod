@@ -36,11 +36,11 @@
     },
 
     "ExpiringObjectDownload": {
-        "object": "data/main.datareel/model/aws/s3/expiring-object-download.mjson"
+        "object": "./model/aws/s3/expiring-object-download.mjson"
     },
 
     "ExpiringObjectDownloadMapping": {
-        "object": "data/main.datareel/mapping/aws/s3/expiring-object-download-mapping.mjson"
+        "object": "./mapping/aws/s3/expiring-object-download-mapping.mjson"
     }
 
 }

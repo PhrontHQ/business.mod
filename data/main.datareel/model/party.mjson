@@ -18,21 +18,21 @@
                 {"@": "images"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/party.mjson"
+                "%": "./party.mjson"
             },
             "exportName": "Party",
             "module": {
-                "%": "data/main.datareel/model/party"
+                "%": "./party"
             },
             "object":{"@": "party"},
             "parent":{"@": "objectDescriptor"}
         }
     },
     "party": {
-        "object": "data/main.datareel/model/party"
+        "object": "./party"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
     "existenceTimeRange": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -58,7 +58,7 @@
         }
     },
     "PartyPostalAddressDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-postal-address.mjson"
+        "object": "./messaging-channel/party-postal-address.mjson"
     },
     "emailAddresses": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -72,7 +72,7 @@
         }
     },
     "PartyEmailAddressDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-email-address.mjson"
+        "object": "./messaging-channel/party-email-address.mjson"
     },
     "phoneNumbers": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -86,7 +86,7 @@
         }
     },
     "PartyPhoneNumberDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-phone-number.mjson"
+        "object": "./messaging-channel/party-phone-number.mjson"
     },
 
     "smsNumbers": {
@@ -100,7 +100,7 @@
         }
     },
     "PartySMSNumberDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-s-m-s-number.mjson"
+        "object": "./messaging-channel/party-s-m-s-number.mjson"
     },
 
     "instantMessageAddresses": {
@@ -115,7 +115,7 @@
         }
     },
     "PartyInstantMessageAddressDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-instant-message-address.mjson"
+        "object": "./messaging-channel/party-instant-message-address.mjson"
     },
     "contactForms": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -138,7 +138,7 @@
         }
     },
     "PartyContactFormDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-contact-form.mjson"
+        "object": "./messaging-channel/party-contact-form.mjson"
     },
     "socialProfiles": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -151,7 +151,7 @@
         }
     },
     "SocialProfileFormDescriptor": {
-        "object": "data/main.datareel/model/social-profile.mjson"
+        "object": "./social-profile.mjson"
     },
     "calendars": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -164,7 +164,7 @@
         }
     },
     "calendar_descriptor": {
-        "object": "data/main.datareel/model/calendar.mjson"
+        "object": "./calendar.mjson"
     },
 
     "eventsParticipatingIn": {
@@ -178,7 +178,7 @@
         }
     },
     "event_descriptor": {
-        "object": "data/main.datareel/model/event.mjson"
+        "object": "./event.mjson"
     },
 
     "images": {
@@ -190,7 +190,7 @@
         }
     },
     "image_descriptor": {
-        "object": "data/main.datareel/model/image.mjson"
+        "object": "./image.mjson"
     }
 
 }

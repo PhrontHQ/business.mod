@@ -23,7 +23,7 @@
     },
 
     "ContactFormDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/contact-form.mjson"
+        "object": "../../model/messaging-channel/contact-form.mjson"
     },
 
     "embedded-value-converter": {

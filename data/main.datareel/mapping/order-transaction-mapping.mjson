@@ -32,7 +32,7 @@
     },
 
     "OrderTransaction": {
-        "object": "data/main.datareel/model/order-transaction.mjson"
+        "object": "../model/order-transaction.mjson"
     },
     "orderConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",

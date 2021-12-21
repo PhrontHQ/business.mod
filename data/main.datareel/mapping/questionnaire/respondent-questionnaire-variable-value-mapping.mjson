@@ -30,7 +30,7 @@
         }
     },
     "RespondentQuestionnaireVariableValueDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-variable-value.mjson"
+        "object": "../../model/questionnaire/respondent-questionnaire-variable-value.mjson"
     },
 
     "respondentQuestionnaireConverter": {

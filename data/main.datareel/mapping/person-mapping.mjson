@@ -107,7 +107,7 @@
     },
 
     "PersonDescriptor": {
-        "object": "data/main.datareel/model/person.mjson"
+        "object": "../model/person.mjson"
     },
 
     "postalAddresses-value-converter": {

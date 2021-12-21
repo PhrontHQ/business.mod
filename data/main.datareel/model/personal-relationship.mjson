@@ -10,21 +10,21 @@
                 {"@": "secondPersonRelationshipRole"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/personal-relationship.mjson"
+                "%": "./personal-relationship.mjson"
             },
             "exportName": "PersonalRelationship",
             "module": {
-                "%": "data/main.datareel/model/personal-relationship"
+                "%": "./personal-relationship"
             },
             "object":{"@": "personal-relationship"},
             "parent":{"@": "party-party-relationship"}
         }
     },
     "personal-relationship": {
-        "object": "data/main.datareel/model/personal-relationship"
+        "object": "./personal-relationship"
     },
     "party-party-relationship": {
-        "object": "data/main.datareel/model/party-party-relationship.mjson"
+        "object": "./party-party-relationship.mjson"
     },
     "firstPerson": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -37,7 +37,7 @@
         }
     },
     "person_descriptor": {
-        "object": "data/main.datareel/model/person.mjson"
+        "object": "./person.mjson"
     },
     "firstPersonRelationshipRole": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -49,7 +49,7 @@
         }
     },
     "role_descriptor": {
-        "object": "data/main.datareel/model/role.mjson"
+        "object": "./role.mjson"
     },
     "secondPerson": {
         "prototype": "montage/core/meta/property-descriptor",

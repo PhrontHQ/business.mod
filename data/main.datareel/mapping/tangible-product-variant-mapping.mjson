@@ -21,6 +21,6 @@
     },
 
     "TangibleProductVariantObjectDescriptor": {
-        "object": "data/main.datareel/model/tangible-product-variant.mjson"
+        "object": "../model/tangible-product-variant.mjson"
     }
 }

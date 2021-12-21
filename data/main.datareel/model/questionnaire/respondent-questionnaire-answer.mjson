@@ -11,11 +11,11 @@
                 {"@": "respondentNotes"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/questionnaire/respondent-questionnaire-answer.mjson"
+                "%":"./respondent-questionnaire-answer.mjson"
             },
             "exportName": "RespondentQuestionnaireAnswer",
             "module": {
-                "%": "data/main.datareel/model/questionnaire/respondent-questionnaire-answer"
+                "%": "./respondent-questionnaire-answer"
             },
             "object": {"@": "respondentQuestionnaireAnswerPrototype"},
             "modulePrototype": {"@": "respondentQuestionnaireAnswerPrototype"},
@@ -24,10 +24,10 @@
         }
     },
     "respondentQuestionnaireAnswerPrototype": {
-        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire-answer"
+        "object": "./respondent-questionnaire-answer"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "../data-object.mjson"
     },
 
     "respondentQuestionnaire": {
@@ -41,7 +41,7 @@
         }
     },
     "respondentQuestionnaireDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire.mjson"
+        "object": "./respondent-questionnaire.mjson"
     },
 
     "questionnaireQuestion": {
@@ -55,7 +55,7 @@
         }
     },
     "questionnaireQuestionDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/questionnaire-question.mjson"
+        "object": "./questionnaire-question.mjson"
     },
 
     "answers": {
@@ -68,7 +68,7 @@
         }
     },
     "answerDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/answer.mjson"
+        "object": "./answer.mjson"
     },
 
     "completionDate": {

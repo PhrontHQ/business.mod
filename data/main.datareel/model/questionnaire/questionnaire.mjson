@@ -16,11 +16,11 @@
                 {"@": "customerEngagementQuestionnaires"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/questionnaire/questionnaire.mjson"
+                "%":"./questionnaire.mjson"
             },
             "exportName": "Questionnaire",
             "module": {
-                "%": "data/main.datareel/model/questionnaire/questionnaire"
+                "%": "./questionnaire"
             },
             "object":{"@": "questionnaire"},
             "modulePrototype": {"@": "questionnairePrototype"},
@@ -29,13 +29,13 @@
         }
     },
     "questionnaire": {
-        "object": "data/main.datareel/model/questionnaire/questionnaire"
+        "object": "./questionnaire"
     },
     "questionnairePrototype": {
-        "object": "data/main.datareel/model/questionnaire/questionnaire"
+        "object": "./questionnaire"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "../data-object.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -67,7 +67,7 @@
         }
     },
     "Image_descriptor": {
-        "object": "data/main.datareel/model/image.mjson"
+        "object": "../image.mjson"
     },
 
     "description": {
@@ -91,7 +91,7 @@
         }
     },
     "questionnaireQuestionDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/questionnaire-question.mjson"
+        "object": "./questionnaire-question.mjson"
     },
     "userContextVariables": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -104,7 +104,7 @@
         }
     },
     "variableDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/variable.mjson"
+        "object": "./variable.mjson"
     },
 
     "referrerQuestionnaire": {
@@ -140,7 +140,7 @@
        }
     },
     "respondentQuestionnairesDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/respondent-questionnaire.mjson"
+        "object": "./respondent-questionnaire.mjson"
     },
 
     "customerEngagementQuestionnaires": {
@@ -154,7 +154,7 @@
        }
     },
     "CustomerEngagementQuestionnaireDescriptor": {
-        "object": "data/main.datareel/model/customer-engagement-questionnaire.mjson"
+        "object": "../customer-engagement-questionnaire.mjson"
     }
 
 }

@@ -32,7 +32,7 @@
     },
 
     "RoleDescriptor": {
-        "object": "data/main.datareel/model/role.mjson"
+        "object": "../model/role.mjson"
     },
     "eventsWithParticipationRoleConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",

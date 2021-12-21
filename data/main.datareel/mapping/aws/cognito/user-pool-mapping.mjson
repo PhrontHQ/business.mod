@@ -35,7 +35,7 @@
     },
 
     "UserPoolDescriptor": {
-        "object": "data/main.datareel/model/aws/cognito/user-pool.mjson"
+        "object": "../../../model/aws/cognito/user-pool.mjson"
     },
 
     "IdDescriptor": {

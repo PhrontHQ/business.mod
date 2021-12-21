@@ -7,17 +7,17 @@
                 {"@": "name"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/color/color-space.mjson"
+                "%": "./color-space.mjson"
             },
             "exportName": "ColorSpace",
             "module": {
-                "%": "data/main.datareel/model/color/color-space"
+                "%": "./color-space"
             },
             "object":{"@": "color-space"}
         }
     },
     "color-space": {
-        "object": "data/main.datareel/model/color/color-space"
+        "object": "./color-space"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",

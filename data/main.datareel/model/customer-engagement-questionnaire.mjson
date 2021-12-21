@@ -13,11 +13,11 @@
                 {"@": "participationStatusOptionalForEvent"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/customer-engagement-questionnaire.mjson"
+                "%": "./customer-engagement-questionnaire.mjson"
             },
             "exportName": "CustomerEngagementQuestionnaire",
             "module": {
-                "%": "data/main.datareel/model/customer-engagement-questionnaire"
+                "%": "./customer-engagement-questionnaire"
             },
             "object":{"@": "CustomerEngagementQuestionnaire"},
             "parent":{"@": "ObjectDescriptor"},
@@ -36,11 +36,11 @@
     },
 
     "ObjectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
 
     "CustomerEngagementQuestionnaire": {
-        "object": "data/main.datareel/model/customer-engagement-questionnaire"
+        "object": "./customer-engagement-questionnaire"
     },
 
     "organization": {
@@ -54,7 +54,7 @@
         }
     },
     "organizationDescriptor": {
-        "object": "data/main.datareel/model/organization.mjson"
+        "object": "./organization.mjson"
     },
 
 
@@ -69,7 +69,7 @@
         }
     },
     "serviceDescriptor": {
-        "object": "data/main.datareel/model/service.mjson"
+        "object": "./service.mjson"
     },
 
     "questionnaire": {
@@ -83,7 +83,7 @@
         }
     },
     "questionnaireDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/questionnaire.mjson"
+        "object": "./questionnaire/questionnaire.mjson"
     },
 
     "rolesRequiredToComplete": {
@@ -103,10 +103,10 @@
         }
     },
     "roleDescriptor": {
-        "object": "data/main.datareel/model/role.mjson"
+        "object": "./role.mjson"
     },
     "EventType": {
-        "object": "data/main.datareel/model/event"
+        "object": "./event"
     },
     "participationStatusRequiredByEvent": {
         "prototype": "montage/core/meta/property-descriptor",

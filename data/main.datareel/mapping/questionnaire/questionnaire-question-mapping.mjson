@@ -39,7 +39,7 @@
     },
 
     "QuestionnaireQuestionDescriptor": {
-        "object": "data/main.datareel/model/questionnaire/questionnaire-question.mjson"
+        "object": "../../model/questionnaire/questionnaire-question.mjson"
     },
 
     "questionnaireForeignKeyConverter": {

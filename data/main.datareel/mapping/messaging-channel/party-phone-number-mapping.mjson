@@ -17,7 +17,7 @@
     },
 
     "PartyPhoneNumber": {
-        "object": "data/main.datareel/model/messaging-channel/party-phone-number.mjson"
+        "object": "../../model/messaging-channel/party-phone-number.mjson"
     }
 
 }

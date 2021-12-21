@@ -9,21 +9,21 @@
                 {"@": "controllingOrganization"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/app/application.mjson"
+                "%": "./application.mjson"
             },
             "exportName": "Application",
             "module": {
-                "%": "data/main.datareel/model/app/application"
+                "%": "./application"
             },
             "object":{"@": "Application"},
             "parent":{"@": "DataObjectDescriptor"}
         }
     },
     "Application": {
-        "object": "data/main.datareel/model/app/application"
+        "object": "./application"
     },
     "DataObjectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "../data-object.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -43,7 +43,7 @@
        }
     },
     "UserPoolClientDescriptor": {
-        "object": "data/main.datareel/model/app/user-pool-client.mjson"
+        "object": "./user-pool-client.mjson"
     },
     "controllingOrganization": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -57,7 +57,7 @@
        }
     },
     "OrganizationDescriptor": {
-        "object": "data/main.datareel/model/organization.mjson"
+        "object": "../organization.mjson"
     }
 
 }

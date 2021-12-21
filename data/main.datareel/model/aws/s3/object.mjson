@@ -15,21 +15,21 @@
                 {"@": "accessControlList"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/aws/s3/object.mjson"
+                "%": "./object.mjson"
             },
             "exportName": "Object",
             "module": {
-                "%": "data/main.datareel/model/aws/s3/object"
+                "%": "./object"
             },
             "object":{"@": "Object"},
             "parent":{"@": "ObjectDescriptor"}
         }
     },
     "Object": {
-        "object": "data/main.datareel/model/aws/s3/object"
+        "object": "./object"
     },
     "ObjectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "../../data-object.mjson"
     },
     "bucketName": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -48,7 +48,7 @@
        }
     },
     "BucketDescriptor": {
-        "object": "data/main.datareel/model/aws/s3/bucket.mjson"
+        "object": "./bucket.mjson"
     },
 
     "key": {

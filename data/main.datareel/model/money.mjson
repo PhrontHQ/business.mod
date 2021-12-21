@@ -8,17 +8,17 @@
                 {"@": "currencyCode"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/money.mjson"
+                "%": "./money.mjson"
             },
             "exportName": "Money",
             "module": {
-                "%": "data/main.datareel/model/money"
+                "%": "./money"
             },
             "object":{"@": "Money"}
         }
     },
     "Money": {
-        "object": "data/main.datareel/model/money"
+        "object": "./money"
     },
     "amount": {
         "prototype": "montage/core/meta/property-descriptor",

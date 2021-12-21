@@ -9,18 +9,18 @@
                 {"@": "timeZone"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/event-time.mjson"
+                "%":"./event-time.mjson"
             },
             "exportName": "EventTime",
             "module": {
-                "%": "data/main.datareel/model/event-time"
+                "%": "./event-time"
             },
             "modulePrototype":{"@": "EventTime"},
             "object":{"@": "EventTime"}
         }
     },
     "EventTime": {
-        "object": "data/main.datareel/model/event-time"
+        "object": "./event-time"
     },
     "date": {
         "prototype": "montage/core/meta/property-descriptor",

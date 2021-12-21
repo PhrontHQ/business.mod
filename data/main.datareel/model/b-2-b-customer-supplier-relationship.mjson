@@ -7,21 +7,21 @@
                 {"@": "customer"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/b-2-b-customer-supplier-relationship.mjson"
+                "%": "./b-2-b-customer-supplier-relationship.mjson"
             },
             "exportName": "B2BCustomerSupplierRelationship",
             "module": {
-                "%": "data/main.datareel/model/b-2-b-customer-supplier-relationship"
+                "%": "./b-2-b-customer-supplier-relationship"
             },
             "object":{"@": "b-2-b-customer-supplier-relationship"},
             "parent":{"@": "customer-supplier-relationship"}
         }
     },
     "b-2-b-customer-supplier-relationship": {
-        "object": "data/main.datareel/model/b-2-b-customer-supplier-relationship"
+        "object": "./b-2-b-customer-supplier-relationship"
     },
     "customer-supplier-relationship": {
-        "object": "data/main.datareel/model/customer-supplier-relationship.mjson"
+        "object": "./customer-supplier-relationship.mjson"
     },
     "customer": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -34,7 +34,7 @@
         }
     },
     "organization_descriptor": {
-        "object": "data/main.datareel/model/organization.mjson"
+        "object": "./organization.mjson"
     }
 
 }

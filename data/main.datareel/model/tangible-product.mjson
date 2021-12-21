@@ -8,11 +8,11 @@
                 {"@": "variants"}
            ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/tangible-product.mjson"
+                "%": "./tangible-product.mjson"
             },
             "exportName": "TangibleProduct",
             "module": {
-                "%": "data/main.datareel/model/tangible-product"
+                "%": "./tangible-product"
             },
             "object":{"@": "tangible-product"},
             "parent":{"@": "productObjectDescriptor"},
@@ -32,11 +32,11 @@
     },
 
     "productObjectDescriptor": {
-        "object": "data/main.datareel/model/product.mjson"
+        "object": "./product.mjson"
     },
 
     "tangible-product": {
-        "object": "data/main.datareel/model/tangible-product"
+        "object": "./tangible-product"
     },
 
     "template": {
@@ -60,6 +60,6 @@
         }
     },
     "variant_descriptor": {
-        "object": "data/main.datareel/model/tangible-product-variant.mjson"
+        "object": "./tangible-product-variant.mjson"
     }
 }

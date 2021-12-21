@@ -40,7 +40,7 @@
     },
 
     "ProductVariantObjectDescriptor": {
-        "object": "data/main.datareel/model/product-variant.mjson"
+        "object": "../model/product-variant.mjson"
     },
     "presentmentPricesConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",

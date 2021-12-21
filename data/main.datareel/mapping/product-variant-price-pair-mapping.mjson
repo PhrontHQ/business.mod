@@ -25,7 +25,7 @@
     },
 
     "ProductVariantPricePair": {
-        "object": "data/main.datareel/model/product-variant-price-pair.mjson"
+        "object": "../model/product-variant-price-pair.mjson"
     },
     "MoneyForeignKeyConverter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",

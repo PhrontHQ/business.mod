@@ -8,11 +8,11 @@
                 {"@": "messagingChannel"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/messaging-channel/party-email-address.mjson"
+                "%":"./party-email-address.mjson"
             },
             "exportName": "PartyEmailAddress",
             "module": {
-                "%": "data/main.datareel/model/messaging-channel/party-email-address"
+                "%": "./party-email-address"
             },
             "modulePrototype":{"@": "PartyEmailAddress"},
             "object":{"@": "PartyEmailAddress"},
@@ -20,10 +20,10 @@
         }
     },
     "PartyEmailAddress": {
-        "object": "data/main.datareel/model/messaging-channel/party-email-address"
+        "object": "./party-email-address"
     },
     "PartyMessagingChannelDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-messaging-channel.mjson"
+        "object": "./party-messaging-channel.mjson"
     },
 
     "party": {
@@ -38,7 +38,7 @@
         }
     },
     "PartyDescriptor": {
-        "object": "data/main.datareel/model/party.mjson"
+        "object": "../party.mjson"
     },
 
     "messagingChannel": {
@@ -51,6 +51,6 @@
         }
     },
     "EmailAddress": {
-        "object": "data/main.datareel/model/messaging-channel/email-address.mjson"
+        "object": "./email-address.mjson"
     }
 }

@@ -9,21 +9,21 @@
                 {"@": "orders"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/customer-supplier-relationship.mjson"
+                "%": "./customer-supplier-relationship.mjson"
             },
             "exportName": "CustomerSupplierRelationship",
             "module": {
-                "%": "data/main.datareel/model/customer-supplier-relationship"
+                "%": "./customer-supplier-relationship"
             },
             "object":{"@": "customer-supplier-relationship"},
             "parent":{"@": "party-party-relationship"}
         }
     },
     "customer-supplier-relationship": {
-        "object": "data/main.datareel/model/customer-supplier-relationship"
+        "object": "./customer-supplier-relationship"
     },
     "party-party-relationship": {
-        "object": "data/main.datareel/model/party-party-relationship.mjson"
+        "object": "./party-party-relationship.mjson"
     },
     "customer": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -35,10 +35,10 @@
         }
     },
     "party_descriptor": {
-        "object": "data/main.datareel/model/party.mjson"
+        "object": "./party.mjson"
     },
     "organization_descriptor": {
-        "object": "data/main.datareel/model/organization.mjson"
+        "object": "./organization.mjson"
     },
     "supplier": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -59,7 +59,7 @@
         }
     },
     "orderDescriptor": {
-        "object": "data/main.datareel/model/order.mjson"
+        "object": "./order.mjson"
     }
 
 }

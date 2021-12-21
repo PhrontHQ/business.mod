@@ -39,7 +39,7 @@
     },
 
     "Object": {
-        "object": "data/main.datareel/model/aws/s3/object.mjson"
+        "object": "../../../model/aws/s3/object.mjson"
     },
     "bucket-converter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",

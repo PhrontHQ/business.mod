@@ -7,11 +7,11 @@
                 {"@": "name"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/resource.mjson"
+                "%": "./resource.mjson"
             },
             "exportName": "Resource",
             "module": {
-                "%": "data/main.datareel/model/resource"
+                "%": "./resource"
             },
             "object":{"@": "resource"},
             "parent":{"@": "PartyDescriptor"},
@@ -30,11 +30,11 @@
         }
     },
     "resource": {
-        "object": "data/main.datareel/model/resource"
+        "object": "./resource"
     },
 
     "PartyDescriptor": {
-        "object": "data/main.datareel/model/party.mjson"
+        "object": "./party.mjson"
     },
 
     "name": {

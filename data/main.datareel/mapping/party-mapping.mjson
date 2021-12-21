@@ -34,7 +34,7 @@
         }
     },
     "PartyDescriptor": {
-        "object": "data/main.datareel/model/party.mjson"
+        "object": "../model/party.mjson"
     },
     "string-to-range-converter": {
         "prototype": "../converter/r-f-c-3339-u-t-c-range-string-to-date-range-converter"

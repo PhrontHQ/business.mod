@@ -8,11 +8,11 @@
                 {"@": "oid"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/p-g-catalog.mjson"
+                "%":"./p-g-catalog.mjson"
             },
             "exportName": "PGCatalog",
             "module": {
-                "%": "data/main.datareel/model/p-g-catalog"
+                "%": "./p-g-catalog"
             },
             "object":{"@": "PGCatalog"},
             "modulePrototype": {"@": "PGClass"}
@@ -20,7 +20,7 @@
         }
     },
     "PGClass": {
-        "object": "data/main.datareel/model/p-g-catalog"
+        "object": "./p-g-catalog"
     },
     "namespaceName": {
         "prototype": "montage/core/meta/property-descriptor",

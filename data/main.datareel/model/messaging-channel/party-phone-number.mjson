@@ -8,11 +8,11 @@
                 {"@": "messagingChannel"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/messaging-channel/party-phone-number.mjson"
+                "%":"./party-phone-number.mjson"
             },
             "exportName": "PartyPhoneNumber",
             "module": {
-                "%": "data/main.datareel/model/messaging-channel/party-phone-number"
+                "%": "./party-phone-number"
             },
             "modulePrototype":{"@": "PartyPhoneNumber"},
             "object":{"@": "PartyPhoneNumber"},
@@ -20,10 +20,10 @@
         }
     },
     "PartyPhoneNumber": {
-        "object": "data/main.datareel/model/messaging-channel/party-phone-number"
+        "object": "./party-phone-number"
     },
     "PartyMessagingChannelDescriptor": {
-        "object": "data/main.datareel/model/messaging-channel/party-messaging-channel.mjson"
+        "object": "./party-messaging-channel.mjson"
     },
 
     "party": {
@@ -38,7 +38,7 @@
         }
     },
     "PartyDescriptor": {
-        "object": "data/main.datareel/model/party.mjson"
+        "object": "../party.mjson"
     },
 
     "messagingChannel": {
@@ -51,6 +51,6 @@
         }
     },
     "PhoneNumber": {
-        "object": "data/main.datareel/model/messaging-channel/phone-number.mjson"
+        "object": "./phone-number.mjson"
     }
 }

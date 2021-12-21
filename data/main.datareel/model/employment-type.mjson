@@ -7,21 +7,21 @@
                 {"@": "name"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.datareel/model/employment-type.mjson"
+                "%": "./employment-type.mjson"
             },
             "exportName": "EmploymentType",
             "module": {
-                "%": "data/main.datareel/model/employment-type"
+                "%": "./employment-type"
             },
             "object":{"@": "employment-type"},
             "parent":{"@": "object_descriptor"}
         }
     },
     "employment-type": {
-        "object": "data/main.datareel/model/employment-type"
+        "object": "./employment-type"
     },
     "object_descriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "./data-object.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",

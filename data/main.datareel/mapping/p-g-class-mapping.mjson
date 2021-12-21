@@ -27,7 +27,7 @@
     },
 
     "PGClassDescriptor": {
-        "object": "data/main.datareel/model/p-g-class.mjson"
+        "object": "../model/p-g-class.mjson"
     },
 
     "PGClassConverter": {

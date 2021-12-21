@@ -10,11 +10,11 @@
                 {"@": "serviceProvider"}
             ],
             "objectDescriptorModule": {
-                "%":"data/main.datareel/model/messaging-channel/messaging-channel.mjson"
+                "%":"./messaging-channel.mjson"
             },
             "exportName": "MessagingChannel",
             "module": {
-                "%": "data/main.datareel/model/messaging-channel/messaging-channel"
+                "%": "./messaging-channel"
             },
             "modulePrototype":{"@": "MessagingChannel"},
             "object":{"@": "MessagingChannel"},
@@ -22,10 +22,10 @@
         }
     },
     "MessagingChannel": {
-        "object": "data/main.datareel/model/messaging-channel/messaging-channel"
+        "object": "./messaging-channel"
     },
     "objectDescriptor": {
-        "object": "data/main.datareel/model/data-object.mjson"
+        "object": "../data-object.mjson"
     },
     "preferredForParties": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -38,7 +38,7 @@
         }
     },
     "PartyDescriptor": {
-        "object": "data/main.datareel/model/party.mjson"
+        "object": "../party.mjson"
     },
     "description": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -67,6 +67,6 @@
         }
     },
     "OrganizationDescriptor": {
-        "object": "data/main.datareel/model/organization.mjson"
+        "object": "../organization.mjson"
     }
 }

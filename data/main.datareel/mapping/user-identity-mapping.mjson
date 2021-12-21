@@ -44,7 +44,7 @@
     },
 
     "UserIdentityDescriptor": {
-        "object": "data/main.datareel/model/user-identity.mjson"
+        "object": "../model/user-identity.mjson"
     },
 
     "person-converter": {

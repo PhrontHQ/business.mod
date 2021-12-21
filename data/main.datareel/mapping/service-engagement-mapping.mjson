@@ -27,7 +27,7 @@
     },
 
     "ServiceEngagementObjectDescriptor": {
-        "object": "data/main.datareel/model/service-engagement.mjson"
+        "object": "../model/service-engagement.mjson"
     },
 
     "serviceToOneConverter": {
