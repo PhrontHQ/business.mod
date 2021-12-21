@@ -1,40 +1,80 @@
 'use strict';
 var Montage = require('montage/montage');
 var PATH = require("path");
+const useMr = true;
 var workerPromise;
+
 
 if(!global.cache) {
     global.cache = new Map();
 }
 
-//console.log("module:",module,"filename:",__filename,"dirname",__dirname);
-//Load Montage and Phront dependencies
-// workerPromise = Montage.loadPackage(PATH.join(__dirname, "."), {
-//     mainPackageLocation: PATH.join(__filename, ".")
-//   })
+if(!useMr) {
 
-/*
-    The idea here is to run main.js as if it were in the final function itself,
-    to standardize and reuse shared logic and shift it to our own objects,
-    the worker that can be subclassed, and other setups that can be serialized
-    and where serialization can be reused.
+    const Module = require("module");
+    const fs = require("fs");
 
-    So we use module.parent to setup montage as if we were in that projet
+    const MontageDeserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer;
+    Montage.MontageDeserializer = MontageDeserializer;
 
-    and we put the symbols we expect on parent's exports as well
-*/
-workerPromise = Montage.loadPackage(PATH.join(module.parent.path, "."), {
-mainPackageLocation: PATH.join(module.parent.filename, ".")
-}).then(function (mr) {
-    return mr.async("./main.mjson");
-}).then(function (module) {
-    console.log("Phront Worker reporting for duty!");
-    var worker = module.montageObject;
-    Montage.application = worker;
-    return worker;
-});
+    const node_createRequire = (require) ('module').createRequire;
 
-module.parent.exports.worker = exports.worker = workerPromise;
+    // Flags: --expose-internals
+
+    // const internalModule = require('internal/module');
+    const makeRequireFunction = require('internal/modules/cjs/helpers').makeRequireFunction;
+
+
+    const resolveMJSONFile = function (module, path) {
+    console.log(">> resolveMJSONFile: "+module.id);
+        const content = fs.readFileSync(path).toString();
+    module.text = content;
+    const mjsonModuleRequire = makeRequireFunction(module,/*redirects*/);
+    //module.deserializer = MontageDeserializer;
+    Montage.MJSONCompilerFactory(mjsonModuleRequire, module.exports, module, global, module.filename, module.directory);
+
+        console.log("<< resolveMJSONFile: "+module.id +" with montageObject:",module.exports.montageObject);
+    //module.exports = content;
+    };
+
+    Module._extensions[".mjson"] = resolveMJSONFile;
+
+    var worker = module.parent.exports.worker = exports.worker = require("./main.mjson").montageObject;
+Montage.application = worker;
+
+    workerPromise = Promise.resolve(worker);
+} else {
+
+    //console.log("module:",module,"filename:",__filename,"dirname",__dirname);
+    //Load Montage and Phront dependencies
+    // workerPromise = Montage.loadPackage(PATH.join(__dirname, "."), {
+    //     mainPackageLocation: PATH.join(__filename, ".")
+    //   })
+
+    /*
+        The idea here is to run main.js as if it were in the final function itself,
+        to standardize and reuse shared logic and shift it to our own objects,
+        the worker that can be subclassed, and other setups that can be serialized
+        and where serialization can be reused.
+
+        So we use module.parent to setup montage as if we were in that projet
+
+        and we put the symbols we expect on parent's exports as well
+    */
+    workerPromise = Montage.loadPackage(PATH.join(module.parent.path, "."), {
+    mainPackageLocation: PATH.join(module.parent.filename, ".")
+    }).then(function (mr) {
+        return mr.async("./main.mjson");
+    }).then(function (module) {
+        var worker = module.montageObject;
+        Montage.application = worker;
+        console.timeEnd("Main");
+        console.log("Phront Worker reporting for duty!");
+        return worker;
+    });
+
+    module.parent.exports.worker = exports.worker = workerPromise;
+}
 
 module.parent.exports.connect = exports.connect = (event, context, callback) => {
     workerPromise.then(function(worker) {
