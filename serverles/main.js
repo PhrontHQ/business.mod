@@ -1,4 +1,9 @@
 'use strict';
+
+/*
+    workaround for the fact that mr doesn't find crypto which is a built-in module, needs to fix that for good.
+*/
+global.crypto = require('crypto');
 var Montage = require('montage/montage');
 var PATH = require("path");
 const useMr = true;
