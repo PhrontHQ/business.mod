@@ -1,4 +1,6 @@
 'use strict';
+console.log(process.version);
+console.time("Main");
 
 /*
     workaround for the fact that mr doesn't find crypto which is a built-in module, needs to fix that for good.
