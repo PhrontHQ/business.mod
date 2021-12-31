@@ -15,7 +15,7 @@
                 {"@": "timeZones"}
             ],
             "objectDescriptorModule": {
-                "%": "logic/model/descriptors/country.mjson"
+                "%": "./country.mjson"
             },
             "exportName": "Country",
             "module": {

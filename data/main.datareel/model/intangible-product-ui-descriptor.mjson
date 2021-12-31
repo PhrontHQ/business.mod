@@ -1,0 +1,10 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/user-interface-descriptor",
+        "values": {
+            "collectionNameExpression": "'Intangible Products'",
+            "nameExpression": "name",
+            "descriptionExpression": "description"
+        }
+    }
+}

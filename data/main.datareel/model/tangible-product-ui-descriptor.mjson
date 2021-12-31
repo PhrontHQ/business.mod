@@ -1,0 +1,10 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/user-interface-descriptor",
+        "values": {
+            "collectionNameExpression": "'Tangible Products'",
+            "nameExpression": "name",
+            "descriptionExpression": "description"
+        }
+    }
+}
