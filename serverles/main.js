@@ -18,6 +18,7 @@ if(!useMr) {
 
     const Module = require("module");
     const fs = require("fs");
+    const createModuleMetadata = require("montage/core/mr/require").createModuleMetadata;
 
     const MontageDeserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer;
     Montage.MontageDeserializer = MontageDeserializer;
@@ -27,27 +28,55 @@ if(!useMr) {
     // Flags: --expose-internals
 
     // const internalModule = require('internal/module');
-    const makeRequireFunction = require('internal/modules/cjs/helpers').makeRequireFunction;
+    // const makeRequireFunction = require('internal/modules/cjs/helpers').makeRequireFunction;
 
 
     const resolveMJSONFile = function (module, path) {
-    console.log(">> resolveMJSONFile: "+module.id);
+        //console.log(">> resolveMJSONFile: "+module.id);
         const content = fs.readFileSync(path).toString();
-    module.text = content;
-    const mjsonModuleRequire = makeRequireFunction(module,/*redirects*/);
-    //module.deserializer = MontageDeserializer;
-    Montage.MJSONCompilerFactory(mjsonModuleRequire, module.exports, module, global, module.filename, module.directory);
+        module.text = content;
+        module.parsedText = JSON.parse(content);
 
-        console.log("<< resolveMJSONFile: "+module.id +" with montageObject:",module.exports.montageObject);
-    //module.exports = content;
+        //var mjsonModuleRequire = module.require;
+        const mjsonModuleRequire = Module.createRequire(path);
+        //const mjsonModuleRequire = makeRequireFunction(module,/*redirects*/);
+
+
+        // const dependencies = Montage.parseMJSONDependencies(module.parsedText, function(moduleId) {
+        //     if(moduleId !== "global") {
+        //         mjsonModuleRequire(moduleId);
+        //     }
+        // });
+
+        //module.deserializer = MontageDeserializer;
+        Montage.MJSONCompilerFactory(mjsonModuleRequire, module.exports, module, global, module.filename, module.directory);
+
+            //console.log("<< resolveMJSONFile: "+module.id +" with montageObject:",module.exports.montageObject);
+        //module.exports = content;
     };
 
     Module._extensions[".mjson"] = resolveMJSONFile;
 
-    var worker = module.parent.exports.worker = exports.worker = require("./main.mjson").montageObject;
-Montage.application = worker;
+    const nodeNativeJsExtension = Module._extensions['.js'];
+
+    Module._extensions['.js'] = function(module, filename) {
+        nodeNativeJsExtension(module, filename);
+
+        /*
+            Ideally we should have access to the require function passed to the file code's but it's not available, so we create a new one.
+
+            Module.createRequire(filename) seems to create a new Module object as well, which is less than ideal. The other way would be to capture it in the files themselves.
+        */
+        createModuleMetadata(module, Module.createRequire(filename), module.exports);
+    }
+
+    var worker = module.parent.exports.worker = exports.worker = module.parent.require("./main.mjson").montageObject;
+    Montage.application = worker;
 
     workerPromise = Promise.resolve(worker);
+    console.timeEnd("Main");
+    console.log("Phront Worker reporting for duty!");
+
 } else {
 
     //console.log("module:",module,"filename:",__filename,"dirname",__dirname);
