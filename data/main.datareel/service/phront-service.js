@@ -40,6 +40,7 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     //DataTrigger = (require)("./data-trigger").DataTrigger,
     path = require("path"),
     fs = require('fs'),
+    currentEnvironment = require("montage/core/environment").currentEnvironment,
     PhrontService;
 
     // const { RDSDataClient, BatchExecuteStatementCommand, BeginTransactionCommand, CommitTransactionCommand } = require("@aws-sdk/client-rds-data");
@@ -303,7 +304,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                             region: region
                         };
 
-                    if(!process.env.aws_access_key_id || !process.env.aws_secret_access_key) {
+                    if(!currentEnvironment.isAWS) {
                         credentials = fromIni({profile: connection.profile});
                     }
 

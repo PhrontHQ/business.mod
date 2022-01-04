@@ -6,6 +6,7 @@ var fromIni /* = (require) ("@aws-sdk/credential-provider-ini").fromIni */,
     RawDataService = require("montage/data/service/raw-data-service").RawDataService,
     SyntaxInOrderIterator = require("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
+    currentEnvironment = require("montage/core/environment").currentEnvironment,
     //Causes issues
     // secretObjectDescriptor = (require) ("../model/aws/secret.mjson").montageObject,
     S3DataService;
@@ -106,7 +107,7 @@ exports.SecretManagerDataService = SecretManagerDataService = RawDataService.spe
                         region: region
                     };
 
-                    if(!process.env.aws_access_key_id || !process.env.aws_secret_access_key) {
+                    if(!currentEnvironment.isAWS) {
                         credentials = fromIni({profile: connection.profile});
                     }
 

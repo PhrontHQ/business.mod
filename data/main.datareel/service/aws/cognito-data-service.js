@@ -13,6 +13,7 @@ var fromIni /* = (require) ("@aws-sdk/credential-provider-ini").fromIni*/,
     SyntaxInOrderIterator = require("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     crypto = require("crypto"),
+    currentEnvironment = require("montage/core/environment").currentEnvironment,
     CognitoUserPoolDescriptor = require("../../model/aws/cognito/user-pool.mjson").montageObject,
     CognitoUserPoolClientDescriptor = require("../../model/aws/cognito/user-pool-client.mjson").montageObject;
 
@@ -78,7 +79,7 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
 
             if(connection) {
 
-                if(!process.env.aws_access_key_id || !process.env.aws_secret_access_key) {
+                if(!currentEnvironment.isAWS) {
                     credentials = fromIni({profile: connection.profile});
 
                     credentials = credentials().then((value) => {
@@ -116,15 +117,6 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
                         apiVersion: '2016-04-18',
                         region: region
                     };
-
-                    // if(!process.env.aws_access_key_id || !process.env.aws_secret_access_key) {
-                    //     credentials = fromIni({profile: connection.profile});
-
-                    //     credentials = credentials().then((value) => {
-                    //         console.log("credentials value:", value);
-                    //         return value;
-                    //     });
-                    // }
 
                     if(credentials) {
                         cognitoIdentityServiceProviderOptions.credentials = credentials;
@@ -164,15 +156,6 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
                         apiVersion: '2016-04-18',
                         region: region
                     };
-
-                    // if(!process.env.aws_access_key_id || !process.env.aws_secret_access_key) {
-                    //     credentials = fromIni({profile: connection.profile});
-
-                    //     credentials = credentials().then((value) => {
-                    //         console.log("credentials value:", value);
-                    //         return value;
-                    //     });
-                    // }
 
                     if(credentials) {
                         cognitoIdentityServiceProviderOptions.credentials = credentials;

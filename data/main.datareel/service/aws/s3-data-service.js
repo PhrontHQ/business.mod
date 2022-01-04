@@ -15,6 +15,7 @@ var fromIni /* = (require) ("@aws-sdk/credential-provider-ini").fromIni */,
     crypto = require("crypto"),
     BucketDescriptor = require("../../model/aws/s3/bucket.mjson").montageObject,
     ObjectDescriptor = require("../../model/aws/s3/object.mjson").montageObject,
+    currentEnvironment = require("montage/core/environment").currentEnvironment,
     ExpiringObjectDownloadDescriptor = require("../../model/aws/s3/expiring-object-download.mjson").montageObject,
     S3DataService;
 
@@ -120,7 +121,7 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                         region: region
                     };
 
-                    if(!process.env.aws_access_key_id || !process.env.aws_secret_access_key) {
+                    if(!currentEnvironment.isAWS) {
                         credentials = fromIni({profile: connection.profile});
                     }
 
