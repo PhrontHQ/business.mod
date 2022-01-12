@@ -1,4 +1,17 @@
 'use strict';
+
+if(process.env.PROFILE_START) {
+    const inspector = require('inspector');
+    var fs = require('fs');
+    var session = new inspector.Session();
+    session.connect();
+
+    session.post('Profiler.enable', () => {
+        session.post('Profiler.start', () => {
+        });
+    });
+}
+
 console.log(process.version);
 console.time("Main");
 
@@ -97,7 +110,8 @@ if(!useMr) {
 
         and we put the symbols we expect on parent's exports as well
     */
-    workerPromise = Montage.loadPackage(PATH.join(module.parent.path, "."), {
+   const processPath = PATH.join(module.parent.path, ".");
+    workerPromise = Montage.loadPackage(processPath, {
     mainPackageLocation: PATH.join(module.parent.filename, ".")
     }).then(function (mr) {
         return mr.async("./main.mjson");
@@ -106,6 +120,17 @@ if(!useMr) {
         Montage.application = worker;
         console.timeEnd("Main");
         console.log("Phront Worker reporting for duty!");
+
+        if(process.env.PROFILE_START) {
+
+            session.post('Profiler.stop', (err, { profile }) => {
+                // Write profile to disk, upload, etc.
+                if (!err) {
+                fs.writeFileSync(processPath+'/'+Date.now()+'-profile.cpuprofile', JSON.stringify(profile));
+                }
+            });
+        }
+
         return worker;
     });
 
