@@ -4,16 +4,16 @@ var fromIni /* = (require) ("@aws-sdk/credential-provider-ini").fromIni*/,
     CognitoIdentityProviderClient /* = (require) ("@aws-sdk/client-cognito-identity-provider/dist-cjs/CognitoIdentityProviderClient").CognitoIdentityProviderClient */,
     ListUserPoolsCommand /* = (require) ("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/ListUserPoolsCommand").ListUserPoolsCommand */,
     DescribeUserPoolCommand /* = (require) ("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/DescribeUserPoolCommand").DescribeUserPoolCommand */,
+    CreateUserPoolCommand,
     ListUserPoolClientsCommand /* = (require) ("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/ListUserPoolClientsCommand").ListUserPoolClientsCommand */,
     DescribeUserPoolClientCommand /* = (require) ("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/DescribeUserPoolClientCommand").DescribeUserPoolClientCommand */,
     CreateUserPoolClientCommand,
     //DataService = (require)("montage/data/service/data-service").DataService,
     Criteria = require("montage/core/criteria").Criteria,
-    RawDataService = require("montage/data/service/raw-data-service").RawDataService,
+    AWSRawDataService = require("./a-w-s-raw-data-service").AWSRawDataService,
     SyntaxInOrderIterator = require("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     crypto = require("crypto"),
-    currentEnvironment = require("montage/core/environment").currentEnvironment,
     CognitoUserPoolDescriptor = require("../../model/aws/cognito/user-pool.mjson").montageObject,
     CognitoUserPoolClientDescriptor = require("../../model/aws/cognito/user-pool-client.mjson").montageObject;
 
@@ -26,9 +26,9 @@ var fromIni /* = (require) ("@aws-sdk/credential-provider-ini").fromIni*/,
 * TODO: Document
 *
 * @class
-* @extends RawDataService
+* @extends AWSRawDataService
 */
-exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** @lends CognitoDataService.prototype */ {
+exports.CognitoDataService = CognitoDataService = AWSRawDataService.specialize(/** @lends CognitoDataService.prototype */ {
 
     /***************************************************************************
      * Initializing
@@ -36,7 +36,7 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
 
     constructor: {
         value: function CognitoDataService() {
-            RawDataService.call(this);
+            return AWSRawDataService.call(this);
 
             /*
                 Currently CognitoObjects don't inherit from DataObjects, so the logical bug in event path delivery because of the inherirance causing to be routed to the PostgreSQL service instead doesn't apply here, so no need to register specificall on these object descriptors difectly.
@@ -49,160 +49,109 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
 
         }
     },
-    _connection: {
-        value: undefined
+    apiVersion: {
+        value: "2016-04-18"
     },
 
-    connection: {
-        get: function() {
-            if(!this._connection) {
-                this.connection = this.connectionForIdentifier(this.currentEnvironment.stage);
-            }
-            return this._connection;
-        },
-        set: function(value) {
+    // __cognitoIdentityServiceProvider: {
+    //     value: undefined
+    // },
 
-            if(value !== this._connection) {
-                this._connection = value;
-            }
+    // _cognitoIdentityServiceProvider: {
+    //     get: function () {
+    //         if (!this.__cognitoIdentityServiceProvider) {
+    //             var connection = this.connection;
+
+    //             if(connection) {
+    //                 var region,
+    //                     credentials = this._credentials;
+
+    //                 if(connection.region) {
+    //                     region = connection.region;
+    //                 } else if(connection.resourceArn) {
+    //                     region = connection.resourceArn.split(":")[3];
+    //                 }
+
+    //                 var cognitoIdentityServiceProviderOptions =  {
+    //                     apiVersion: '2016-04-18',
+    //                     region: region
+    //                 };
+
+    //                 if(credentials) {
+    //                     cognitoIdentityServiceProviderOptions.credentials = credentials;
+    //                 }
+
+    //                 // this.__cognitoIdentityServiceProviderOld = new CognitoIdentityServiceProvider(cognitoIdentityServiceProviderOptions);
+    //                 this.__cognitoIdentityServiceProvider = new CognitoIdentityProvider(cognitoIdentityServiceProviderOptions);
+
+
+    //             } else {
+    //                 throw "CognitoDataService could not find a connection for stage - "+this.currentEnvironment.stage+" -";
+    //             }
+
+    //         }
+    //         return this.__cognitoIdentityServiceProvider;
+    //     }
+    // },
+    instantiateAWSClientWithOptions: {
+        value: function (awsClientOptions) {
+            return new CognitoIdentityProviderClient(awsClientOptions);
         }
     },
 
-
-    __credentials: {
-        value: undefined
-    },
-    _credentials: {
-        get: function() {
-            var connection = this.connection,
-                credentials;
-
-            if(connection) {
-
-                if(!currentEnvironment.isAWS) {
-                    credentials = fromIni({profile: connection.profile});
-
-                    credentials = credentials().then((value) => {
-                        console.log("credentials value:", value);
-                        return value;
-                    });
-                }
-            }
-
-            return credentials;
-
-        }
-    },
-
-    __cognitoIdentityServiceProvider: {
-        value: undefined
-    },
-
-    _cognitoIdentityServiceProvider: {
+    awsClientPromises: {
         get: function () {
-            if (!this.__cognitoIdentityServiceProvider) {
-                var connection = this.connection;
+            var promises = this.super();
 
-                if(connection) {
-                    var region,
-                        credentials = this._credentials;
+            promises.push(
+                require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/CognitoIdentityProviderClient").then(function(exports) { CognitoIdentityProviderClient = exports.CognitoIdentityProviderClient})
+            );
+            promises.push(
+                require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/ListUserPoolsCommand").then(function(exports) { ListUserPoolsCommand = exports.ListUserPoolsCommand})
+            );
+            promises.push(
+                require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/DescribeUserPoolCommand").then(function(exports) { DescribeUserPoolCommand = exports.DescribeUserPoolCommand})
+            );
+            promises.push(
+                require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/CreateUserPoolCommand").then(function(exports) { CreateUserPoolCommand = exports.CreateUserPoolCommand})
+            );
+            promises.push(
+                require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/ListUserPoolClientsCommand").then(function(exports) { ListUserPoolClientsCommand = exports.ListUserPoolClientsCommand})
+            );
+            promises.push(
+                require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/DescribeUserPoolClientCommand").then(function(exports) { DescribeUserPoolClientCommand = exports.DescribeUserPoolClientCommand})
+            );
+            promises.push(
+                require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/CreateUserPoolClientCommand").then(function(exports) { CreateUserPoolClientCommand = exports.CreateUserPoolClientCommand})
+            );
 
-                    if(connection.region) {
-                        region = connection.region;
-                    } else if(connection.resourceArn) {
-                        region = connection.resourceArn.split(":")[3];
-                    }
+            return promises;
 
-                    var cognitoIdentityServiceProviderOptions =  {
-                        apiVersion: '2016-04-18',
-                        region: region
-                    };
-
-                    if(credentials) {
-                        cognitoIdentityServiceProviderOptions.credentials = credentials;
-                    }
-
-                    // this.__cognitoIdentityServiceProviderOld = new CognitoIdentityServiceProvider(cognitoIdentityServiceProviderOptions);
-                    this.__cognitoIdentityServiceProvider = new CognitoIdentityProvider(cognitoIdentityServiceProviderOptions);
-
-
-                } else {
-                    throw "CognitoDataService could not find a connection for stage - "+this.currentEnvironment.stage+" -";
-                }
-
-            }
-            return this.__cognitoIdentityServiceProvider;
-        }
-    },
-    __cognitoIdentityServiceProviderClient: {
-        value: undefined
-    },
-    _cognitoIdentityServiceProviderClient: {
-        get: function () {
-            if (!this.__cognitoIdentityServiceProviderClient) {
-                var connection = this.connection;
-
-                if(connection) {
-                    var region,
-                        credentials = this._credentials;
-
-                    if(connection.region) {
-                        region = connection.region;
-                    } else if(connection.resourceArn) {
-                        region = connection.resourceArn.split(":")[3];
-                    }
-
-                    var cognitoIdentityServiceProviderOptions =  {
-                        apiVersion: '2016-04-18',
-                        region: region
-                    };
-
-                    if(credentials) {
-                        cognitoIdentityServiceProviderOptions.credentials = credentials;
-                    }
-
-                    // this.__cognitoIdentityServiceProviderOld = new CognitoIdentityServiceProvider(cognitoIdentityServiceProviderOptions);
-                    this.__cognitoIdentityServiceProviderClient = new CognitoIdentityProviderClient(cognitoIdentityServiceProviderOptions);
-
-
-                } else {
-                    throw "CognitoDataService could not find a connection for stage - "+this.currentEnvironment.stage+" -";
-                }
-
-            }
-            return this.__cognitoIdentityServiceProviderClient;
-        }
-    },
-
-    __cognitoIdentityServiceProviderClientPromise: {
-        value: undefined
-    },
-    _cognitoIdentityServiceProviderClientPromise: {
-        get: function () {
-            if (!this.__cognitoIdentityServiceProviderClientPromise) {
+                // this.__cognitoIdentityServiceProviderClientPromise = Promise.all(promises).then(() => { return this.awsClient;});
 
                 this.__cognitoIdentityServiceProviderClientPromise = Promise.all([
-                    require.async("@aws-sdk/credential-provider-ini"),
-                    require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/CognitoIdentityProviderClient"),
-                    require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/ListUserPoolsCommand"),
-                    require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/DescribeUserPoolCommand"),
-                    require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/ListUserPoolClientsCommand"),
-                    require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/DescribeUserPoolClientCommand"),
-                    require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/CreateUserPoolClientCommand")
+                    // require.async("@aws-sdk/credential-provider-ini"),
+                    // require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/CognitoIdentityProviderClient"),
+                    // require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/ListUserPoolsCommand"),
+                    // require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/DescribeUserPoolCommand"),
+                    // require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/CreateUserPoolCommand"),
+                    // require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/ListUserPoolClientsCommand"),
+                    // require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/DescribeUserPoolClientCommand"),
+                    // require.async("@aws-sdk/client-cognito-identity-provider/dist-cjs/commands/CreateUserPoolClientCommand")
                 ])
                 .then((resolvedModules) => {
                     fromIni = resolvedModules[0].fromIni;
                     CognitoIdentityProviderClient = resolvedModules[1].CognitoIdentityProviderClient;
                     ListUserPoolsCommand = resolvedModules[2].ListUserPoolsCommand;
                     DescribeUserPoolCommand = resolvedModules[3].DescribeUserPoolCommand;
-                    ListUserPoolClientsCommand = resolvedModules[4].ListUserPoolClientsCommand;
-                    DescribeUserPoolClientCommand = resolvedModules[5].DescribeUserPoolClientCommand;
-                    CreateUserPoolClientCommand = resolvedModules[6].CreateUserPoolClientCommand;
-                    return this._cognitoIdentityServiceProviderClient;
+                    CreateUserPoolCommand = resolvedModules[4].CreateUserPoolCommand;
+                    ListUserPoolClientsCommand = resolvedModules[5].ListUserPoolClientsCommand;
+                    DescribeUserPoolClientCommand = resolvedModules[6].DescribeUserPoolClientCommand;
+                    CreateUserPoolClientCommand = resolvedModules[7].CreateUserPoolClientCommand;
+                    return this.awsClient;
 
                 });
-            }
-            return this.__cognitoIdentityServiceProviderClientPromise;
+            // return this.__cognitoIdentityServiceProviderClientPromise;
         }
     },
 
@@ -508,8 +457,8 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
                     UserPoolId: UserPoolId /* required */
                 };
 
-                this._cognitoIdentityServiceProviderClientPromise.then(() => {
-                    this._cognitoIdentityServiceProviderClient.send(new DescribeUserPoolCommand(params), this.callbackForDataPropertyNamed(objectDescriptor, readOperation, "UserPool"));
+                this.awsClientPromise.then(() => {
+                    this.awsClient.send(new DescribeUserPoolCommand(params), this.callbackForDataPropertyNamed(objectDescriptor, readOperation, "UserPool"));
                     // this._cognitoIdentityServiceProvider.describeUserPool(params, this.callbackForDataPropertyNamed(objectDescriptor, readOperation, "UserPool"));
                 });
 
@@ -525,16 +474,16 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
                 operationLocales = readOperation.locales,
                 rawCriteria = criteria ? this.mapCriteriaToRawCriteria(criteria, mapping, operationLocales) : null,
                 listUserPools = (params, callback) => {
-                    this._cognitoIdentityServiceProviderClientPromise.then(() => {
-                        this._cognitoIdentityServiceProviderClient.send(new ListUserPoolsCommand(params), callback);
+                    this.awsClientPromise.then(() => {
+                        this.awsClient.send(new ListUserPoolsCommand(params), callback);
                         //this._cognitoIdentityServiceProvider.listUserPools(params, callback);
                     });
                 },
                 callback = this.callbackForDataPropertyNamed(objectDescriptor, readOperation, "UserPools", rawCriteria, params, listUserPools);
 
                 var describeUserPool = (params, callback) => {
-                    this._cognitoIdentityServiceProviderClientPromise.then(() => {
-                        this._cognitoIdentityServiceProviderClient.send(new DescribeUserPoolCommand(params), callback);
+                    this.awsClientPromise.then(() => {
+                        this.awsClient.send(new DescribeUserPoolCommand(params), callback);
                         // this._cognitoIdentityServiceProvider.describeUserPool(params, callback);
                     });
                 };
@@ -550,7 +499,7 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
     handleUserPoolCreateOperation: {
         value: function (createOperation) {
             var self = this,
-                cognitoidentityserviceprovider = this._cognitoIdentityServiceProvider,
+                //cognitoidentityserviceprovider = this._cognitoIdentityServiceProvider,
                 objectDescriptor = createOperation.target,
                 referrer = createOperation.referrer,
                 referrerId = createOperation.referrerId,
@@ -750,7 +699,11 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
 
             }
 
-              cognitoidentityserviceprovider.createUserPool(params, callback);
+            //cognitoidentityserviceprovider.createUserPool(params, callback);
+            this.awsClientPromise.then(() => {
+                this.awsClient.send(new CreateUserPoolCommand(params), callback);
+            });
+
 
         }
     },
@@ -802,8 +755,8 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
                     ClientId: ClientId, // required
                     UserPoolId: UserPoolId // required
                 };
-                this._cognitoIdentityServiceProviderClientPromise.then(() => {
-                    this._cognitoIdentityServiceProviderClient.send(new DescribeUserPoolClientCommand(params), callback);
+                this.awsClientPromise.then(() => {
+                    this.awsClient.send(new DescribeUserPoolClientCommand(params), callback);
                 });
             }
             /*
@@ -855,28 +808,28 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
 
                     if(isNotLast) {
                         params.NextToken = nextToken;
-                        //If we're here we've already created the actual client, so no need to use this._cognitoIdentityServiceProviderClientPromise()
-                        self._cognitoIdentityServiceProviderClient.send(new ListUserPoolClientsCommand(params), callback);
+                        //If we're here we've already created the actual client, so no need to use this.awsClientPromise()
+                        self.awsClient.send(new ListUserPoolClientsCommand(params), callback);
                     }
                 }
 
 
-                this._cognitoIdentityServiceProviderClientPromise.then(() => {
-                    this._cognitoIdentityServiceProviderClient.send(new ListUserPoolClientsCommand(params), callback);
+                this.awsClientPromise.then(() => {
+                    this.awsClient.send(new ListUserPoolClientsCommand(params), callback);
                 });
 
 
             } else {
                 var listUserPoolClients = (params, callback) => {
-                    this._cognitoIdentityServiceProviderClientPromise.then(() => {
-                        this._cognitoIdentityServiceProviderClient.send(new ListUserPoolClientsCommand(params), callback);
+                    this.awsClientPromise.then(() => {
+                        this.awsClient.send(new ListUserPoolClientsCommand(params), callback);
                         //this._cognitoIdentityServiceProvider.listUserPoolClients(params, callback);
                     });
                 };
 
                 var describeUserPoolClient = (params, callback) => {
-                    this._cognitoIdentityServiceProviderClientPromise.then(() => {
-                        this._cognitoIdentityServiceProviderClient.send(new DescribeUserPoolClientCommand(params), callback);
+                    this.awsClientPromise.then(() => {
+                        this.awsClient.send(new DescribeUserPoolClientCommand(params), callback);
                         //this._cognitoIdentityServiceProvider.describeUserPoolClient(params, callback);
                     });
                 };
@@ -1011,8 +964,8 @@ exports.CognitoDataService = CognitoDataService = RawDataService.specialize(/** 
 
             }
 
-            this._cognitoIdentityServiceProviderClientPromise.then(() => {
-                this._cognitoIdentityServiceProviderClient.send(new CreateUserPoolClientCommand(params), callback);
+            this.awsClientPromise.then(() => {
+                this.awsClient.send(new CreateUserPoolClientCommand(params), callback);
             });
         }
     }

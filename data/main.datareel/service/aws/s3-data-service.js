@@ -9,7 +9,7 @@ var fromIni /* = (require) ("@aws-sdk/credential-provider-ini").fromIni */,
     getSignedUrl /* = (require) ("@aws-sdk/s3-request-presigner").getSignedUrl */,
     // S3 =  (require) ("@aws-sdk/client-s3").S3,
     DataService = require("montage/data/service/data-service").DataService,
-    RawDataService = require("montage/data/service/raw-data-service").RawDataService,
+    AWSRawDataService = require("./a-w-s-raw-data-service").AWSRawDataService,
     //SyntaxInOrderIterator = (require) ("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     crypto = require("crypto"),
@@ -25,9 +25,9 @@ var fromIni /* = (require) ("@aws-sdk/credential-provider-ini").fromIni */,
 * TODO: Document
 *
 * @class
-* @extends RawDataService
+* @extends AWSRawDataService
 */
-exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3DataService.prototype */ {
+exports.S3DataService = S3DataService = AWSRawDataService.specialize(/** @lends S3DataService.prototype */ {
 
     /***************************************************************************
      * Initializing
@@ -35,7 +35,7 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
 
     constructor: {
         value: function S3DataService() {
-            RawDataService.call(this);
+            AWSRawDataService.call(this);
 
             var mainService = DataService.mainService;
             // mainService.addEventListener(DataOperation.Type.ReadOperation,this,false);
@@ -78,96 +78,125 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
         }
     },
 
-    _connection: {
-        value: undefined
+    apiVersion: {
+        value: "2006-03-01"
     },
 
-    connection: {
-        get: function() {
-            if(!this._connection) {
-                this.connection = this.connectionForIdentifier(this.currentEnvironment.stage);
-            }
-            return this._connection;
-        },
-        set: function(value) {
+    // __S3Client: {
+    //     value: undefined
+    // },
 
-            if(value !== this._connection) {
-                this._connection = value;
-            }
+    // _S3Client: {
+    //     get: function () {
+    //         if (!this.__S3Client) {
+    //             var connection = this.connection;
+
+    //             if(connection) {
+    //                 var region,
+    //                     credentials;
+
+    //                 if(connection.bucketRegion) {
+    //                     region = connection.bucketRegion;
+    //                 } else if(connection.resourceArn) {
+    //                     region = connection.resourceArn.split(":")[3];
+    //                 }
+
+    //                 var S3DataServiceOptions =  {
+    //                     apiVersion: '2006-03-01',
+    //                     region: region
+    //                 };
+
+    //                 if(!currentEnvironment.isAWS) {
+    //                     credentials = fromIni({profile: connection.profile});
+    //                 }
+
+    //                 if(credentials) {
+    //                     S3DataServiceOptions.credentials = credentials;
+    //                 }
+
+    //                 this.__S3Client = new S3Client(S3DataServiceOptions);
+
+    //             } else {
+    //                 throw "S3DataService could not find a connection for stage - "+this.currentEnvironment.stage+" -";
+    //             }
+
+    //         }
+    //         return this.__S3Client;
+    //     }
+    // },
+
+    // instantiateAWSClientOptions: {
+    //     value: function() {
+    //         var awsClientOptions = this.super();
+
+    //         if(this.connection.bucketRegion || !awsClientOptions.region) {
+    //             awsClientOptions.region = this.connection.bucketRegion;
+    //         }
+
+    //         return awsClientOptions;
+    //     }
+    // },
+
+    instantiateAWSClientWithOptions: {
+        value: function (awsClientOptions) {
+            return new S3Client(awsClientOptions);
         }
     },
 
-    __S3Client: {
-        value: undefined
-    },
+    // __S3ClientPromise: {
+    //     value: undefined
+    // },
 
-    _S3Client: {
+    // _S3ClientPromise: {
+    //     get: function () {
+    //         if (!this.__S3ClientPromise) {
+    //             this.__S3ClientPromise = Promise.all([
+    //                 require.async("@aws-sdk/credential-provider-ini"),
+    //                 require.async("@aws-sdk/client-s3/dist-cjs/S3Client"),
+    //                 require.async("@aws-sdk/client-s3/dist-cjs/commands/HeadObjectCommand"),
+    //                 require.async("@aws-sdk/client-s3/dist-cjs/commands/PutObjectCommand"),
+    //                 require.async("@aws-sdk/client-s3/dist-cjs/commands/GetObjectCommand"),
+    //                 require.async("@aws-sdk/s3-request-presigner")
+    //             ])
+    //             .then((resolvedModules) => {
+    //                 fromIni = resolvedModules[0].fromIni;
+    //                 S3Client = resolvedModules[1].S3Client;
+    //                 HeadObjectCommand = resolvedModules[2].HeadObjectCommand;
+    //                 PutObjectCommand = resolvedModules[3].PutObjectCommand;
+    //                 GetObjectCommand = resolvedModules[4].GetObjectCommand;
+    //                 getSignedUrl = resolvedModules[5].getSignedUrl;
+
+    //                 return this._S3Client;
+    //             });
+
+    //         }
+
+    //         return this.__S3ClientPromise;
+    //     }
+    // },
+
+    awsClientPromises: {
         get: function () {
-            if (!this.__S3Client) {
-                var connection = this.connection;
+            var promises = this.super();
 
-                if(connection) {
-                    var region,
-                        credentials;
+            promises.push(
+                require.async("@aws-sdk/client-s3/dist-cjs/S3Client").then(function(exports) { S3Client = exports.S3Client})
+            );
+            promises.push(
+                require.async("@aws-sdk/client-s3/dist-cjs/commands/HeadObjectCommand").then(function(exports) { HeadObjectCommand = exports.HeadObjectCommand})
+            );
+            promises.push(
+                require.async("@aws-sdk/client-s3/dist-cjs/commands/PutObjectCommand").then(function(exports) { PutObjectCommand = exports.PutObjectCommand})
+            );
+            promises.push(
+                require.async("@aws-sdk/client-s3/dist-cjs/commands/GetObjectCommand").then(function(exports) { GetObjectCommand = exports.GetObjectCommand})
+            );
+            promises.push(
+                require.async("@aws-sdk/s3-request-presigner").then(function(exports) { getSignedUrl = exports.getSignedUrl})
+            );
 
-                    if(connection.bucketRegion) {
-                        region = connection.bucketRegion;
-                    } else if(connection.resourceArn) {
-                        region = connection.resourceArn.split(":")[3];
-                    }
+            return promises;
 
-                    var S3DataServiceOptions =  {
-                        apiVersion: '2006-03-01',
-                        region: region
-                    };
-
-                    if(!currentEnvironment.isAWS) {
-                        credentials = fromIni({profile: connection.profile});
-                    }
-
-                    if(credentials) {
-                        S3DataServiceOptions.credentials = credentials;
-                    }
-
-                    this.__S3Client = new S3Client(S3DataServiceOptions);
-
-                } else {
-                    throw "S3DataService could not find a connection for stage - "+this.currentEnvironment.stage+" -";
-                }
-
-            }
-            return this.__S3Client;
-        }
-    },
-    __S3ClientPromise: {
-        value: undefined
-    },
-
-    _S3ClientPromise: {
-        get: function () {
-            if (!this.__S3ClientPromise) {
-                this.__S3ClientPromise = Promise.all([
-                    require.async("@aws-sdk/credential-provider-ini"),
-                    require.async("@aws-sdk/client-s3/dist-cjs/S3Client"),
-                    require.async("@aws-sdk/client-s3/dist-cjs/commands/HeadObjectCommand"),
-                    require.async("@aws-sdk/client-s3/dist-cjs/commands/PutObjectCommand"),
-                    require.async("@aws-sdk/client-s3/dist-cjs/commands/GetObjectCommand"),
-                    require.async("@aws-sdk/s3-request-presigner")
-                ])
-                .then((resolvedModules) => {
-                    fromIni = resolvedModules[0].fromIni;
-                    S3Client = resolvedModules[1].S3Client;
-                    HeadObjectCommand = resolvedModules[2].HeadObjectCommand;
-                    PutObjectCommand = resolvedModules[3].PutObjectCommand;
-                    GetObjectCommand = resolvedModules[4].GetObjectCommand;
-                    getSignedUrl = resolvedModules[5].getSignedUrl;
-
-                    return this._S3Client;
-                });
-
-            }
-
-            return this.__S3ClientPromise;
         }
     },
 
@@ -227,12 +256,12 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                         (promises || (promises = [])).push(new Promise(function(resolve, reject) {
 
                             /*
-                                For now, _S3ClientPromise gets all dependencies
+                                For now, awsClientPromise gets all dependencies
                             */
-                            self._S3ClientPromise.then(() => {
+                            self.awsClientPromise.then(() => {
 
                                 const command = new GetObjectCommand(params);
-                                getSignedUrl(self._S3Client, command, { expiresIn: 3600 })
+                                getSignedUrl(self.awsClient, command, { expiresIn: 3600 })
                                 .then((url) => {
                                     //console.log('signedURL is', url);
                                     (rawData || (rawData = {}))["signedUrl"] = url;
@@ -342,9 +371,9 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                         */
                     if(readExpressions.indexOf("content") !== -1) {
                         /*
-                            For now, _S3ClientPromise gets all dependencies
+                            For now, awsClientPromise gets all dependencies
                         */
-                        this._S3ClientPromise.then(() => {
+                        this.awsClientPromise.then(() => {
                             /*
                                 aws-sdk v3
                                 https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/getobjectcommand.html
@@ -352,15 +381,15 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                                 Command style
                             */
                             const getObjectCommand = new GetObjectCommand(params);
-                            this._S3Client.send(getObjectCommand, callback);
+                            this.awsClient.send(getObjectCommand, callback);
                         });
 
                     } else if(params.hasOwnProperty("Key") && params.hasOwnProperty("Bucket") && Object.keys(params).length > 2) {
 
                         /*
-                            For now, _S3ClientPromise gets all dependencies
+                            For now, awsClientPromise gets all dependencies
                         */
-                        this._S3ClientPromise.then(() => {
+                        this.awsClientPromise.then(() => {
                             /*
                                 aws-sdk v3
                                 https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/headobjectcommand.html
@@ -368,7 +397,7 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                             */
                             //No point to do even a head if nothing more is asked but Key and Bucket...
                             const headObjectCommand = new HeadObjectCommand(params);
-                            this._S3Client.send(headObjectCommand, callback);
+                            this.awsClient.send(headObjectCommand, callback);
                         });
 
 
@@ -382,7 +411,7 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
                     */
 
                     // var signedURL1
-                    // this._S3Client.getSignedUrl('getObject', params, function (err, url) {
+                    // this.awsClient.getSignedUrl('getObject', params, function (err, url) {
                     //     if (err) {
                     //         console.error(err, err.stack); // an error occurred
                     //     }
@@ -394,9 +423,9 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
 
                 } else {
                     /*
-                        For now, _S3ClientPromise gets all dependencies
+                        For now, awsClientPromise gets all dependencies
                     */
-                    this._S3ClientPromise.then(() => {
+                    this.awsClientPromise.then(() => {
 
                         //If no expression, we return the default
                         /*
@@ -407,7 +436,7 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
 
                         //No point to do even a head if nothing more is asked but Key and Bucket...
                         const headObjectCommand = new HeadObjectCommand(params);
-                        this._S3Client.send(headObjectCommand, callback);
+                        this.awsClient.send(headObjectCommand, callback);
                     });
 
                 }
@@ -446,9 +475,9 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
             }
 
             /*
-                For now, _S3ClientPromise gets all dependencies
+                For now, awsClientPromise gets all dependencies
             */
-            this._S3ClientPromise.then(() => {
+            this.awsClientPromise.then(() => {
 
                 const command = new PutObjectCommand(params);
                 var operation = new DataOperation();
@@ -457,7 +486,7 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
 
                 operation.target = createOperation.target;
 
-                this._S3Client.send(command)
+                this.awsClient.send(command)
                 .then(function(data) {
                     /*
                         data is like:
@@ -491,7 +520,7 @@ exports.S3DataService = S3DataService = RawDataService.specialize(/** @lends S3D
 
             });
 
-            // this._S3Client.putObject(params, function (err, data) {
+            // this.awsClient.putObject(params, function (err, data) {
 
             //     var operation = new DataOperation();
             //     operation.referrerId = createOperation.id;

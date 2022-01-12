@@ -3,7 +3,7 @@ var fromIni /* = (require) ("@aws-sdk/credential-provider-ini").fromIni */,
     SecretsManagerClient /* = (require) ("@aws-sdk/client-secrets-manager/dist-cjs/SecretsManagerClient").SecretsManagerClient */,
     GetSecretValueCommand /* = (require) ("@aws-sdk/client-secrets-manager/dist-cjs/commands/GetSecretValueCommand").GetSecretValueCommand */,
     //DataService = (require) ("montage/data/service/data-service").DataService,
-    RawDataService = require("montage/data/service/raw-data-service").RawDataService,
+    AWSRawDataService = require("./a-w-s-raw-data-service").AWSRawDataService,
     SyntaxInOrderIterator = require("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     currentEnvironment = require("montage/core/environment").currentEnvironment,
@@ -20,9 +20,9 @@ var fromIni /* = (require) ("@aws-sdk/credential-provider-ini").fromIni */,
 * TODO: Document
 *
 * @class
-* @extends RawDataService
+* @extends AWSRawDataService
 */
-exports.SecretManagerDataService = SecretManagerDataService = RawDataService.specialize(/** @lends SecretManagerDataService.prototype */ {
+exports.SecretManagerDataService = SecretManagerDataService = AWSRawDataService.specialize(/** @lends SecretManagerDataService.prototype */ {
 
     /***************************************************************************
      * Initializing
@@ -30,7 +30,7 @@ exports.SecretManagerDataService = SecretManagerDataService = RawDataService.spe
 
     constructor: {
         value: function SecretManagerDataService() {
-            RawDataService.call(this);
+            AWSRawDataService.call(this);
 
             //var mainService = DataService.mainService;
             //this.addEventListener(DataOperation.Type.ReadOperation,this,false);
@@ -54,6 +54,10 @@ exports.SecretManagerDataService = SecretManagerDataService = RawDataService.spe
         }
     },
 
+    apiVersion: {
+        value: "2017-10-17"
+    },
+
     handleCreateTransactionOperation: {
         value: function (createTransactionOperation) {
 
@@ -64,89 +68,112 @@ exports.SecretManagerDataService = SecretManagerDataService = RawDataService.spe
         }
     },
 
-    _connection: {
-        value: undefined
-    },
+    // _connection: {
+    //     value: undefined
+    // },
 
-    connection: {
-        get: function() {
-            if(!this._connection) {
-                this.connection = this.connectionForIdentifier(this.currentEnvironment.stage);
-            }
-            return this._connection;
-        },
-        set: function(value) {
+    // connection: {
+    //     get: function() {
+    //         if(!this._connection) {
+    //             this.connection = this.connectionForIdentifier(this.currentEnvironment.stage);
+    //         }
+    //         return this._connection;
+    //     },
+    //     set: function(value) {
 
-            if(value !== this._connection) {
-                this._connection = value;
-            }
+    //         if(value !== this._connection) {
+    //             this._connection = value;
+    //         }
+    //     }
+    // },
+
+    // __SecretsManagerClient: {
+    //     value: undefined
+    // },
+
+    // _SecretsManagerClient: {
+    //     get: function () {
+    //         if (!this.__SecretsManager) {
+    //             var connection = this.connection;
+
+    //             if(connection) {
+    //                 var region,
+    //                     credentials;
+
+    //                 if(connection.region) {
+    //                     region = connection.region;
+    //                 } else if(connection.resourceArn) {
+    //                     region = connection.resourceArn.split(":")[3];
+    //                 }
+
+    //                 var SecretsManagerOptions =  {
+    //                     apiVersion: '2017-10-17',
+    //                     region: region
+    //                 };
+
+    //                 if(!currentEnvironment.isAWS) {
+    //                     credentials = fromIni({profile: connection.profile});
+    //                 }
+
+    //                 if(credentials) {
+    //                     SecretsManagerOptions.credentials = credentials;
+    //                 }
+
+    //                 this.__SecretsManagerClient = new SecretsManagerClient(SecretsManagerOptions);
+
+    //             } else {
+    //                 throw "SecretsManager could not find a connection for stage - "+this.currentEnvironment.stage+" -";
+    //             }
+
+    //         }
+    //         return this.__SecretsManagerClient;
+    //     }
+    // },
+
+    instantiateAWSClientWithOptions: {
+        value: function (awsClientOptions) {
+            return new SecretsManagerClient(awsClientOptions);
         }
     },
 
-    __SecretsManagerClient: {
-        value: undefined
-    },
+    // __SecretsManagerPromise: {
+    //     value: undefined
+    // },
 
-    _SecretsManager: {
+    // _SecretsManagerPromise: {
+    //     get: function () {
+    //         if (!this.__SecretsManagerPromise) {
+    //             this.__SecretsManagerPromise = Promise.all([
+    //                 require.async("@aws-sdk/credential-provider-ini"),
+    //                 require.async("@aws-sdk/client-secrets-manager/dist-cjs/SecretsManagerClient"),
+    //                 require.async("@aws-sdk/client-secrets-manager/dist-cjs/commands/GetSecretValueCommand")
+    //             ])
+    //             .then((resolvedModules) => {
+    //                 fromIni = resolvedModules[0].fromIni;
+    //                 SecretsManagerClient = resolvedModules[1].SecretsManagerClient;
+    //                 GetSecretValueCommand = resolvedModules[2].GetSecretValueCommand;
+
+    //                 return this._SecretsManagerClient;
+    //             });
+    //         }
+
+    //         return this.__SecretsManagerPromise;
+    //     }
+    // },
+
+    awsClientPromises: {
         get: function () {
-            if (!this.__SecretsManager) {
-                var connection = this.connection;
+            var promises = this.super();
 
-                if(connection) {
-                    var region,
-                        credentials;
+            promises.push(
+                require.async("@aws-sdk/client-secrets-manager/dist-cjs/SecretsManagerClient").then(function(exports) { SecretsManagerClient = exports.SecretsManagerClient})
+            );
+            promises.push(
+                require.async("@aws-sdk/client-secrets-manager/dist-cjs/commands/GetSecretValueCommand").then(function(exports) { GetSecretValueCommand = exports.GetSecretValueCommand})
+            );
 
-                    if(connection.region) {
-                        region = connection.region;
-                    } else if(connection.resourceArn) {
-                        region = connection.resourceArn.split(":")[3];
-                    }
+            return promises;
 
-                    var SecretsManagerOptions =  {
-                        apiVersion: '2017-10-17',
-                        region: region
-                    };
-
-                    if(!currentEnvironment.isAWS) {
-                        credentials = fromIni({profile: connection.profile});
-                    }
-
-                    if(credentials) {
-                        SecretsManagerOptions.credentials = credentials;
-                    }
-
-                    this.__SecretsManagerClient = new SecretsManagerClient(SecretsManagerOptions);
-
-                } else {
-                    throw "SecretsManager could not find a connection for stage - "+this.currentEnvironment.stage+" -";
-                }
-
-            }
-            return this.__SecretsManagerClient;
-        }
-    },
-    __SecretsManagerPromise: {
-        value: undefined
-    },
-
-    _SecretsManagerPromise: {
-        get: function () {
-            if (!this.__SecretsManagerPromise) {
-                this.__SecretsManagerPromise = Promise.all([
-                    require.async("@aws-sdk/credential-provider-ini"),
-                    require.async("@aws-sdk/client-secrets-manager/dist-cjs/SecretsManagerClient"),
-                    require.async("@aws-sdk/client-secrets-manager/dist-cjs/commands/GetSecretValueCommand")
-                ])
-                .then((resolvedModules) => {
-                    fromIni = resolvedModules[0].fromIni;
-                    SecretsManagerClient = resolvedModules[1].SecretsManagerClient;
-                    GetSecretValueCommand = resolvedModules[2].GetSecretValueCommand;
-
-                    return this._SecretsManager;
-                });
-            }
-
-            return this.__SecretsManagerPromise;
         }
     },
 
@@ -183,12 +210,12 @@ exports.SecretManagerDataService = SecretManagerDataService = RawDataService.spe
 
                 (promises || (promises = [])).push(new Promise(function(resolve, reject) {
 
-                    self._SecretsManagerPromise.then(() => {
+                    self.awsClientPromise.then(() => {
 
                         const getSecretValueCommand = new GetSecretValueCommand({
                             SecretId: secretId
                         });
-                        self._SecretsManager.send(getSecretValueCommand, function (err, data) {
+                        self.awsClient.send(getSecretValueCommand, function (err, data) {
                             if (err) {
                                 /*
 

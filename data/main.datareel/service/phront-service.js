@@ -1,5 +1,5 @@
 
-var RawDataService = require("montage/data/service/raw-data-service").RawDataService,
+var AWSRawDataService = require("./aws/a-w-s-raw-data-service").AWSRawDataService,
     Criteria = require("montage/core/criteria").Criteria,
     ObjectDescriptor = require("montage/core/meta/object-descriptor").ObjectDescriptor,
     RawEmbeddedValueToObjectConverter = require("montage/data/converter/raw-embedded-value-to-object-converter").RawEmbeddedValueToObjectConverter,
@@ -26,8 +26,13 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     DataOperationType = require("montage/data/service/data-operation").DataOperationType,
     //PGClass = (require)("../model/p-g-class").PGClass,
 
-    fromIni = require("@aws-sdk/credential-provider-ini").fromIni,
-    RDSDataService = require("@aws-sdk/client-rds-data").RDSData,
+    fromIni,
+    RDSDataClient,
+    BatchExecuteStatementCommand,
+    BeginTransactionCommand,
+    CommitTransactionCommand,
+    ExecuteStatementCommand,
+    RollbackTransactionCommand,
 
     pgutils = require('./pg-utils'),
     prepareValue = pgutils.prepareValue,
@@ -40,7 +45,6 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     //DataTrigger = (require)("./data-trigger").DataTrigger,
     path = require("path"),
     fs = require('fs'),
-    currentEnvironment = require("montage/core/environment").currentEnvironment,
     PhrontService;
 
     // const { RDSDataClient, BatchExecuteStatementCommand, BeginTransactionCommand, CommitTransactionCommand } = require("@aws-sdk/client-rds-data");
@@ -144,7 +148,7 @@ var createTableTemplatePrefix = `CREATE TABLE :schema.":table"
 * @class
 * @extends RawDataService
 */
-exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends PhrontService.prototype */ {
+exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends PhrontService.prototype */ {
 
     /***************************************************************************
      * Initializing
@@ -154,7 +158,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
         value: function PhrontService() {
             "use strict";
 
-            RawDataService.call(this);
+            AWSRawDataService.call(this);
 
 
             if(this._mapResponseHandlerByOperationType.size === 0) {
@@ -184,6 +188,13 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             this.addEventListener(DataOperation.Type.CommitTransactionOperation,this,false);
             this.addEventListener(DataOperation.Type.RollbackTransactionOperation,this,false);
 
+            /*
+                Kickstart loading dependencies as we always need this data service:
+                The Promise.all() returned is cached, so it doesn't matter wether it's done or not
+                by the time the worker's function handles the message
+            */
+            this.awsClientPromises;
+
 
             // this._registeredConnectionsByIdentifier = new Map();
         }
@@ -202,6 +213,10 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
         }
 
+    },
+
+    apiVersion: {
+        value: "2018-08-01"
     },
 
     /***************************************************************************
@@ -287,40 +302,44 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     //     }
     // },
 
-    __rdsDataService: {
-        value: undefined
+    instantiateAWSClientWithOptions: {
+        value: function (awsClientOptions) {
+            return new RDSDataClient(awsClientOptions);
+        }
     },
 
-    _rdsDataService: {
+    awsClientPromises: {
         get: function () {
-            if (!this.__rdsDataService) {
-                var connection = this.connection;
+                var promises = this.super();
 
-                if(connection) {
-                    var credentials,
-                        region = connection.resourceArn.split(":")[3],
-                        RDSDataServiceOptions =  {
-                            apiVersion: '2018-08-01',
-                            region: region
-                        };
+                // if(!currentEnvironment.isAWS) {
+                //     promises.push(
+                //         require.async("@aws-sdk/credential-provider-ini").then(function(exports) { fromIni = exports.fromIni})
+                //     )
+                // };
+                promises.push(
+                    require.async("@aws-sdk/client-rds-data/dist-cjs/RDSDataClient").then(function(exports) { RDSDataClient = exports.RDSDataClient})
+                );
+                promises.push(
+                    require.async("@aws-sdk/client-rds-data/dist-cjs/commands/BatchExecuteStatementCommand").then(function(exports) { BatchExecuteStatementCommand = exports.BatchExecuteStatementCommand})
+                );
+                promises.push(
+                    require.async("@aws-sdk/client-rds-data/dist-cjs/commands/BeginTransactionCommand").then(function(exports) { BeginTransactionCommand = exports.BeginTransactionCommand})
+                );
+                promises.push(
+                    require.async("@aws-sdk/client-rds-data/dist-cjs/commands/CommitTransactionCommand").then(function(exports) { CommitTransactionCommand = exports.CommitTransactionCommand})
+                );
+                promises.push(
+                    require.async("@aws-sdk/client-rds-data/dist-cjs/commands/ExecuteStatementCommand").then(function(exports) {
+                        ExecuteStatementCommand = exports.ExecuteStatementCommand
+                    })
+                );
+                promises.push(
+                    require.async("@aws-sdk/client-rds-data/dist-cjs/commands/RollbackTransactionCommand").then(function(exports) { RollbackTransactionCommand = exports.RollbackTransactionCommand})
+                );
 
-                    if(!currentEnvironment.isAWS) {
-                        credentials = fromIni({profile: connection.profile});
-                    }
-
-                    if(credentials) {
-                        RDSDataServiceOptions.credentials = credentials;
-                    }
-
-                    this.__rdsDataService = new RDSDataService(RDSDataServiceOptions);
-
-                } else {
-                    throw "Could not find a database connection for stage - "+this.currentEnvironment.stage+" -";
-                }
-
-
-            }
-            return this.__rdsDataService;
+                // this.__rdsDataClientPromise = Promise.all(promises).then(() => { return this.awsClient;});
+            return promises;
         }
     },
 
@@ -4338,7 +4357,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
             //Time to execute
             return new Promise(function (resolve, reject) {
                 //rawDataOperation.parameterSets = [[]]; //as a work-around for batch...
-                self._rdsDataService.executeStatement(rawDataOperation, function (err, data) {
+                self.executeStatement(rawDataOperation, function (err, data) {
                     //var response = this;
 
                     if (err) {
@@ -4353,7 +4372,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
                             iRecord = rawOperationRecords[i];
                             iOperation = batchedOperations[i];
 
-                            //Only map back for read results, if we get it from _rdsDataService.executeStatement ...
+                            //Only map back for read results, if we get it from _rdsDataClient.executeStatement ...
                             if(iOperation.type === readType) {
                                 iFetchesults = data.records[i];
                                 if(iFetchesults) {
@@ -4802,42 +4821,6 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
                     })
 
-                    /*
-                    batchSQL = operationSQL.join(";\n");
-                    rawDataOperation.sql = batchSQL;
-
-                    return new Promise(function (resolve, reject) {
-                        //rawDataOperation.parameterSets = [[]]; //as a work-around for batch...
-                        self._rdsDataService.executeStatement(rawDataOperation, function (err, data) {
-                            if (data && transactionId) {
-                                data.transactionId = transactionId;
-                            }
-                            if (err) {
-                                // an error occurred
-                                console.log(err, err.stack, rawDataOperation);
-                                operation.type = DataOperation.Type.AppendTransactionFailedOperation;
-                                //Should the data be the error?
-                                if(!data) {
-                                    data = {
-                                        transactionId: transactionId
-                                    };
-                                    data.error = err;
-                                }
-                                operation.data = data;
-                                resolve(operation);
-                            }
-                            else {
-                                // successful response
-                                operation.type = DataOperation.Type.AppendTransactionCompletedOperation;
-                                //What should be the operation's payload ? The Raw Transaction Id?
-                                operation.data = data;
-
-                                resolve(operation);
-                            }
-                        });
-                    });
-                    */
-
                 .catch(function (error) {
                     var operation = new DataOperation();
                     operation.referrerId = appendTransactionOperation.id;
@@ -4885,7 +4868,7 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
 
             this.mapOperationToRawOperationConnection(transactionEndOperation, rawDataOperation);
 
-            //_rdsDataService.commitTransaction & _rdsDataService.rollbackTransaction make sure the param
+            //_rdsDataClient.commitTransaction & _rdsDataClient.rollbackTransaction make sure the param
             //don't have a database nor schema field, so we delete it.
             //TODO, try to find a way to instruct this.mapOperationToRawOperationConnection not to put them in if we don't want them
             delete rawDataOperation.database;
@@ -5020,32 +5003,46 @@ exports.PhrontService = PhrontService = RawDataService.specialize(/** @lends Phr
     // Export promisified versions of the RDSDataService methods
     batchExecuteStatement: {
         value: function (params, callback) {
-            this._rdsDataService.batchExecuteStatement(params, callback);
+            //this.awsClient.batchExecuteStatement(params, callback);
+            this.awsClientPromise.then(() => {
+                this.awsClient.send(new BatchExecuteStatementCommand(params), callback);
+            });
         }
     },
 
     beginTransaction: {
         value: function (params, callback) {
-            this._rdsDataService.beginTransaction(params, callback);
+            //this.awsClient.beginTransaction(params, callback);
+            this.awsClientPromise.then(() => {
+                this.awsClient.send(new BeginTransactionCommand(params), callback);
+            });
         }
     },
 
     commitTransaction: {
         value: function (params, callback) {
-            this._rdsDataService.commitTransaction(params, callback);
+            // this.awsClient.commitTransaction(params, callback);
+            this.awsClientPromise.then(() => {
+                this.awsClient.send(new CommitTransactionCommand(params), callback);
+            });
         }
     },
     executeStatement: {
         value: function (params, callback) {
-            this._rdsDataService.executeStatement(params, callback);
+            //this.awsClient.executeStatement(params, callback);
+            this.awsClientPromise.then(() => {
+                this.awsClient.send(new ExecuteStatementCommand(params), callback);
+            });
         }
     },
     rollbackTransaction: {
         value: function (params, callback) {
-            this._rdsDataService.rollbackTransaction(params, callback);
+            //this.awsClient.rollbackTransaction(params, callback);
+            this.awsClientPromise.then(() => {
+                this.awsClient.send(new RollbackTransactionCommand(params), callback);
+            });
         }
     }
-
 
 });
 
