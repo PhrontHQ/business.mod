@@ -10,10 +10,11 @@ if(process.env.PROFILE_START) {
         session.post('Profiler.start', () => {
         });
     });
+
+    console.log(process.version);
+    console.time("Main");
 }
 
-console.log(process.version);
-console.time("Main");
 
 /*
     workaround for the fact that mr doesn't find crypto which is a built-in module, needs to fix that for good.
@@ -118,10 +119,9 @@ if(!useMr) {
     }).then(function (module) {
         var worker = module.montageObject;
         Montage.application = worker;
-        console.timeEnd("Main");
-        console.log("Phront Worker reporting for duty!");
 
         if(process.env.PROFILE_START) {
+            console.timeEnd("Main");
 
             session.post('Profiler.stop', (err, { profile }) => {
                 // Write profile to disk, upload, etc.
@@ -130,6 +130,8 @@ if(!useMr) {
                 }
             });
         }
+
+        console.log("Phront Worker reporting for duty!");
 
         return worker;
     });
