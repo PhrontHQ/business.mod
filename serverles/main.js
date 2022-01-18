@@ -1,5 +1,10 @@
 'use strict';
 
+if(process.env.TIME_START) {
+    console.log(process.version);
+    console.time("Main");
+}
+
 if(process.env.PROFILE_START) {
     const inspector = require('inspector');
     var fs = require('fs');
@@ -10,9 +15,6 @@ if(process.env.PROFILE_START) {
         session.post('Profiler.start', () => {
         });
     });
-
-    console.log(process.version);
-    console.time("Main");
 }
 
 
@@ -120,9 +122,10 @@ if(!useMr) {
         var worker = module.montageObject;
         Montage.application = worker;
 
-        if(process.env.PROFILE_START) {
+        if(process.env.TIME_START) {
             console.timeEnd("Main");
-
+        }
+        if(process.env.PROFILE_START) {
             session.post('Profiler.stop', (err, { profile }) => {
                 // Write profile to disk, upload, etc.
                 if (!err) {
