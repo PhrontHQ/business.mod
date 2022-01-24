@@ -8,7 +8,8 @@ const   Worker = require("./worker").Worker,
     MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
 
     // Montage = (require)("montage/core/core").Montage,
-    currentEnvironment = require("montage/core/environment").currentEnvironment;
+    currentEnvironment = require("montage/core/environment").currentEnvironment,
+    util = require('util');
 
 const successfullResponse = {
         statusCode: 200,
@@ -343,7 +344,6 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
         }
     },
 
-    /* default implementation is just echo */
     handleMessage: {
         value: function(event, context, callback) {
 
@@ -483,8 +483,11 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                 callback(null, successfullResponse)
             })
             .catch((err) => {
-                console.log(err)
-                callback(failedResponse(500, JSON.stringify(err)))
+                console.error("Error: ",err, " for event: ",event);
+                /*
+                    JSON.stringify() doesn't handle circular references, util.inspect() does
+                */
+                callback(failedResponse(500, util.inspect(err)))
             });
 
         }
