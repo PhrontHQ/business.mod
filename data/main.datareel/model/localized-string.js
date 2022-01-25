@@ -17,7 +17,7 @@
 //Thus is working client side, more work needed using the project esm:
 //https://www.npmjs.com/package/esm
 //https://github.com/standard-things/esm
-// var LIGHTSPEED = require("./module-x.js").LIGHTSPEED;
+// var LIGHTSPEED = (require)("./module-x.js").LIGHTSPEED;
 
 
 /*

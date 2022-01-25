@@ -1,6 +1,6 @@
 // ES6 myModule.js
-
-import {LIGHTSPEED} from './module-x.js';
+// This was a test, capability to do so is disabled in mr for now
+// import {LIGHTSPEED} from './module-x.js';
 
 class LocalizedString extends String {
     //ES2019

@@ -1,12 +1,8 @@
-var fromIni /* = (require) ("@aws-sdk/credential-provider-ini").fromIni */,
-    // SecretsManager = (require) ("@aws-sdk/client-secrets-manager").SecretsManager,
-    SecretsManagerClient /* = (require) ("@aws-sdk/client-secrets-manager/dist-cjs/SecretsManagerClient").SecretsManagerClient */,
-    GetSecretValueCommand /* = (require) ("@aws-sdk/client-secrets-manager/dist-cjs/commands/GetSecretValueCommand").GetSecretValueCommand */,
-    //DataService = (require) ("montage/data/service/data-service").DataService,
+var SecretsManagerClient,
+    GetSecretValueCommand,
     AWSRawDataService = require("./a-w-s-raw-data-service").AWSRawDataService,
-    SyntaxInOrderIterator = require("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
+    //SyntaxInOrderIterator = (require)("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
-    currentEnvironment = require("montage/core/environment").currentEnvironment,
     //Causes issues
     // secretObjectDescriptor = (require) ("../model/aws/secret.mjson").montageObject,
     S3DataService;
@@ -68,98 +64,11 @@ exports.SecretManagerDataService = SecretManagerDataService = AWSRawDataService.
         }
     },
 
-    // _connection: {
-    //     value: undefined
-    // },
-
-    // connection: {
-    //     get: function() {
-    //         if(!this._connection) {
-    //             this.connection = this.connectionForIdentifier(this.currentEnvironment.stage);
-    //         }
-    //         return this._connection;
-    //     },
-    //     set: function(value) {
-
-    //         if(value !== this._connection) {
-    //             this._connection = value;
-    //         }
-    //     }
-    // },
-
-    // __SecretsManagerClient: {
-    //     value: undefined
-    // },
-
-    // _SecretsManagerClient: {
-    //     get: function () {
-    //         if (!this.__SecretsManager) {
-    //             var connection = this.connection;
-
-    //             if(connection) {
-    //                 var region,
-    //                     credentials;
-
-    //                 if(connection.region) {
-    //                     region = connection.region;
-    //                 } else if(connection.resourceArn) {
-    //                     region = connection.resourceArn.split(":")[3];
-    //                 }
-
-    //                 var SecretsManagerOptions =  {
-    //                     apiVersion: '2017-10-17',
-    //                     region: region
-    //                 };
-
-    //                 if(!currentEnvironment.isAWS) {
-    //                     credentials = fromIni({profile: connection.profile});
-    //                 }
-
-    //                 if(credentials) {
-    //                     SecretsManagerOptions.credentials = credentials;
-    //                 }
-
-    //                 this.__SecretsManagerClient = new SecretsManagerClient(SecretsManagerOptions);
-
-    //             } else {
-    //                 throw "SecretsManager could not find a connection for stage - "+this.currentEnvironment.stage+" -";
-    //             }
-
-    //         }
-    //         return this.__SecretsManagerClient;
-    //     }
-    // },
-
     instantiateAWSClientWithOptions: {
         value: function (awsClientOptions) {
             return new SecretsManagerClient(awsClientOptions);
         }
     },
-
-    // __SecretsManagerPromise: {
-    //     value: undefined
-    // },
-
-    // _SecretsManagerPromise: {
-    //     get: function () {
-    //         if (!this.__SecretsManagerPromise) {
-    //             this.__SecretsManagerPromise = Promise.all([
-    //                 require.async("@aws-sdk/credential-provider-ini"),
-    //                 require.async("@aws-sdk/client-secrets-manager/dist-cjs/SecretsManagerClient"),
-    //                 require.async("@aws-sdk/client-secrets-manager/dist-cjs/commands/GetSecretValueCommand")
-    //             ])
-    //             .then((resolvedModules) => {
-    //                 fromIni = resolvedModules[0].fromIni;
-    //                 SecretsManagerClient = resolvedModules[1].SecretsManagerClient;
-    //                 GetSecretValueCommand = resolvedModules[2].GetSecretValueCommand;
-
-    //                 return this._SecretsManagerClient;
-    //             });
-    //         }
-
-    //         return this.__SecretsManagerPromise;
-    //     }
-    // },
 
     awsClientPromises: {
         get: function () {

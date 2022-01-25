@@ -1,13 +1,11 @@
 // const { S3Client, GetObjectCommand, PutObjectCommand, HeadObjectCommand, S3 } = require("@aws-sdk/client-s3");
 
 
-var fromIni /* = (require) ("@aws-sdk/credential-provider-ini").fromIni */,
-    S3Client /* = (require) ("@aws-sdk/client-s3/dist-cjs/S3Client").S3Client */,
-    HeadObjectCommand /* = (require) ("@aws-sdk/client-s3/dist-cjs/commands/HeadObjectCommand").HeadObjectCommand */,
-    PutObjectCommand /* = (require) ("@aws-sdk/client-s3/dist-cjs/commands/PutObjectCommand").PutObjectCommand */,
-    GetObjectCommand /* = (require) ("@aws-sdk/client-s3/dist-cjs/commands/GetObjectCommand").GetObjectCommand */,
-    getSignedUrl /* = (require) ("@aws-sdk/s3-request-presigner").getSignedUrl */,
-    // S3 =  (require) ("@aws-sdk/client-s3").S3,
+var S3Client,
+    HeadObjectCommand,
+    PutObjectCommand,
+    GetObjectCommand,
+    getSignedUrl,
     DataService = require("montage/data/service/data-service").DataService,
     AWSRawDataService = require("./a-w-s-raw-data-service").AWSRawDataService,
     //SyntaxInOrderIterator = (require) ("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
@@ -15,7 +13,6 @@ var fromIni /* = (require) ("@aws-sdk/credential-provider-ini").fromIni */,
     crypto = require("crypto"),
     BucketDescriptor = require("../../model/aws/s3/bucket.mjson").montageObject,
     ObjectDescriptor = require("../../model/aws/s3/object.mjson").montageObject,
-    currentEnvironment = require("montage/core/environment").currentEnvironment,
     ExpiringObjectDownloadDescriptor = require("../../model/aws/s3/expiring-object-download.mjson").montageObject,
     S3DataService;
 
@@ -82,98 +79,11 @@ exports.S3DataService = S3DataService = AWSRawDataService.specialize(/** @lends 
         value: "2006-03-01"
     },
 
-    // __S3Client: {
-    //     value: undefined
-    // },
-
-    // _S3Client: {
-    //     get: function () {
-    //         if (!this.__S3Client) {
-    //             var connection = this.connection;
-
-    //             if(connection) {
-    //                 var region,
-    //                     credentials;
-
-    //                 if(connection.bucketRegion) {
-    //                     region = connection.bucketRegion;
-    //                 } else if(connection.resourceArn) {
-    //                     region = connection.resourceArn.split(":")[3];
-    //                 }
-
-    //                 var S3DataServiceOptions =  {
-    //                     apiVersion: '2006-03-01',
-    //                     region: region
-    //                 };
-
-    //                 if(!currentEnvironment.isAWS) {
-    //                     credentials = fromIni({profile: connection.profile});
-    //                 }
-
-    //                 if(credentials) {
-    //                     S3DataServiceOptions.credentials = credentials;
-    //                 }
-
-    //                 this.__S3Client = new S3Client(S3DataServiceOptions);
-
-    //             } else {
-    //                 throw "S3DataService could not find a connection for stage - "+this.currentEnvironment.stage+" -";
-    //             }
-
-    //         }
-    //         return this.__S3Client;
-    //     }
-    // },
-
-    // instantiateAWSClientOptions: {
-    //     value: function() {
-    //         var awsClientOptions = this.super();
-
-    //         if(this.connection.bucketRegion || !awsClientOptions.region) {
-    //             awsClientOptions.region = this.connection.bucketRegion;
-    //         }
-
-    //         return awsClientOptions;
-    //     }
-    // },
-
     instantiateAWSClientWithOptions: {
         value: function (awsClientOptions) {
             return new S3Client(awsClientOptions);
         }
     },
-
-    // __S3ClientPromise: {
-    //     value: undefined
-    // },
-
-    // _S3ClientPromise: {
-    //     get: function () {
-    //         if (!this.__S3ClientPromise) {
-    //             this.__S3ClientPromise = Promise.all([
-    //                 require.async("@aws-sdk/credential-provider-ini"),
-    //                 require.async("@aws-sdk/client-s3/dist-cjs/S3Client"),
-    //                 require.async("@aws-sdk/client-s3/dist-cjs/commands/HeadObjectCommand"),
-    //                 require.async("@aws-sdk/client-s3/dist-cjs/commands/PutObjectCommand"),
-    //                 require.async("@aws-sdk/client-s3/dist-cjs/commands/GetObjectCommand"),
-    //                 require.async("@aws-sdk/s3-request-presigner")
-    //             ])
-    //             .then((resolvedModules) => {
-    //                 fromIni = resolvedModules[0].fromIni;
-    //                 S3Client = resolvedModules[1].S3Client;
-    //                 HeadObjectCommand = resolvedModules[2].HeadObjectCommand;
-    //                 PutObjectCommand = resolvedModules[3].PutObjectCommand;
-    //                 GetObjectCommand = resolvedModules[4].GetObjectCommand;
-    //                 getSignedUrl = resolvedModules[5].getSignedUrl;
-
-    //                 return this._S3Client;
-    //             });
-
-    //         }
-
-    //         return this.__S3ClientPromise;
-    //     }
-    // },
 
     awsClientPromises: {
         get: function () {

@@ -1,6 +1,6 @@
 var AbstractInspector = require("ui/controls/abstract/abstract-inspector").AbstractInspector,
-    // SystemService = require('core/service/system-service').SystemService,
-    // moment = require("moment-timezone"),
+    // SystemService = (require)('core/service/system-service').SystemService,
+    // moment = (require)("moment-timezone"),
     _      = require("lodash");
 
 exports.LanguageAndRegion = AbstractInspector.specialize({

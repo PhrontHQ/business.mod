@@ -42,12 +42,9 @@ var AWSRawDataService = require("./aws/a-w-s-raw-data-service").AWSRawDataServic
     escapeString = pgutils.escapeString,
     pgstringify = require('./pgstringify'),
     parse = require("montage/core/frb/parse"),
-    //DataTrigger = (require)("./data-trigger").DataTrigger,
     path = require("path"),
     fs = require('fs'),
     PhrontService;
-
-    // const { RDSDataClient, BatchExecuteStatementCommand, BeginTransactionCommand, CommitTransactionCommand } = require("@aws-sdk/client-rds-data");
 
 
 

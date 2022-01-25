@@ -9,7 +9,7 @@ var Converter = require("montage/core/converter/converter").Converter,
 
 /*
     Not sure we'll need this here to properly deal with a wider range of languages/scripts
-    Locale = require("montage/core/locale").Locale;
+    Locale = (require)("montage/core/locale").Locale;
 
     First implementation adapted from
     https://github.com/gnustep/libs-base/blob/master/Source/NSPersonNameComponentsFormatter.m

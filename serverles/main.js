@@ -45,8 +45,8 @@ if(!useMr) {
 
     // Flags: --expose-internals
 
-    // const internalModule = require('internal/module');
-    // const makeRequireFunction = require('internal/modules/cjs/helpers').makeRequireFunction;
+    // const internalModule = (require)('internal/module');
+    // const makeRequireFunction = (require)('internal/modules/cjs/helpers').makeRequireFunction;
 
 
     const resolveMJSONFile = function (module, path) {

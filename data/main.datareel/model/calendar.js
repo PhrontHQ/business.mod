@@ -4,7 +4,7 @@ var DataObject = require("./data-object").DataObject;
 
 Ideally we'd want Phront's calendar type to specialize Montage's Calendar, but we aso need things in Object... hmmm
 
-MontageCalendar = require("montage/core/date/calendar").Calendar,
+MontageCalendar = (require)("montage/core/date/calendar").Calendar,
 */
 
 /**
