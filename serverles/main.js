@@ -1,5 +1,10 @@
 'use strict';
 
+global.Promise = require("bluebird");
+
+exports.initMainModuleWithRequire = function( mainModule, mainRequire) {
+
+
 if(process.env.TIME_START) {
     console.log(process.version);
     console.time("Main");
@@ -77,7 +82,19 @@ if(!useMr) {
 
     const nodeNativeJsExtension = Module._extensions['.js'];
 
+    /*
+        FIXME!!!
+        WARNING, when debugging locally with links, we end up with the same module loaded twice, causing errors, with filenames like:
+
+            /Users/benoit/Sites/marchant/plum/plumming-data-worker/node_modules/phront/node_modules/montage/core/target.js
+            and
+            /Users/benoit/Sites/marchant/plum/plumming-data-worker/node_modules/montage/core/target.js
+
+        need to find a way to set it up so it doesn't happen
+    */
+
     Module._extensions['.js'] = function(module, filename) {
+
         nodeNativeJsExtension(module, filename);
 
         /*
@@ -88,7 +105,20 @@ if(!useMr) {
         createModuleMetadata(module, Module.createRequire(filename), module.exports);
     }
 
-    var worker = module.parent.exports.worker = exports.worker = module.parent.require("./main.mjson").montageObject;
+    var computedModuleId = `${PATH.relative(module.path, mainModule.path)}/main.mjson`;
+    /*
+        For reducing code packaged and deployed, we need a valid moduleId for the main project's main.json file.
+        Since phront is a direct dependency, we're pretty sure of the location this file will have regarding the project's root.mjson:
+
+        '../../../main.mjson'
+
+        So we're going to hard code it and throw if it turned out wrong at runtime.
+    */
+    if( computedModuleId !== '../../../main.mjson') {
+        throw "Project's main.mjson - "+computedModuleId+" doesn't match expectected '../../../main.mjson'";
+    }
+
+    var worker = mainModule.exports.worker = exports.worker = mainRequire("./main.mjson").montageObject;
     Montage.application = worker;
 
     workerPromise = Promise.resolve(worker);
@@ -109,16 +139,32 @@ if(!useMr) {
         the worker that can be subclassed, and other setups that can be serialized
         and where serialization can be reused.
 
-        So we use module.parent to setup montage as if we were in that projet
+        So we use mainModule to setup montage as if we were in that projet
 
         and we put the symbols we expect on parent's exports as well
     */
    const processPath = PATH.join(module.parent.path, ".");
     workerPromise = Montage.loadPackage(processPath, {
     mainPackageLocation: PATH.join(module.parent.filename, ".")
-    }).then(function (mr) {
-        return mr.async("./main.mjson");
-    }).then(function (module) {
+    })
+    .then(function (mr) {
+        //Inject current file:
+        var currentMrModule = mr.inject("phront/serverles/main", exports),
+            computedModuleId = `${PATH.relative(module.path, mainModule.path)}/main.mjson`;
+        /*
+            For reducing code packaged and deployed, we need a valid moduleId for the main project's main.json file.
+            Since phront is a direct dependency, we're pretty sure of the location this file will have regarding the project's root.mjson:
+
+            '../../../main.mjson'
+
+            So we're going to hard code it and throw if it turned out wrong at runtime.
+        */
+        if( computedModuleId !== '../../../main.mjson') {
+            throw "Project's main.mjson - "+computedModuleId+" doesn't match expectected '../../../main.mjson'";
+        }
+        return currentMrModule.require.async("../../../main.mjson");
+    })
+    .then(function (module) {
         var worker = module.montageObject;
         Montage.application = worker;
 
@@ -139,10 +185,10 @@ if(!useMr) {
         return worker;
     });
 
-    module.parent.exports.worker = exports.worker = workerPromise;
+    mainModule.exports.worker = exports.worker = workerPromise;
 }
 
-module.parent.exports.connect = exports.connect = (event, context, callback) => {
+mainModule.exports.connect = exports.connect = (event, context, callback) => {
     workerPromise.then(function(worker) {
       if(typeof worker.handleConnect === "function") {
           return worker.handleConnect(event, context, callback);
@@ -155,7 +201,7 @@ module.parent.exports.connect = exports.connect = (event, context, callback) => 
     });
 };
 
-module.parent.exports.default = exports.default = async (event, context, callback) => {
+mainModule.exports.default = exports.default = async (event, context, callback) => {
   const worker = await workerPromise;
   if(typeof worker.handleMessage === "function") {
       await worker.handleMessage(event, context, callback);
@@ -167,7 +213,7 @@ module.parent.exports.default = exports.default = async (event, context, callbac
   });
 };
 
-module.parent.exports.handlePerformTransaction = exports.handlePerformTransaction  = async function (event, context, callback) {
+mainModule.exports.handlePerformTransaction = exports.handlePerformTransaction  = async function (event, context, callback) {
   console.log("handlePerformTransaction event:",event,"context:",context);
 
   const worker = await workerPromise;
@@ -187,12 +233,12 @@ module.parent.exports.handlePerformTransaction = exports.handlePerformTransactio
 };
 
 
-module.parent.exports.httpAuthorize = module.exports.httpAuthorize = async (event, context, callback) => {
+    mainModule.exports.httpAuthorize = module.exports.httpAuthorize = async (event, context, callback) => {
     console.log("httpAuthorize:","event:", event, "context:", context, "callback:", callback , "_authorize:", _authorize);
     return _authorize.call(this, event, context, callback);
   };
 
-module.parent.exports.httpDefault = exports.httpDefault  = async function (event, context, callback) {
+    mainModule.exports.httpDefault = exports.httpDefault  = async function (event, context, callback) {
     console.log("httpDefault event:",event,"context:",context);
 
     const worker = await workerPromise;
@@ -203,15 +249,15 @@ module.parent.exports.httpDefault = exports.httpDefault  = async function (event
     callback(null, {
         statusCode: 200,
         headers: {
-          'Access-Control-Allow-Origin': '*', // Required for CORS support to work
-          'Access-Control-Allow-Credentials': true // Required for cookies, authorization headers with HTTPS
+            'Access-Control-Allow-Origin': '*', // Required for CORS support to work
+            'Access-Control-Allow-Credentials': true // Required for cookies, authorization headers with HTTPS
         },
         body: 'Sent.'
     });
 
-  };
+    };
 
-module.parent.exports.disconnect = exports.disconnect = (event, context, callback) => {
+  mainModule.exports.disconnect = exports.disconnect = (event, context, callback) => {
   workerPromise.then(function(worker) {
 
       if(typeof worker.handleDisconnect === "function") {
@@ -322,7 +368,7 @@ const _authorize = async (event, context, callback) => {
 
   };
 
-  module.parent.exports.authorize = module.exports.authorize = async (event, context, callback) => {
+  mainModule.exports.authorize = module.exports.authorize = async (event, context, callback) => {
     console.log("authorize:","event:", event, "context:", context, "callback:", callback, "_authorize:", _authorize );
     return _authorize.call(this, event, context, callback);
   }
@@ -408,3 +454,4 @@ var generateDeny = function(principalId, resource) {
 }
 
   */
+}
