@@ -5,7 +5,7 @@
             "name": "Application",
             "propertyDescriptors": [
                 {"@": "name"},
-                {"@": "userPoolClients"},
+                {"@": "appClients"},
                 {"@": "controllingOrganization"}
             ],
             "objectDescriptorModule": {
@@ -32,18 +32,18 @@
             "valueType": "string"
         }
     },
-    "userPoolClients": {
+    "appClients": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "userPoolClients",
+            "name": "appClients",
             "cardinality": -1,
             "valueType": "object",
-            "valueDescriptor": {"@": "UserPoolClientDescriptor"},
+            "valueDescriptor": {"@": "AppClientDescriptor"},
             "inversePropertyName": "application"
        }
     },
-    "UserPoolClientDescriptor": {
-        "object": "./user-pool-client.mjson"
+    "AppClientDescriptor": {
+        "object": "./app-client.mjson"
     },
     "controllingOrganization": {
         "prototype": "montage/core/meta/property-descriptor",

@@ -1,22 +1,21 @@
 /**
-    @module phront/data/main.datareel/model/aws/secret
+    @module phront/data/main.datareel/model/app/app-client
 */
 
 var DataObject = require("../data-object").DataObject;
 
 /**
- * @class UserPoolClient
+ * @class AppClient
  * @extends DataObject
  *
- * A UserPoolClient is the representatiom/registration of an  Application
- * in a UserPool for the sake of authentication.
+ * An AppClient is the representatiom/registration of an application for the sake of authentication and authorization.
  *
  * A User Pool can be provided by external services, in which case this acts as a cache.
  */
 
-exports.UserPoolClient = DataObject.specialize(/** @lends Application.prototype */ {
+exports.AppClient = DataObject.specialize(/** @lends Application.prototype */ {
     constructor: {
-        value: function UserPoolClient() {
+        value: function AppClient() {
             this.super();
             return this;
         }

@@ -2,7 +2,7 @@
     "root": {
         "prototype": "montage/core/meta/module-object-descriptor",
         "values": {
-            "name": "UserPoolClient",
+            "name": "AppClient",
             "propertyDescriptors": [
                 {"@": "name"},
                 {"@": "applicationProperty"},
@@ -12,18 +12,18 @@
                 {"@": "cognitoUserPoolClient"}
             ],
             "objectDescriptorModule": {
-                "%": "./user-pool-client.mjson"
+                "%": "./app-client.mjson"
             },
-            "exportName": "UserPoolClient",
+            "exportName": "AppClient",
             "module": {
-                "%": "./user-pool-client"
+                "%": "./app-client"
             },
-            "object":{"@": "UserPoolClient"},
+            "object":{"@": "AppClient"},
             "parent":{"@": "DataObjectDescriptor"}
         }
     },
-    "UserPoolClient": {
-        "object": "./user-pool-client"
+    "AppClient": {
+        "object": "./app-client"
     },
     "DataObjectDescriptor": {
         "object": "../data-object.mjson"
@@ -42,8 +42,8 @@
             "cardinality": 1,
             "valueType": "object",
             "valueDescriptor": {"@": "ApplicationDescriptor"},
-            "inversePropertyName": "userPoolClients",
-            "description": "The application the user pool client represents. An application could have access to different pools via different UserPoolClients"
+            "inversePropertyName": "appClients",
+            "description": "The application the user pool client represents. An application could have access to different pools via different AppClients"
        }
     },
     "ApplicationDescriptor": {
@@ -61,7 +61,8 @@
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "credentials",
-            "valueType": "string"
+            "valueType": "string",
+            "isOneWayEncrypted": true
         }
     },
     "userPool": {
@@ -71,7 +72,7 @@
             "cardinality": 1,
             "valueType": "object",
             "valueDescriptor": {"@": "UserPoolDescriptor"},
-            "inversePropertyName": "userPoolClients"
+            "inversePropertyName": "appClients"
        }
     },
     "UserPoolDescriptor": {

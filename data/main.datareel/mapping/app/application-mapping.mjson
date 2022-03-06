@@ -7,9 +7,9 @@
             "objectMapping": {
                 "rules": {
                     "name": {"<->": "name"},
-                    "userPoolClients": {
+                    "appClients": {
                         "<->": "id",
-                        "converter": {"@": "userPoolClients-converter"}
+                        "converter": {"@": "appClients-converter"}
                     },
                     "controllingOrganization": {
                         "<->": "controllingOrganizationId",
@@ -31,7 +31,7 @@
         "object": "../../model/app/application.mjson"
     },
 
-    "userPoolClients-converter": {
+    "appClients-converter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "applicationId == $"

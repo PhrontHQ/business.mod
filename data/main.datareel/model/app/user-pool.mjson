@@ -5,7 +5,7 @@
             "name": "UserPool",
             "propertyDescriptors": [
                 {"@": "name"},
-                {"@": "userPoolClients"},
+                {"@": "appClients"},
                 {"@": "cognitoUserPool"},
                 {"@": "servedOrganizations"}
 
@@ -34,18 +34,18 @@
             "valueType": "string"
         }
     },
-    "userPoolClients": {
+    "appClients": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
-            "name": "userPoolClients",
+            "name": "appClients",
             "cardinality": -1,
             "valueType": "object",
-            "valueDescriptor": {"@": "UserPoolClientDescriptor"},
+            "valueDescriptor": {"@": "AppClientDescriptor"},
             "inversePropertyName": "userPool"
         }
     },
-    "UserPoolClientDescriptor": {
-        "object": "./user-pool-client.mjson"
+    "AppClientDescriptor": {
+        "object": "./app-client.mjson"
     },
     "cognitoUserPool": {
         "prototype": "montage/core/meta/property-descriptor",

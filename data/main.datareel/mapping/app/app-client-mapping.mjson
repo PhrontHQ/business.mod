@@ -2,7 +2,7 @@
     "root": {
         "prototype": "montage/data/service/expression-data-mapping",
         "values": {
-            "objectDescriptor": {"@": "UserPoolClientDescriptor"},
+            "objectDescriptor": {"@": "AppClientDescriptor"},
             "rawDataPrimaryKeys":["id"],
             "objectMapping": {
                 "rules": {
@@ -33,8 +33,8 @@
         }
     },
 
-    "UserPoolClientDescriptor": {
-        "object": "../../model/app/user-pool-client.mjson"
+    "AppClientDescriptor": {
+        "object": "../../model/app/app-client.mjson"
     },
 
     "userPool-converter": {

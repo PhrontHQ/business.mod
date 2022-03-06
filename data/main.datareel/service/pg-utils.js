@@ -209,7 +209,7 @@ function normalizeQueryConfig (config, values, callback) {
     return config
 }
 
-function escapeString(str, rawType) {
+function escapeString(str, rawType, propertyDescriptor) {
     let hasBackslash = false;
     let isJSONB = rawType === "jsonb";
     let delimiter = isJSONB ? '' : "'";
@@ -234,10 +234,10 @@ function escapeString(str, rawType) {
 }
 
 module.exports = {
-    prepareValue: function prepareValueWrapper (value, type) {
+    prepareValue: function prepareValueWrapper (value, type, propertyDescriptor) {
         // this ensures that extra arguments do not get passed into prepareValue
         // by accident, eg: from calling values.map(utils.prepareValue)
-        return prepareValue(value,type)
+        return prepareValue(value, type, propertyDescriptor)
     },
 
     // Ported from PostgreSQL 9.2.4 source code in src/interfaces/libpq/fe-exec.c

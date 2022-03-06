@@ -512,168 +512,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
         }
 
     },
-    /*
-        mapCriteriaToRawStatement: {
-          value: function(criteria, mapping) {
-            var objectRule,
-                rule,
-                syntax = criteria ? criteria.syntax : null,
-                property,
-                propertyName,
-                propertyDescriptor,
-                rawProperty,
-                escapedRawProperty,
-                value,
-                escapedValue,
-                pgstringifiedValue,
-              condition;
 
-
-            //   if(criteria) {
-            //     pgstringifiedValue = this.stringify(criteria.syntax,criteria.parameters,mapping);
-            //     console.log(pgstringifiedValue);
-            //   }
-
-            //Going to be ugly...
-              //We need to transform the criteria into a SQL equivalent. Hard-coded for a single object for now
-
-              //Hard coded Find an object with it's originId:
-              if(criteria && criteria.parameters && Object.keys(criteria.parameters).length === 1 && criteria.parameters.hasOwnProperty("originId")) {
-                condition = `"originId" = '${criteria.parameters.originId}'`;
-              }
-              else if(syntax && syntax.type == "equals") {
-                var args = syntax.args;
-
-                //There are 2 arguments, one is a property name, and the other the parameter.
-                //Let's look for the parameter.
-                //The first 2 look for a parsed expression  like "id == $id"
-                if(args[1].type === "property" && args[1].args[0].type === "parameters") {
-                    value = criteria.parameters[args[1].args[1].value];
-                    propertyName = args[0].args[1].value;
-                }
-                else if(args[0].type === "property" && args[0].args[0].type === "parameters") {
-                    value = criteria.parameters[args[0].args[1].value];
-                    propertyName = args[1].args[1].value;
-                }
-                //This one looks for parsed expression like "id == $""
-                else if(args[1].type === "parameters") {
-                    propertyName = args[0].args[1].value;
-                    value = criteria.parameters;
-                }
-
-                objectRule = mapping.objectMappingRules.get(propertyName);
-                if(objectRule) {
-                  propertyDescriptor = objectRule.propertyDescriptor;
-                }
-                rule = objectRule && mapping.rawDataMappingRules.get(objectRule.sourcePath);
-
-                if(rule) {
-                  rawProperty = objectRule.sourcePath;
-                  escapedRawProperty = escapeIdentifier(rawProperty);
-                }
-                else {
-                  escapedRawProperty = escapeIdentifier(propertyName);
-                }
-
-                escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value);
-
-                // if(args[0].type === "property") {
-                //   propertyName = args[0].args[1].value;
-                //   objectRule = mapping.objectMappingRules.get(propertyName);
-                //   if(objectRule) {
-                //     propertyDescriptor = objectRule.propertyDescriptor;
-                //   }
-                //   rule = objectRule && mapping.rawDataMappingRules.get(objectRule.sourcePath);
-
-                //   if(rule) {
-                //     rawProperty = objectRule.sourcePath;
-                //     escapedRawProperty = escapeIdentifier(rawProperty);
-                //   }
-                //   else {
-                //     escapedRawProperty = escapeIdentifier(propertyName);
-                //   }
-                // }
-                // if(args[1].type === "parameters") {
-                //   value = criteria.parameters;
-                //   escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value);
-                // }
-
-                if(propertyDescriptor && propertyDescriptor.valueType == "string") {
-                    condition = `${escapedRawProperty} ilike ${escapedValue}`
-                }
-                else {
-                    condition = `${escapedRawProperty} = ${escapedValue}`
-                }
-
-              }
-              else if(syntax && syntax.type == "has") {
-                var args = syntax.args;
-                // if(args[1].type === "property") {
-                //     propertyName = args[1].args[1].value;
-
-                //     if(args[0].type === "parameters") {
-                //         value = criteria.parameters;
-                //         escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value,"list");
-                //     }
-                // }
-                // else
-                if(args[0].type === "parameters") {
-                    if(args[1].type === "property") {
-                        propertyName = args[1].args[1].value;
-                    }
-                    else {
-                        throw new Error("phront-service.js: unhandled syntax in mapCriteriaToRawStatement(criteria: "+JSON.stringify(criteria)+"objectDescriptor: "+mapping.objectDescriptor.name);
-                    }
-                    value = criteria.parameters;
-                    rawProperty = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-                    escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value,"list");
-
-                } else if(args[0].type === "property") {
-                    propertyName = args[0].args[1].value;
-
-                    if(args[0].type === "parameters") {
-                        value = criteria.parameters;
-                        rawProperty = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-                        escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value,"list");
-                    }
-                    else if(args[1].type === "parameters") {
-                        value = criteria.parameters;
-                        if(!Array.isArray(value)) {
-                            value = [value];
-                        }
-                        rawProperty = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-                        escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value);
-                    } else if(args[1].type === "property" && args[1].args[0].type === "parameters") {
-                        var parametersKey = args[1].args[1].value;
-                        value = criteria.parameters[parametersKey];
-                        if(!Array.isArray(value)) {
-                            value = [value];
-                        }
-                        rawProperty = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-                        escapedValue = this.mapPropertyValueToRawTypeExpression(rawProperty,value);
-                    }
-
-                } else {
-                    throw new Error("phron-service.js: unhandled syntax in mapCriteriaToRawStatement(criteria: "+JSON.stringify(criteria)+"objectDescriptor: "+mapping.objectDescriptor.name);
-                }
-                // rawProperty = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-                escapedRawProperty = escapeIdentifier(rawProperty);
-
-                if(rawProperty === "id")  {
-                    condition = `${escapedRawProperty} in ${escapedValue}`
-                } else {
-                    condition = `${escapedRawProperty} @> ${escapedValue}`
-                }
-
-
-              }
-              else if((criteria && criteria.expression) || (criteria && criteria.syntax) || (criteria && criteria.parameters)) {
-                console.error("missing implementation of criteria ",criteria);
-              }
-              return condition;
-          }
-        },
-    */
     HAS_DATA_API_UUID_ARRAY_BUG: {
         value: false
     },
@@ -2517,41 +2356,86 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
         }
     },
 
-    mapPropertyValueToRawType: {
-        value: function (property, value, type) {
+
+    /**
+     * see:
+     * https://www.postgresql.org/docs/10/pgcrypto.html
+     *
+     * The accepted types are: des, xdes, md5 and bf.
+     *
+     * @type {string}
+     * @default "bf"
+     */
+
+    encryptionSaltHashingAlgorithm: {
+        value: "bf" //Blowfish
+    },
+
+    /**
+     * see:
+     * https://www.postgresql.org/docs/10/pgcrypto.html
+     *
+     * For the algorithms that have one: bf and xdes
+     *
+     * @type {number}
+     * @default 10
+     */
+    encryptionSaltHashingAlgorithmIterationCount: {
+        value: 10
+    },
+
+    mapPropertyDescriptorValueToRawValue: {
+        value: function (propertyDescriptor, value, rawPropertyName, type, dataOperation) {
             if (value === null || value === "" || value === undefined) {
                 return "NULL";
             }
             else if (typeof value === "string") {
-                return escapeString(value, type);
+                /*
+                    Modeled after:
+                    https://www.postgresql.fastware.com/blog/further-protect-your-data-with-pgcrypto
+
+                    and many similar examples
+                */
+
+                var escapedValue = escapeString(value, type, propertyDescriptor);
+                if(propertyDescriptor?.isOneWayEncrypted) {
+                    if(dataOperation && (dataOperation.type === DataOperation.Type.CreateOperation || dataOperation.type === DataOperation.Type.UpdateOperation)) {
+                        return `${this.connection.schema}.crypt(${escapedValue}, ${this.connection.schema}.gen_salt('${this.encryptionSaltHashingAlgorithm}'${this.encryptionSaltHashingAlgorithmIterationCount ? ','+this.encryptionSaltHashingAlgorithmIterationCount : ""}))`;
+                    } else {
+                        //For read, we use the name of the colum that contains the encrypted value as the salt
+                        return `${this.connection.schema}.crypt(${escapedValue}, ${rawPropertyName})`;
+                    }
+                } else {
+                    return escapedValue;
+                }
             }
             else {
-                return prepareValue(value, type);
+                return prepareValue(value, type, propertyDescriptor);
             }
         }
     },
-    mapPropertyValueToRawTypeExpression: {
-        value: function (property, value, type) {
-            var mappedValue = this.mapPropertyValueToRawType(property, value, type);
+    mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression: {
+        value: function (propertyDescriptor, value, rawPropertyName, type, dataOperation) {
+            var mappedValue = this.mapPropertyDescriptorValueToRawValue(propertyDescriptor, value, rawPropertyName, type, dataOperation);
             // if(mappedValue !== "NULL" && (Array.isArray(value) || typeof value === "string")) {
             //   return `'${mappedValue}'`;
             // }
             return mappedValue;
         }
     },
-    mapPropertyDescriptorValueToRawValue: {
-        value: function (propertyDescriptor, value, type) {
-            if (value == null || value == "") {
-                return "NULL";
-            }
-            else if (typeof value === "string") {
-                return escapeString(value);
-            }
-            else {
-                return prepareValue(value, type);
-            }
-        }
-    },
+    // mapPropertyDescriptorValueToRawValue: {
+    //     value: function (propertyDescriptor, value, type) {
+    //         if (value == null || value == "") {
+    //             return "NULL";
+    //         }
+    //         else if (typeof value === "string") {
+    //             return escapeString(value);
+    //         }
+    //         else {
+    //             return prepareValue(value, type);
+    //         }
+    //     }
+    // },
 
 
     /*
@@ -3699,7 +3583,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                         }
 
                     } else {
-                        iRawType = self.mapObjectDescriptorRawPropertyToRawType(objectDescriptor, iKey, mapping);
+                        iRawType = self.mapObjectDescriptorRawPropertyToRawType(objectDescriptor, iKey, mapping, iPropertyDescriptor);
                     }
 
                     //In that case we need to produce json to be stored in jsonb
@@ -3714,7 +3598,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                             // iMappedValue[language][region] = iValue;
                             // iMappedValue = JSON.stringify(iMappedValue);
 
-                            iMappedValue = self.mapPropertyValueToRawTypeExpression(iKey, iValue, iRawType);
+                            iMappedValue = self.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(iPropertyDescriptor, iValue, iKey, iRawType, createOperation);
                             if(typeof iValue !== "object") {
                                 language = operationLocales[0].language;
                                 region = operationLocales[0].region;
@@ -3725,11 +3609,11 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                         else if(operationLocales.length > 1) {
                             //if more than one locales, then it's a multi-locale structure
                             //We should already have a json
-                            iMappedValue = self.mapPropertyValueToRawTypeExpression(iKey, iValue, iRawType);
+                            iMappedValue = self.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(iPropertyDescriptor, iValue, iKey, iRawType, createOperation);
                         }
 
                     } else {
-                        iMappedValue = self.mapPropertyValueToRawTypeExpression(iKey, iValue, iRawType);
+                        iMappedValue = self.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(iPropertyDescriptor, iValue, iKey, iRawType, createOperation);
                     }
                     // if(iValue == null || iValue == "") {
                     //   iValue = 'NULL';
@@ -3951,7 +3835,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 recordKeys = Object.keys(dataChanges),
                 setRecordKeys = Array(recordKeys.length),
                 // sqlColumns = recordKeys.join(","),
-                i, countI, iKey, iKeyEscaped, iValue, iMappedValue, iAssignment, iRawType, iPrimaryKey,
+                i, countI, iKey, iKeyEscaped, iValue, iMappedValue, iAssignment, iRawType, iPropertyDescriptor, iPrimaryKey,
                 iHasAddedValue, iHasRemovedValues, iPrimaryKeyValue,
                 iKeyValue,
                 dataSnapshot = updateOperation.snapshot,
@@ -3987,13 +3871,14 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
                     iKey = dataSnapshotKeys[i];
                     iValue = dataSnapshot[iKey];
-                    iRawType = this.mapObjectDescriptorRawPropertyToRawType(objectDescriptor, iKey, mapping);
+                    iPropertyDescriptor = mapping.propertyDescriptorForRawPropertyName(iKey);
+                    iRawType = this.mapObjectDescriptorRawPropertyToRawType(objectDescriptor, iKey, mapping, iPropertyDescriptor);
 
                     if(iValue === undefined || iValue === null) {
                         //TODO: this needs to be taken care of in pgstringify as well for criteria. The problem is the operator changes based on value...
-                        condition += `"${tableName}".${escapeIdentifier(iKey)} is ${this.mapPropertyValueToRawTypeExpression(iKey, iValue, iRawType)}`;
+                        condition += `"${tableName}".${escapeIdentifier(iKey)} is ${this.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(iPropertyDescriptor, iValue, iKey, iRawType, updateOperation)}`;
                     } else {
-                        condition += `"${tableName}".${escapeIdentifier(iKey)} = ${this.mapPropertyValueToRawTypeExpression(iKey, iValue, iRawType)}`;
+                        condition += `"${tableName}".${escapeIdentifier(iKey)} = ${this.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(iPropertyDescriptor, iValue, iKey, iRawType, updateOperation)}`;
                     }
                 }
             }
@@ -4023,24 +3908,25 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 iKey = recordKeys[i];
                 iKeyEscaped = escapeIdentifier(iKey);
                 iValue = dataChanges[iKey];
-                iRawType = this.mapObjectDescriptorRawPropertyToRawType(objectDescriptor, iKey, mapping);
+                iPropertyDescriptor = mapping.propertyDescriptorForRawPropertyName(iKey);
+                iRawType = this.mapObjectDescriptorRawPropertyToRawType(objectDescriptor, iKey, mapping, iPropertyDescriptor);
 
                 if (iValue === null) {
                     iAssignment = `${iKeyEscaped} = NULL`;
                 } else if((iHasAddedValue = iValue.hasOwnProperty("addedValues")) || (iHasRemovedValues = iValue.hasOwnProperty("removedValues")) ) {
 
                     if (iHasAddedValue) {
-                        iMappedValue = this.mapPropertyValueToRawTypeExpression(iKey, iValue.addedValues, iRawType);
+                        iMappedValue = this.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(iPropertyDescriptor, iValue.addedValues, iKeyEscaped, iRawType, updateOperation);
                         iAssignment = `${iKeyEscaped} = ${schemaName}.anyarray_concat_uniq(${iKeyEscaped}, ${iMappedValue})`;
                     }
                     if (iHasRemovedValues) {
-                        iMappedValue = this.mapPropertyValueToRawTypeExpression(iKey, iValue.removedValues, iRawType);
+                        iMappedValue = this.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(iPropertyDescriptor, iValue.removedValues, iKeyEscaped, iRawType, updateOperation);
                         iAssignment = `${iKeyEscaped} = ${schemaName}.anyarray_remove(${iKeyEscaped}, ${iMappedValue})`;
                     }
 
                 } else {
 
-                    iMappedValue = this.mapPropertyValueToRawTypeExpression(iKey, iValue, iRawType);
+                    iMappedValue = this.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(iPropertyDescriptor, iValue, iKeyEscaped, iRawType, updateOperation);
                     //iAssignment = `${iKey} = '${iValue}'`;
                     iAssignment = `${iKeyEscaped} = ${iMappedValue}`;
                 }
@@ -4173,11 +4059,12 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 criteria = deleteOperation.criteria,
                 dataChanges = data,
                 objectDescriptor = deleteOperation.target,
+                mapping = objectDescriptor && self.mappingForType(objectDescriptor),
                 aProperty, aValue, addedValues, removedValues, aPropertyDescriptor,
                 //Now we need to transform the operation into SQL:
                 tableName = this.tableForObjectDescriptor(objectDescriptor),
                 schemaName = rawDataOperation.schema,
-                i, countI, iKey, iKeyEscaped, iValue, iMappedValue, iAssignment, iPrimaryKey, iPrimaryKeyValue,
+                i, countI, iKey, iKeyEscaped, iValue, iRawType, iPropertyDescriptor, iMappedValue, iAssignment, iPrimaryKey, iPrimaryKeyValue,
                 iKeyValue,
                 dataSnapshot = deleteOperation.snapshot,
                 dataSnapshotKeys = dataSnapshot ? Object.keys(dataSnapshot) : null,
@@ -4205,7 +4092,11 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
                     iKey = dataSnapshotKeys[i];
                     iValue = dataSnapshot[iKey];
-                    condition += `${escapeIdentifier(iKey)} = ${this.mapPropertyValueToRawTypeExpression(iKey, iValue)}`;
+
+                    iPropertyDescriptor = mapping.propertyDescriptorForRawPropertyName(iKey);
+                    iRawType = this.mapObjectDescriptorRawPropertyToRawType(objectDescriptor, iKey, mapping, iPropertyDescriptor);
+
+                    condition += `${escapeIdentifier(iKey)} = ${this.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(iPropertyDescriptor, iValue, iKey, iRawType, deleteOperation)}`;
                 }
             }
 

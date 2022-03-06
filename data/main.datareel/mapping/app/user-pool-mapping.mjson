@@ -7,9 +7,9 @@
             "objectMapping": {
                 "rules": {
                     "name": {"<->": "name"},
-                    "userPoolClients": {
+                    "appClients": {
                         "<->": "id",
-                        "converter": {"@": "userPoolClients-converter"}
+                        "converter": {"@": "appClients-converter"}
                     },
                     "cognitoUserPool": {
                         "<->": "cognitoUserPoolId",
@@ -35,7 +35,7 @@
         "object": "../../model/app/user-pool.mjson"
     },
 
-    "userPoolClients-converter": {
+    "appClients-converter": {
         "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "userPoolId == $"

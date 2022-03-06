@@ -307,16 +307,11 @@ module.exports = {
                     //propertyName = `ARRAY[${propertyName}]`;
                     propertyName = `ARRAY[${escapeIdentifier(tableName)}.${escapeIdentifier(propertyName)}]`;
                 }
-                // if((propertyName === "id" || (propertyDescriptor && propertyDescriptor.cardinality === 1))) {
-                //     propertyName = `ARRAY[${propertyName}]`;
-                // }
             }
             else {
                 throw new Error("pgstringify.js: unhandled syntax in has functionStringifiers syntax: "+JSON.stringify(syntax)+"objectDescriptor: "+dataMapping.objectDescriptor.name);
             }
             value = scope;
-            // rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-            // escapedValue = dataService.mapPropertyValueToRawTypeExpression(rawProperty,value,"list");
             escapedValue = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
 
         } else if(args[0].type === "property") {
@@ -337,7 +332,7 @@ module.exports = {
             if(args[0].type === "parameters") {
                 value = scope;
                 rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-                escapedValue = dataService.mapPropertyValueToRawTypeExpression(rawProperty,value,"list");
+                escapedValue = dataService.mapPropertyDescriptorValueToRawTypeExpression(propertyDescriptor, value,"list");
             }
             else if(args[1].type === "parameters") {
                 value = scope;
@@ -345,7 +340,7 @@ module.exports = {
                     value = [value];
                 }
                 rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-                escapedValue = dataService.mapPropertyValueToRawTypeExpression(rawProperty,value);
+                escapedValue = dataService.mapPropertyDescriptorValueToRawTypeExpression(propertyDescriptor, value);
             } else if(args[1].type === "property" && args[1].args[0].type === "parameters") {
                 var parametersKey = args[1].args[1].value;
                 value = scope[parametersKey];
@@ -355,7 +350,7 @@ module.exports = {
                 }
 
                 rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-                escapedValue = dataService.mapPropertyValueToRawTypeExpression(rawProperty,value);
+                escapedValue = dataService.mapPropertyDescriptorValueToRawTypeExpression(propertyDescriptor, value);
             } else if(args[1].type === "property" && args[0].args[0].type === "parameters") {
                 propertyName = args[1].args[1].value;
                 var parametersKey = args[0].args[1].value;
@@ -388,7 +383,7 @@ module.exports = {
                 escapedValue = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
             } else {
                 rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-                escapedValue = dataService.mapPropertyValueToRawTypeExpression(rawProperty,value);
+                escapedValue = dataService.mapPropertyDescriptorValueToRawTypeExpression(propertyDescriptor, value);
             }
         } else {
             throw new Error("phront-service.js: unhandled syntax in mapCriteriaToRawStatement(criteria: "+JSON.stringify(criteria)+"objectDescriptor: "+mapping.objectDescriptor.name);
@@ -432,75 +427,75 @@ module.exports = {
 
                 If for some (performance?) reason we needed to revert to that, we'd have to single it out more so it stand on it's own for dealing with both left and right.
             */
-            var chain,
-                value, propertyName, rawProperty, escapedRawProperty, escapedValue, condition,
-                i, countI, args,
-                dataMapping = dataMappings[dataMappings.length-1];
+//             var chain,
+//                 value, propertyName, rawProperty, escapedRawProperty, escapedValue, condition,
+//                 i, countI, args,
+//                 dataMapping = dataMappings[dataMappings.length-1];
 
-            chain = "(";
+//             chain = "(";
 
-            args = syntax.args;
+//             args = syntax.args;
 
-            if(args[0].type === "parameters") {
-                if(args[1].type === "property") {
-                    propertyName = args[1].args[1].value;
-                }
-                else {
-                    throw new Error("pgstringify.js: unhandled syntax in has functionStringifiers syntax: "+JSON.stringify(syntax)+"objectDescriptor: "+dataMapping.objectDescriptor.name);
-                }
-                value = scope;
-                rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-                escapedValue = dataService.mapPropertyValueToRawTypeExpression(rawProperty,value,"list");
+//             if(args[0].type === "parameters") {
+//                 if(args[1].type === "property") {
+//                     propertyName = args[1].args[1].value;
+//                 }
+//                 else {
+//                     throw new Error("pgstringify.js: unhandled syntax in has functionStringifiers syntax: "+JSON.stringify(syntax)+"objectDescriptor: "+dataMapping.objectDescriptor.name);
+//                 }
+//                 value = scope;
+//                 rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
+//                 escapedValue = dataService.mapPropertyDescriptorValueToRawTypeExpression(rawProperty,value,"list");
 
-            } else if(args[0].type === "property") {
-                propertyName = args[0].args[1].value;
+//             } else if(args[0].type === "property") {
+//                 propertyName = args[0].args[1].value;
 
-                if(args[0].type === "parameters") {
-                    value = scope;
-                    rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-                    escapedValue = dataService.mapPropertyValueToRawTypeExpression(rawProperty,value,"list");
-                }
-                else if(args[1].type === "parameters") {
-                    value = scope;
-                    if(!Array.isArray(value)) {
-                        value = [value];
-                    }
-                    rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-                    escapedValue = dataService.mapPropertyValueToRawTypeExpression(rawProperty,value);
-                } else if(args[1].type === "property" && args[1].args[0].type === "parameters") {
-                    var parametersKey = args[1].args[1].value;
-                    value = scope[parametersKey];
-                    if(!Array.isArray(value)) {
-                        value = [value];
-                    }
-                    rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-                    escapedValue = dataService.mapPropertyValueToRawTypeExpression(rawProperty,value);
-                }
+//                 if(args[0].type === "parameters") {
+//                     value = scope;
+//                     rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
+//                     escapedValue = dataService.mapPropertyDescriptorValueToRawTypeExpression(rawProperty,value,"list");
+//                 }
+//                 else if(args[1].type === "parameters") {
+//                     value = scope;
+//                     if(!Array.isArray(value)) {
+//                         value = [value];
+//                     }
+//                     rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
+//                     escapedValue = dataService.mapPropertyDescriptorValueToRawTypeExpression(rawProperty,value);
+//                 } else if(args[1].type === "property" && args[1].args[0].type === "parameters") {
+//                     var parametersKey = args[1].args[1].value;
+//                     value = scope[parametersKey];
+//                     if(!Array.isArray(value)) {
+//                         value = [value];
+//                     }
+//                     rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
+//                     escapedValue = dataService.mapPropertyDescriptorValueToRawTypeExpression(rawProperty,value);
+//                 }
 
-            } else {
-                throw new Error("phron-service.js: unhandled syntax in mapCriteriaToRawStatement(criteria: "+JSON.stringify(criteria)+"objectDescriptor: "+mapping.objectDescriptor.name);
-            }
-            // rawProperty = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-            escapedRawProperty = escapeIdentifier(rawProperty);
+//             } else {
+//                 throw new Error("phron-service.js: unhandled syntax in mapCriteriaToRawStatement(criteria: "+JSON.stringify(criteria)+"objectDescriptor: "+mapping.objectDescriptor.name);
+//             }
+//             // rawProperty = mapping.mapObjectPropertyNameToRawPropertyName(propertyName);
+//             escapedRawProperty = escapeIdentifier(rawProperty);
 
-            if(rawProperty === "id")  {
-                //<@ should work here as well as in:
-                //SELECT * FROM phront."Event" where '2020-04-09 12:38:00+00'::TIMESTAMPTZ <@ "timeRange"  ;
-                condition = `${escapedRawProperty} in ${escapedValue}`;
-            } else {
-                condition = `${escapedRawProperty} @> ${escapedValue}`;
-            }
+//             if(rawProperty === "id")  {
+//                 //<@ should work here as well as in:
+//                 //SELECT * FROM phront."Event" where '2020-04-09 12:38:00+00'::TIMESTAMPTZ <@ "timeRange"  ;
+//                 condition = `${escapedRawProperty} in ${escapedValue}`;
+//             } else {
+//                 condition = `${escapedRawProperty} @> ${escapedValue}`;
+//             }
 
 
-            chain += condition;
-/*
-            for(i=1, countI = args.length;i<countI;i++) {
-                chain += i > 1 ? ", " : "";
-                chain += dataService.stringifyChild(args[i],scope, dataMapping);
-            }
-*/
-            chain += ")";
-            return chain;
+//             chain += condition;
+// /*
+//             for(i=1, countI = args.length;i<countI;i++) {
+//                 chain += i > 1 ? ", " : "";
+//                 chain += dataService.stringifyChild(args[i],scope, dataMapping);
+//             }
+// */
+//             chain += ")";
+//             return chain;
         },
         overlaps: function _overlaps(syntax, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements, currentAliasPrefix) {
             return dataService._stringifyCollectionOperator(syntax, scope, parent, dataService, dataMappings, locales, rawExpressionJoinStatements, currentAliasPrefix, "&&", "<@");
@@ -1137,7 +1132,7 @@ module.exports = {
                     if(objectRule) {
                         propertyDescriptor = objectRule.propertyDescriptor;
                     }
-                    escapedValue = dataService.mapPropertyDescriptorValueToRawValue(propertyDescriptor, parameterValue, type);
+                    escapedValue = dataService.mapPropertyDescriptorValueToRawValue(propertyDescriptor, parameterValue, parameterName, type);
 
                     return escapedValue;
                 } else {

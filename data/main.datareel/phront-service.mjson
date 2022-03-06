@@ -72,7 +72,7 @@
                 {"@": "RoleRankingMapping"},
                 {"@": "ApplicationMapping"},
                 {"@": "UserPoolMapping"},
-                {"@": "UserPoolClientMapping"}
+                {"@": "AppClientMapping"}
 
             ],
             "types": [
@@ -146,7 +146,7 @@
                 {"@": "RoleRanking"},
                 {"@": "Application"},
                 {"@": "UserPool"},
-                {"@": "UserPoolClient"}
+                {"@": "AppClient"}
           ],
             "userIdentityServices": [
                 {"@": "cognitoIdentityService"}
@@ -703,12 +703,12 @@
         "object": "./mapping/app/user-pool-mapping.mjson"
     },
 
-    "UserPoolClient": {
-        "object": "./model/app/user-pool-client.mjson"
+    "AppClient": {
+        "object": "./model/app/app-client.mjson"
     },
 
-    "UserPoolClientMapping": {
-        "object": "./mapping/app/user-pool-client-mapping.mjson"
+    "AppClientMapping": {
+        "object": "./mapping/app/app-client-mapping.mjson"
     },
 
     "cognitoIdentityService": {
