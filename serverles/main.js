@@ -313,7 +313,7 @@ mainModule.exports.handlePerformTransaction = exports.handlePerformTransaction  
 
 const _authorize = async (event, context, callback) => {
 
-    console.log("_authorize:","event:", event, "context:", context, "callback:", callback);
+    //console.log("_authorize:","event:", event, "context:", context, "callback:", callback);
 
     const worker = await workerPromise;
     var authResponse;
@@ -363,13 +363,13 @@ const _authorize = async (event, context, callback) => {
         }
     }
 
-    console.log("main authorize authResponse Allow:",authResponse);
+    //console.log("main authorize authResponse Allow:",authResponse);
     callback(null, authResponse);
 
   };
 
   mainModule.exports.authorize = module.exports.authorize = async (event, context, callback) => {
-    console.log("authorize:","event:", event, "context:", context, "callback:", callback, "_authorize:", _authorize );
+    //console.log("authorize:","event:", event, "context:", context, "callback:", callback, "_authorize:", _authorize );
     return _authorize.call(this, event, context, callback);
   }
 
