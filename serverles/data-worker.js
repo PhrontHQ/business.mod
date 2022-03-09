@@ -151,7 +151,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
     handleAuthorize: {
         value: async function(event, context, callback) {
 
-            console.log("handleAuthorize: event:", event, " context:", context, "callback: ", callback);
+            //console.log("handleAuthorize: event:", event, " context:", context, "callback: ", callback);
             // await sleep(6000)
 
             var base64EncodedSerializedIdentity = event.queryStringParameters.identity,
@@ -181,7 +181,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
             return identityPromise.then(function(identity) {
 
-                console.log("DataWorker handleAuthorize with identity:",identity);
+                //console.log("DataWorker handleAuthorize with identity:",identity);
                 var identityObjectDescriptor;
 
                 if(!identity) {
