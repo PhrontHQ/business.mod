@@ -2664,8 +2664,14 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
     buildSchemaDescriptorForObjectDescriptor: {
         value: function(objectDescriptor) {
-            var mapping = objectDescriptor && this.mappingForType(objectDescriptor),
-                schemaDescriptor,
+            var mapping = objectDescriptor && this.mappingForType(objectDescriptor);
+
+            /* For example for Date or Map */
+            if(!mapping) {
+                return null;
+            }
+
+            var schemaDescriptor,
                 schemaPropertyDescriptors,
                 propertyDescriptors = Array.from(objectDescriptor.propertyDescriptors),
                 parentDescriptor,
@@ -2681,11 +2687,6 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 keyArrayColumn,
                 valueArrayColumn;
 
-
-            /* For example for Date or Map */
-            if(!mapping) {
-                return null;
-            }
 
             //mapping.schemaDescriptor =
             schemaDescriptor = new ObjectDescriptor();
