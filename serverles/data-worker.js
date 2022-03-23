@@ -161,13 +161,17 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
     handleAuthorize: {
         value: async function(event, context, callback) {
 
-            //console.log("handleAuthorize: event:", event, " context:", context, "callback: ", callback);
             // await sleep(6000)
 
-            var base64EncodedSerializedSession = event.queryStringParameters.session,
+            var isModStage = event.requestContext.stage === "mod",
+                base64EncodedSerializedSession = event.queryStringParameters.session,
                 serializedSession,
                 identityPromise, authorizeConnectionOperation,
                 self = this;
+
+            if(isModStage) {
+                console.log("handleAuthorize: event:", event, " context:", context, "callback: ", callback);
+            }
 
 
             if(base64EncodedSerializedSession) {
