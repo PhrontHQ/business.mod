@@ -121,7 +121,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             var stage = event.requestContext.stage,
                 eventHeaders = event.headers,
                 acceptLanguage = (eventHeaders && (eventHeaders["Accept-Language"]|| eventHeaders["accept-language"])),
-                eventHeaderUserIp = eventHeaders["x-forwarded-for"]?.split(",")[0].trim(),
+                eventHeaderUserIp = (eventHeaders && eventHeaders["x-forwarded-for"]?.split(",")[0].trim()),
                 userAgent = (eventHeaders && (eventHeaders["User-Agent"] || eventHeaders["user-agent"])) || event.requestContext.identity.userAgent,
                 userIp = event.requestContext.identity.sourceIp;
 
@@ -418,6 +418,11 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
     handleMessage: {
         value: function(event, context, callback) {
+            var isModStage = event.requestContext.stage === "mod";
+
+            if(isModStage) {
+                console.log("handleAuthorize: event:", event, " context:", context, "callback: ", callback);
+            }
 
             /*
                 Add a check if the message isn't coming from the socket, the only other is through the handleCommitTransaction lambda.
