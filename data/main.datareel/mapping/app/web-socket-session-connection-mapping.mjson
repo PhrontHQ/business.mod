@@ -1,0 +1,35 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "WebSocketSessionConnectionDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "connectionId": {
+                        "<->": "connectionId"
+                    },
+                    "timeRange": {
+                        "<->": "timeRange",
+                        "converter": {"@": "string-to-range-converter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "name"
+            ]
+        }
+    },
+
+    "WebSocketSessionConnectionDescriptor": {
+        "object": "../../model/app/web-socket-session-connection.mjson"
+    },
+
+    "string-to-range-converter": {
+        "prototype": "../../converter/r-f-c-3339-u-t-c-range-string-to-date-range-converter"
+    }
+}

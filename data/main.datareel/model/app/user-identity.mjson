@@ -2,53 +2,53 @@
     "root": {
         "prototype": "montage/core/meta/module-object-descriptor",
         "values": {
-            "name": "UserSession",
+            "name": "UserIdentity",
             "propertyDescriptors": [
-                {"@": "identity"},
+                {"@": "username"},
+                {"@": "password"},
+                {"@": "session"},
+                {"@": "accountConfirmationCode"},
+                {"@": "isAccountConfirmed"},
+                {"@": "needsNewConfirmationCode"},
+                {"@": "isAuthenticated"},
+                {"@": "isMfaEnabled"},
+                {"@": "firstName"},
+                {"@": "lastName"},
+                {"@": "email"},
+                {"@": "phone"},
+                {"@": "images"},
+                {"@": "addresses"},
+                {"@": "tags"},
+                {"@": "mfaCode"},
                 {"@": "person"},
-                {"@": "environment"},
-                {"@": "connectionId"},
-                {"@": "connectionTimeRange"}
+                {"@": "locale"},
+                {"@": "timeZone"}
             ],
             "objectDescriptorModule": {
-                "%": "./user-session.mjson"
+                "%": "./user-identity.mjson"
             },
-            "exportName": "UserSession",
+            "exportName": "UserIdentity",
             "module": {
-                "%": "./user-session"
+                "%": "./user-identity"
             },
-            "object":{"@": "user-session"},
-            "parent":{"@": "DataObjectDescriptor"}
+            "object":{"@": "user-identity"},
+            "parent":{"@": "IdentityDescriptor"}
         }
     },
-    "user-session": {
-        "object": "./user-session"
+    "IdentityDescriptor": {
+        "object": "montage/data/model/identity.mjson"
     },
 
-    "DataObjectDescriptor": {
-        "object": "./data-object.mjson"
+    "user-identity": {
+        "object": "./user-identity"
     },
-
-    "identity": {
+    "username": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
             "name": "username",
             "valueType": "string"
         }
     },
-    "person": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "person",
-            "valueType": "object",
-            "cardinality": 1,
-            "valueDescriptor": {"@": "person_descriptor"}
-       }
-    },
-    "person_descriptor": {
-        "object": "./person.mjson"
-    },
-
     "password": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {
@@ -143,7 +143,19 @@
         }
     },
     "image_descriptor": {
-        "object": "./image.mjson"
+        "object": "../image.mjson"
+    },
+    "addresses": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "addresses",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "addresses_descriptor"}
+       }
+    },
+    "addresses_descriptor": {
+        "object": "../messaging-channel/postal-address.mjson"
     },
     "tags": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -171,7 +183,7 @@
        }
     },
     "personDescriptor": {
-        "object": "./person.mjson"
+        "object": "../person.mjson"
     },
     "locale": {
         "prototype": "montage/core/meta/property-descriptor",

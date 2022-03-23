@@ -1,0 +1,94 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "WebSocketSession",
+            "propertyDescriptors": [
+                {"@": "id"},
+                {"@": "identity"},
+                {"@": "connections"},
+                {"@": "app"},
+                {"@": "windows"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./web-socket-session.mjson"
+            },
+            "exportName": "WebSocketSession",
+            "module": {
+                "%": "./web-socket-session"
+            },
+            "object":{"@": "WebSocketSession"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "WebSocketSession": {
+        "object": "./web-socket-session"
+    },
+    "objectDescriptor": {
+        "object": "../data-object.mjson"
+    },
+    "id": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "id",
+            "valueType": "string"
+        }
+    },
+    "identity": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "identity",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "IdentityDescriptor"},
+            "inversePropertyName": "webSocketSessions"
+       }
+    },
+    "IdentityDescriptor": {
+        "object": "montage/data/model/identity.mjson"
+    },
+
+    "connections": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "connections",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "WebSocketSessionConnectionsDescriptor"},
+            "isSearchable": true
+        }
+    },
+    "WebSocketSessionConnectionsDescriptor": {
+        "object": "./web-socket-session-connection.mjson"
+    },
+
+    "app": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "app",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "ApplicationDescriptor"},
+            "inversePropertyName": "webSocketSessions"
+       }
+    },
+    "ApplicationDescriptor": {
+        "object": "./application.mjson"
+    },
+
+    "windows": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "windows",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "UserAgentWindowDescriptor"},
+            "inversePropertyName": "party",
+            "isSearchable": true
+        }
+    },
+    "UserAgentWindowDescriptor": {
+        "object": "./user-agent-window.mjson"
+    }
+
+}

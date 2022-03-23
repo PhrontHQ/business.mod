@@ -2,13 +2,14 @@ const   Worker = require("./worker").Worker,
         Identity = require("montage/data/model/identity").Identity,
         IdentityDescriptor = require("montage/data/model/identity.mjson").montageObject,
         AuthorizationPolicy = require("montage/data/service/authorization-policy").AuthorizationPolicy,
-    DataOperation = require("montage/data/service/data-operation").DataOperation,
-    OperationCoordinator = require("../data/main.datareel/service/operation-coordinator").OperationCoordinator,
-    Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
-    MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
-
-    // Montage = (require)("montage/core/core").Montage,
-    currentEnvironment = require("montage/core/environment").currentEnvironment,
+        DataOperation = require("montage/data/service/data-operation").DataOperation,
+        OperationCoordinator = require("../data/main.datareel/service/operation-coordinator").OperationCoordinator,
+        Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
+        MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
+        Range = require("montage/core/range").Range,
+        // Montage = (require)("montage/core/core").Montage,
+        currentEnvironment = require("montage/core/environment").currentEnvironment,
+        WebSocketSession = require("../data/main.datareel/model/app/web-socket-session").WebSocketSession,
     util = require('util');
 
 const successfullResponse = {
@@ -117,10 +118,11 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
      */
     setEnvironmentFromEvent: {
         value: function(event) {
-            //console.log("setEnvironemntFromEvent: ",event);
             var stage = event.requestContext.stage,
-                acceptLanguage = (event.headers && (event.headers["Accept-Language"]||event.headers["accept-language"])),
-                userAgent = (event.headers && (event.headers["User-Agent"] || event.headers["user-agent"])) || event.requestContext.identity.userAgent,
+                eventHeaders = event.headers,
+                acceptLanguage = (eventHeaders && (eventHeaders["Accept-Language"]|| eventHeaders["accept-language"])),
+                eventHeaderUserIp = eventHeaders["x-forwarded-for"]?.split(",")[0].trim(),
+                userAgent = (eventHeaders && (eventHeaders["User-Agent"] || eventHeaders["user-agent"])) || event.requestContext.identity.userAgent,
                 userIp = event.requestContext.identity.sourceIp;
 
                 /*
@@ -137,6 +139,10 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
             //console.log("userAgent: ",userAgent);
 
+            if(eventHeaderUserIp && eventHeaderUserIp !== userIp) {
+                console.warn("eventHeaderUserIp is "+eventHeaderUserIp+" and sourceIp is "+sourceIp);
+            }
+
             currentEnvironment.stage = stage;
             currentEnvironment.userAgent = userAgent;
             if(languages) {
@@ -144,6 +150,10 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             }
             currentEnvironment.userAgentIPAddress = userIp;
             currentEnvironment.clientId = event.requestContext.connectionId;
+
+            if(stage === "mod") {
+                console.log("setEnvironemntFromEvent: ",event);
+            }
 
         }
     },
@@ -154,22 +164,22 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             //console.log("handleAuthorize: event:", event, " context:", context, "callback: ", callback);
             // await sleep(6000)
 
-            var base64EncodedSerializedIdentity = event.queryStringParameters.identity,
-                serializedIdentity,
+            var base64EncodedSerializedSession = event.queryStringParameters.session,
+                serializedSession,
                 identityPromise, authorizeConnectionOperation,
                 self = this;
 
 
-            if(base64EncodedSerializedIdentity) {
-                serializedIdentity = Buffer.from(base64EncodedSerializedIdentity, 'base64').toString('binary');
-                this.deserializer.init(serializedIdentity, this.require, /*objectRequires*/undefined, /*module*/undefined, /*isSync*/false);
+            if(base64EncodedSerializedSession) {
+                serializedSession = Buffer.from(base64EncodedSerializedSession, 'base64').toString('binary');
+                this.deserializer.init(serializedSession, this.require, /*objectRequires*/undefined, /*module*/undefined, /*isSync*/false);
                 try {
                     identityPromise = this.deserializer.deserializeObject();
                 } catch (error) {
                     /*
-                        If there's a serializedIdentity and we can't deserialize it, we're the ones triggering the fail.
+                        If there's a serializedSession and we can't deserialize it, we're the ones triggering the fail.
                     */
-                    console.error("Error: ",error, " Deserializing ",serializedIdentity);
+                    console.error("Error: ",error, " Deserializing ",serializedSession);
 
                     return Promise.resolve(this.responseForEventAuthorization(event, null, false, /*responseContext*/error));
 
@@ -179,10 +189,11 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                 identityPromise = Promise.resolve(null);
             }
 
-            return identityPromise.then(function(identity) {
+            return identityPromise.then(function(session) {
 
                 //console.log("DataWorker handleAuthorize with identity:",identity);
-                var identityObjectDescriptor;
+                var identity = session?.identity,
+                    identityObjectDescriptor;
 
                 if(!identity) {
                     /*
@@ -191,7 +202,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                         So we use an Anonymous identity singleton
                     */
                     if(self.mainService.authorizationPolicy === AuthorizationPolicy.OnConnect) {
-                        return self.responseForEventAuthorization(event, serializedIdentity, false, null);
+                        return self.responseForEventAuthorization(event, serializedSession, false, null);
                     } else {
                         identity = Identity.AnonymousIdentity;
                         identityObjectDescriptor = IdentityDescriptor;
@@ -206,6 +217,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
                 authorizeConnectionOperation.id = event.requestContext.requestId;
                 authorizeConnectionOperation.type = DataOperation.Type.AuthorizeConnectionOperation;
+                authorizeConnectionOperation.timeStamp = event.requestContext.connectedAt;
                 authorizeConnectionOperation.target = identityObjectDescriptor;
                 authorizeConnectionOperation.data = identity;
                 /*
@@ -241,7 +253,18 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                     */
                     var serializedAuthorizedIdentity = self._serializer.serializeObject(authorizeConnectionCompletedOperation.data);
 
-                    return self.responseForEventAuthorization(event, serializedAuthorizedIdentity, true, null);
+                    /*
+                        start a session
+                    */
+                    return self.startSessionForOperation(authorizeConnectionOperation)
+                    .then((webSocketSession) => {
+
+                        var context = {
+                            session: webSocketSession.snapshot
+                        };
+
+                        return self.responseForEventAuthorization(event, serializedAuthorizedIdentity, true, context);
+                    });
 
                 }).catch((error) => {
                     var serializedAuthorizedIdentity = self._serializer.serializeObject(identity);
@@ -287,9 +310,9 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                 return this.deserializer.deserializeObject();
             } catch (error) {
                 /*
-                    If there's a serializedIdentity and we can't deserialize it, we're the ones triggering the fail.
+                    If there's a serializedSession and we can't deserialize it, we're the ones triggering the fail.
                 */
-                console.error("Error: ",error, " Deserializing ",serializedIdentity);
+                console.error("Error: ",error, " Deserializing ",event.requestContext.authorizer.principalId);
                 return Promise.reject(error);
             }
         }
@@ -303,6 +326,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
             connectOperation.id = event.requestContext.requestId;
             connectOperation.type = DataOperation.Type.ConnectOperation;
+            connectOperation.timeStamp = event.requestContext.connectedAt;
             connectOperation.target = this;
 
             /*
@@ -342,6 +366,50 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
            });
 
         }
+    },
+
+    startSessionForOperation: {
+        value: function(operation) {
+            const identity = operation.data;
+            //All we need from original event should be in operation
+
+            var webSocketSession = this.mainService.createDataObject(WebSocketSession);
+
+            /*
+                operation.clientId is AWS's event.requestContext.requestId.
+
+                It should be unique.
+            */
+            webSocketSession.connectionId = operation.clientId;
+            /*
+                Set the start time of the session from operation.timeStamp, which is event.requestContext.connectedAt in AWS
+            */
+            webSocketSession.existenceTimeRange = new Range(new Date(operation.timeStamp), null);
+
+            /*
+                We should get this from the identity's applicationIdentifier.
+                which should be the instance of the application in the DB the session should be linked to:
+
+                When we "publish" an app for an organization, this id should make it through the app's static assets somehow?
+
+                If we use the technique to get the values of the joins of a query, maybe we could get the origanization's app corresponding to however the query was authorized?
+
+            */
+                webSocketSession.applicationIdentifier = identity.applicationIdentifier;
+                //webSocketSession.app = identity.applicationIdentifier;
+
+            return Promise.resolve(webSocketSession);
+
+            // return this.mainService.saveChanges()
+            // .then(() => {
+            //     return webSocketSession;
+            // })
+            // .catch((error) => {
+            //     return Promise.reject(error);
+            // })
+
+        }
+
     },
 
     handleMessage: {
@@ -491,6 +559,55 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             });
 
         }
-    }
+    },
+    handleDisconnect: {
+        value: function(event, context, callback) {
+            var self = this,
+                disconnectOperation = new DataOperation(),
+            serializedIdentity = event.requestContext.authorizer.principalId;
+
+            disconnectOperation.id = event.requestContext.requestId;
+            disconnectOperation.type = DataOperation.Type.DisconnectOperation;
+            disconnectOperation.timeStamp = event.requestContext.requestTimeEpoch;
+            disconnectOperation.target = this;
+
+            /*
+                The following 2 lines are in OperationCoordinator as well, when it deserialize client-sent operations. We createdisdisconnectOperation connectOperation here as it's not sent by teh client, but by the Gateway itself
+            */
+            disconnectOperation.context = event;
+            //Set the clientId (in API already)
+            disconnectOperation.clientId = event.requestContext.connectionId;
+
+            this.setEnvironmentFromEvent(event);
+
+            this.endSessionForDisconnectOperation(disconnectOperation)
+            then( () => {
+                this.super(event, context, callback);
+            });
+
+        }
+    },
+    endSessionForDisconnectOperation: {
+        value: function(disconnectOperation) {
+            const identity = disconnectOperation.identity;
+            //All we need from original event should be in connectOperation
+
+            var webSocketSession = this.mainService.createDataObject(WebSocketSession);
+
+            /*
+                connectOperation.clientId is AWS's event.requestContext.requestId.
+
+                It should be unique.
+            */
+            webSocketSession.connectionId = disconnectOperation.clientId;
+            /*
+                Set the end time of the session from connectOperation.timeStamp, which is event.requestContext.connectedAt in AWS
+            */
+            webSocketSession.existenceTimeRange.end = new Date(disconnectOperation.timeStamp);
+        }
+
+    },
+
+
 
 });

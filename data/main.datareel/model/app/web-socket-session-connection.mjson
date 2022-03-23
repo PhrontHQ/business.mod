@@ -1,0 +1,44 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "WebSocketSessionConnection",
+            "propertyDescriptors": [
+                {"@": "connectionId"},
+                {"@": "timeRange"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./web-socket-session-connection.mjson"
+            },
+            "exportName": "WebSocketSessionConnection",
+            "module": {
+                "%": "./web-socket-session-connection"
+            },
+            "object":{"@": "WebSocketSessionConnection"}
+        }
+    },
+    "WebSocketSessionConnection": {
+        "object": "./web-socket-session-connection"
+    },
+    "connectionId": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "connectionId",
+            "valueType": "string",
+            "isSearchable": true
+        }
+    },
+    "timeRange": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "timeRange",
+            "valueType": "date",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "range_descriptor"}
+        }
+    },
+    "range_descriptor": {
+        "object": "montage/core/range.mjson"
+    }
+
+}

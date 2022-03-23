@@ -1,13 +1,15 @@
 'use strict';
 
 global.Promise = require("bluebird");
+const Timer = require("../core/timer").Timer;
 
 exports.initMainModuleWithRequire = function( mainModule, mainRequire) {
 
+var mainTimer;
 
 if(process.env.TIME_START) {
     console.log(process.version);
-    console.time("Main");
+    mainTimer = new Timer('Main');
 }
 
 if(process.env.PROFILE_START) {
@@ -27,9 +29,10 @@ if(process.env.PROFILE_START) {
     workaround for the fact that mr doesn't find crypto which is a built-in module, needs to fix that for good.
 */
 global.crypto = require('crypto');
-var Montage = require('montage/montage');
-var PATH = require("path");
-const useMr = true;
+const   Montage = require('montage/montage'),
+        PATH = require("path"),
+        useMr = true;
+
 var workerPromise;
 
 
@@ -122,7 +125,7 @@ if(!useMr) {
     Montage.application = worker;
 
     workerPromise = Promise.resolve(worker);
-    console.timeEnd("Main");
+    console.log(mainTimer.runtimeMsStr());
     console.log("Phront Worker reporting for duty!");
 
 } else {
@@ -169,7 +172,7 @@ if(!useMr) {
         Montage.application = worker;
 
         if(process.env.TIME_START) {
-            console.timeEnd("Main");
+            console.log(mainTimer.runtimeMsStr());
         }
         if(process.env.PROFILE_START) {
             session.post('Profiler.stop', (err, { profile }) => {
@@ -188,10 +191,29 @@ if(!useMr) {
     mainModule.exports.worker = exports.worker = workerPromise;
 }
 
+
+/*
+    calback()
+
+    If there's an error, then one argument is used, the error is passed
+    If there's not, the first argument being the error is null and the second is the response that should be returned:
+
+    callback();                 //Indicates success but no information returned to the caller
+    callback(null);             //Indicates success but no information returned to the caller
+    callback(null, "success");  //Indicates success with information returned to the caller
+    callback(error);            //Indicates error with error information returned to the caller
+*/
+
 mainModule.exports.connect = exports.connect = (event, context, callback) => {
+    const isModStage = event.requestContext.stage === "mod",
+    timer = isModStage ? new Timer('default') : null;
+
     workerPromise.then(function(worker) {
       if(typeof worker.handleConnect === "function") {
-          return worker.handleConnect(event, context, callback);
+          return worker.handleConnect(event, context, function() {
+            if(timer) console.log(timer.runtimeMsStr());
+            callback.apply(global,arguments);
+          });
       } else {
         callback(null, {
               statusCode: 200,
@@ -202,9 +224,15 @@ mainModule.exports.connect = exports.connect = (event, context, callback) => {
 };
 
 mainModule.exports.default = exports.default = async (event, context, callback) => {
+    const isModStage = event.requestContext.stage === "mod",
+    timer = isModStage ? new Timer('default') : null;
+
   const worker = await workerPromise;
   if(typeof worker.handleMessage === "function") {
-      await worker.handleMessage(event, context, callback);
+      await worker.handleMessage(event, context, function() {
+        if(timer) console.log(timer.runtimeMsStr());
+        callback.apply(global,arguments);
+      });
   }
 
   callback(null, {
@@ -214,6 +242,9 @@ mainModule.exports.default = exports.default = async (event, context, callback) 
 };
 
 mainModule.exports.handlePerformTransaction = exports.handlePerformTransaction  = async function (event, context, callback) {
+    const isModStage = event.requestContext.stage === "mod",
+    timer = isModStage ? new Timer('handlePerformTransaction') : null;
+
   console.log("handlePerformTransaction event:",event,"context:",context);
 
   const worker = await workerPromise;
@@ -221,6 +252,7 @@ mainModule.exports.handlePerformTransaction = exports.handlePerformTransaction  
       await worker.handleMessage(event, context, callback);
   }
 
+  if(timer) console.log(timer.runtimeMsStr());
   callback(null, {
       statusCode: 200,
       headers: {
@@ -259,9 +291,14 @@ mainModule.exports.handlePerformTransaction = exports.handlePerformTransaction  
 
   mainModule.exports.disconnect = exports.disconnect = (event, context, callback) => {
   workerPromise.then(function(worker) {
+    const isModStage = event.requestContext.stage === "mod",
+            timer = isModStage ? new Timer('disconnect') : null;
 
       if(typeof worker.handleDisconnect === "function") {
-          return worker.handleDisconnect(event, context, callback);
+          return worker.handleDisconnect(event, context, function() {
+            if(timer) console.log(timer.runtimeMsStr());
+            callback.apply(global,arguments);
+          });
       } else {
             callback(null, {
                 statusCode: 200,
@@ -310,8 +347,9 @@ mainModule.exports.handlePerformTransaction = exports.handlePerformTransaction  
     https://github.com/awslabs/aws-apigateway-lambda-authorizer-blueprints/blob/master/blueprints/nodejs/index.js
 */
 
-
 const _authorize = async (event, context, callback) => {
+    const isModStage = event.requestContext.stage === "mod",
+            timer = isModStage ? new Timer('authorize') : null;
 
     //console.log("_authorize:","event:", event, "context:", context, "callback:", callback);
 
@@ -358,11 +396,13 @@ const _authorize = async (event, context, callback) => {
     for(; ( i < countI); i++ ) {
         if(statements[i].Effect !== "Allow") {
             console.log("main authorize authResponse Deny:",authResponse);
+            if(timer) console.log(timer.runtimeMsStr());
             callback("Unauthorized");
             return;
         }
     }
 
+    if(timer) console.log(timer.runtimeMsStr());
     //console.log("main authorize authResponse Allow:",authResponse);
     callback(null, authResponse);
 

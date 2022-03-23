@@ -44,6 +44,7 @@ var AWSRawDataService = require("./aws/a-w-s-raw-data-service").AWSRawDataServic
     parse = require("montage/core/frb/parse"),
     path = require("path"),
     fs = require('fs'),
+    Timer = require("../../../core/timer").Timer,
     PhrontService;
 
 
@@ -66,30 +67,6 @@ var AWSRawDataService = require("./aws/a-w-s-raw-data-service").AWSRawDataServic
 // 		sessionToken: result.Credentials.SessionToken
 // 	};
 // }
-
-
-class Timer {
-    // Automatically starts the timer
-    constructor(name = 'Benchmark') {
-        this.NS_PER_SEC = 1e9;
-        this.MS_PER_NS = 1e-6;
-        this.name = name;
-        this.startTime = process.hrtime();
-    }
-
-    // returns the time in ms since instantiation
-    // can be called multiple times
-    runtimeMs() {
-        const diff = process.hrtime(this.startTime);
-        return (diff[0] * this.NS_PER_SEC + diff[1]) * this.MS_PER_NS;
-    }
-
-    // retuns a string: the time in ms since instantiation
-    runtimeMsStr() {
-        return `${this.name} took ${this.runtimeMs()} milliseconds`;
-    }
-}
-
 
 /*
     var params = {
@@ -2772,43 +2749,53 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
                 } else if(isMapPropertyDescriptor) {
                     if(iObjectRuleSourcePathSyntax && iObjectRuleSourcePathSyntax.type !== "record") {
+                        /*
+                            The map is stored as 1 array of a custom postgres type for an entry built for the type of teh key and the type  of the value, with a convention on names,
+                                see  ../raw-model/create-postgresql-map-entry-type-sql-format.js
+                            so it can be reused throughout the model/schema.
+                        */
+
                         throw "Can't create key and column array columns with expression '"+iObjectRule.sourcePath+"'";
+                    } else {
+                        /*
+                            The map is stored as two arrays, 1 for keys and one for values, where the same index builds the key-value entry
+                        */
+                        iIndexType = this.indexTypeForPropertyDescriptorWithRawDataMappingRule(iPropertyDescriptor, iRule);
+
+                        //The keys
+                        keyArrayColumn = iObjectRuleSourcePathSyntax.args.keys.args[1].value;
+                        columnType = this.mapPropertyDescriptorToRawType(iPropertyDescriptor, iRule, iPropertyDescriptor.keyType, iPropertyDescriptor._keyDescriptorReference);
+
+                        iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality(keyArrayColumn,schemaDescriptor,iPropertyDescriptor.cardinality);
+                        iSchemaPropertyDescriptor.valueType = columnType;
+                        schemaDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
+                        // iSchemaPropertyDescriptor.owner = schemaDescriptor;
+                        // schemaPropertyDescriptors.push(iSchemaPropertyDescriptor);
+
+                        if(iIndexType) {
+                            iSchemaPropertyDescriptor.indexType = iIndexType;
+                        }
+
+                        colunmns.add(iSchemaPropertyDescriptor.name);
+
+
+                         //The values
+                        valueArrayColumn = iObjectRuleSourcePathSyntax.args.values.args[1].value;
+                        columnType = this.mapPropertyDescriptorToRawType(iPropertyDescriptor, iRule, iPropertyDescriptor.valueType, iPropertyDescriptor._valueDescriptorReference);
+
+                        iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality(valueArrayColumn,schemaDescriptor,iPropertyDescriptor.cardinality);
+                        iSchemaPropertyDescriptor.valueType = columnType;
+                        schemaDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
+                        // iSchemaPropertyDescriptor.owner = schemaDescriptor;
+                        // schemaPropertyDescriptors.push(iSchemaPropertyDescriptor);
+
+                        if(iIndexType) {
+                            iSchemaPropertyDescriptor.indexType = iIndexType;
+                        }
+
+                        colunmns.add(iSchemaPropertyDescriptor.name);
                     }
 
-                    iIndexType = this.indexTypeForPropertyDescriptorWithRawDataMappingRule(iPropertyDescriptor, iRule);
-
-                    //The keys
-                    keyArrayColumn = iObjectRuleSourcePathSyntax.args.keys.args[1].value;
-                    columnType = this.mapPropertyDescriptorToRawType(iPropertyDescriptor, iRule, iPropertyDescriptor.keyType, iPropertyDescriptor._keyDescriptorReference);
-
-                    iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality(keyArrayColumn,schemaDescriptor,iPropertyDescriptor.cardinality);
-                    iSchemaPropertyDescriptor.valueType = columnType;
-                    schemaDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
-                    // iSchemaPropertyDescriptor.owner = schemaDescriptor;
-                    // schemaPropertyDescriptors.push(iSchemaPropertyDescriptor);
-
-                    if(iIndexType) {
-                        iSchemaPropertyDescriptor.indexType = iIndexType;
-                    }
-
-                    colunmns.add(iSchemaPropertyDescriptor.name);
-
-
-                     //The values
-                    valueArrayColumn = iObjectRuleSourcePathSyntax.args.values.args[1].value;
-                    columnType = this.mapPropertyDescriptorToRawType(iPropertyDescriptor, iRule, iPropertyDescriptor.valueType, iPropertyDescriptor._valueDescriptorReference);
-
-                    iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality(valueArrayColumn,schemaDescriptor,iPropertyDescriptor.cardinality);
-                    iSchemaPropertyDescriptor.valueType = columnType;
-                    schemaDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
-                    // iSchemaPropertyDescriptor.owner = schemaDescriptor;
-                    // schemaPropertyDescriptors.push(iSchemaPropertyDescriptor);
-
-                    if(iIndexType) {
-                        iSchemaPropertyDescriptor.indexType = iIndexType;
-                    }
-
-                    colunmns.add(iSchemaPropertyDescriptor.name);
 
                 } else {
                     //If the source syntax is a record and we have a converter, it can't become a column and has to be using a combination of other raw proeprties that have to be in propertyDescriptors
@@ -3283,7 +3270,8 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 createSchemaPromise = Promise.all([
                     require.async("../raw-model/install-postgresql-anyarray_remove-sql-format"),
                     require.async("../raw-model/install-postgresql-anyarray_concat_uniq-sql-format"),
-                    require.async("../raw-model/install-postgresql-intervalrange-sql-format")
+                    require.async("../raw-model/install-postgresql-intervalrange-sql-format"),
+                    require.async("../raw-model/create-postgresql-map-entry-type-sql-format")
                 ])
                 .then(function(resolvedValues) {
                     var rawDataOperation = {},

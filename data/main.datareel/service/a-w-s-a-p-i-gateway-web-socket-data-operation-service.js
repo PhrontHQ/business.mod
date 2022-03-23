@@ -14,6 +14,8 @@ var DataService = require("montage/data/service/data-service").DataService,
     defaultEventManager = require("montage/core/event/event-manager").defaultEventManager,
     //RawEmbeddedValueToObjectConverter = (require) ("montage/data/converter/raw-embedded-value-to-object-converter").RawEmbeddedValueToObjectConverter,
     //ReadEvent = (require) ("montage/data/model/read-event").ReadEvent,
+    BytesConverter = require("montage/core/converter/bytes-converter").BytesConverter,
+    WebSocketSession = require("../model/app/web-socket-session").WebSocketSession,
     currentEnvironment = require("montage/core/environment").currentEnvironment;
 
 
@@ -168,8 +170,9 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
     _createSocket: {
         value: function() {
             var applicationIdentity = this.application.identity,
-                serializedIdentity,
-                base64EncodedSerializedIdentity;
+                session = new WebSocketSession(),
+                serializedSession,
+                base64EncodedSerializedSession;
 
 
             /*
@@ -189,20 +192,21 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
 
 
             if(applicationIdentity) {
-                try {
-
-                    serializedIdentity = this._serializer.serializeObject(applicationIdentity);
-                    base64EncodedSerializedIdentity = btoa(serializedIdentity);
-
-                } catch(error) {
-                    console.error(error);
-                    throw error;
-                }
-
-
+                session.identity = applicationIdentity;
             }
 
-            this._socket = new WebSocket(this.connection.websocketURL+"?identity="+base64EncodedSerializedIdentity);
+            try {
+
+                serializedSession = this._serializer.serializeObject(session);
+                base64EncodedSerializedSession = btoa(serializedSession);
+
+            } catch(error) {
+                console.error(error);
+                throw error;
+            }
+
+
+            this._socket = new WebSocket(this.connection.websocketURL+"?session="+base64EncodedSerializedSession);
 
             this._socket.addEventListener("open", this);
             this._socket.addEventListener("error", this);
@@ -580,6 +584,18 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
         }
     },
 
+    _textEncoder: {
+        get: function() {
+            return this.__textEncoder || (this.__textEncoder= new TextEncoder());
+        }
+    },
+
+    _bytesConverter: {
+        get: function() {
+            return this.__bytesConverter || (this.__bytesConverter= new BytesConverter());
+        }
+    },
+
     _socketSendOperation: {
         value: function(operation) {
             this._socketOpenPromise.then(() => {
@@ -593,6 +609,8 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
                 //     var deserializedOperation = deserializer.deserializeObject();
                 //     console.log(deserializedOperation);
                 // }
+
+                console.log("send message size: "+ this._bytesConverter.convert(this._textEncoder.encode(serializedOperation).length));
 
                 this._socket.send(serializedOperation);
             });

@@ -72,7 +72,9 @@
                 {"@": "RoleRankingMapping"},
                 {"@": "ApplicationMapping"},
                 {"@": "UserPoolMapping"},
-                {"@": "AppClientMapping"}
+                {"@": "AppClientMapping"},
+                {"@": "WebSocketSessionMapping"},
+                {"@": "WebSocketSessionConnectionMapping"}
 
             ],
             "types": [
@@ -146,7 +148,10 @@
                 {"@": "RoleRanking"},
                 {"@": "Application"},
                 {"@": "UserPool"},
-                {"@": "AppClient"}
+                {"@": "AppClient"},
+                {"@": "WebSocketSession"},
+                {"@": "WebSocketSessionConnection"}
+
           ],
             "userIdentityServices": [
                 {"@": "cognitoIdentityService"}
@@ -709,6 +714,22 @@
 
     "AppClientMapping": {
         "object": "./mapping/app/app-client-mapping.mjson"
+    },
+
+    "WebSocketSession": {
+        "object": "./model/app/web-socket-session.mjson"
+    },
+
+    "WebSocketSessionMapping": {
+        "object": "./mapping/app/web-socket-session-mapping.mjson"
+    },
+
+    "WebSocketSessionConnection": {
+        "object": "./model/app/web-socket-session-connection.mjson"
+    },
+
+    "WebSocketSessionConnectionMapping": {
+        "object": "./mapping/app/web-socket-session-connection-mapping.mjson"
     },
 
     "cognitoIdentityService": {

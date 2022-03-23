@@ -13,9 +13,9 @@
         }
     },
     "user-identity": {
-        "object": "./model/user-identity.mjson"
+        "object": "./model/app/user-identity.mjson"
     },
     "userIdentityMapping": {
-        "object": "./mapping/user-identity-mapping.mjson"
+        "object": "./mapping/app/user-identity-mapping.mjson"
     }
 }

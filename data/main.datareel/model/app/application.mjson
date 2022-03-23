@@ -6,7 +6,8 @@
             "propertyDescriptors": [
                 {"@": "name"},
                 {"@": "appClients"},
-                {"@": "controllingOrganization"}
+                {"@": "controllingOrganization"},
+                {"@": "webSocketSessions"}
             ],
             "objectDescriptorModule": {
                 "%": "./application.mjson"
@@ -58,6 +59,19 @@
     },
     "OrganizationDescriptor": {
         "object": "../organization.mjson"
+    },
+    "webSocketSessions": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "webSocketSessions",
+            "cardinality": -1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "WebSocketSessionsDescriptor"},
+            "inversePropertyName": "app"
+       }
+    },
+    "WebSocketSessionsDescriptor": {
+        "object": "./web-socket-session.mjson"
     }
 
 }

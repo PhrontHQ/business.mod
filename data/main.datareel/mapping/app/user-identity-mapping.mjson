@@ -44,7 +44,7 @@
     },
 
     "UserIdentityDescriptor": {
-        "object": "../model/user-identity.mjson"
+        "object": "../../model/app/user-identity.mjson"
     },
 
     "person-converter": {

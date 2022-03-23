@@ -167,7 +167,7 @@
        }
     },
     "userIdentity_descriptor": {
-        "object": "./user-identity.mjson"
+        "object": "./app/user-identity.mjson"
     },
     "employmentHistory": {
         "prototype": "montage/core/meta/property-descriptor",

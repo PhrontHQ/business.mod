@@ -6,7 +6,7 @@ var IdentityService = require("montage/data/service/identity-service").IdentityS
     CognitoUserAttribute = AmazonCognitoIdentity.CognitoUserAttribute,
     CognitoUserPool = AmazonCognitoIdentity.CognitoUserPool,
     CognitoUser = AmazonCognitoIdentity.CognitoUser,
-    UserIdentity = require("../model/user-identity").UserIdentity,
+    UserIdentity = require("../model/app/user-identity").UserIdentity,
     Criteria = require("montage/core/criteria").Criteria,
     uuid = require("montage/core/uuid");
 
