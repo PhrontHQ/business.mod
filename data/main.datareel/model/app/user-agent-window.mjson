@@ -1,0 +1,62 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "UserAgentWindow",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "durationTimeRange"},
+                {"@": "positionTimeLog"}
+
+            ],
+            "objectDescriptorModule": {
+                "%": "./user-pool.mjson"
+            },
+            "exportName": "UserAgentWindow",
+            "module": {
+                "%": "./user-agent-window"
+            },
+            "object":{"@": "UserAgentWindow"},
+            "parent":{"@": "DataObjectDescriptor"}
+        }
+    },
+    "UserAgentWindow": {
+        "object": "./user-agent-window"
+    },
+    "DataObjectDescriptor": {
+        "object": "../data-object.mjson"
+    },
+    "name": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "durationTimeRange": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "durationTimeRange",
+            "valueType": "date",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "range_descriptor"}
+        }
+    },
+    "range_descriptor": {
+        "object": "montage/core/range.mjson"
+    },
+    "positionTimeLog": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "positionTimeLog",
+            "cardinality": -1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "LogEntryDescriptor"},
+            "description": "The parties using a UserPool"
+       }
+    },
+    "LogEntryDescriptor": {
+        "object": "../organization.mjson"
+    }
+
+}
