@@ -265,13 +265,13 @@ mainModule.exports.handlePerformTransaction = exports.handlePerformTransaction  
 };
 
 
-    mainModule.exports.httpAuthorize = module.exports.httpAuthorize = async (event, context, callback) => {
-    console.log("httpAuthorize:","event:", event, "context:", context, "callback:", callback , "_authorize:", _authorize);
+mainModule.exports.authorizeSend = module.exports.authorizeSend = async (event, context, callback) => {
+    console.log("authorizeSend:","event:", event, "context:", context, "callback:", callback , "_authorize:", _authorize);
     return _authorize.call(this, event, context, callback);
-  };
+};
 
-    mainModule.exports.httpDefault = exports.httpDefault  = async function (event, context, callback) {
-    console.log("httpDefault event:",event,"context:",context);
+mainModule.exports.send = exports.send  = async function (event, context, callback) {
+    console.log("send event:",event,"context:",context);
 
     const worker = await workerPromise;
     if(typeof worker.handleMessage === "function") {
@@ -287,9 +287,9 @@ mainModule.exports.handlePerformTransaction = exports.handlePerformTransaction  
         body: 'Sent.'
     });
 
-    };
+};
 
-  mainModule.exports.disconnect = exports.disconnect = (event, context, callback) => {
+mainModule.exports.disconnect = exports.disconnect = (event, context, callback) => {
   workerPromise.then(function(worker) {
     const isModStage = event.requestContext.stage === "mod",
             timer = isModStage ? new Timer('disconnect') : null;
@@ -308,6 +308,15 @@ mainModule.exports.handlePerformTransaction = exports.handlePerformTransaction  
   });
 };
 
+
+mainModule.exports.authenticate = module.exports.authenticate = async (event, context, callback) => {
+    console.log("authenticate:"," event:", event, " context:", context);
+
+    callback(null, {
+        statusCode: 200,
+        body: 'Received.'
+    });
+};
 
 
 /*
