@@ -332,7 +332,7 @@ module.exports = {
             if(args[0].type === "parameters") {
                 value = scope;
                 rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-                escapedValue = dataService.mapPropertyDescriptorValueToRawTypeExpression(propertyDescriptor, value,"list");
+                escapedValue = dataService.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(propertyDescriptor, value, rawProperty, "list");
             }
             else if(args[1].type === "parameters") {
                 value = scope;
@@ -340,7 +340,7 @@ module.exports = {
                     value = [value];
                 }
                 rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-                escapedValue = dataService.mapPropertyDescriptorValueToRawTypeExpression(propertyDescriptor, value);
+                escapedValue = dataService.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(propertyDescriptor, value, rawProperty);
             } else if(args[1].type === "property" && args[1].args[0].type === "parameters") {
                 var parametersKey = args[1].args[1].value;
                 value = scope[parametersKey];
@@ -350,7 +350,7 @@ module.exports = {
                 }
 
                 rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-                escapedValue = dataService.mapPropertyDescriptorValueToRawTypeExpression(propertyDescriptor, value);
+                escapedValue = dataService.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(propertyDescriptor, value, rawProperty);
             } else if(args[1].type === "property" && args[0].args[0].type === "parameters") {
                 propertyName = args[1].args[1].value;
                 var parametersKey = args[0].args[1].value;
@@ -383,7 +383,7 @@ module.exports = {
                 escapedValue = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
             } else {
                 rawProperty = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName);
-                escapedValue = dataService.mapPropertyDescriptorValueToRawTypeExpression(propertyDescriptor, value);
+                escapedValue = dataService.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(propertyDescriptor, value, rawProperty);
             }
         } else {
             throw new Error("phront-service.js: unhandled syntax in mapCriteriaToRawStatement(criteria: "+JSON.stringify(criteria)+"objectDescriptor: "+mapping.objectDescriptor.name);
