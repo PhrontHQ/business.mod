@@ -152,7 +152,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             currentEnvironment.clientId = event.requestContext.connectionId;
 
             if(stage === "mod") {
-                console.log("setEnvironemntFromEvent: ",event);
+                console.log("setEnvironmentFromEvent: ",event);
             }
 
         }
