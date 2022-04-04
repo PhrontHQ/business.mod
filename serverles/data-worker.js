@@ -206,7 +206,21 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                         So we use an Anonymous identity singleton
                     */
                     if(self.mainService.authorizationPolicy === AuthorizationPolicy.OnConnect) {
-                        return self.responseForEventAuthorization(event, serializedSession, false, null);
+                        var authorizeConnectionFailedOperation = new DataOperation();
+
+                        authorizeConnectionFailedOperation.id = event.requestContext.requestId;
+                        authorizeConnectionFailedOperation.type = DataOperation.Type.AuthorizeConnectionFailedOperation;
+                        authorizeConnectionFailedOperation.timeStamp = event.requestContext.connectedAt;
+                        authorizeConnectionFailedOperation.target = identityObjectDescriptor;
+                        authorizeConnectionFailedOperation.data = new Error("No identity found in session");
+                        /*
+                            The following 2 lines are in OperationCoordinator as well, when it deserialize client-sent operations. We create connectOperation here as it's not sent by teh client, but by the Gateway itself
+                        */
+                            authorizeConnectionFailedOperation.context = event;
+                        //Set the clientId (in API already)
+                        authorizeConnectionFailedOperation.clientId = event.requestContext.connectionId;
+
+                        return self.responseForEventAuthorization(event, serializedSession, false, authorizeConnectionFailedOperation);
                     } else {
                         identity = Identity.AnonymousIdentity;
                         identityObjectDescriptor = IdentityDescriptor;
