@@ -435,7 +435,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             var isModStage = event.requestContext.stage === "mod";
 
             if(isModStage) {
-                console.log("handleAuthorize: event:", event, " context:", context, "callback: ", callback);
+                console.log("handleMessage: event:", event, " context:", context, "callback: ", callback);
             }
 
             /*
