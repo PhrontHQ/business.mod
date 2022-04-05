@@ -434,9 +434,9 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
         value: function(event, context, callback) {
             var isModStage = event.requestContext.stage === "mod";
 
-            if(isModStage) {
-                console.log("handleMessage: event:", event, " context:", context, "callback: ", callback);
-            }
+            // if(isModStage) {
+            //     console.log("handleMessage: event:", event, " context:", context, "callback: ", callback);
+            // }
 
             /*
                 Add a check if the message isn't coming from the socket, the only other is through the handleCommitTransaction lambda.
