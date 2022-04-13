@@ -24,13 +24,13 @@
     "fullstack-phone": "^1.62.0",
     "object-sizeof": "^1.5.2",
     "id128": "^1.5.0",
-    "@aws-sdk/credential-provider-ini": "^3.41.0",
-    "@aws-sdk/client-cognito-identity-provider": "^3.41.0",
-    "@aws-sdk/client-secrets-manager": "^3.41.0",
-    "@aws-sdk/client-s3": "^3.41.0",
-    "@aws-sdk/s3-request-presigner": "^3.41.0",
-    "@aws-sdk/client-rds-data": "^3.41.0",
-    "@aws-sdk/client-apigatewaymanagementapi": "^3.41.0"
+    "@aws-sdk/credential-provider-ini": "^3.67.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.67.0",
+    "@aws-sdk/client-secrets-manager": "^3.67.0",
+    "@aws-sdk/client-s3": "^3.67.0",
+    "@aws-sdk/s3-request-presigner": "^3.67.0",
+    "@aws-sdk/client-rds-data": "^3.67.0",
+    "@aws-sdk/client-apigatewaymanagementapi": "^3.67.0"
   },
   "devDependencies": {
     "concurrently": "^3.4.0",
