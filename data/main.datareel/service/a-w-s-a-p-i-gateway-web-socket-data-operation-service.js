@@ -16,7 +16,9 @@ var DataService = require("montage/data/service/data-service").DataService,
     //ReadEvent = (require) ("montage/data/model/read-event").ReadEvent,
     BytesConverter = require("montage/core/converter/bytes-converter").BytesConverter,
     WebSocketSession = require("../model/app/web-socket-session").WebSocketSession,
-    currentEnvironment = require("montage/core/environment").currentEnvironment;
+    currentEnvironment = require("montage/core/environment").currentEnvironment,
+    isMod = ((currentEnvironment.stage === "mod" ||
+    currentEnvironment.stage === "local"));
 
 
 var Identity = require("montage/data/model/identity").Identity;
@@ -148,7 +150,7 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
                         websocketURL;
 
                 if(global.location) {
-                    if(stage === "dev" || global.location.hostname === "127.0.0.1" || global.location.hostname === "localhost" || global.location.hostname.endsWith(".local") ) {
+                    if(stage === "mod" || global.location.hostname === "127.0.0.1" || global.location.hostname === "localhost" || global.location.hostname.endsWith(".local") ) {
                         websocketURL = new URL(connection.websocketURL);
 
                         if(global.location.hostname === "localhost" && currentEnvironment.isAndroidDevice && websocketURL.hostname.endsWith(".local")) {
@@ -610,7 +612,9 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
                 //     console.log(deserializedOperation);
                 // }
 
-                console.log("send message size: "+ this._bytesConverter.convert(this._textEncoder.encode(serializedOperation).length));
+                if(isMod) {
+                    console.log("send message size: "+ this._bytesConverter.convert(this._textEncoder.encode(serializedOperation).length));
+                }
 
                 this._socket.send(serializedOperation);
             });
