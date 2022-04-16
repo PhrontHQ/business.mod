@@ -1454,9 +1454,9 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 */
 
                 if(!useDefaultExpressions && readExpressions.length === 1 && (readOperation.referrer || readOperation.referrerId)) {
-                    sql = `SELECT DISTINCT ${escapedRawReadExpressions.join()} FROM ${schemaName}."${tableName}"`;
+                    sql = `SELECT DISTINCT ${escapedRawReadExpressions.join()} FROM "${schemaName}"."${tableName}"`;
                 } else {
-                    sql = `SELECT DISTINCT (SELECT to_jsonb(_) FROM (SELECT ${escapedRawReadExpressions.join(",")}) as _) FROM ${schemaName}."${tableName}"`;
+                    sql = `SELECT DISTINCT (SELECT to_jsonb(_) FROM (SELECT ${escapedRawReadExpressions.join(",")}) as _) FROM "${schemaName}"."${tableName}"`;
                 }
 
                 //Adding the join expressions if any
@@ -3940,7 +3940,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
             */
 
 
-            sql = `UPDATE  ${schemaName}."${tableName}" SET ${setRecordKeys.join(",")} ${hasRawExpressionJoinStatements ? "FROM" : ""} ${hasRawExpressionJoinStatements ? rawExpressionJoinStatements.fromClauseQualifiedRightDataSetsString : ""} WHERE (${condition})${hasRawExpressionJoinStatements ? " AND (" : ""}${hasRawExpressionJoinStatements ? rawExpressionJoinStatements.joinAndConditionString : ""}${hasRawExpressionJoinStatements ? ")" : ""}`;
+            sql = `UPDATE  "${schemaName}"."${tableName}" SET ${setRecordKeys.join(",")} ${hasRawExpressionJoinStatements ? "FROM" : ""} ${hasRawExpressionJoinStatements ? rawExpressionJoinStatements.fromClauseQualifiedRightDataSetsString : ""} WHERE (${condition})${hasRawExpressionJoinStatements ? " AND (" : ""}${hasRawExpressionJoinStatements ? rawExpressionJoinStatements.joinAndConditionString : ""}${hasRawExpressionJoinStatements ? ")" : ""}`;
 
 
             return Promise.resolve(sql);
@@ -4089,7 +4089,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 }
             }
 
-            sql = `DELETE FROM ${schemaName}."${tableName}"
+            sql = `DELETE FROM "${schemaName}"."${tableName}"
         WHERE (${condition})`;
             return Promise.resolve(sql);
         }
