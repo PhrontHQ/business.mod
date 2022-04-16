@@ -2949,7 +2949,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                     // createExtensionPgcryptoSchema = `CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA "${schemaName}";   `,
                     createTableTemplatePrefix = `CREATE TABLE "${schemaName}"."${tableName}"
     (
-        id uuid NOT NULL DEFAULT phront.gen_random_uuid(),
+        id uuid NOT NULL DEFAULT "${schemaName}".gen_random_uuid(),
         CONSTRAINT "${tableName}_pkey" PRIMARY KEY (id)`,
                     createTableTemplateSuffix = `
     )
