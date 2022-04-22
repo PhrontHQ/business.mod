@@ -17,20 +17,21 @@
     "url": "PhrontHQ/phront"
   },
   "dependencies": {
+    "@aws-sdk/client-apigatewaymanagementapi": "^3.75.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.75.0",
+    "@aws-sdk/client-rds-data": "^3.75.0",
+    "@aws-sdk/client-s3": "^3.75.0",
+    "@aws-sdk/client-secrets-manager": "^3.75.0",
+    "@aws-sdk/credential-provider-ini": "^3.75.0",
+    "@aws-sdk/s3-request-presigner": "^3.75.0",
     "amazon-cognito-identity-js": "^3.2.0",
+    "fullstack-phone": "^1.62.0",
+    "id128": "^1.5.0",
     "lodash": "^4.17.2",
     "montage": "github:marchant/montage#montage-19",
     "montage-geo": "github:marchant/montage-geo.git#montage-19",
-    "fullstack-phone": "^1.62.0",
     "object-sizeof": "^1.5.2",
-    "id128": "^1.5.0",
-    "@aws-sdk/credential-provider-ini": "^3.75.0",
-    "@aws-sdk/client-cognito-identity-provider": "^3.75.0",
-    "@aws-sdk/client-secrets-manager": "^3.75.0",
-    "@aws-sdk/client-s3": "^3.75.0",
-    "@aws-sdk/s3-request-presigner": "^3.75.0",
-    "@aws-sdk/client-rds-data": "^3.75.0",
-    "@aws-sdk/client-apigatewaymanagementapi": "^3.75.0"
+    "pg": "^8.7.3"
   },
   "devDependencies": {
     "concurrently": "^3.4.0",
@@ -44,8 +45,8 @@
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.2",
     "open": "0.0.5",
-    "tiny-worker": "github:marchant/tiny-worker#master",
-    "serverless": "~1.75.0"
+    "serverless": "~1.75.0",
+    "tiny-worker": "github:marchant/tiny-worker#master"
   },
   "scripts": {
     "jsdoc": "jsdoc -c jsdoc.json",
