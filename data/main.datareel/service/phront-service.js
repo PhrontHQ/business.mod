@@ -45,6 +45,10 @@ var AWSRawDataService = require("./aws/a-w-s-raw-data-service").AWSRawDataServic
     path = require("path"),
     fs = require('fs'),
     Timer = require("../../../core/timer").Timer,
+    SecretObjectDescriptor = require("../model/aws/secret.mjson").montageObject,
+    PostgreSQLCLient,
+    PostgreSQLCLientPool,
+    ReadWritePostgreSQLClientPool,
     PhrontService;
 
 
@@ -167,12 +171,35 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 The Promise.all() returned is cached, so it doesn't matter wether it's done or not
                 by the time the worker's function handles the message
             */
-            this.awsClientPromises;
+            //this.awsClientPromises;
 
 
             // this._registeredConnectionsByIdentifier = new Map();
         }
     },
+
+    usePerformTransaction: {
+        value: true
+    },
+
+    useDataAPI: {
+        value: false
+    },
+
+    // _useDataAPI: {
+    //     value: undefined
+    // },
+
+    /*
+        for now the decsion is to have the endpoints property in the connection info for an environment.
+    */
+    // useDataAPI: {
+    //     get: function() {
+    //         return this._useDataAPI !== undefined
+    //             ? this._useDataAPI
+    //             : (this._useDataAPI = this.connection.hasOwnProperty("endpoints"));
+    //     }
+    // },
 
     supportsTransaction: {
         value: true
@@ -276,16 +303,157 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
     //     }
     // },
 
+    readWriteEndoint: {
+        get: function() {
+            return this.connection.readWriteEndpoint;
+        }
+    },
+
+    _createSharedReadWriteClientPool: {
+        value: function() {
+            var connectionOptions = {
+                host: this.readWriteEndoint.endpoint,
+                port: this.databaseCredentials.value.port,
+                user: this.databaseCredentials.value.username,
+                // database: this.databaseCredentials.value.dbClusterIdentifier,
+                database: this.connection.database,
+                password: this.databaseCredentials.value.password
+            };
+
+            console.debug("connectionOptions: ",connectionOptions);
+
+            return new PostgreSQLCLientPool(connectionOptions);
+        }
+    },
+
+    readWriteClientPool: {
+        get: function() {
+            return ReadWritePostgreSQLClientPool || (
+                global._ReadWritePostgreSQLClientPool
+                    ? (ReadWritePostgreSQLClientPool = global._ReadWritePostgreSQLClientPool)
+                    : (ReadWritePostgreSQLClientPool = global._ReadWritePostgreSQLClientPool = this._createSharedReadWriteClientPool())
+            )
+        }
+    },
+
+    /*
+        WIP: We need to asses how to use a single dedicated reader vs more than one with special purpose?
+    */
+
+    readOnlyClientPool: {
+        get: function() {
+            return ReadOnlyPostgreSQLClientPool || (
+                global._ReadOnlyPostgreSQLClientPool
+                    ? (ReadOnlyPostgreSQLClientPool = global._ReadOnlyPostgreSQLClientPool)
+                    : (ReadOnlyPostgreSQLClientPool = global._ReadOnlyPostgreSQLClientPool = new PostgreSQLCLientPool({
+                            host: signerOptions.hostname,
+                            port: signerOptions.port,
+                            user: signerOptions.username,
+                            database: 'my-db',
+                            password: getPassword
+                        }))
+            )
+        }
+    },
+
+
     instantiateAWSClientWithOptions: {
         value: function (awsClientOptions) {
-            return new RDSDataClient(awsClientOptions);
+            if(this.useDataAPI) {
+                return new RDSDataClient(awsClientOptions);
+            } else {
+
+            }
+        }
+    },
+
+    /*
+        {
+            "name":"databaseName",
+            "value": {
+                "username":"aUsername",
+                "password":"aUsernamePassword",
+                "engine":"postgres",
+                "host":"hostName",
+                "port":1234,
+                "dbClusterIdentifier":"dbClusterIdentifierName"
+            }
+        }
+    */
+    databaseCredentials: {
+        value: null
+    },
+
+    /*
+        From: https://node-postgres.com/features/connecting
+
+        An alternative to loading the credentials ourselves using our DataService is to use the capability from pg and RDS.signer:
+
+        const signerOptions = {
+            credentials: {
+                accessKeyId: 'YOUR-ACCESS-KEY',
+                secretAccessKey: 'YOUR-SECRET-ACCESS-KEY',
+            },
+            region: 'us-east-1',
+            hostname: 'example.aslfdewrlk.us-east-1.rds.amazonaws.com',
+            port: 5432,
+            username: 'api-user'
+        }
+        const signer = new RDS.Signer()
+        const getPassword = () => signer.getAuthToken(signerOptions)
+        const pool = new Pool({
+            host: signerOptions.hostname,
+            port: signerOptions.port,
+            user: signerOptions.username,
+            database: 'my-db',
+            password: getPassword
+        })
+
+    */
+
+    loadDatabaseCredentialsFromSecret: {
+        value: function () {
+            return new Promise( (resolve, reject) => {
+
+                //TODO later: replace this with a proper DataService fetchData()
+                var readOperation = new DataOperation();
+                readOperation.type = DataOperation.Type.ReadOperation;
+                readOperation.target = SecretObjectDescriptor;
+                readOperation.criteria = new Criteria().initWithExpression("name == $.name", {
+                    name: `${this.currentEnvironment.stage}-${this.connection.database}-database`
+                });
+
+                SecretObjectDescriptor.addEventListener(DataOperation.Type.ReadCompletedOperation, (readCompletedOperation) => {
+                    readCompletedOperation.stopImmediatePropagation();
+                    resolve((this.databaseCredentials = readCompletedOperation.data[0]));
+                }, {
+                    capture: true,
+                    once: true
+                });
+
+                SecretObjectDescriptor.addEventListener(DataOperation.Type.ReadFailedOperation, function(readFailedOperation) {
+                    readFailedOperation.stopImmediatePropagation();
+                    reject(readFailedOperation.data);
+                }, {
+                    capture: true,
+                    once: true
+                });
+
+                SecretObjectDescriptor.dispatchEvent(readOperation);
+
+            });
+
         }
     },
 
     awsClientPromises: {
         get: function () {
-                var promises = this.super();
+            var promises = this.super();
 
+
+
+
+            if(this.useDataAPI) {
                 // if(!currentEnvironment.isAWS) {
                 //     promises.push(
                 //         require.async("@aws-sdk/credential-provider-ini").then(function(exports) { fromIni = exports.fromIni})
@@ -313,6 +481,17 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 );
 
                 // this.__rdsDataClientPromise = Promise.all(promises).then(() => { return this.awsClient;});
+            } else {
+                promises.push(
+                    require.async("pg").then(function(exports) {
+                        PostgreSQLCLient = exports.Client;
+                        PostgreSQLCLientPool = exports.Pool;
+                    })
+                );
+                promises.push(
+                    this.loadDatabaseCredentialsFromSecret()
+                );
+            }
             return promises;
         }
     },
@@ -324,7 +503,19 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
     connection: {
         get: function() {
             if(!this._connection) {
-                this.connection = this.connectionForIdentifier(this.currentEnvironment.stage);
+
+                /*
+                    Adding a bit of logic since apparently an RDS Proxy must be in the same VPC as the database and although the database can be publicly accessible, the proxy can’t be.
+
+                    So in working locally we need to address the database cluster directly.
+
+                    -> https://www.stackovercloud.com/2020/06/30/amazon-rds-proxy-now-generally-available/
+                */
+                if(!this.currentEnvironment.isAWS) {
+                    this.connection = this.connectionForIdentifier(`local-${this.currentEnvironment.stage}`);
+                } else {
+                    this.connection = this.connectionForIdentifier(this.currentEnvironment.stage);
+                }
             }
             return this._connection;
         },
@@ -334,7 +525,11 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 this._connection = value;
 
                 if(value) {
-                    var region = value.resourceArn.split(":")[3],
+                    var region = value.resourceArn
+                    ? value.resourceArn.split(":")[3]
+                    : value.endPoint
+                        ? value.endpoint.split(".")[2]
+                        : null,
                     profile, owner,
                     RDSDataServiceOptions =  {
                         apiVersion: '2018-08-01',
@@ -1712,7 +1907,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                             If the readOperation has a referrer, it's a readOperation created by us to fetch an object's property, so we're going to use that.
                         */
 
-                        var operation = self.responseOperationForReadOperation(readOperation.referrer ? readOperation.referrer : readOperation, err, data && data.records, isNotLast);
+                        var operation = self.responseOperationForReadOperation(readOperation.referrer ? readOperation.referrer : readOperation, err, (data && (data.rows || data.records)), isNotLast);
                         /*
                             If we pass responseOperationForReadOperation the readOperation.referrer if there's one, we end up with the right clientId ans right referrerId, but the wrong target, so for now, reset it to what it should be:
                         */
@@ -1927,7 +2122,11 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
     */
     addOneRawData: {
         value: function (stream, rawData, context) {
-            return this.super(stream, JSON.parse(rawData[0].stringValue), context);
+            if(!this.useDataAPI) {
+                return this.super(stream, rawData.to_jsonb, context);
+            } else {
+                return this.super(stream, JSON.parse(rawData[0].stringValue), context);
+            }
         }
     },
 
@@ -2947,7 +3146,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                     owner = this.connection.owner,
                     // createSchema = `CREATE SCHEMA IF NOT EXISTS "${schemaName}";`,
                     // createExtensionPgcryptoSchema = `CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA "${schemaName}";   `,
-                    createTableTemplatePrefix = `CREATE TABLE "${schemaName}"."${tableName}"
+                    createTableTemplatePrefix = `CREATE TABLE IF NOT EXISTS "${schemaName}"."${tableName}"
     (
         id uuid NOT NULL DEFAULT "${schemaName}".gen_random_uuid(),
         CONSTRAINT "${tableName}_pkey" PRIMARY KEY (id)`,
@@ -3337,7 +3536,8 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                         else {
                             // successful response
                             console.log(data);
-                            var hasSchema = (data.records.length === 1);
+                            var result = self.useDataAPI ? data.records : data.rows,
+                                hasSchema = (result.length === 1);
 
                             if(!hasSchema) {
                                 self.createSchemaForCreateObjectDescriptorOperation(dataOperation)
@@ -4151,6 +4351,28 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
     handleCreateTransactionOperation: {
         value: function (createTransactionOperation) {
+
+            /*
+                Transition, we punt in that case, make it work right away
+            */
+            if(this.usePerformTransaction) {
+                var operation = new DataOperation();
+                operation.referrerId = createTransactionOperation.id;
+                operation.clientId = createTransactionOperation.clientId;
+                //We keep the same
+                operation.target = createTransactionOperation.target;
+                //if we punt, we don't use the dataAPI and we don't have a transactionId provided by it, so we punt
+                // operation.id = data.transactionId;
+
+                operation.type = DataOperation.Type.CreateTransactionCompletedOperation;
+                //What should be the operation's payload ? The Raw Transaction Id?
+                operation.data = {};
+                operation.data[this.identifier] = operation.id;
+
+                operation.target.dispatchEvent(operation);
+                return;
+            }
+
             var self = this,
                 rawDataOperation = {},
                 // firstObjectDescriptor,
@@ -4469,6 +4691,23 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
     handleAppendTransactionOperation: {
         value: function (appendTransactionOperation) {
+
+            /*
+                Transition, we punt in that case
+            */
+            if(this.usePerformTransaction) {
+                var operation = new DataOperation();
+                operation.referrerId = appendTransactionOperation.id;
+                operation.clientId = appendTransactionOperation.clientId;
+                operation.target = appendTransactionOperation.target;
+                operation.type = DataOperation.Type.AppendTransactionCompletedOperation;
+                operation.data = {};
+                operation.data.transactionId = appendTransactionOperation.referrerId;
+
+                operation.target.dispatchEvent(operation);
+                return;
+            }
+
             /*
                 Right now we're receiving this twice for saveChanges happening from inside the Worker.
 
@@ -4815,6 +5054,14 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 return;
             }
 
+                        /*
+                Transition, we punt in that case
+            */
+                if(this.usePerformTransaction) {
+                    this.handlePerformTransactionOperation(commitTransactionOperation, true);
+                    return;
+                }
+
 
             //New addition: a 1 shot transaction
             if(!commitTransactionOperation.referrerId) {
@@ -4871,6 +5118,221 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
         }
     },
 
+    /*
+        To get to this ASAP, we're going to pass a flag for now
+        When we have properly added the PerformTransactionOperation flow as a full-class citizen
+        in the design, we won't need it anymore, the event manager doesn't dispatch a second argument anyway so it will be undefined.
+    */
+    handlePerformTransactionOperation: {
+        value: function (performTransactionOperation, _actAsHandleCommitTransactionOperation) {
+            console.debug("handlePerformTransactionOperation: ",performTransactionOperation, _actAsHandleCommitTransactionOperation);
+
+            /*
+                Right now we're receiving this twice for saveChanges happening from inside the Worker.
+
+                1. From Observing ourselves as participant in handling mainService transactions events,
+                2. From that same event bubbling to the mainService which we listen to as well when handling handleAppendTransactionOperation that are sent by a client of the DataWorker.
+
+                This needs to be cleaned up, one possibility is with our Liaison RawDataService on the client dispatching the transaction events directly in the worker, which would eliminate for RawDataServiced in the DataWorker differences between the transaction being initiated from outside vs from inside of it.
+
+                In the meantime, if the target is ourselves and the currentTarget is not, then it means we've already done the job.
+            */
+                if(performTransactionOperation.target === this && performTransactionOperation.currentTarget !== this) {
+                    return;
+                }
+
+            var self = this;
+            this.awsClientPromise.then(() => {
+
+
+
+                //New addition: a 1 shot transaction
+                var self = this,
+                    rawDataOperation = {},
+                    operations = performTransactionOperation.data.operations,
+                    batchedOperations,
+                    responseOperations = [];
+
+                batchedOperations = this.callDelegateMethod("rawDataServiceWillOrderTransactionOperations", this, operations);
+                if(!batchedOperations) {
+                    batchedOperations = this._orderedTransactionOperations(operations);
+                }
+
+
+
+                this.mapOperationToRawOperationConnection(performTransactionOperation, rawDataOperation);
+
+
+                var self = this,
+                //rawDataOperationHeaderLength = JSON.stringify(rawDataOperation).length,
+                readOperationType = DataOperation.Type.ReadOperation,
+                createOperationType = DataOperation.Type.CreateOperation,
+                updateOperationType = DataOperation.Type.UpdateOperation,
+                deleteOperationType = DataOperation.Type.DeleteOperation,
+                sqlMapPromises = [],
+                rawOperationRecords = [],
+                i, countI, iOperation, iRecord, createdCount = 0;
+
+
+
+                /*
+                    We're starting to dispatch a batch's operations individually, so if that's the case, we've aleady done the equivalent of that loop before we arrive here.
+                */
+                //Now loop on operations and create the matching sql:
+                for (i = 0, countI = batchedOperations && batchedOperations.length; (i < countI); i++) {
+                    iOperation = batchedOperations[i];
+                    iRecord = {};
+                    rawOperationRecords[i] = iRecord;
+                    // if (iOperation.type === readOperationType) {
+                    //     this.handleRead(iOperation);
+                    //     // sqlMapPromises.push(Promise.resolve(this.mapReadOperationToRawStatement(iOperation, rawDataOperation)));
+                    // } else
+                    if (iOperation.type === updateOperationType) {
+                        sqlMapPromises.push(this._mapUpdateOperationToSQL(iOperation, rawDataOperation,iRecord ));
+                    } else if (iOperation.type === createOperationType) {
+                        sqlMapPromises.push(this._mapCreateOperationToSQL(iOperation, rawDataOperation, iRecord));
+                        createdCount++;
+                    } else if (iOperation.type === deleteOperationType) {
+                        sqlMapPromises.push(this._mapDeleteOperationToSQL(iOperation, rawDataOperation, iRecord));
+                    } else {
+                        console.error("-handleAppendTransactionOperation: Operation With Unknown Type: ", iOperation);
+                    }
+                }
+
+                var operation = new DataOperation();
+                operation.referrerId = performTransactionOperation.id;
+                operation.target = performTransactionOperation.target;
+                //Carry on the details needed by the coordinator to dispatch back to client
+                operation.clientId = performTransactionOperation.clientId;
+
+
+                return Promise.all(sqlMapPromises)
+                    .then(function (operationSQL) {
+                        var i, countI, iBatch = "", iStatement,
+                        MaxSQLStatementLength = Infinity,
+                        batchPromises = [],
+                        operationData = "",
+                        executeStatementErrors = [],
+                        executeStatementData = [],
+                        iBatchRawDataOperation,
+                        startIndex,
+                        endIndex,
+                        lastIndex;
+
+
+                        /*
+                            Looks like we're getting some handlePerformTransactionOperation/handleCommitTransactionOperation from intake raw model from the PlummingIntakeDataService, for objectDescriptors we don't handle.
+                            We shouldn't
+                            Until that's sorted out, if operationSQL is not an array or an empty one, because mapping realized we had no business dealing with that, we're going to punt, we shouldn't be part of it:
+                        */
+                       if(!operationSQL || (operationSQL && operationSQL.length === 0)) {
+                           return;
+                       }
+
+                        for(i=0, startIndex=0, countI = operationSQL.length, lastIndex = countI-1;(i<countI); i++) {
+
+                            iStatement = operationSQL[i];
+
+                            if(!iStatement || iStatement === "") continue;
+
+                            if( (i === lastIndex) ) {
+
+                                if(i === lastIndex) {
+                                    if(iBatch.length) {
+                                        iBatch += ";\n";
+                                    }
+                                    iBatch += iStatement;
+                                    iBatch += ";";
+                                    endIndex = i;
+                                } else {
+                                    endIndex = i-1;
+                                }
+                                //Time to execute what we have before it becomes too big:
+                                iBatchRawDataOperation = {};
+                                Object.assign(iBatchRawDataOperation,rawDataOperation);
+                                //console.log("iBatch:",iBatch);
+                                iBatchRawDataOperation.sql = iBatch;
+
+                                //Right now _executeBatchStatement will create symetric response operations if we pass responseOperations as an argument. This is implemented by using the data of the original create/update operations to eventually send it back. We can do without that, but we need to re-test that when we do batch of fetches and re-activate it.
+                                //Now we continue:
+                                iBatch = iStatement;
+                                startIndex = i;
+                            } else {
+                                if(iBatch.length) {
+                                    iBatch += ";\n";
+                                }
+                                iBatch += iStatement;
+                            }
+                        }
+
+
+
+                        // callback - checkout a client
+                        self.readWriteClientPool.connect((err, client, done) => {
+                            if (err) {
+                                operation.type = DataOperation.Type.PerformTransactionFailedOperation;
+                                operation.data = err;
+                                operation.target.dispatchEvent(operation);
+                                return operation;
+                            }
+
+                            const shouldAbort = err => {
+                                if (err) {
+                                  console.error('Error in transaction', err.stack)
+                                  client.query('ROLLBACK', err => {
+                                    if (err) {
+                                      console.error('Error rolling back client', err.stack)
+                                      operation.type = _actAsHandleCommitTransactionOperation ? DataOperation.Type.CommitTransactionFailedOperation: DataOperation.Type.PerformTransactionFailedOperation;
+                                      operation.data = err;
+                                      operation.target.dispatchEvent(operation);
+                                    }
+                                    // release the client back to the pool
+                                    done()
+                                  })
+                                }
+                                return !!err
+                              }
+
+                            client.query('BEGIN', err => {
+                                if (shouldAbort(err)) return
+                                //const queryText = 'INSERT INTO users(name) VALUES($1) RETURNING id'
+                                client.query(iBatchRawDataOperation.sql, undefined, (err, res) => {
+                                    if (shouldAbort(err)) return
+                                    client.query('COMMIT', err => {
+                                        if (err) {
+                                            console.error('Error committing transaction', err.stack)
+                                            operation.type = _actAsHandleCommitTransactionOperation ? DataOperation.Type.CommitTransactionFailedOperation: DataOperation.Type.PerformTransactionFailedOperation;
+                                            operation.data = err;
+                                            operation.target.dispatchEvent(operation);
+                                            return operation;
+                                        } else {
+                                            operation.type = _actAsHandleCommitTransactionOperation ? DataOperation.Type.CommitTransactionCompletedOperation: DataOperation.Type.PerformTransactionCompletedOperation;
+                                            //Not sure what we could return here.
+                                            operation.data = true;
+                                            operation.target.dispatchEvent(operation);
+                                        }
+                                        done()
+                                    })
+                                })
+                            })
+                        });
+
+
+
+                    })
+                    .catch(function (error) {
+                        operation.type = DataOperation.Type.PerformTransactionFailedOperation;
+                        operation.data = err;
+                        operation.target.dispatchEvent(operation);
+                        return operation;
+                    });
+
+
+            })
+        }
+    },
+
+
     handleRollbackTransactionOperation: {
         value: function (rollbackTransactionOperation) {
             /*return */this._handleTransactionEndOperation(rollbackTransactionOperation);
@@ -4889,35 +5351,78 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
     beginTransaction: {
         value: function (params, callback) {
-            //this.awsClient.beginTransaction(params, callback);
-            this.awsClientPromise.then(() => {
-                this.awsClient.send(new BeginTransactionCommand(params), callback);
-            });
+            if(this.useDataAPI) {
+                    //this.awsClient.beginTransaction(params, callback);
+                this.awsClientPromise.then(() => {
+                    this.awsClient.send(new BeginTransactionCommand(params), callback);
+                });
+            } else {
+
+                params.sql = "BEGIN";
+                this.sendDirectStatement(params, callback);
+            }
         }
     },
 
     commitTransaction: {
         value: function (params, callback) {
-            // this.awsClient.commitTransaction(params, callback);
+            if(this.useDataAPI) {
+                // this.awsClient.commitTransaction(params, callback);
+                this.awsClientPromise.then(() => {
+                    this.awsClient.send(new CommitTransactionCommand(params), callback);
+                });
+            } else {
+                params.sql = "COMMIT";
+                this.sendDirectStatement(params, callback);
+            }
+        }
+    },
+
+    sendDirectStatement: {
+        value: function (params, callback) {
             this.awsClientPromise.then(() => {
-                this.awsClient.send(new CommitTransactionCommand(params), callback);
+                // callback - checkout a client
+                this.readWriteClientPool.connect((err, client, done) => {
+                  if (err) {
+                    callback(err);
+                  }
+                  client.query(params.sql, undefined, (err, res) => {
+                    //Returns the client to the pool I assume
+                    done()
+                    if (err) {
+                        callback(err);
+                    } else {
+                        callback(null, res);
+                    }
+                  })
+                });
             });
         }
     },
+
     executeStatement: {
-        value: function (params, callback) {
-            //this.awsClient.executeStatement(params, callback);
-            this.awsClientPromise.then(() => {
-                this.awsClient.send(new ExecuteStatementCommand(params), callback);
-            });
+        value: function executeStatement(params, callback) {
+            if(this.useDataAPI) {
+                //this.awsClient.executeStatement(params, callback);
+                this.awsClientPromise.then(() => {
+                    this.awsClient.send(new ExecuteStatementCommand(params), callback);
+                });
+            } else {
+                this.sendDirectStatement(params, callback);
+            }
         }
     },
     rollbackTransaction: {
-        value: function (params, callback) {
-            //this.awsClient.rollbackTransaction(params, callback);
-            this.awsClientPromise.then(() => {
-                this.awsClient.send(new RollbackTransactionCommand(params), callback);
-            });
+        value: function rollbackTransaction(params, callback) {
+            if(this.useDataAPI) {
+                //this.awsClient.rollbackTransaction(params, callback);
+                this.awsClientPromise.then(() => {
+                    this.awsClient.send(new RollbackTransactionCommand(params), callback);
+                });
+            } else {
+                params.sql = "ROLLBACK";
+                this.sendDirectStatement(params, callback);
+            }
         }
     }
 

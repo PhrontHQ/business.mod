@@ -54,6 +54,10 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
         value: true
     },
 
+    usePerformTransaction: {
+        value: true
+    },
+
     handleMainServiceChange: {
         value: function (mainService) {
             //That only happens once
@@ -77,6 +81,7 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
                 this.addEventListener(DataOperation.Type.UpdateOperation,this,false);
                 this.addEventListener(DataOperation.Type.CreateOperation,this,false);
                 this.addEventListener(DataOperation.Type.DeleteOperation,this,false);
+                this.addEventListener(DataOperation.Type.PerformTransactionOperation,this,false);
                 this.addEventListener(DataOperation.Type.CreateTransactionOperation,this,false);
                 this.addEventListener(DataOperation.Type.AppendTransactionOperation,this,false);
                 this.addEventListener(DataOperation.Type.CommitTransactionOperation,this,false);
@@ -99,6 +104,10 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
                 mainService.addEventListener(DataOperation.Type.CreateTransactionCompletedOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.BatchCompletedOperation,this,false);
                 mainService.addEventListener(DataOperation.Type.BatchFailedOperation,this,false);
+
+                mainService.addEventListener(DataOperation.Type.ChangeFailedOperation,this,false);
+                mainService.addEventListener(DataOperation.Type.PerformTransactionCompletedOperation,this,false);
+
                 mainService.addEventListener(DataOperation.Type.TransactionUpdatedOperation,this,false);
 
                 mainService.addEventListener(DataOperation.Type.AppendTransactionCompletedOperation,this,false);
@@ -210,12 +219,19 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
 
             this._socket = new WebSocket(this.connection.websocketURL+"?session="+base64EncodedSerializedSession);
 
+            //The maxTimeOut of AWS API Gateway.
+            this._socket.reconnectionInterval = this.reconnectionInterval;
+
             this._socket.addEventListener("open", this);
             this._socket.addEventListener("error", this);
             this._socket.addEventListener("close", this);
             this._socket.addEventListener("message", this);
 
         }
+    },
+
+    reconnectionInterval: {
+        value: 29000
     },
 
     _authorizationPolicy: {
@@ -406,6 +422,10 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
         }
     },
 
+    useDataAPI: {
+        value: false
+    },
+
     /*
       overriden to efficently counters the data structure
       returned by AWS RDS DataAPI efficently
@@ -413,13 +433,18 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
       addOneRawData: {
         value: function (stream, rawData, context) {
             //Data coming from Postresql
-            if(Array.isArray(rawData)) {
-                return this.super(stream, JSON.parse(rawData[0].stringValue), context);
-            }
-            //Possible others
-            else {
-                return this.super(stream, rawData, context);
-            }
+                if(!this.useDataAPI) {
+                    return this.super(stream, rawData.to_jsonb, context);
+                } else {
+                    if(Array.isArray(rawData)) {
+                        return this.super(stream, JSON.parse(rawData[0].stringValue), context);
+                    }
+                    //Possible others
+                    else {
+                        return this.super(stream, rawData, context);
+                    }
+
+                }
         }
     },
 
@@ -551,6 +576,12 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
             if(this.handlesType(operation.target)) {
                 this._socketSendOperation(operation);
             }
+        }
+    },
+
+    handlePerformTransactionOperation: {
+        value: function (performTransactionOperation) {
+            this._socketSendOperation(performTransactionOperation);
         }
     },
 
