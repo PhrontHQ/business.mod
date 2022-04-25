@@ -643,9 +643,9 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
                 //     console.log(deserializedOperation);
                 // }
 
-                if(isMod) {
-                    console.log("send message size: "+ this._bytesConverter.convert(this._textEncoder.encode(serializedOperation).length));
-                }
+                // if(isMod) {
+                //     console.log("send message size: "+ this._bytesConverter.convert(this._textEncoder.encode(serializedOperation).length));
+                // }
 
                 this._socket.send(serializedOperation);
             });
