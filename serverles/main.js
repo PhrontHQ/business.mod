@@ -224,15 +224,20 @@ mainModule.exports.connect = exports.connect = (event, context, callback) => {
 };
 
 mainModule.exports.default = exports.default = async (event, context, callback) => {
-    const isModStage = event.requestContext.stage === "mod",
-    timer = isModStage ? new Timer('default') : null;
+//     const isModStage = event.requestContext.stage === "mod",
+//     timer = isModStage ? new Timer('default') : null;
+
+//   const worker = await workerPromise;
+//   if(typeof worker.handleMessage === "function") {
+//       await worker.handleMessage(event, context, function() {
+//         if(timer) console.log(timer.runtimeMsStr());
+//         callback.apply(global,arguments);
+//       });
+//   }
 
   const worker = await workerPromise;
   if(typeof worker.handleMessage === "function") {
-      await worker.handleMessage(event, context, function() {
-        if(timer) console.log(timer.runtimeMsStr());
-        callback.apply(global,arguments);
-      });
+      await worker.handleMessage(event, context, callback);
   }
 
   callback(null, {
