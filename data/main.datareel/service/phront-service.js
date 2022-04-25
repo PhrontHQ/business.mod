@@ -320,7 +320,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 password: this.databaseCredentials.value.password
             };
 
-            console.debug("connectionOptions: ",connectionOptions);
+            //console.debug("connectionOptions: ",connectionOptions);
 
             return new PostgreSQLCLientPool(connectionOptions);
         }
@@ -5384,12 +5384,14 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 // callback - checkout a client
                 this.readWriteClientPool.connect((err, client, done) => {
                   if (err) {
+                    console.error("sendDirectStatement() readWriteClientPool.connect error: ",err);
                     callback(err);
                   }
                   client.query(params.sql, undefined, (err, res) => {
                     //Returns the client to the pool I assume
                     done()
                     if (err) {
+                        console.error("sendDirectStatement() client.query error: ",err);
                         callback(err);
                     } else {
                         callback(null, res);
