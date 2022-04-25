@@ -18,17 +18,9 @@
             "module": {
                 "%": "./collection"
             },
-            "object":{"@": "collection"},
-            "modulePrototype": {"@": "collectionPrototype"},
             "parent":{"@": "objectDescriptor"}
 
         }
-    },
-    "collection": {
-        "object": "./collection"
-    },
-    "collectionPrototype": {
-        "object": "./collection"
     },
     "title": {
         "prototype": "montage/core/meta/property-descriptor",

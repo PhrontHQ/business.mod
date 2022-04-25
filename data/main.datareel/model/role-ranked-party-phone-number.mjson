@@ -13,15 +13,10 @@
             },
             "exportName": "PartyPhoneNumber",
             "module": {
-                "%": "./messaging-channel/party-phone-number"
+                "%": "./role-ranked-party-phone-number"
             },
-            "modulePrototype":{"@": "PartyPhoneNumber"},
-            "object":{"@": "PartyPhoneNumber"},
             "parent":{"@": "ObjectDescriptor"}
         }
-    },
-    "RoleRankedPartyPhoneNumber": {
-        "object": "./role-ranked-party-phone-number"
     },
     "ObjectDescriptor": {
         "object": "./data-object.mjson"

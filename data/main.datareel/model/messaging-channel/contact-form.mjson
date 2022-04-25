@@ -15,7 +15,6 @@
             "module": {
                 "%": "./contact-form"
             },
-            "modulePrototype":{"@": "ContactForm"},
             "object":{"@": "ContactForm"},
             "parent":{"@": "MessagingChannelDescriptor"}
         }

@@ -18,12 +18,8 @@
             "module": {
                 "%": "./app-client"
             },
-            "object":{"@": "AppClient"},
             "parent":{"@": "DataObjectDescriptor"}
         }
-    },
-    "AppClient": {
-        "object": "./app-client"
     },
     "DataObjectDescriptor": {
         "object": "../data-object.mjson"

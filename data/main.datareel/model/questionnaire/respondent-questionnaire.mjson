@@ -22,7 +22,6 @@
                 "%": "./respondent-questionnaire"
             },
             "object": {"@": "questionnairePrototype"},
-            "modulePrototype": {"@": "questionnairePrototype"},
             "parent":{"@": "objectDescriptor"}
         }
     },

@@ -13,12 +13,8 @@
             "exportName": "CollectionRuleSet",
             "module": {
                 "%": "./collection-rule-set"
-            },
-            "modulePrototype":{"@": "collectionRuleSetPrototype"}
+            }
         }
-    },
-    "collectionRuleSetPrototype": {
-        "object": "./collection-rule-set"
     },
 
     "appliedDisjunctively": {

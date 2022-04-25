@@ -18,12 +18,8 @@
             "module": {
                 "%": "./expiring-object-download"
             },
-            "object":{"@": "ExpiringObjectDownloadPrototype"},
             "parent":{"@": "DataObjectDescriptor"}
         }
-    },
-    "ExpiringObjectDownloadPrototype": {
-        "object": "./expiring-object-download"
     },
     "DataObjectDescriptor": {
         "object": "../../data-object.mjson"

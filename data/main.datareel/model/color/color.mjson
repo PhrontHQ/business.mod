@@ -15,13 +15,8 @@
             "module": {
                 "%": "./color"
             },
-            "modulePrototype":{"@": "color"},
-            "object":{"@": "color"},
             "parent":{"@": "ObjectDescriptor"}
         }
-    },
-    "color": {
-        "object": "./color"
     },
     "ObjectDescriptor": {
         "object": "../data-object.mjson"

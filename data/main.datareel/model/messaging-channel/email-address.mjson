@@ -17,7 +17,6 @@
             "module": {
                 "%": "./email-address"
             },
-            "modulePrototype":{"@": "EmailAddress"},
             "object":{"@": "EmailAddress"},
             "parent":{"@": "MessagingChannelDescriptor"}
         }

@@ -13,12 +13,8 @@
             "exportName": "WebSocketSessionConnection",
             "module": {
                 "%": "./web-socket-session-connection"
-            },
-            "object":{"@": "WebSocketSessionConnection"}
+            }
         }
-    },
-    "WebSocketSessionConnection": {
-        "object": "./web-socket-session-connection"
     },
     "connectionId": {
         "prototype": "montage/core/meta/property-descriptor",

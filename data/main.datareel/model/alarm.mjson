@@ -12,7 +12,6 @@
             "module": {
                 "%": "./alarm"
             },
-            "modulePrototype":{"@": "AlarmPrototype"},
             "object":{"@": "AlarmPrototype"},
             "parent":{"@": "eventDescriptor"}
         }

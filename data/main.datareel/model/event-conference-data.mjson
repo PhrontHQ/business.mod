@@ -19,7 +19,6 @@
             "module": {
                 "%": "./event-conference-data"
             },
-            "modulePrototype": {"@": "EventConferenceData"},
             "object": {"@": "EventConferenceData"}
         }
     },

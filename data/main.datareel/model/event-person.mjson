@@ -16,7 +16,6 @@
             "module": {
                 "%": "./event-attendee"
             },
-            "modulePrototype":{"@": "EventPerson"},
             "object":{"@": "EventPerson"}
         }
     },

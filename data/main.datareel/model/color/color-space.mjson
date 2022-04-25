@@ -12,12 +12,8 @@
             "exportName": "ColorSpace",
             "module": {
                 "%": "./color-space"
-            },
-            "object":{"@": "color-space"}
+            }
         }
-    },
-    "color-space": {
-        "object": "./color-space"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",

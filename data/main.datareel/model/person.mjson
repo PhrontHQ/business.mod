@@ -30,7 +30,6 @@
             "module": {
                 "%": "./person"
             },
-            "object":{"@": "person"},
             "parent":{"@": "PartyDescriptor"},
             "userInterfaceDescriptorModules": {
                 "*": {
@@ -45,9 +44,6 @@
             }
 
         }
-    },
-    "person": {
-        "object": "./person"
     },
     "PartyDescriptor": {
         "object": "./party.mjson"

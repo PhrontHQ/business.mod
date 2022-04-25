@@ -15,7 +15,6 @@
             "module": {
                 "%": "./instant-message-address"
             },
-            "modulePrototype":{"@": "InstantMessageAddress"},
             "object":{"@": "InstantMessageAddress"},
             "parent":{"@": "MessagingChannelDescriptor"}
         }

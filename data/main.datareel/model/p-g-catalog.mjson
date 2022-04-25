@@ -14,13 +14,9 @@
             "module": {
                 "%": "./p-g-catalog"
             },
-            "object":{"@": "PGCatalog"},
-            "modulePrototype": {"@": "PGClass"}
+            "object":{"@": "PGCatalog"}
 
         }
-    },
-    "PGClass": {
-        "object": "./p-g-catalog"
     },
     "namespaceName": {
         "prototype": "montage/core/meta/property-descriptor",

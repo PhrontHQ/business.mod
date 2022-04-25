@@ -21,12 +21,8 @@
             "module": {
                 "%": "./object"
             },
-            "object":{"@": "Object"},
             "parent":{"@": "ObjectDescriptor"}
         }
-    },
-    "Object": {
-        "object": "./object"
     },
     "ObjectDescriptor": {
         "object": "../../data-object.mjson"

@@ -28,7 +28,6 @@
             "module": {
                 "%": "./calendar"
             },
-            "modulePrototype":{"@": "CalendarPrototype"},
             "object":{"@": "CalendarPrototype"},
             "parent":{"@": "Object"}
         }

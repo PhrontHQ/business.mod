@@ -18,7 +18,6 @@
             "module": {
                 "%": "./social-profile"
             },
-            "modulePrototype":{"@": "SocialProfile"},
             "object": {"@": "SocialProfile"},
             "parent": {"@": "ObjectDescriptor"}
         }

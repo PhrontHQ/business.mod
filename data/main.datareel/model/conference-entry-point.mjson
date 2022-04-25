@@ -20,7 +20,6 @@
             "module": {
                 "%": "./conference-entry-point"
             },
-            "modulePrototype":{"@": "ConferenceEntryPoint"},
             "object":{"@": "ConferenceEntryPoint"}
         }
     },

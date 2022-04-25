@@ -16,12 +16,8 @@
             "exportName": "UserPool",
             "module": {
                 "%": "./user-pool"
-            },
-            "object":{"@": "UserPool"}
+            }
         }
-    },
-    "UserPool": {
-        "object": "./user-pool"
     },
     "id": {
         "prototype": "montage/core/meta/property-descriptor",

@@ -22,14 +22,10 @@
                 "%": "./country"
             },
             "object":{"@": "country"},
-            "modulePrototype": {"@": "countryPrototype"},
             "parent":{"@": "objectDescriptor"}
         }
     },
     "country": {
-        "object": "./country"
-    },
-    "countryPrototype": {
         "object": "./country"
     },
 

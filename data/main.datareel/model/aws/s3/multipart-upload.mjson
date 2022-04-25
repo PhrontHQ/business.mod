@@ -13,12 +13,8 @@
             "module": {
                 "%": "./multipart-upload"
             },
-            "object":{"@": "MultipartUpload"},
             "parent":{"@": "objectDescriptor"}
         }
-    },
-    "MultipartUpload": {
-        "object": "./multipart-upload"
     },
     "ObjectDescriptor": {
         "object": "../../data-object.mjson"

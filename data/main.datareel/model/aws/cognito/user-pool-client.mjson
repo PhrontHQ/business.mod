@@ -21,12 +21,8 @@
             "exportName": "UserPoolClient",
             "module": {
                 "%": "./user-pool-client"
-            },
-            "object":{"@": "UserPoolClient"}
+            }
         }
-    },
-    "UserPoolClient": {
-        "object": "./user-pool-client"
     },
     "clientId": {
         "prototype": "montage/core/meta/property-descriptor",

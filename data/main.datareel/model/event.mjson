@@ -50,7 +50,6 @@
             "module": {
                 "%": "./event"
             },
-            "modulePrototype":{"@": "EventPrototype"},
             "object":{"@": "EventPrototype"},
             "parent":{"@": "ObjectDescriptor"}
         }

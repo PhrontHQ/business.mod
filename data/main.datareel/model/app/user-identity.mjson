@@ -31,7 +31,6 @@
             "module": {
                 "%": "./user-identity"
             },
-            "object":{"@": "user-identity"},
             "parent":{"@": "IdentityDescriptor"}
         }
     },
@@ -39,9 +38,6 @@
         "object": "montage/data/model/identity.mjson"
     },
 
-    "user-identity": {
-        "object": "./user-identity"
-    },
     "username": {
         "prototype": "montage/core/meta/property-descriptor",
         "values": {

@@ -14,7 +14,6 @@
             "module": {
                 "%": "./party-email-address"
             },
-            "modulePrototype":{"@": "PartyEmailAddress"},
             "object":{"@": "PartyEmailAddress"},
             "parent":{"@": "PartyMessagingChannelDescriptor"}
         }

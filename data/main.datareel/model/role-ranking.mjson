@@ -14,7 +14,6 @@
             "module": {
                 "%": "./role-ranking"
             },
-            "modulePrototype":{"@": "RoleRanking"},
             "object":{"@": "RoleRanking"},
             "parent":{"@": "ObjectDescriptor"}
         }

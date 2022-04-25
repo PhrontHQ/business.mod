@@ -18,7 +18,6 @@
                 "%": "./respondent-questionnaire-answer"
             },
             "object": {"@": "respondentQuestionnaireAnswerPrototype"},
-            "modulePrototype": {"@": "respondentQuestionnaireAnswerPrototype"},
             "parent":{"@": "objectDescriptor"}
 
         }

@@ -23,15 +23,11 @@
                 "%": "./questionnaire"
             },
             "object":{"@": "questionnaire"},
-            "modulePrototype": {"@": "questionnairePrototype"},
             "parent":{"@": "objectDescriptor"}
 
         }
     },
     "questionnaire": {
-        "object": "./questionnaire"
-    },
-    "questionnairePrototype": {
         "object": "./questionnaire"
     },
     "objectDescriptor": {

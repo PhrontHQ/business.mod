@@ -17,12 +17,8 @@
             "module": {
                 "%": "./user-pool"
             },
-            "object":{"@": "UserPool"},
             "parent":{"@": "DataObjectDescriptor"}
         }
-    },
-    "UserPool": {
-        "object": "./user-pool"
     },
     "DataObjectDescriptor": {
         "object": "../data-object.mjson"

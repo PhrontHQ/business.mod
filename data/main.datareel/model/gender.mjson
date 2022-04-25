@@ -13,7 +13,6 @@
             "module": {
                 "%": "./gender"
             },
-            "modulePrototype":{"@": "Gender"},
             "object":{"@": "Gender"},
             "parent":{"@": "ObjectObjectDescriptor"}
         }

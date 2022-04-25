@@ -16,8 +16,7 @@
             "module": {
                 "%": "./p-g-class"
             },
-            "object":{"@": "PGClass"},
-            "modulePrototype": {"@": "PGClass"}
+            "object":{"@": "PGClass"}
 
         }
     },

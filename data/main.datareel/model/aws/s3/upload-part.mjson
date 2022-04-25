@@ -13,12 +13,8 @@
             "module": {
                 "%": "./upload-part"
             },
-            "object":{"@": "UploadPart"},
             "parent":{"@": "objectDescriptor"}
         }
-    },
-    "UploadPart": {
-        "object": "./upload-part"
     },
     "ObjectDescriptor": {
         "object": "../../data-object.mjson"

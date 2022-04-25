@@ -20,14 +20,10 @@
                 "%": "./question"
             },
             "object":{"@": "question"},
-            "modulePrototype": {"@": "questionPrototype"},
             "parent":{"@": "objectDescriptor"}
         }
     },
     "question": {
-        "object": "./question"
-    },
-    "questionPrototype": {
         "object": "./question"
     },
     "objectDescriptor": {

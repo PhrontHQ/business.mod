@@ -19,12 +19,8 @@
             "exportName": "DataObject",
             "module": {
                 "%": "./data-object"
-            },
-            "object":{"@": "object"}
+            }
         }
-    },
-    "object": {
-        "object": "./data-object"
     },
 
     "originId": {

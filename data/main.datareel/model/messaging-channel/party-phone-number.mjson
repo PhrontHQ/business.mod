@@ -14,7 +14,6 @@
             "module": {
                 "%": "./party-phone-number"
             },
-            "modulePrototype":{"@": "PartyPhoneNumber"},
             "object":{"@": "PartyPhoneNumber"},
             "parent":{"@": "PartyMessagingChannelDescriptor"}
         }

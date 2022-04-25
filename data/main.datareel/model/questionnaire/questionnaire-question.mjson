@@ -21,15 +21,11 @@
                 "%": "./questionnaire-question"
             },
             "object":{"@": "questionnaireQuestion"},
-            "modulePrototype": {"@": "questionnairePrototype"},
             "parent":{"@": "objectDescriptor"}
 
         }
     },
     "questionnaireQuestion": {
-        "object": "./questionnaire-question"
-    },
-    "questionnairePrototype": {
         "object": "./questionnaire-question"
     },
     "objectDescriptor": {

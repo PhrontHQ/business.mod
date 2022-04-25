@@ -30,7 +30,6 @@
             "module": {
                 "%": "./phone-number"
             },
-            "modulePrototype":{"@": "phone-number"},
             "object":{"@": "phone-number"},
             "parent":{"@": "MessagingChannelDescriptor"}
         }

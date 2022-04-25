@@ -29,14 +29,10 @@
                 "%": "./answer"
             },
             "object":{"@": "answer"},
-            "modulePrototype": {"@": "answerPrototype"},
             "parent":{"@": "objectDescriptor"}
         }
     },
     "answer": {
-        "object": "./answer"
-    },
-    "answerPrototype": {
         "object": "./answer"
     },
     "objectDescriptor": {

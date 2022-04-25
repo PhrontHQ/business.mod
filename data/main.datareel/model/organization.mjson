@@ -26,7 +26,6 @@
             "module": {
                 "%": "./organization"
             },
-            "object":{"@": "organization"},
             "parent":{"@": "PartyDescriptor"},
             "userInterfaceDescriptorModules": {
                 "*": {
@@ -35,9 +34,6 @@
             }
 
         }
-    },
-    "organization": {
-        "object": "./organization"
     },
 
     "PartyDescriptor": {

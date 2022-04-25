@@ -19,7 +19,6 @@
                 "%": "./variable"
             },
             "object":{"@": "variable"},
-            "modulePrototype": {"@": "variablePrototype"},
             "parent":{"@": "objectDescriptor"}
 
         }

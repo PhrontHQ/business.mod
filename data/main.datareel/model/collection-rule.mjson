@@ -14,12 +14,8 @@
             "exportName": "CollectionRule",
             "module": {
                 "%": "./collection-rule-set"
-            },
-            "modulePrototype":{"@": "collectionRulePrototype"}
+            }
         }
-    },
-    "collectionRulePrototype": {
-        "object": "./collection-rule"
     },
 
     "column": {

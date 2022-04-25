@@ -20,7 +20,6 @@
             "module": {
                 "%": "./party-messaging-channel"
             },
-            "modulePrototype":{"@": "PartyMessagingChannel"},
             "object":{"@": "PartyMessagingChannel"},
             "parent":{"@": "objectDescriptor"}
         }

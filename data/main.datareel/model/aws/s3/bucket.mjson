@@ -13,12 +13,8 @@
             "module": {
                 "%": "./bucket"
             },
-            "object":{"@": "Bucket"},
             "parent":{"@": "ObjectDescriptor"}
         }
-    },
-    "Bucket": {
-        "object": "./bucket"
     },
     "ObjectDescriptor": {
         "object": "../../data-object.mjson"

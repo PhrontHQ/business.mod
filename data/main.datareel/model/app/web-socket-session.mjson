@@ -17,12 +17,8 @@
             "module": {
                 "%": "./web-socket-session"
             },
-            "object":{"@": "WebSocketSession"},
             "parent":{"@": "objectDescriptor"}
         }
-    },
-    "WebSocketSession": {
-        "object": "./web-socket-session"
     },
     "objectDescriptor": {
         "object": "../data-object.mjson"

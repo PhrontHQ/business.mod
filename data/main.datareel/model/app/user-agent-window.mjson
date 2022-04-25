@@ -16,12 +16,8 @@
             "module": {
                 "%": "./user-agent-window"
             },
-            "object":{"@": "UserAgentWindow"},
             "parent":{"@": "DataObjectDescriptor"}
         }
-    },
-    "UserAgentWindow": {
-        "object": "./user-agent-window"
     },
     "DataObjectDescriptor": {
         "object": "../data-object.mjson"

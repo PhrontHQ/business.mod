@@ -16,7 +16,6 @@
             "module": {
                 "%": "./messaging-channel"
             },
-            "modulePrototype":{"@": "MessagingChannel"},
             "object":{"@": "MessagingChannel"},
             "parent":{"@": "objectDescriptor"}
         }

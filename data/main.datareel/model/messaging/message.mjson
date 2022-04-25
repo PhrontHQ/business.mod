@@ -22,7 +22,6 @@
             "module": {
                 "%": "./message"
             },
-            "modulePrototype":{"@": "Message"},
             "object":{"@": "Message"},
             "parent":{"@": "objectDescriptor"}
         }

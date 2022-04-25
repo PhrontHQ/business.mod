@@ -16,7 +16,6 @@
                 "%": "./respondent-questionnaire-variable-value"
             },
             "object": {"@": "respondentQuestionnaireVariableValuePrototype"},
-            "modulePrototype": {"@": "respondentQuestionnaireVariableValuePrototype"},
             "parent":{"@": "objectDescriptor"}
 
         }
