@@ -5,6 +5,16 @@ const Timer = require("../core/timer").Timer;
 
 exports.initMainModuleWithRequire = function( mainModule, mainRequire) {
 
+const successfullResponse = {
+        statusCode: 200,
+        body: 'Success'
+    };
+
+const failedResponse = (statusCode, error) => ({
+        statusCode,
+        body: error
+    });
+
 var mainTimer;
 
 if(process.env.TIME_START) {
@@ -224,21 +234,30 @@ mainModule.exports.connect = exports.connect = (event, context, callback) => {
 };
 
 mainModule.exports.default = exports.default = async (event, context, callback) => {
-//     const isModStage = event.requestContext.stage === "mod",
-//     timer = isModStage ? new Timer('default') : null;
-
-//   const worker = await workerPromise;
-//   if(typeof worker.handleMessage === "function") {
-//       await worker.handleMessage(event, context, function() {
-//         if(timer) console.log(timer.runtimeMsStr());
-//         callback.apply(global,arguments);
-//       });
-//   }
+    const isModStage = event.requestContext.stage === "mod",
+    timer = isModStage ? new Timer('default') : null;
 
   const worker = await workerPromise;
   if(typeof worker.handleMessage === "function") {
-      await worker.handleMessage(event, context, callback);
-  }
+    var result =  await worker.handleMessage(event, context, callback);
+    if(timer) console.log(timer.runtimeMsStr());
+    console.log("default result is ",result);
+    return result;
+
+  } else {
+
+
+//   const worker = await workerPromise;
+//   if(typeof worker.handleMessage === "function") {
+//       await worker.handleMessage(event, context, callback);
+//   }
+
+    return successfullResponse;
+    // callback(null, {
+    //         statusCode: 200,
+    //         body: 'Sent.'
+    //     });
+    }
 
   callback(null, {
       statusCode: 200,
@@ -411,15 +430,17 @@ const _authorize = async (event, context, callback) => {
         if(statements[i].Effect !== "Allow") {
             console.log("main authorize authResponse Deny:",authResponse);
             if(timer) console.log(timer.runtimeMsStr());
-            callback("Unauthorized");
-            return;
+
+            return "Unauthorized";
+            // callback("Unauthorized");
+            // return;
         }
     }
 
     if(timer) console.log(timer.runtimeMsStr());
     //console.log("main authorize authResponse Allow:",authResponse);
-    callback(null, authResponse);
-
+    //callback(null, authResponse);
+    return authResponse;
   };
 
   mainModule.exports.authorize = module.exports.authorize = async (event, context, callback) => {

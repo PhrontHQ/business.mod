@@ -496,7 +496,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             }
 
             //this.operationCoordinator.handleMessage(event, context, callback, this.apiGateway)
-            this.authorizerIdentityFromEvent(event, deserializedOperation)
+            return this.authorizerIdentityFromEvent(event, deserializedOperation)
             .then(function(identity) {
                 var connectionPromise;
 
@@ -571,14 +571,18 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                 return self.operationCoordinator.handleOperation(deserializedOperation, event, context, callback, self.apiGateway);
             })
             .then(() => {
-                callback(null, successfullResponse)
+                //console.log("successfullResponse:",successfullResponse);
+
+                //callback(null, successfullResponse)
+                return successfullResponse;
             })
             .catch((err) => {
                 console.error("Error: ",err, " for event: ",event);
                 /*
                     JSON.stringify() doesn't handle circular references, util.inspect() does
                 */
-                callback(failedResponse(500, util.inspect(err)))
+                //callback(failedResponse(500, util.inspect(err)))
+                return failedResponse(500, util.inspect(err));
             });
 
         }
