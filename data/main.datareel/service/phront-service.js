@@ -3464,9 +3464,10 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
             if(!createSchemaPromise) {
                 var createSchema = `CREATE SCHEMA IF NOT EXISTS "${schemaName}";`,
                 createExtensionPgcryptoSchema = `CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA "${schemaName}";`,
-                instalPostGISSQL = fs.readFileSync(path.resolve(__dirname, "../raw-model/install-postGIS.sql"), 'utf8');
+                // instalPostGISSQL = fs.readFileSync(path.resolve(__dirname, "../raw-model/install-postGIS.sql"), 'utf8');
 
                 createSchemaPromise = Promise.all([
+                    require.async("../raw-model/install-postGIS-sql-format"),
                     require.async("../raw-model/install-postgresql-anyarray_remove-sql-format"),
                     require.async("../raw-model/install-postgresql-anyarray_concat_uniq-sql-format"),
                     require.async("../raw-model/install-postgresql-intervalrange-sql-format"),
@@ -3476,10 +3477,10 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                     var rawDataOperation = {},
                         sql = `${createSchema}
                     ${createExtensionPgcryptoSchema}
-                    ${instalPostGISSQL}
-                    ${resolvedValues[0].format(schemaName)}
+                    ${resolvedValues[0].format("public")}
                     ${resolvedValues[1].format(schemaName)}
-                    ${resolvedValues[2].format(schemaName)}`;
+                    ${resolvedValues[2].format(schemaName)}
+                    ${resolvedValues[3].format(schemaName)}`;
 
                     self.mapOperationToRawOperationConnection(dataOperation, rawDataOperation);
                     rawDataOperation.sql = sql;
