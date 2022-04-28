@@ -259,10 +259,6 @@ mainModule.exports.default = exports.default = async (event, context, callback) 
     //     });
     }
 
-  callback(null, {
-      statusCode: 200,
-      body: 'Sent.'
-  });
 };
 
 mainModule.exports.handlePerformTransaction = exports.handlePerformTransaction  = async function (event, context, callback) {
