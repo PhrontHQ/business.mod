@@ -53,7 +53,8 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 target null now handled in DataOperation deserializedSelf, so we change observing this to mainService for these 4
             */
             mainService.addEventListener(DataOperation.Type.CreateTransactionOperation,this,false);
-            //mainService.addEventListener(DataOperation.Type.AppendTransactionOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.PerformTransactionOperation,this,false);
+                //mainService.addEventListener(DataOperation.Type.AppendTransactionOperation,this,false);
             //mainService.addEventListener(DataOperation.Type.CommitTransactionOperation,this,false);
             //mainService.addEventListener(DataOperation.Type.RollbackTransactionOperation,this,false);
 
@@ -67,6 +68,10 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
             mainService.addEventListener(DataOperation.Type.CreateCompletedOperation,this,false);
             mainService.addEventListener(DataOperation.Type.DeleteFailedOperation,this,false);
             mainService.addEventListener(DataOperation.Type.DeleteCompletedOperation,this,false);
+
+            mainService.addEventListener(DataOperation.Type.PerformTransactionFailedOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.PerformTransactionCompletedOperation,this,false);
+
             mainService.addEventListener(DataOperation.Type.CreateTransactionFailedOperation,this,false);
             mainService.addEventListener(DataOperation.Type.CreateTransactionCompletedOperation,this,false);
             mainService.addEventListener(DataOperation.Type.BatchCompletedOperation,this,false);
@@ -406,10 +411,14 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 (deserializedOperation.type ===  DataOperation.Type.CreateOperation) ||
                 (deserializedOperation.type ===  DataOperation.Type.UpdateOperation) ||
                 (deserializedOperation.type ===  DataOperation.Type.DeleteOperation) ||
+
+                (deserializedOperation.type ===  DataOperation.Type.PerformTransactionOperation) ||
+
                 (deserializedOperation.type ===  DataOperation.Type.CreateTransactionOperation) ||
                 (deserializedOperation.type ===  DataOperation.Type.AppendTransactionOperation) ||
                 (deserializedOperation.type ===  DataOperation.Type.CommitTransactionOperation) ||
                 (deserializedOperation.type ===  DataOperation.Type.RollbackTransactionOperation) ||
+
                 (deserializedOperation.type ===  DataOperation.Type.MergeOperation)
             ) {
                 resultOperationPromise = new Promise(function(resolve,reject) {
@@ -486,25 +495,43 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
         }
     },
 
+
     handleCreateTransactionOperation: {
         value: function (createTransactionOperation) {
+            return this.handleCreateOrPerformTransaction(createTransactionOperation);
+        }
+    },
+
+    handlePerformTransactionOperation: {
+        value: function (performTransactionOperation) {
+            return this.handleCreateOrPerformTransaction(performTransactionOperation);
+        }
+    },
+
+    handleCreateOrPerformTransaction: {
+        value: function (transactionOperation /*old createTransactionOperation*/) {
+
+            const isCreateTransactionOperation = (transactionOperation.type ===  DataOperation.Type.CreateTransactionOperation);
 
             /*
                 To avoid handling transactions that are created by the worker, we're going to only look at the one dispatched on mainService itself:
             */
 
-            if(createTransactionOperation.target !== this.mainService) {
+            if(transactionOperation.target !== this.mainService) {
                 return;
             }
 
             //Need to analyze the array of object descriptors:
-            var objectDescriptorModuleIds = createTransactionOperation.data.objectDescriptors
-                ? createTransactionOperation.data.objectDescriptors
-                : createTransactionOperation.data, //Older format
+            var objectDescriptorModuleIds = isCreateTransactionOperation
+                ? transactionOperation.data.objectDescriptors
+                    ? transactionOperation.data.objectDescriptors
+                    : transactionOperation.data //Older format
+                : (transactionOperation?.data?.operations && Object.keys(transactionOperation.data.operations)),
+
                 i, countI, iObjectDescriptorModuleId, iObjectDescriptor, iObjectDescriptorDataService, iOperation, iObjectDescriptors
                 objectDescriptorByDataService = new Map();
 
-            createTransactionOperation.objectDescriptorByDataService = objectDescriptorByDataService;
+            transactionOperation.objectDescriptorByDataService = objectDescriptorByDataService;
             if(objectDescriptorModuleIds)  {
                 for(i=0, countI = objectDescriptorModuleIds.length; (i<countI); i++) {
                     iObjectDescriptorModuleId = objectDescriptorModuleIds[i];
@@ -529,13 +556,13 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 }
 
 
-                this._pendingOperationById.set(createTransactionOperation.id,createTransactionOperation);
+                this._pendingOperationById.set(transactionOperation.id,transactionOperation);
 
                 /*
                     special case, the createTransaction's objectDescriptors are all for the same RawDataService, we re-target
                 */
                 if(objectDescriptorByDataService.size === 1) {
-                    createTransactionOperation.target = iObjectDescriptorDataService;
+                    transactionOperation.target = iObjectDescriptorDataService;
 
                     /*
                         We know who needs it and that the listener implements that method.
@@ -550,8 +577,9 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
                         createTransactionOperation.target.dispatchEvent(createTransactionOperation);
                     */
-
-                   createTransactionOperation.target.handleCreateTransactionOperation(createTransactionOperation);
+                        isCreateTransactionOperation
+                            ? transactionOperation.target.handleCreateTransactionOperation(transactionOperation)
+                            : transactionOperation.target.handlePerformTransactionOperation(transactionOperation);
 
                     /*
                         The client will get the createtransactioncompleted from the single DataService.
@@ -560,20 +588,26 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
                 } else if(objectDescriptorByDataService.size > 1) {
 
+                    /*
+                        if isCreateTransactionOperation is false and we have multiple RawDataServices involved,
+                        we need to de-multiply and go to a multi-phase transaaction approach.
+
+                    */
+
 
                     let nestedCreateTransactionsById,
                         mapIterator = objectDescriptorByDataService.entries(),
                         iterationOperation,
                         mapIteration;
 
-                        createTransactionOperation.nestedCreateTransactionsById = nestedCreateTransactionsById = new Map();
-                        createTransactionOperation.nestedCreateTransactionsFailedOperations = new Set();
-                        createTransactionOperation.nestedCreateTransactionsCompletedOperations = new Set();
+                        transactionOperation.nestedCreateTransactionsById = nestedCreateTransactionsById = new Map();
+                        transactionOperation.nestedCreateTransactionsFailedOperations = new Set();
+                        transactionOperation.nestedCreateTransactionsCompletedOperations = new Set();
 
                     while ((mapIteration = mapIterator.next().value)) {
                         iterationOperation = new DataOperation();
                         iterationOperation.type = DataOperation.Type.CreateTransactionOperation;
-                        iterationOperation.referrerId = createTransactionOperation.id;
+                        iterationOperation.referrerId = transactionOperation.id;
 
                         iterationOperation.target = mapIteration[0];
                         iterationOperation.data = {
