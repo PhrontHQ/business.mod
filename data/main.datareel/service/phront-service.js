@@ -4638,7 +4638,61 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
     /*
         We listen on the mainService now. If we see our identifier in the appendTransactionOperation data, we take care of it.
     */
-   _orderedTransactionOperations: {
+    _orderedTransactionOperations: {
+        value: function (operations) {
+            if(!Array.isArray(operations)) {
+                return this._orderedTransactionOperationsByModuleId(operations);
+            } else {
+                return this._orderedTransactionOperationsArray(operations);
+            }
+        }
+    },
+
+    _orderedTransactionOperationsArray: {
+        value: function (operations) {
+            var i, countI,
+                iOperation,
+                push = Array.prototype.push,
+                createOperationType = DataOperation.Type.CreateOperation,
+                updateOperationType = DataOperation.Type.UpdateOperation,
+                deleteOperationType = DataOperation.Type.DeleteOperation,
+                createOperations,
+                updateOperations,
+                deleteOperations,
+                orderedOperations = [];
+
+            for(i=0, countI = operations.length; (i<countI); i++) {
+                iOperation = operations[i];
+
+                if(this.handlesType(iOperation.target)) {
+
+                    if(iOperation.type === createOperationType) {
+                        (createOperations || (createOperations = [])).push(iOperation);
+                    }
+                    else if(iOperation.type === updateOperationType) {
+                        (updateOperations || (updateOperations = [])).push(iOperation);
+                    }
+                    else if(iOperation.type === deleteOperationType) {
+                        (deleteOperations || (deleteOperations = [])).push(iOperation);
+                    }
+                }
+            }
+
+            if(createOperations?.length) {
+                push.apply(orderedOperations,createOperations);
+            }
+            if(updateOperations?.length) {
+                push.apply(orderedOperations,updateOperations);
+            }
+            if(deleteOperations?.length) {
+                push.apply(orderedOperations,deleteOperations);
+            }
+
+            return orderedOperations;
+
+        }
+    },
+   _orderedTransactionOperationsByModuleId: {
         value: function (operations) {
             var objectDescriptorModuleIds = Object.keys(operations),
                 mainService = this.mainService,
