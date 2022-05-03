@@ -434,7 +434,17 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
         value: function (stream, rawData, context) {
             //Data coming from Postresql
                 if(!this.useDataAPI) {
-                    return this.super(stream, rawData.to_jsonb, context);
+                    /*
+                        RawData from Postgres is
+                        {
+                            to_jsonb: {
+                                ...Actual RawData
+                            }
+                        }
+
+                        but others aren't
+                    */
+                    return this.super(stream, rawData.to_jsonb || rawData, context);
                 } else {
                     if(Array.isArray(rawData)) {
                         return this.super(stream, JSON.parse(rawData[0].stringValue), context);
@@ -634,7 +644,7 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
             this._socketOpenPromise.then(() => {
                 var serializedOperation = this._serializer.serializeObject(operation);
 
-                //console.log("----> send operation "+serializedOperation);
+                //console.debug("----> send operation "+serializedOperation);
 
                 // if(operation.type === "batch") {
                 //     var deserializer = new Deserializer();
