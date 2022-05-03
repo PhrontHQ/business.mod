@@ -5353,12 +5353,12 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                                 return !!err
                               }
 
-                            client.query('BEGIN', err => {
+                            client.query('BEGIN', (err, res) => {
                                 if (shouldAbort(err)) return
                                 //const queryText = 'INSERT INTO users(name) VALUES($1) RETURNING id'
                                 client.query(iBatchRawDataOperation.sql, undefined, (err, res) => {
                                     if (shouldAbort(err)) return
-                                    client.query('COMMIT', err => {
+                                    client.query('COMMIT', (err, res) => {
                                         if (err) {
                                             console.error('Error committing transaction', err.stack)
                                             operation.type = _actAsHandleCommitTransactionOperation ? DataOperation.Type.CommitTransactionFailedOperation: DataOperation.Type.PerformTransactionFailedOperation;
