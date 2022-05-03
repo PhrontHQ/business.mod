@@ -209,6 +209,8 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
     addMainServiceEventListeners: {
         value: function() {
             this.super();
+            this.mainService.addEventListener(DataOperation.Type.PerformTransactionOperation, this, false);
+            this.mainService.addEventListener(DataOperation.Type.CreateTransactionOperation, this, false);
             this.mainService.addEventListener(DataOperation.Type.AppendTransactionOperation,this,false);
             this.mainService.addEventListener(DataOperation.Type.CommitTransactionOperation,this,false);
             this.mainService.addEventListener(DataOperation.Type.RollbackTransactionOperation,this,false);
