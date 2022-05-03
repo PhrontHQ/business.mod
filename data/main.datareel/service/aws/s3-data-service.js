@@ -415,7 +415,7 @@ exports.S3DataService = S3DataService = AWSRawDataService.specialize(/** @lends 
                         Bucket: bucketName,
                         Key: key,
                         ETag: data.ETag,
-                        Location: `https://${bucketName}.s3-${bucketRegion}.amazonaws.com/${key}`
+                        Location: `https://${bucketName}.s3.amazonaws.com/${key}`
                     };
 
                 })
