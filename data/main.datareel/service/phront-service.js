@@ -5194,8 +5194,10 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 This needs to be cleaned up, one possibility is with our Liaison RawDataService on the client dispatching the transaction events directly in the worker, which would eliminate for RawDataServiced in the DataWorker differences between the transaction being initiated from outside vs from inside of it.
 
                 In the meantime, if the target is ourselves and the currentTarget is not, then it means we've already done the job.
+
+                Unfortunately, because OperationCoordinator right now does the triage of data operations going to each raw data service,
             */
-                if(performTransactionOperation.target === this && performTransactionOperation.currentTarget !== this) {
+                if(!performTransactionOperation.clientId && performTransactionOperation.target === this && performTransactionOperation.currentTarget !== this) {
                     return;
                 }
 
