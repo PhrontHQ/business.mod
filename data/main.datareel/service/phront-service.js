@@ -157,14 +157,15 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
                 Either each needs to observe each types, kinda kills event delegation optimization, so we need to implement an alterative to Target.nextTarget to be able to either return an array, meaning that it could end up bifurcating, or we add an alternative called composedPath (DOM method name on Event), propagationPath (better) or targetPropagationPath, or nextTargetPath, that includes eveything till the top.
             */
-            this.addEventListener(DataOperation.Type.ReadOperation,this,false);
-            this.addEventListener(DataOperation.Type.UpdateOperation,this,false);
-            this.addEventListener(DataOperation.Type.CreateOperation,this,false);
-            this.addEventListener(DataOperation.Type.DeleteOperation,this,false);
-            this.addEventListener(DataOperation.Type.CreateTransactionOperation,this,false);
-            this.addEventListener(DataOperation.Type.AppendTransactionOperation,this,false);
-            this.addEventListener(DataOperation.Type.CommitTransactionOperation,this,false);
-            this.addEventListener(DataOperation.Type.RollbackTransactionOperation,this,false);
+            // this.addEventListener(DataOperation.Type.ReadOperation,this,false);
+            // this.addEventListener(DataOperation.Type.UpdateOperation,this,false);
+            // this.addEventListener(DataOperation.Type.CreateOperation,this,false);
+            // this.addEventListener(DataOperation.Type.DeleteOperation,this,false);
+            // this.addEventListener(DataOperation.Type.PerformTransactionOperation,this,false);
+            // this.addEventListener(DataOperation.Type.CreateTransactionOperation,this,false);
+            // this.addEventListener(DataOperation.Type.AppendTransactionOperation,this,false);
+            // this.addEventListener(DataOperation.Type.CommitTransactionOperation,this,false);
+            // this.addEventListener(DataOperation.Type.RollbackTransactionOperation,this,false);
 
             /*
                 Kickstart loading dependencies as we always need this data service:
