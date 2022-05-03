@@ -52,8 +52,8 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
             /*
                 target null now handled in DataOperation deserializedSelf, so we change observing this to mainService for these 4
             */
-            mainService.addEventListener(DataOperation.Type.CreateTransactionOperation,this,false);
-            mainService.addEventListener(DataOperation.Type.PerformTransactionOperation,this,false);
+            mainService.addEventListener(DataOperation.Type.CreateTransactionOperation, this, false);
+            mainService.addEventListener(DataOperation.Type.PerformTransactionOperation, this, false);
                 //mainService.addEventListener(DataOperation.Type.AppendTransactionOperation,this,false);
             //mainService.addEventListener(DataOperation.Type.CommitTransactionOperation,this,false);
             //mainService.addEventListener(DataOperation.Type.RollbackTransactionOperation,this,false);
