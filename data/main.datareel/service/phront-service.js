@@ -1049,7 +1049,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
     mapReadOperationToRawReadOperation: {
 
-        value: function (readOperation, rawDataOperation) {
+        value: function mapReadOperationToRawReadOperation(readOperation, rawDataOperation) {
 
             /*
                 Until we solve more efficiently (lazily) how RawDataServices listen for and receive data operations, we have to check wether we're the one to deal with this:
