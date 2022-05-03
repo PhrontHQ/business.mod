@@ -69,6 +69,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
             mainService.addEventListener(DataOperation.Type.DeleteFailedOperation,this,false);
             mainService.addEventListener(DataOperation.Type.DeleteCompletedOperation,this,false);
 
+            mainService.addEventListener(DataOperation.Type.PerformTransactionProgressOperation,this,false);
             mainService.addEventListener(DataOperation.Type.PerformTransactionFailedOperation,this,false);
             mainService.addEventListener(DataOperation.Type.PerformTransactionCompletedOperation,this,false);
 
@@ -561,8 +562,7 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 /*
                     special case, the createTransaction's objectDescriptors are all for the same RawDataService, we re-target
                 */
-                if(objectDescriptorByDataService.size === 1) {
-                    transactionOperation.target = iObjectDescriptorDataService;
+                // if(objectDescriptorByDataService.size === 1) {
 
                     /*
                         We know who needs it and that the listener implements that method.
@@ -577,22 +577,32 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
 
                         createTransactionOperation.target.dispatchEvent(createTransactionOperation);
                     */
+
+                    /*
+                        transactionOperation.target = iObjectDescriptorDataService;
                         isCreateTransactionOperation
                             ? transactionOperation.target.handleCreateTransactionOperation(transactionOperation)
                             : transactionOperation.target.handlePerformTransactionOperation(transactionOperation);
+                    */
+                        // iObjectDescriptorDataService.dispatchEvent(transactionOperation);
 
                     /*
                         The client will get the createtransactioncompleted from the single DataService.
                         We don't need to stay in the middle.
                     */
 
-                } else if(objectDescriptorByDataService.size > 1) {
+                // } else
+
+                if(objectDescriptorByDataService.size > 1) {
+
 
                     /*
                         if isCreateTransactionOperation is false and we have multiple RawDataServices involved,
-                        we need to de-multiply and go to a multi-phase transaaction approach.
+                        we need to de-multiply and go to a multi-phase transaction approach.
 
+                        So we stop the current dispatch of transactionOperation and we take control.
                     */
+                    transactionOperation.stopImmediatePropagation();
 
 
                     let nestedCreateTransactionsById,
