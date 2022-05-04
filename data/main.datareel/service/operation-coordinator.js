@@ -308,10 +308,10 @@ exports.OperationCoordinator = Target.specialize(/** @lends OperationCoordinator
                 //console.log("handleEvent:",operation);
                 this.dispatchOperationToConnectionClientId(operation,this.gateway,operation.clientId)
                 .then(function(operation) {
-                    if(operation.type.endsWith("CompletedOperation") || operation.type.endsWith("FailedOperation")) {
+                    // if(operation.type.endsWith("CompletedOperation") || operation.type.endsWith("FailedOperation")) {
                         //resolve
                         self._operationPromisesByReferrerId.get(operation.referrerId)[0]();
-                    }
+                    //}
                 },function(error) {
                     //reject
                     self._operationPromisesByReferrerId.get(operation.referrerId)[1](error);
