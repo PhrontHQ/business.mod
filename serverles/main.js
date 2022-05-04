@@ -241,7 +241,7 @@ mainModule.exports.default = exports.default = async (event, context, callback) 
   if(typeof worker.handleMessage === "function") {
     var result =  await worker.handleMessage(event, context, callback);
     if(timer) console.log(timer.runtimeMsStr());
-    console.log("default result is ",result);
+    // console.log("default result is ",result);
     return result;
 
   } else {
