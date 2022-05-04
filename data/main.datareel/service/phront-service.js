@@ -5183,7 +5183,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
     */
     handlePerformTransactionOperation: {
         value: function (performTransactionOperation, _actAsHandleCommitTransactionOperation) {
-            console.debug("handlePerformTransactionOperation: ",performTransactionOperation, _actAsHandleCommitTransactionOperation);
+            // console.debug("handlePerformTransactionOperation: ",performTransactionOperation, _actAsHandleCommitTransactionOperation);
 
             /*
                 Right now we're receiving this twice for saveChanges happening from inside the Worker.
