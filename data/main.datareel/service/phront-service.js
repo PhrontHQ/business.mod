@@ -4104,6 +4104,10 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 iPropertyDescriptor = mapping.propertyDescriptorForRawPropertyName(iKey);
                 iRawType = this.mapObjectDescriptorRawPropertyToRawType(objectDescriptor, iKey, mapping, iPropertyDescriptor);
 
+                if(iValue === undefined) {
+                    console.debug("undefined iValue for objectDescriptor "+objectDescriptor.name+" iKey: "+iKey+", iPropertyDescriptor:",iPropertyDescriptor+", iRawType:", iRawType);
+                }
+
                 if (iValue === null) {
                     iAssignment = `${iKeyEscaped} = NULL`;
                 } else if((iHasAddedValue = iValue.hasOwnProperty("addedValues")) || (iHasRemovedValues = iValue.hasOwnProperty("removedValues")) ) {
