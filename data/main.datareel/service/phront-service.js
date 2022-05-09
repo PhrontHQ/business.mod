@@ -3160,8 +3160,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
     )
     TABLESPACE pg_default;
 
-    ALTER TABLE ${schemaName}."${tableName}"
-        OWNER to ${owner};
+    /*ALTER TABLE ${schemaName}."${tableName}" OWNER to ${owner};*/
     CREATE UNIQUE INDEX "${tableName}_id_idx" ON "${schemaName}"."${tableName}" (id);
     `;
 
