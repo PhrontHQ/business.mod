@@ -151,9 +151,9 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             currentEnvironment.userAgentIPAddress = userIp;
             currentEnvironment.clientId = event.requestContext.connectionId;
 
-            if(stage === "mod") {
-                console.log("setEnvironmentFromEvent: ",event);
-            }
+            // if(stage === "mod") {
+            //     console.log("setEnvironmentFromEvent: ",event);
+            // }
 
         }
     },
@@ -169,9 +169,9 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                 identityPromise, authorizeConnectionOperation,
                 self = this;
 
-            if(isModStage) {
-                console.log("handleAuthorize: event:", event, " context:", context, "callback: ", callback);
-            }
+            // if(isModStage) {
+            //     console.log("handleAuthorize: event:", event, " context:", context, "callback: ", callback);
+            // }
 
 
             if(base64EncodedSerializedSession) {
@@ -468,6 +468,22 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                 return Promise.reject("Unknown message: ",serializedOperation);
             }
 
+            if(Array.isArray(deserializedOperation)) {
+                console.log("message contains "+deserializedOperation.length+" operations");
+                for(var i=0, countI = deserializedOperation.length, promises = new Array(deserializedOperation.length); (i<countI); i++) {
+                    promises[i] = (this.handleOperation(deserializedOperation[i], event, context, callback));
+                }
+                return Promise.all(promises);
+            } else {
+                console.log("message contains 1 operations");
+                return this.handleOperation(deserializedOperation, event, context, callback);
+            }
+        }
+    },
+
+    handleOperation: {
+            value: function(deserializedOperation, event, context, callback) {
+
             //console.debug("DataWorker received: ",deserializedOperation);
 
             if(deserializedOperation && !deserializedOperation.target && deserializedOperation.dataDescriptor) {
@@ -560,7 +576,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
                 return connectionPromise;
             })
-            .then(function(clientId) {
+            .then((clientId) => {
                 /*
                     If we come from http, we're not going to have it from the gateway,
                     But we expect the client to have it
@@ -568,7 +584,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                 // if(!currentEnvironment.clientId) {
                 //     currentEnvironment.clientId = deserializedOperation.clientId;
                 // }
-                return self.operationCoordinator.handleOperation(deserializedOperation, event, context, callback, self.apiGateway);
+                return this.operationCoordinator.handleOperation(deserializedOperation, event, context, callback, this.apiGateway);
             })
             .then(() => {
                 //console.log("successfullResponse:",successfullResponse);

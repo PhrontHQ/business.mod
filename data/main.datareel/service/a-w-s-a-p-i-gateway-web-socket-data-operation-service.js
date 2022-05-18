@@ -46,6 +46,8 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
             this._serializer = new MontageSerializer().initWithRequire(require);
             this._deserializer = new Deserializer();
 
+            this._readOperationQueue = [];
+
             return this;
         }
     },
@@ -581,10 +583,40 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
         }
     },
 
+    _readOperationQueue: {
+        value: undefined
+    },
+
     handleReadOperation: {
         value: function (operation) {
             if(this.handlesType(operation.target)) {
-                this._socketSendOperation(operation);
+                this._readOperationQueue.push(operation);
+                if (this._readOperationQueue.length === 1) {
+                    queueMicrotask(() => {
+                        var _operation;
+                        if(this._readOperationQueue.length > 1) {
+                            // _operation = new DataOperation();
+                            // _operation.type = DataOperation.Type.BatchOperation;
+                            // // batchOperation.target= transactionObjecDescriptors,
+                            // _operation.data = {
+                            //         batchedOperations: this._dispatchOperationQueue
+                            // };
+                            // this._pendingOperationById.set(_operation.id, _operation);
+                            this._socketSendOperation(this._readOperationQueue);
+
+                        } else {
+                            this._socketSendOperation(this._readOperationQueue[0]);
+
+                        }
+
+                        // var serializedOperation = this._serializer.serializeObject(_operation);
+                        // this._socket.send(serializedOperation);
+                        this._readOperationQueue = [];
+
+                    });
+                }
+
+                //this._socketSendOperation(operation);
             }
         }
     },
