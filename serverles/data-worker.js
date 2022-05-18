@@ -475,7 +475,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                 }
                 return Promise.all(promises);
             } else {
-                console.log("message contains 1 operations");
+                // console.log("message contains 1 operations");
                 return this.handleOperation(deserializedOperation, event, context, callback);
             }
         }
