@@ -237,26 +237,33 @@ mainModule.exports.default = exports.default = async (event, context, callback) 
     const isModStage = event.requestContext.stage === "mod",
     timer = isModStage ? new Timer('default') : null;
 
-  const worker = await workerPromise;
-  if(typeof worker.handleMessage === "function") {
-    var result =  await worker.handleMessage(event, context, callback);
-    if(timer) console.log(timer.runtimeMsStr());
-    // console.log("default result is ",result);
-    return result;
+    const worker = await workerPromise;
+    if(typeof worker.handleMessage === "function") {
+        try {
+            /*
+                If event contains multiple operations, the result would be an array,
+                which doesn't mean anything for the gateway, so we return successfullResponse or failedResponse
+            */
+            var result =  await worker.handleMessage(event, context, callback);
+            if(timer) console.log(timer.runtimeMsStr());
+        } catch(error) {
+            console.error("worker.handleMessage error for event:",event, "context: ", context);
+            return failedResponse(500, error);
+        }
+        // console.log("default result is ",result);
+        return successfullResponse;
 
-  } else {
+    } else {
+        //   const worker = await workerPromise;
+        //   if(typeof worker.handleMessage === "function") {
+        //       await worker.handleMessage(event, context, callback);
+        //   }
 
-
-//   const worker = await workerPromise;
-//   if(typeof worker.handleMessage === "function") {
-//       await worker.handleMessage(event, context, callback);
-//   }
-
-    return successfullResponse;
-    // callback(null, {
-    //         statusCode: 200,
-    //         body: 'Sent.'
-    //     });
+        return successfullResponse;
+        // callback(null, {
+        //         statusCode: 200,
+        //         body: 'Sent.'
+        //     });
     }
 
 };
