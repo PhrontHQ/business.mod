@@ -321,7 +321,7 @@ module.exports = {
 
             if(!propertyDescriptor) {
                 //Might be a rawDataProeprty already, we check:
-                var rawDataMappingRule = dataMapping.rawDataMappingRules.get(propertyName);
+                var rawDataMappingRule = dataMapping.rawDataMappingRuleForPropertyName(propertyName);
 
                 if(rawDataMappingRule) {
                     propertyDescriptor = objectDescriptor.propertyDescriptorForName(rawDataMappingRule.sourcePath);
@@ -691,8 +691,8 @@ module.exports = {
                 ? leftDataSetAlias
                 : tableName,
                 rawPropertyValue = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyName),
-                // rule = dataMapping.rawDataMappingRules.get(rawPropertyValue),
-                objectRule = dataMapping.objectMappingRules.get(propertyName),
+                // rule = dataMapping.rawDataMappingRuleForPropertyName(rawPropertyValue),
+                objectRule = dataMapping.objectMappingRuleForPropertyName(propertyName),
                 propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyName),
                 isLocalizable = propertyDescriptor && propertyDescriptor.isLocalizable,
                 //For backward compatibility, propertyDescriptor.valueDescriptor still returns a Promise....
@@ -709,7 +709,7 @@ module.exports = {
                 joinType = SQLJoinType.Join,
                 result;
 
-            if(!propertyDescriptor && !objectRule && !dataMapping.rawDataMappingRules.get(propertyName) && !dataMapping.isPrimaryKeyComponent(propertyName)) {
+            if(!propertyDescriptor && !objectRule && !dataMapping.rawDataMappingRuleForPropertyName(propertyName) && !dataMapping.isPrimaryKeyComponent(propertyName)) {
                 throw "Can't stringify Unknown property `"+propertyName+"', no propertyDescriptor nor objectMappingRules found for objectDescriptor '"+objectDescriptor.name+"' in expression qualifying '"+dataMappings[0].objectDescriptor.name+"'";
             }
 
@@ -1066,7 +1066,7 @@ module.exports = {
                     // var propertyValue = syntax.args[1].value,
                     //     objectDescriptor = dataMapping.objectDescriptor,
                     //     rawPropertyValue = dataMapping.mapObjectPropertyNameToRawPropertyName(propertyValue),
-                    //     rule = dataMapping.rawDataMappingRules.get(rawPropertyValue),
+                    //     rule = dataMapping.rawDataMappingRuleForPropertyName(rawPropertyValue),
                     //     propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyValue),
                     //     //For backward compatibility, propertyDescriptor.valueDescriptor still returns a Promise....
                     //     //propertyValueDescriptor = propertyDescriptor.valueDescriptor;
@@ -1126,7 +1126,7 @@ module.exports = {
                         escapedValue;
 
                     propertyName = propertyValueSyntax.args[1].value;
-                    objectRule = dataMapping.objectMappingRules.get(propertyName);
+                    objectRule = dataMapping.objectMappingRuleForPropertyName(propertyName);
 
 
                     if(objectRule) {

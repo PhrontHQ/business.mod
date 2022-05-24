@@ -147,7 +147,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
             }
 
             this._columnNamesByObjectDescriptor = new Map();
-            this._schemaDescriptorByObjectDescriptor = new Map();
+            this._rawDataDescriptorByObjectDescriptor = new Map();
 
             /*
                 Shifted from listening to mainService to getting events on ourselve,
@@ -808,7 +808,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
                 } else {
                     if(aPropertyDescriptor) {
-                        var rawDataMappingRule = mapping.rawDataMappingRules.get(aPropertyDescriptor.name),
+                        var rawDataMappingRule = mapping.rawDataMappingRuleForPropertyName(aPropertyDescriptor.name),
                         reverter = rawDataMappingRule ? rawDataMappingRule.reverter : null;
                         /*
                             We really need to use some kind of mapping/converter to go SQL, rather than inlining things like that...
@@ -1194,7 +1194,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
             for(i=0, countI = readExpressions.length;(i<countI); i++) {
                 iExpression = readExpressions[i];
                 iRawPropertyNames = mapping.mapObjectPropertyNameToRawPropertyNames(iExpression);
-                iObjectRule = mapping.objectMappingRules.get(iExpression);
+                iObjectRule = mapping.objectMappingRuleForPropertyName(iExpression);
                 iObjectRuleConverter = iObjectRule && iObjectRule.converter;
                 //iPropertyDescriptor = iObjectRule && iObjectRule.propertyDescriptor;
                 iPropertyDescriptor = objectDescriptor.propertyDescriptorNamed(iExpression);
@@ -1205,7 +1205,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 iValueDescriptorReferenceMapping = iValueDescriptorReference && this.mappingForType(iValueDescriptorReference);
 
                 if(iValueDescriptorReference) {
-                    iValueSchemaDescriptor = this.schemaDescriptorForObjectDescriptor(iValueDescriptorReference);
+                    iValueSchemaDescriptor = this.rawDataDescriptorForObjectDescriptor(iValueDescriptorReference);
                 }
 
                 iIsInlineReadExpression = (
@@ -1503,7 +1503,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                                         we find our primaryKey on the other side, we can just use the converter since we have the primary key value:
                                     */
                                     iInversePropertyDescriptor = iValueDescriptorReference && iValueDescriptorReference.propertyDescriptorForName(iPropertyDescriptor.inversePropertyName);
-                                    iInversePropertyObjectRule = iValueDescriptorReferenceMapping && iValueDescriptorReferenceMapping.objectMappingRules.get(iPropertyDescriptor.inversePropertyName);
+                                    iInversePropertyObjectRule = iValueDescriptorReferenceMapping && iValueDescriptorReferenceMapping.objectMappingRuleForPropertyName(iPropertyDescriptor.inversePropertyName);
                                     iInversePropertyObjectRuleConverter = iInversePropertyObjectRule && iInversePropertyObjectRule.converter;
 
                                     if(iInversePropertyDescriptor) {
@@ -2180,7 +2180,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
             if(mapping.rawDataPrimaryKeys.includes(rawProperty)) {
                 return "uuid";
             } else {
-                var schemaDescriptor = this.schemaDescriptorForObjectDescriptor(objectDescriptor),
+                var schemaDescriptor = this.rawDataDescriptorForObjectDescriptor(objectDescriptor),
                     schemaPropertyDescriptor = schemaDescriptor && schemaDescriptor.propertyDescriptorForName(rawProperty);
 
                 if(schemaPropertyDescriptor) {
@@ -2190,7 +2190,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                         @marchant: Now that we've built the schemaDescriptor, we shouldn't need to do this anymore, keeping in case I'm wrong
                     */
                     if(!propertyDescriptor) {
-                        mappingRule = mapping.rawDataMappingRules.get(rawProperty);
+                        mappingRule = mapping.objectMappingRuleForPropertyName(rawProperty);
                         // propertyName = mappingRule ? mappingRule.sourcePath : rawProperty;
                         // propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyName);
                         propertyDescriptor = mapping.propertyDescriptorForRawPropertyName(rawProperty);
@@ -2805,34 +2805,19 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
     },
 
 
-    /**
-     * Method called by mappings when asked for a schemaDescriptor and don't have one.
-     *
-     * @method
-     * @argument {Object} mapping        - the mapping object
-     *                                     to assign the values.
-     * @returns {ObjectDescriptor}  -
-     */
-    mappingRequestsSchemaDescriptor: {
-        value: function (mapping) {
-            return this.buildSchemaDescriptorForObjectDescriptor(mapping.objectDescriptor);
-        }
-    },
-
-
-    _schemaDescriptorByObjectDescriptor: {
+    _rawDataDescriptorByObjectDescriptor: {
         value: undefined
     },
 
-    schemaDescriptorForObjectDescriptor: {
+    rawDataDescriptorForObjectDescriptor: {
         value: function(objectDescriptor) {
-            return this._schemaDescriptorByObjectDescriptor.get(objectDescriptor) || this.buildSchemaDescriptorForObjectDescriptor(objectDescriptor);
+            return this._rawDataDescriptorByObjectDescriptor.get(objectDescriptor) || this.buildRawDataDescriptorForObjectDescriptor(objectDescriptor);
         }
     },
 
     _buildColumnNamesForObjectDescriptor:  {
         value: function(objectDescriptor) {
-            var schemaDescriptor = this.schemaDescriptorForObjectDescriptor(objectDescriptor),
+            var schemaDescriptor = this.rawDataDescriptorForObjectDescriptor(objectDescriptor),
                 colunmns = new Set(schemaDescriptor.propertyDescriptorNamesIterator);
 
             this._columnNamesByObjectDescriptor.set(objectDescriptor,colunmns);
@@ -2841,7 +2826,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
         }
     },
 
-    buildSchemaDescriptorForObjectDescriptor: {
+    buildRawDataDescriptorForObjectDescriptor: {
         value: function(objectDescriptor) {
             var mapping = objectDescriptor && this.mappingForType(objectDescriptor);
 
@@ -2901,8 +2886,8 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 isMapPropertyDescriptor = (iPropertyDescriptor._keyDescriptorReference != null || iPropertyDescriptor.keyType != null);
                 iPropertyDescriptorValueDescriptor = iPropertyDescriptor._valueDescriptorReference;
                 iDescendantDescriptors = iPropertyDescriptorValueDescriptor ? iPropertyDescriptorValueDescriptor.descendantDescriptors : null;
-                iObjectRule = mapping.objectMappingRules.get(iPropertyDescriptor.name);
-                iRule = iObjectRule && mapping.rawDataMappingRules.get(iObjectRule.sourcePath);
+                iObjectRule = mapping.objectMappingRuleForPropertyName(iPropertyDescriptor.name);
+                iRule = iObjectRule && mapping.rawDataMappingRuleForPropertyName(iObjectRule.sourcePath);
                 converterforeignDescriptorMappings = iObjectRule && iObjectRule.converter && iObjectRule.converter.foreignDescriptorMappings;
                 iObjectRuleSourcePathSyntax = iObjectRule && iObjectRule.sourcePathSyntax;
 
@@ -3092,7 +3077,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 }
             }
 
-            this._schemaDescriptorByObjectDescriptor.set(objectDescriptor,schemaDescriptor);
+            this._rawDataDescriptorByObjectDescriptor.set(objectDescriptor,schemaDescriptor);
             return schemaDescriptor;
         }
     },
@@ -3115,7 +3100,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                     mapping = objectDescriptor && this.mappingForType(objectDescriptor),
                     parentDescriptor,
                     tableName = this.tableForObjectDescriptor(objectDescriptor),
-                    schemaDescriptor = this.schemaDescriptorForObjectDescriptor(objectDescriptor),
+                    schemaDescriptor = this.rawDataDescriptorForObjectDescriptor(objectDescriptor),
                     propertyDescriptors = Array.from(schemaDescriptor.propertyDescriptors),
                     i, countI, iPropertyDescriptor, iPropertyDescriptorValueDescriptor, iDescendantDescriptors, iObjectRule, iRule, iIndex,
                     //Hard coded for now, should be derived from a mapping telling us n which databaseName that objectDescriptor is stored
@@ -3177,8 +3162,8 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                     //.valueDescriptor still returns a promise
                     iPropertyDescriptorValueDescriptor = iPropertyDescriptor._valueDescriptorReference;
                     iDescendantDescriptors = iPropertyDescriptorValueDescriptor ? iPropertyDescriptorValueDescriptor.descendantDescriptors : null;
-                    iObjectRule = mapping.objectMappingRules.get(iPropertyDescriptor.name);
-                    iRule = iObjectRule && mapping.rawDataMappingRules.get(iObjectRule.sourcePath);
+                    iObjectRule = mapping.objectMappingRuleForPropertyName(iPropertyDescriptor.name);
+                    iRule = iObjectRule && mapping.rawDataMappingRuleForPropertyName(iObjectRule.sourcePath);
                     converterforeignDescriptorMappings = iObjectRule && iObjectRule.converter && iObjectRule.converter.foreignDescriptorMappings;
                     iObjectRuleSourcePathSyntax = iObjectRule && iObjectRule.sourcePathSyntax;
 
@@ -3333,8 +3318,8 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 //                 //.valueDescriptor still returns a promise
 //                 iPropertyDescriptorValueDescriptor = iPropertyDescriptor._valueDescriptorReference;
 //                 iDescendantDescriptors = iPropertyDescriptorValueDescriptor ? iPropertyDescriptorValueDescriptor.descendantDescriptors : null;
-//                 iObjectRule = mapping.objectMappingRules.get(iPropertyDescriptor.name);
-//                 iRule = iObjectRule && mapping.rawDataMappingRules.get(iObjectRule.sourcePath);
+//                 iObjectRule = mapping.objectMappingRuleForPropertyName(iPropertyDescriptor.name);
+//                 iRule = iObjectRule && mapping.objectMappingRuleForPropertyName(iObjectRule.sourcePath);
 //                 converterforeignDescriptorMappings = iObjectRule && iObjectRule.converter && iObjectRule.converter.foreignDescriptorMappings;
 //                 iObjectRuleSourcePathSyntax = iObjectRule && iObjectRule.sourcePathSyntax;
 
@@ -3738,7 +3723,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 }
 
                 var objectDescriptor = createOperation.target,
-                    schemaDescriptor = self.schemaDescriptorForObjectDescriptor(objectDescriptor),
+                    schemaDescriptor = self.rawDataDescriptorForObjectDescriptor(objectDescriptor),
                     tableName = self.tableForObjectDescriptor(objectDescriptor),
                     schemaName = rawDataOperation.schema,
                     recordKeys = Object.keys(record),

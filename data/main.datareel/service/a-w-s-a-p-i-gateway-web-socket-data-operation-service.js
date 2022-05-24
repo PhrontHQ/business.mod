@@ -300,7 +300,7 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
 
     //         return valueDescriptor.then( function(valueDescriptor) {
     //             var mapping = objectDescriptor && self.mappingForType(objectDescriptor),
-    //                 objectRule = mapping && mapping.objectMappingRules.get(propertyName),
+    //                 objectRule = mapping && mapping.objectMappingRuleForPropertyName(propertyName),
     //                 snapshot = self.snapshotForObject(object),
     //                 objectRuleConverter = objectRule && objectRule.converter;
 

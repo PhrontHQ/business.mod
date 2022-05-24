@@ -692,7 +692,7 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
 
             return valueDescriptor.then( function(valueDescriptor) {
                 var mapping = objectDescriptor && self.mappingForType(objectDescriptor),
-                    objectRule = mapping && mapping.objectMappingRules.get(propertyName),
+                    objectRule = mapping && mapping.objectMappingRuleForPropertyName(propertyName),
                     snapshot = self.snapshotForObject(object),
                     objectRuleConverter = objectRule && objectRule.converter;
 
@@ -754,12 +754,11 @@ exports.PhrontClientService = PhrontClientService = RawDataService.specialize(/*
     _mapObjectDescriptorReadExpressionToRawReadExpression: {
         value: function(objectDescriptor, readExpressions,rawReadExpressions) {
             var i, countI, iExpression, iRule, iPropertyDescriptor,
-            mapping = this.mappingForType(objectDescriptor),
-            rawDataMappingRules = mapping.rawDataMappingRules;
+            mapping = this.mappingForType(objectDescriptor);
 
             for(i=0, countI = readExpressions && readExpressions.length;(i<countI);i++) {
                 iExpression = readExpressions[i];
-                rule = rawDataMappingRules.get(iExpression);
+                rule = mapping.rawDataMappingRuleForPropertyName(iExpression);
                 propertyName = rule ? rule.sourcePath : iExpression;
                 //propertyDescriptor = objectDescriptor.propertyDescriptorForName(propertyName);
 
