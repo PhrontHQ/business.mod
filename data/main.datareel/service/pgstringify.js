@@ -221,15 +221,16 @@ module.exports = {
                     chain = stringifier(syntax, scope, parent, this, dataMappings, locales, rawExpressionJoinStatements, currentAliasPrefix);
 
                 } else {
-                    chain = syntax.type;
-                    chain += "(";
+                    chain = `${syntax.type}(`;
 
                     args = syntax.args;
                     for(i=1, countI = args.length;i<countI;i++) {
-                        chain += i > 1 ? ", " : "";
-                        chain += this.stringifyChild(args[i],scope, dataMappings, locales, rawExpressionJoinStatements, currentAliasPrefix);
+                        if(i > 1) {
+                            chain = `${chain}, `;
+                        }
+                        chain = `${chain}${this.stringifyChild(args[i],scope, dataMappings, locales, rawExpressionJoinStatements, currentAliasPrefix)}`;
                     }
-                    chain += ")";
+                    chain = `${chain})`;
                 }
 
             }
@@ -247,9 +248,7 @@ module.exports = {
 
             } else {
                 //string = this.stringify(syntax.args[0], scope, dataMappings) + "." + chain;
-                string = this.stringify(syntax.args[0], scope, dataMappings, locales, rawExpressionJoinStatements, /*parent*/syntax, currentAliasPrefix);
-                string += " ";
-                string += chain;
+                string = `${this.stringify(syntax.args[0], scope, dataMappings, locales, rawExpressionJoinStatements, /*parent*/syntax, currentAliasPrefix)} ${chain}`;
             }
         }
 
@@ -264,7 +263,7 @@ module.exports = {
         ) {
             return string;
         } else if(string && string.length) {
-            return "(" + string + ")";
+            return `(${string})`;
         } else {
             return string;
         }

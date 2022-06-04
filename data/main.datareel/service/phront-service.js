@@ -49,7 +49,8 @@ var AWSRawDataService = require("./aws/a-w-s-raw-data-service").AWSRawDataServic
     PostgreSQLCLient,
     PostgreSQLCLientPool,
     ReadWritePostgreSQLClientPool,
-    PhrontService;
+    PhrontService,
+    ProcessEnv = process.env;
 
 
 
@@ -800,10 +801,11 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                         result = 'jsonb_build_object(';
                         for(let i=0, countI = operationLocales.length;(i<countI);i++) {
                                 language = operationLocales[i].language;
-                                result += `'${language}',"${tableName}".${escapedExpression}::jsonb->'${language}'`;
-                                if(i+2 < countI) result += ",";
+                                result = `${result}'${language}',"${tableName}".${escapedExpression}::jsonb->'${language}'`;
+                                if(i+2 < countI) result = `${result},`;
+
                         }
-                        result += `) as "${tableName}".${escapedExpression}`;
+                        result = `${result}) as "${tableName}".${escapedExpression}`;
                     }
 
                 } else {
@@ -1064,19 +1066,12 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
 
             var data = readOperation.data,
-                rawReadExpressionMap,
+                // rawReadExpressionMap,
 
-            //console.log("PhrontService: handleRead readOperation.id: ",readOperation.id)
-            //No implementation/formalization yet to read the schema and retrieve ObjectDescriptors
-            //Built from an existing schema. How would we express that in a read criteria? What would be the
-            //objectDescriptor property? The model? Does naming that property that way actually work?
-            // if(data instanceof ObjectDescriptor) {
-            //   return this.handleReadObjectDescriptorOperation(readOperation);
-            // } else {
-                iRawDataOperation,
+                // iRawDataOperation,
                 iReadOperation,
-                iReadOperationExecutionPromise,
-                iPreviousReadOperationExecutionPromise,
+                // iReadOperationExecutionPromise,
+                // iPreviousReadOperationExecutionPromise,
                 objectDescriptor = readOperation.target,
                 mapping = this.mappingForType(objectDescriptor),
                 readExpressions = readOperation.data?.readExpressions,
@@ -1087,21 +1082,21 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 criteriaSyntax,
                 criteriaQualifiedProperties = criteria && criteria.qualifiedProperties,
                 rawReadExpressions,
-                dataChanges = data,
-                changesIterator,
-                aProperty, aValue, addedValues, removedValues, aPropertyDescriptor,
-                self = this,
+                // dataChanges = data,
+                // changesIterator,
+                // aProperty, aValue, addedValues, removedValues, aPropertyDescriptor,
+                // self = this,
                 isReadOperationForSingleObject = false,
-                readOperationExecutedCount = 0,
+                // readOperationExecutedCount = 0,
                 readOperations,
-                firstPromise,
+                // firstPromise,
                 //Take care of locales
                 operationLocales = readOperation.locales,
                 columnNames = this.columnNamesForObjectDescriptor(objectDescriptor),
                 schemaName = rawDataOperation.schema,
                 tableName = this.tableForObjectDescriptor(objectDescriptor),
                 escapedRawReadExpressions = new Set(),
-                readOperationsCount,
+                // readOperationsCount,
                 orderings = readOperation.data?.orderings,
                 rawOrderings,
                 readLimit = readOperation.data?.readLimit,
@@ -1142,12 +1137,12 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
             }
 
             //if (readExpressions) {
-            let i, countI, iExpression, iRawPropertyNames, iKey, iValue, iObjectRule, iPropertyDescriptor, iAssignment, iPrimaryKey, iPrimaryKeyValue, iValueSchemaDescriptor, iValueDescriptorReference, iValueDescriptorReferenceMapping, iInversePropertyObjectRule, iInversePropertyObjectRuleConverter, iRawDataMappingRules, iRawDataMappingRulesIterator,
+            let i, countI, iExpression, iRawPropertyNames, iObjectRule, iPropertyDescriptor, iValueSchemaDescriptor, iValueDescriptorReference, iValueDescriptorReferenceMapping, iInversePropertyObjectRule, iRawDataMappingRules, iRawDataMappingRulesIterator,
             iRawDataMappingRule,
             iRawDataMappingRuleConverter,
-            iRawDataMappingRuleConverterForeignDescriptorMappings,
-            iIsInlineReadExpression, iSourceJoinKey, iDestinationJoinKey, iInversePropertyDescriptor, iObjectRuleConverter,
-            userLocaleCriteria, iReadOperationCriteria;
+            iIsInlineReadExpression, iSourceJoinKey, iInversePropertyDescriptor, iObjectRuleConverter,
+            // userLocaleCriteria, iKey, iValue, iAssignment, iPrimaryKey, iPrimaryKeyValue, iInversePropertyObjectRuleConverter, iRawDataMappingRuleConverterForeignDescriptorMappings, iDestinationJoinKey,
+            iReadOperationCriteria;
 
             // if(criteria && criteria.parameters.DataServiceUserLocales) {
             //     userLocaleCriteria = new Criteria().initWithExpression("locales == $DataServiceUserLocales", {
@@ -1659,28 +1654,28 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
                 //Adding the join expressions if any
                 if(rawExpressionJoinStatements.size) {
-                    sql += ` ${rawExpressionJoinStatements.toString()}`;
+                    sql = `${sql} ${rawExpressionJoinStatements.toString()}`;
                 }
 
                 if (condition) {
                     //Let's try if it doestn't start by a JOIN before going for not containing one at all
                     if(condition.indexOf("JOIN") !== 0) {
-                        sql += ` WHERE (${condition})`;
+                        sql = `${sql}  WHERE (${condition})`;
                     } else {
-                        sql += ` ${condition}`;
+                        sql = `${sql}  ${condition}`;
                     }
                 }
                 //sql = `SELECT ${escapedRawReadExpressionsArray.join(",")} FROM ${schemaName}."${tableName}" WHERE (${condition})`;
 
                 if(rawOrderings) {
-                    sql += ` ORDER BY ${rawOrderings}`;
+                    sql = `${sql}  ORDER BY ${rawOrderings}`;
 
                 }
 
                 if(readLimit) {
-                    sql += ` LIMIT ${readLimit}`;
+                    sql = `${sql}  LIMIT ${readLimit}`;
                     if(readOffset) {
-                        sql += ` OFFSET ${readOffset}`;
+                        sql = `${sql}  OFFSET ${readOffset}`;
                     }
                 }
 
@@ -1769,46 +1764,15 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
     },
 
     performReadOperation: {
-        value: function (readOperation) {
+        value: function performReadOperation(readOperation) {
 
-            var data = readOperation.data,
-                rawReadExpressionMap,
-
-            //console.log("PhrontService: handleRead readOperation.id: ",readOperation.id)
-            //No implementation/formalization yet to read the schema and retrieve ObjectDescriptors
-            //Built from an existing schema. How would we express that in a read criteria? What would be the
-            //objectDescriptor property? The model? Does naming that property that way actually work?
-            // if(data instanceof ObjectDescriptor) {
-            //   return this.handleReadObjectDescriptorOperation(readOperation);
-            // } else {
-                rawDataOperation,
-                iRawDataOperation,
+            var rawDataOperation,
                 iReadOperation,
-                iReadOperationExecutionPromise,
-                iPreviousReadOperationExecutionPromise,
                 objectDescriptor = readOperation.target,
-                mapping = this.mappingForType(objectDescriptor),
-                readExpressions = readOperation.data?.readExpressions,
-                readExpressionsCount = (readExpressions && readExpressions.length) || 0,
-                rawDataPrimaryKeys = mapping.rawDataPrimaryKeys,
-                criteria = readOperation.criteria,
-                criteriaSyntax,
-                criteriaQualifiedProperties = criteria && criteria.qualifiedProperties,
-                rawReadExpressions,
-                dataChanges = data,
-                changesIterator,
-                aProperty, aValue, addedValues, removedValues, aPropertyDescriptor,
                 self = this,
-                isReadOperationForSingleObject = false,
-                readOperationExecutionPromises,
                 readOperationExecutedCount = 0,
                 readOperations,
                 firstPromise,
-                //Take care of locales
-                operationLocales = readOperation.locales,
-                columnNames = this.columnNamesForObjectDescriptor(objectDescriptor),
-                tableName = this.tableForObjectDescriptor(objectDescriptor),
-                escapedRawReadExpressionsArray = [],
                 readOperationsCount;
 
             if(readOperation.rawDataOperation) {
@@ -1829,8 +1793,6 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 return;
             }
 
-
-            readOperationExecutionPromises = [];
             readOperationsCount = readOperations?.length || 0;
 
             // if(readOperation.target.name === "ServiceEngagement") {
@@ -1852,20 +1814,6 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
                         isNotLast = (readOperationsCount - readOperationExecutedCount + 1/*the current/main one*/) > 0;
 
-                        //var endTime  = console.timeEnd(readOperation.id);
-                        //console.log(timer.runtimeMsStr() + " for sql: "+rawDataOperation.sql);
-
-                        //console.log("Query took "+(Date.now()-start)+ " ms");
-                        //debug
-                        //   if(rawDataOperation.sql.indexOf('"name" ilike ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1 && data.records.length === 0) {
-                        //     console.log(rawDataOperation.sql);
-                        //   }
-                        //   else if(rawDataOperation.sql.indexOf('"name" ilike ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1 && data.records.length > 0){
-                        //       console.log("organization found by name");
-                        //   }
-                        // if(rawDataOperation.sql.indexOf('"label"') !== -1) {
-                        //     console.log(rawDataOperation.sql);
-                        //   }
 
                         if(err) {
                             console.error("handleReadOperation Error: readOperation:",readOperation, "rawDataOperation: ",rawDataOperation, "error: ",err);
@@ -1884,27 +1832,6 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                             }
                         }
 
-                        //Special handling for queries with one readExpression
-                        // if(readOperation.data.readExpressions.length === 1) {
-                        //     //Test for
-                        //     if(data.records)
-                        // }
-
-                        // else if(readOperation.target.name === "Event" || readOperation.target.name === "Organization") {
-                        //     console.log("------------------> readDataOperation: ",readOperation);
-                        //     console.log("------------------> rawDataOperation.sql > ",rawDataOperation.sql);
-                        //    console.log("<------------------ rawDataOperation data < ",data);
-                        // }
-
-                        // if(objectDescriptor.name === "RespondentQuestionnaire") {
-                        //     console.log("data: "+data);
-                        //  }
-
-                        //DEBUG:
-                        // if(readOperation.criteria && readOperation.criteria.syntax.type === "has") {
-                        //     console.log(rawDataOperation);
-                        // }
-                        // var operation = self.mapHandledReadResponseToOperation(readOperation, err, data/*, record*/, isNotLast);
 
                         /*
                             If the readOperation has a referrer, it's a readOperation created by us to fetch an object's property, so we're going to use that.
@@ -1960,63 +1887,6 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                             responseOperation.target.dispatchEvent(responseOperation);
 
                         });
-
-                        // iRawDataOperation = {};
-
-                        // //This adds the right access key, db name. etc... to the RawOperation.
-                        // self.mapOperationToRawOperationConnection(iReadOperation, iRawDataOperation);
-
-                        // /*
-                        //     For nested reads for read expressions, we don't have rawReadExpressions to offer, so we'll end up with the default in mapReadOperationToRawStatement:
-                        // */
-                        // self.mapReadOperationToRawStatement(iReadOperation, iRawDataOperation);
-
-
-                        // self.executeStatement(iRawDataOperation, function (err, data) {
-                        //     var isNotLast
-
-                        //     readOperationExecutedCount++;
-
-                        //     isNotLast = (readOperationsCount - readOperationExecutedCount) > 0;
-
-                        //     //var endTime  = console.timeEnd(readOperation.id);
-                        //     //console.log(timer.runtimeMsStr() + " for sql: "+rawDataOperation.sql);
-
-                        //     //console.log("Query took "+(Date.now()-start)+ " ms");
-                        //     //debug
-                        //     //   if(rawDataOperation.sql.indexOf('"name" ilike ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1 && data.records.length === 0) {
-                        //     //     console.log(rawDataOperation.sql);
-                        //     //   }
-                        //     //   else if(rawDataOperation.sql.indexOf('"name" ilike ') !== -1 && rawDataOperation.sql.indexOf("Organization") !== -1 && data.records.length > 0){
-                        //     //       console.log("organization found by name");
-                        //     //   }
-                        //     // if(rawDataOperation.sql.indexOf('"label"') !== -1) {
-                        //     //     console.log(rawDataOperation.sql);
-                        //     //   }
-
-                        //     if(err) {
-                        //         console.error("handleReadOperation Error",readOperation,rawDataOperation,err);
-                        //         if(err.name === "BadRequestException") {
-                        //             if(err.message.startsWith("ERROR: relation ")
-                        //             && (err.message.indexOf(" does not exist") !== -1)) {
-                        //                 err.name = DataOperationErrorNames.ObjectStoreMissing;
-                        //             }
-                        //         }
-                        //     }
-
-                        //     // if(objectDescriptor.name === "RespondentQuestionnaire") {
-                        //     //     console.log("data: "+data);
-                        //     //  }
-
-                        //     //DEBUG:
-                        //     // if(readOperation.criteria && readOperation.criteria.syntax.type === "has") {
-                        //     //     console.log(rawDataOperation);
-                        //     // }
-                        //     // var operation = self.mapHandledReadResponseToOperation(readOperation, err, data/*, record*/, isNotLast);
-                        //     var operation = self.responseOperationForReadOperation(readOperation, err, data.records, isNotLast);
-
-                        //     objectDescriptor.dispatchEvent(operation);
-                        // });
 
                     }
 
@@ -2180,14 +2050,14 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
             if(mapping.rawDataPrimaryKeys.includes(rawProperty)) {
                 return "uuid";
             } else {
-                var schemaDescriptor = this.rawDataDescriptorForObjectDescriptor(objectDescriptor),
-                    schemaPropertyDescriptor = schemaDescriptor && schemaDescriptor.propertyDescriptorForName(rawProperty);
+                var rawDataDescriptor = this.rawDataDescriptorForObjectDescriptor(objectDescriptor),
+                    schemaPropertyDescriptor = rawDataDescriptor && rawDataDescriptor.propertyDescriptorForName(rawProperty);
 
                 if(schemaPropertyDescriptor) {
                     return schemaPropertyDescriptor.valueType;
                 } else {
                     /*
-                        @marchant: Now that we've built the schemaDescriptor, we shouldn't need to do this anymore, keeping in case I'm wrong
+                        @marchant: Now that we've built the rawDataDescriptor, we shouldn't need to do this anymore, keeping in case I'm wrong
                     */
                     if(!propertyDescriptor) {
                         mappingRule = mapping.objectMappingRuleForPropertyName(rawProperty);
@@ -2780,7 +2650,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
                 var columnSQL = `  ${escapeIdentifier(columnName)} ${columnType}`;
                 if (columnType === 'text') {
-                    columnSQL += ' COLLATE pg_catalog."default"';
+                    columnSQL = `${columnSQL} COLLATE pg_catalog."default"`;
                 }
 
                 // if (colunmnStrings.length > 0) {
@@ -2817,8 +2687,8 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
     _buildColumnNamesForObjectDescriptor:  {
         value: function(objectDescriptor) {
-            var schemaDescriptor = this.rawDataDescriptorForObjectDescriptor(objectDescriptor),
-                colunmns = new Set(schemaDescriptor.propertyDescriptorNamesIterator);
+            var rawDataDescriptor = this.rawDataDescriptorForObjectDescriptor(objectDescriptor),
+                colunmns = new Set(rawDataDescriptor.propertyDescriptorNamesIterator);
 
             this._columnNamesByObjectDescriptor.set(objectDescriptor,colunmns);
 
@@ -2835,7 +2705,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 return null;
             }
 
-            var schemaDescriptor,
+            var rawDataDescriptor,
                 schemaPropertyDescriptors,
                 propertyDescriptors = Array.from(objectDescriptor.propertyDescriptors),
                 parentDescriptor,
@@ -2852,10 +2722,10 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 valueArrayColumn;
 
 
-            //mapping.schemaDescriptor =
-            schemaDescriptor = new ObjectDescriptor();
-            schemaDescriptor.name = this.tableForObjectDescriptor(objectDescriptor);
-            schemaPropertyDescriptors = schemaDescriptor.propertyDescriptors;
+            //mapping.rawDataDescriptor =
+            rawDataDescriptor = new ObjectDescriptor();
+            rawDataDescriptor.name = this.tableForObjectDescriptor(objectDescriptor);
+            schemaPropertyDescriptors = rawDataDescriptor.propertyDescriptors;
 
             //Cummulate inherited propertyDescriptors:
             parentDescriptor = objectDescriptor.parent;
@@ -2867,10 +2737,10 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
             }
 
             //Before we start the loop, we add the primaryKey:
-            iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality("id",schemaDescriptor,1);
+            iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality("id",rawDataDescriptor,1);
             iSchemaPropertyDescriptor.valueType = "uuid";
-            schemaDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
-            // iSchemaPropertyDescriptor.owner = schemaDescriptor;
+            rawDataDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
+            // iSchemaPropertyDescriptor.owner = rawDataDescriptor;
             // schemaPropertyDescriptors.push(iSchemaPropertyDescriptor);
             colunmns.add(iSchemaPropertyDescriptor.name);
 
@@ -2919,10 +2789,10 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                     for(j=0, countJ = converterforeignDescriptorMappings.length;(j<countJ);j++) {
                         jRawProperty = converterforeignDescriptorMappings[j].rawDataProperty;
 
-                        iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality(jRawProperty,schemaDescriptor,iPropertyDescriptor.cardinality);
+                        iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality(jRawProperty,rawDataDescriptor,iPropertyDescriptor.cardinality);
                         iSchemaPropertyDescriptor.valueType = columnType;
-                        schemaDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
-                        // iSchemaPropertyDescriptor.owner = schemaDescriptor;
+                        rawDataDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
+                        // iSchemaPropertyDescriptor.owner = rawDataDescriptor;
                         // schemaPropertyDescriptors.push(iSchemaPropertyDescriptor);
 
                         iIndexType = this.indexTypeForPropertyDescriptorWithRawDataMappingRule(iPropertyDescriptor, iRule);
@@ -2953,10 +2823,10 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                         keyArrayColumn = iObjectRuleSourcePathSyntax.args.keys.args[1].value;
                         columnType = this.mapPropertyDescriptorToRawType(iPropertyDescriptor, iRule, iPropertyDescriptor.keyType, iPropertyDescriptor._keyDescriptorReference);
 
-                        iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality(keyArrayColumn,schemaDescriptor,iPropertyDescriptor.cardinality);
+                        iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality(keyArrayColumn,rawDataDescriptor,iPropertyDescriptor.cardinality);
                         iSchemaPropertyDescriptor.valueType = columnType;
-                        schemaDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
-                        // iSchemaPropertyDescriptor.owner = schemaDescriptor;
+                        rawDataDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
+                        // iSchemaPropertyDescriptor.owner = rawDataDescriptor;
                         // schemaPropertyDescriptors.push(iSchemaPropertyDescriptor);
 
                         if(iIndexType) {
@@ -2970,10 +2840,10 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                         valueArrayColumn = iObjectRuleSourcePathSyntax.args.values.args[1].value;
                         columnType = this.mapPropertyDescriptorToRawType(iPropertyDescriptor, iRule, iPropertyDescriptor.valueType, iPropertyDescriptor._valueDescriptorReference);
 
-                        iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality(valueArrayColumn,schemaDescriptor,iPropertyDescriptor.cardinality);
+                        iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality(valueArrayColumn,rawDataDescriptor,iPropertyDescriptor.cardinality);
                         iSchemaPropertyDescriptor.valueType = columnType;
-                        schemaDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
-                        // iSchemaPropertyDescriptor.owner = schemaDescriptor;
+                        rawDataDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
+                        // iSchemaPropertyDescriptor.owner = rawDataDescriptor;
                         // schemaPropertyDescriptors.push(iSchemaPropertyDescriptor);
 
                         if(iIndexType) {
@@ -3018,10 +2888,10 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                                 throw "Implementation missing for dynamically discovering the column type of raw property ' "+iPropertyDescriptorRawProperties[j]+"' in mapping of property '"+iPropertyDescriptor.name+"' of ObjectDescriptor '"+objectDescriptor.name+"'";
                             }
 
-                            iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality(columnName,schemaDescriptor,iPropertyDescriptor.cardinality);
+                            iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality(columnName,rawDataDescriptor,iPropertyDescriptor.cardinality);
                             iSchemaPropertyDescriptor.valueType = columnType;
-                            schemaDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
-                            // iSchemaPropertyDescriptor.owner = schemaDescriptor;
+                            rawDataDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
+                            // iSchemaPropertyDescriptor.owner = rawDataDescriptor;
                             // schemaPropertyDescriptors.push(iSchemaPropertyDescriptor);
 
                             iIndexType = this.indexTypeForPropertyDescriptorWithRawDataMappingRule(iPropertyDescriptor, iRule);
@@ -3041,10 +2911,10 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                         if(!colunmns.has(columnName)) {
                             columnType = this.mapPropertyDescriptorToRawType(iPropertyDescriptor, iRule);
 
-                            iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality(columnName,schemaDescriptor,iPropertyDescriptor.cardinality);
+                            iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality(columnName,rawDataDescriptor,iPropertyDescriptor.cardinality);
                             iSchemaPropertyDescriptor.valueType = columnType;
-                            schemaDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
-                            // iSchemaPropertyDescriptor.owner = schemaDescriptor;
+                            rawDataDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
+                            // iSchemaPropertyDescriptor.owner = rawDataDescriptor;
                             // schemaPropertyDescriptors.push(iSchemaPropertyDescriptor);
 
                             iIndexType = this.indexTypeForPropertyDescriptorWithRawDataMappingRule(iPropertyDescriptor, iRule);
@@ -3059,10 +2929,10 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                         columnName = iPropertyDescriptor.name;
                         columnType = this.mapPropertyDescriptorToRawType(iPropertyDescriptor, iRule);
 
-                        iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality(columnName,schemaDescriptor,iPropertyDescriptor.cardinality);
+                        iSchemaPropertyDescriptor = new PropertyDescriptor().initWithNameObjectDescriptorAndCardinality(columnName,rawDataDescriptor,iPropertyDescriptor.cardinality);
                         iSchemaPropertyDescriptor.valueType = columnType;
-                        schemaDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
-                        // iSchemaPropertyDescriptor.owner = schemaDescriptor;
+                        rawDataDescriptor.addPropertyDescriptor(iSchemaPropertyDescriptor);
+                        // iSchemaPropertyDescriptor.owner = rawDataDescriptor;
                         // schemaPropertyDescriptors.push(iSchemaPropertyDescriptor);
 
                         iIndexType = this.indexTypeForPropertyDescriptorWithRawDataMappingRule(iPropertyDescriptor, iRule);
@@ -3077,8 +2947,8 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 }
             }
 
-            this._rawDataDescriptorByObjectDescriptor.set(objectDescriptor,schemaDescriptor);
-            return schemaDescriptor;
+            this._rawDataDescriptorByObjectDescriptor.set(objectDescriptor,rawDataDescriptor);
+            return rawDataDescriptor;
         }
     },
 
@@ -3100,9 +2970,10 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                     mapping = objectDescriptor && this.mappingForType(objectDescriptor),
                     parentDescriptor,
                     tableName = this.tableForObjectDescriptor(objectDescriptor),
-                    schemaDescriptor = this.rawDataDescriptorForObjectDescriptor(objectDescriptor),
-                    propertyDescriptors = Array.from(schemaDescriptor.propertyDescriptors),
+                    rawDataDescriptor = this.rawDataDescriptorForObjectDescriptor(objectDescriptor),
+                    propertyDescriptors = Array.from(rawDataDescriptor.propertyDescriptors),
                     i, countI, iPropertyDescriptor, iPropertyDescriptorValueDescriptor, iDescendantDescriptors, iObjectRule, iRule, iIndex,
+                    iObjectRules,
                     //Hard coded for now, should be derived from a mapping telling us n which databaseName that objectDescriptor is stored
                     databaseName = this.connection.database,
                     schemaName = this.connection.schema,
@@ -3162,7 +3033,14 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                     //.valueDescriptor still returns a promise
                     iPropertyDescriptorValueDescriptor = iPropertyDescriptor._valueDescriptorReference;
                     iDescendantDescriptors = iPropertyDescriptorValueDescriptor ? iPropertyDescriptorValueDescriptor.descendantDescriptors : null;
-                    iObjectRule = mapping.objectMappingRuleForPropertyName(iPropertyDescriptor.name);
+                    // iObjectRule = mapping.objectMappingRuleForPropertyName(iPropertyDescriptor.name);
+                    iObjectRules = mapping.mappingRulesForRawDataProperty(iPropertyDescriptor.name);
+                    for(var j=0, countJ = iObjectRules.length; (j < countJ); j++) {
+                        iObjectRule = iObjectRules[j];
+                        if(iObjectRule.requirements.length === 1 && iObjectRule.requirements[0] === iPropertyDescriptor.name) {
+                            break;
+                        }
+                    }
                     iRule = iObjectRule && mapping.rawDataMappingRuleForPropertyName(iObjectRule.sourcePath);
                     converterforeignDescriptorMappings = iObjectRule && iObjectRule.converter && iObjectRule.converter.foreignDescriptorMappings;
                     iObjectRuleSourcePathSyntax = iObjectRule && iObjectRule.sourcePathSyntax;
@@ -3193,17 +3071,16 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                     That said, some ObjectDescriptor mappings expect some extensions to be there, like PostGIS, so we'll need to add these dependencies somewhere in teh mapping so we can include them in create extensions here.
                 */
                 // sql += createExtensionPgcryptoSchema;
-                sql += createTableTemplatePrefix;
+                sql = `${sql}${createTableTemplatePrefix}`;
 
                 if (colunmnStrings.length > 0) {
-                    sql += ',\n';
-                    sql += colunmnStrings.join(',\n');
+                    sql = `${sql},\n${colunmnStrings.join(',\n')}`;
                 }
-                sql += createTableTemplateSuffix;
+                sql = `${sql}${createTableTemplateSuffix}`;
 
                 //Now add indexes:
                 if(colunmnIndexStrings.length > 0) {
-                    sql += colunmnIndexStrings.join('\n');
+                    sql = `${sql}${colunmnIndexStrings.join('\n')}`;
                 }
 
                 rawDataOperation.sql = sql;
@@ -3225,7 +3102,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 //                 parentDescriptor,
 //                 tableName = this.tableForObjectDescriptor(objectDescriptor),
 //                 propertyDescriptors = Array.from(objectDescriptor.propertyDescriptors),
-//                 columnNames = this.columnNamesForObjectDescriptor(objectDescriptor),/* triggers the creation of mapping.schemaDescriptor for now*/
+//                 columnNames = this.columnNamesForObjectDescriptor(objectDescriptor),/* triggers the creation of mapping.rawDataDescriptor for now*/
 //                 i, countI, iPropertyDescriptor, iPropertyDescriptorValueDescriptor, iDescendantDescriptors, iObjectRule, iRule, iIndex,
 //                 //Hard coded for now, should be derived from a mapping telling us n which databaseName that objectDescriptor is stored
 //                 databaseName = this.connection.database,
@@ -3723,7 +3600,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 }
 
                 var objectDescriptor = createOperation.target,
-                    schemaDescriptor = self.rawDataDescriptorForObjectDescriptor(objectDescriptor),
+                    rawDataDescriptor = self.rawDataDescriptorForObjectDescriptor(objectDescriptor),
                     tableName = self.tableForObjectDescriptor(objectDescriptor),
                     schemaName = rawDataOperation.schema,
                     recordKeys = Object.keys(record),
@@ -3749,12 +3626,12 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
                         It all comes down to the fact that s3BucketName is a foreignKey to a bucket and has been exposed as an object property.
 
-                        So in that case, we're going to try to get our answer using the newer schemaDescriptor:
+                        So in that case, we're going to try to get our answer using the newer rawDataDescriptor:
                     */
                     iPropertyDescriptor = mapping.propertyDescriptorForRawPropertyName(iKey);
 
                     if(!iPropertyDescriptor) {
-                        iPropertyDescriptor = schemaDescriptor.propertyDescriptorForName(iKey);
+                        iPropertyDescriptor = rawDataDescriptor.propertyDescriptorForName(iKey);
                         if(iPropertyDescriptor) {
                             iRawType = iPropertyDescriptor.valueType;
                         }
@@ -4040,7 +3917,8 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
             if (dataSnapshotKeys) {
                 for (i = 0, countI = dataSnapshotKeys.length; i < countI; i++) {
                     if (condition && condition.length) {
-                        condition += " AND ";
+                        //condition += " AND ";
+                        condition = `${condition} AND `;
                     }
                     else {
                         condition = "";
@@ -4053,9 +3931,9 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
                     if(iValue === undefined || iValue === null) {
                         //TODO: this needs to be taken care of in pgstringify as well for criteria. The problem is the operator changes based on value...
-                        condition += `"${tableName}".${escapeIdentifier(iKey)} is ${this.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(iPropertyDescriptor, iValue, iKey, iRawType, updateOperation)}`;
+                        condition = `${condition}"${tableName}".${escapeIdentifier(iKey)} is ${this.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(iPropertyDescriptor, iValue, iKey, iRawType, updateOperation)}`;
                     } else {
-                        condition += `"${tableName}".${escapeIdentifier(iKey)} = ${this.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(iPropertyDescriptor, iValue, iKey, iRawType, updateOperation)}`;
+                        condition = `${condition}"${tableName}".${escapeIdentifier(iKey)} = ${this.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(iPropertyDescriptor, iValue, iKey, iRawType, updateOperation)}`;
                     }
                 }
             }
@@ -4261,7 +4139,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
             if (dataSnapshotKeys) {
                 for (i = 0, countI = dataSnapshotKeys.length; i < countI; i++) {
                     if (condition && condition.length) {
-                        condition += " AND ";
+                        condition = `${condition} AND `;
                     }
                     else {
                         condition = "";
@@ -4273,7 +4151,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                     iPropertyDescriptor = mapping.propertyDescriptorForRawPropertyName(iKey);
                     iRawType = this.mapObjectDescriptorRawPropertyToRawType(objectDescriptor, iKey, mapping, iPropertyDescriptor);
 
-                    condition += `${escapeIdentifier(iKey)} = ${this.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(iPropertyDescriptor, iValue, iKey, iRawType, deleteOperation)}`;
+                    condition = `${condition}${escapeIdentifier(iKey)} = ${this.mapPropertyDescriptorValueToRawPropertyNameWithTypeExpression(iPropertyDescriptor, iValue, iKey, iRawType, deleteOperation)}`;
                 }
             }
 
@@ -4582,10 +4460,9 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
                             if(i === lastIndex) {
                                 if(iBatch.length) {
-                                    iBatch += ";\n";
+                                    iBatch = `${iBatch};\n`;
                                 }
-                                iBatch += iStatement;
-                                iBatch += ";";
+                                iBatch = `${iBatch}${iStatement};`;
                                 endIndex = i;
                             } else {
                                 endIndex = i-1;
@@ -4604,9 +4481,9 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                             startIndex = i;
                         } else {
                             if(iBatch.length) {
-                                iBatch += ";\n";
+                                iBatch = `${iBatch};\n`;
                             }
-                            iBatch += iStatement;
+                            iBatch = `${iBatch}${iStatement}`;
                         }
                     }
 
@@ -5283,10 +5160,9 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
                                 if(i === lastIndex) {
                                     if(iBatch.length) {
-                                        iBatch += ";\n";
+                                        iBatch = `${iBatch};\n`;
                                     }
-                                    iBatch += iStatement;
-                                    iBatch += ";";
+                                    iBatch = `${iBatch}${iStatement};`;
                                     endIndex = i;
                                 } else {
                                     endIndex = i-1;
@@ -5303,9 +5179,9 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                                 startIndex = i;
                             } else {
                                 if(iBatch.length) {
-                                    iBatch += ";\n";
+                                    iBatch = `${iBatch};\n`;
                                 }
-                                iBatch += iStatement;
+                                iBatch = `${iBatch}${iStatement}`;
                             }
                         }
 
@@ -5430,17 +5306,27 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                   if (err) {
                     console.error("sendDirectStatement() readWriteClientPool.connect error: ",err);
                     callback(err);
-                  }
-                  client.query(params.sql, undefined, (err, res) => {
-                    //Returns the client to the pool I assume
-                    done()
-                    if (err) {
-                        console.error("sendDirectStatement() client.query error: ",err);
-                        callback(err);
-                    } else {
-                        callback(null, res);
+                  } else if(client) {
+
+                    if(ProcessEnv.TIME_PG_READ === "true") {
+                        var queryTimer = new Timer(params.sql);
                     }
-                  })
+                    client.query(params.sql, undefined, (err, res) => {
+                        if(ProcessEnv.TIME_PG_READ === "true") {
+                            console.debug(queryTimer.runtimeMsStr());
+                        }
+
+                        //Returns the client to the pool I assume
+                        done()
+                        if (err) {
+                            console.error("sendDirectStatement() client.query error: ",err);
+                            callback(err);
+                        } else {
+                            callback(null, res);
+                        }
+                      })
+                  }
+
                 });
             });
         }
