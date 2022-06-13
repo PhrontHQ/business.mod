@@ -5213,12 +5213,21 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                                 return !!err
                               }
 
+                            if(ProcessEnv.TIME_PG === "true") {
+                                var queryTimer = new Timer(iBatchRawDataOperation.sql);
+                            }
                             client.query('BEGIN', (err, res) => {
+
                                 if (shouldAbort(err)) return
                                 //const queryText = 'INSERT INTO users(name) VALUES($1) RETURNING id'
                                 client.query(iBatchRawDataOperation.sql, undefined, (err, res) => {
                                     if (shouldAbort(err)) return
                                     client.query('COMMIT', (err, res) => {
+
+                                        if(ProcessEnv.TIME_PG === "true") {
+                                            console.debug(queryTimer.runtimeMsStr());
+                                        }
+
                                         if (err) {
                                             console.error('Error committing transaction', err.stack)
                                             operation.type = _actAsHandleCommitTransactionOperation ? DataOperation.Type.CommitTransactionFailedOperation: DataOperation.Type.PerformTransactionFailedOperation;
@@ -5308,11 +5317,11 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                     callback(err);
                   } else if(client) {
 
-                    if(ProcessEnv.TIME_PG_READ === "true") {
+                    if(ProcessEnv.TIME_PG === "true") {
                         var queryTimer = new Timer(params.sql);
                     }
                     client.query(params.sql, undefined, (err, res) => {
-                        if(ProcessEnv.TIME_PG_READ === "true") {
+                        if(ProcessEnv.TIME_PG === "true") {
                             console.debug(queryTimer.runtimeMsStr());
                         }
 
