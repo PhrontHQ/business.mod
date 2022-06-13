@@ -355,7 +355,6 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
             var serializedOperation;
             //console.log("received socket message ",event);
                 serializedOperation = event.data;
-                //console.log("<---- receive operation "+serializedOperation);
 
 
             if(serializedOperation) {
