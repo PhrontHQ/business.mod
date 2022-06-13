@@ -1849,7 +1849,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                             resolve(operation);
                         }
 
-                    });
+                    }, readOperation);
                 } else {
                     readOperationExecutedCount++;
 
@@ -5214,7 +5214,8 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                               }
 
                             if(ProcessEnv.TIME_PG === "true") {
-                                var queryTimer = new Timer(iBatchRawDataOperation.sql);
+                                //var queryTimer = new Timer(iBatchRawDataOperation.sql);
+                                var queryTimer = new Timer(performTransactionOperation.id);
                             }
                             client.query('BEGIN', (err, res) => {
 
@@ -5308,7 +5309,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
     },
 
     sendDirectStatement: {
-        value: function (params, callback) {
+        value: function (params, callback, dataOperation) {
             this.awsClientPromise.then(() => {
                 // callback - checkout a client
                 this.readWriteClientPool.connect((err, client, done) => {
@@ -5318,7 +5319,8 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                   } else if(client) {
 
                     if(ProcessEnv.TIME_PG === "true") {
-                        var queryTimer = new Timer(params.sql);
+                        //var queryTimer = new Timer(params.sql);
+                        var queryTimer = new Timer(dataOperation.id+dataOperation.type);
                     }
                     client.query(params.sql, undefined, (err, res) => {
                         if(ProcessEnv.TIME_PG === "true") {
@@ -5342,14 +5344,14 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
     },
 
     executeStatement: {
-        value: function executeStatement(params, callback) {
+        value: function executeStatement(params, callback, dataOperation) {
             if(this.useDataAPI) {
                 //this.awsClient.executeStatement(params, callback);
                 this.awsClientPromise.then(() => {
                     this.awsClient.send(new ExecuteStatementCommand(params), callback);
                 });
             } else {
-                this.sendDirectStatement(params, callback);
+                this.sendDirectStatement(params, callback, dataOperation);
             }
         }
     },
