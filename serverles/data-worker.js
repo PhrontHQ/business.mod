@@ -378,10 +378,14 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             })
            .then(() => {
                //console.log("DataWorker -handleConnect: operationCoordinator.handleOperation() done");
-               callback(null, {
-                   statusCode: 200,
-                   body: 'Connected.'
-               });
+               return {
+                    statusCode: 200,
+                    body: 'Connected.'
+                };
+            //    callback(null, {
+            //        statusCode: 200,
+            //        body: 'Connected.'
+            //    });
            }).catch((err) => {
                 console.log(err)
                 callback(failedResponse(500, JSON.stringify(err)))
