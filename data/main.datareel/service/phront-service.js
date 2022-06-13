@@ -5215,7 +5215,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
                             if(ProcessEnv.TIME_PG === "true") {
                                 //var queryTimer = new Timer(iBatchRawDataOperation.sql);
-                                var queryTimer = new Timer(performTransactionOperation.id);
+                                var queryTimer = new Timer(`${performTransactionOperation.id}-${performTransactionOperation.type}`);
                             }
                             client.query('BEGIN', (err, res) => {
 
@@ -5320,7 +5320,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
                     if(ProcessEnv.TIME_PG === "true") {
                         //var queryTimer = new Timer(params.sql);
-                        var queryTimer = new Timer(dataOperation.id+dataOperation.type);
+                        var queryTimer = new Timer(`${dataOperation.id}-${dataOperation.type}`);
                     }
                     client.query(params.sql, undefined, (err, res) => {
                         if(ProcessEnv.TIME_PG === "true") {
