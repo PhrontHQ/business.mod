@@ -594,6 +594,11 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
                 this._readOperationQueue.push(operation);
                 if (this._readOperationQueue.length === 1) {
                     queueMicrotask(() => {
+                    //this._processOperationQueueTimeout = setTimeout(() => {
+
+                        if(this._processOperationQueueTimeout) {
+                            clearTimeout(this._processOperationQueueTimeout);
+                        }
                         var _operation;
                         if(this._readOperationQueue.length > 1) {
                             // _operation = new DataOperation();
@@ -603,9 +608,12 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
                             //         batchedOperations: this._dispatchOperationQueue
                             // };
                             // this._pendingOperationById.set(_operation.id, _operation);
+                            //console.log("this._socketSendOperation ",this._readOperationQueue);
                             this._socketSendOperation(this._readOperationQueue);
 
                         } else {
+                            //console.log("this._socketSendOperation ",this._readOperationQueue[0]);
+
                             this._socketSendOperation(this._readOperationQueue[0]);
 
                         }
@@ -614,6 +622,7 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
                         // this._socket.send(serializedOperation);
                         this._readOperationQueue = [];
 
+                    //},0);
                     });
                 }
 
