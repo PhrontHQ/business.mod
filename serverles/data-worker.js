@@ -150,7 +150,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             }
             currentEnvironment.userAgentIPAddress = userIp;
             currentEnvironment.clientId = event.requestContext.connectionId;
-            currentEnvironment.gatewayRequestId = context.requestId;
+            currentEnvironment.gatewayRequestId = context.awsRequestId;
             currentEnvironment.lambdaRequestId = event.requestContext.requestId;
 
             console.log(currentEnvironment.gatewayRequestId+ ": currentEnvironment: ",currentEnvironment);
