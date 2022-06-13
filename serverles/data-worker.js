@@ -117,7 +117,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
      * @extends Worker
      */
     setEnvironmentFromEvent: {
-        value: function(event) {
+        value: function(event, context) {
             var stage = event.requestContext.stage,
                 eventHeaders = event.headers,
                 acceptLanguage = (eventHeaders && (eventHeaders["Accept-Language"]|| eventHeaders["accept-language"])),
@@ -150,9 +150,13 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             }
             currentEnvironment.userAgentIPAddress = userIp;
             currentEnvironment.clientId = event.requestContext.connectionId;
+            currentEnvironment.gatewayRequestId = context.requestId;
+            currentEnvironment.lambdaRequestId = event.requestContext.requestId;
+
+            console.log(currentEnvironment.gatewayRequestId+ ": currentEnvironment: ",currentEnvironment);
 
             // if(stage === "mod") {
-            //     console.log("setEnvironmentFromEvent: ",event);
+            //     console.log("setEnvironmentFromEvent: ",event, context);
             // }
 
         }
@@ -245,7 +249,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                 //Set the clientId (in API already)
                 authorizeConnectionOperation.clientId = event.requestContext.connectionId;
 
-                self.setEnvironmentFromEvent(event);
+                self.setEnvironmentFromEvent(event, context);
 
                 /*
                     Only the event from connect has headers informations, the only moment when we can get accept-language
@@ -354,7 +358,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             //Set the clientId (in API already)
             connectOperation.clientId = event.requestContext.connectionId;
 
-            this.setEnvironmentFromEvent(event);
+            this.setEnvironmentFromEvent(event, context);
 
             /*
                 Only the event from connect has headers informations, the only moment when we can get accept-language
@@ -451,7 +455,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                 returns the context where our serialized identity is stored.
             */
 
-            this.setEnvironmentFromEvent(event);
+            this.setEnvironmentFromEvent(event, context);
 
             var serializedOperation = event.body,
             deserializedOperation,
@@ -621,7 +625,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             //Set the clientId (in API already)
             disconnectOperation.clientId = event.requestContext.connectionId;
 
-            this.setEnvironmentFromEvent(event);
+            this.setEnvironmentFromEvent(event, context);
 
             this.endSessionForDisconnectOperation(disconnectOperation)
             then( () => {
