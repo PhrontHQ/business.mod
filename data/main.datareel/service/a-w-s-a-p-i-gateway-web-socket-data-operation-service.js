@@ -16,6 +16,7 @@ var DataService = require("montage/data/service/data-service").DataService,
     //ReadEvent = (require) ("montage/data/model/read-event").ReadEvent,
     BytesConverter = require("montage/core/converter/bytes-converter").BytesConverter,
     WebSocketSession = require("../model/app/web-socket-session").WebSocketSession,
+    sizeof = require('object-sizeof'),
     currentEnvironment = require("montage/core/environment").currentEnvironment,
     isMod = ((currentEnvironment.stage === "mod" ||
     currentEnvironment.stage === "local"));
@@ -676,7 +677,9 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
             this._socketOpenPromise.then(() => {
                 var serializedOperation = this._serializer.serializeObject(operation);
 
-                //console.debug("----> send operation "+serializedOperation);
+                // var operationDataKBSize = sizeof(serializedOperation) / 1024;
+
+                // console.debug("----> send "+operationDataKBSize+" KB operation "+serializedOperation);
 
                 // if(operation.type === "batch") {
                 //     var deserializer = new Deserializer();
