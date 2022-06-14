@@ -157,7 +157,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             currentEnvironment.gatewayRequestId = context.awsRequestId;
             currentEnvironment.lambdaRequestId = event.requestContext.requestId;
 
-            console.log(currentEnvironment.gatewayRequestId+ ": currentEnvironment: ",currentEnvironment);
+            //console.log(currentEnvironment.gatewayRequestId+ ": currentEnvironment: ",currentEnvironment);
 
             // if(stage === "mod") {
             //     console.log("setEnvironmentFromEvent: ",event, context);
