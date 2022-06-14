@@ -218,7 +218,7 @@ mainModule.exports.connect = exports.connect = async (event, context, callback) 
     const isModStage = event.requestContext.stage === "mod",
     timer = isModStage ? new Timer('connect') : null;
 
-    workerPromise.then(function(worker) {
+    return workerPromise.then(function(worker) {
       if(typeof worker.handleConnect === "function") {
           return worker.handleConnect(event, context, function() {
             if(timer) console.log(timer.runtimeMsStr());
