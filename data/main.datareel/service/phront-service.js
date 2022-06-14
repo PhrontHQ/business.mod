@@ -789,7 +789,9 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                             Should build something like:
                             COALESCE("Role"."tags"::jsonb #>> '{en,FR}', "Role"."tags"::jsonb #>> '{en,*}') as "tags"
                         */
-                        result = `COALESCE("${tableName}".${escapedExpression}::jsonb #>> '{${language},${region}}', "${tableName}".${escapedExpression}::jsonb #>> '{${language},*}', "${tableName}".${escapedExpression}::jsonb #>> '{en,*}') as ${escapedExpression}`;
+                        result = (language !== "en")
+                            ? `COALESCE("${tableName}".${escapedExpression}::jsonb #>> '{${language},${region}}', "${tableName}".${escapedExpression}::jsonb #>> '{${language},*}', "${tableName}".${escapedExpression}::jsonb #>> '{en,*}') as ${escapedExpression}`
+                            : `COALESCE("${tableName}".${escapedExpression}::jsonb #>> '{${language},${region}}', "${tableName}".${escapedExpression}::jsonb #>> '{${language},*}') as ${escapedExpression}`;
 
                     } else {
                         /*
