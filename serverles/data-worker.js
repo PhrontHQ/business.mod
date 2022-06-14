@@ -382,7 +382,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             })
            .then(() => {
                console.log("DataWorker -handleConnect: operationCoordinator.handleOperation() done");
-               return successfullConnectResponse;
+               return successfullResponse;
             //    callback(null, {
             //        statusCode: 200,
             //        body: 'Connected.'
