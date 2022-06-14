@@ -13,9 +13,13 @@ const   Worker = require("./worker").Worker,
     util = require('util');
 
 const successfullResponse = {
-        statusCode: 200,
-        body: 'Success'
-    };
+    statusCode: 200,
+    body: 'Success'
+};
+const successfullConnectResponse = {
+    statusCode: 200,
+    body: 'Connected'
+};
 
 const failedResponse = (statusCode, error) => ({
         statusCode,
@@ -371,24 +375,22 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                 That's what shpould probably happen client side as well, where the opertions are dispatched locally and the caught by an object that just push them on the WebSocket.
             */
 
-            this.authorizerIdentityFromEvent(event, connectOperation)
+            return this.authorizerIdentityFromEvent(event, connectOperation)
             .then(function(identity) {
                 connectOperation.identity = identity;
                 return self.operationCoordinator.handleOperation(connectOperation, event, context, callback, self.apiGateway);
             })
            .then(() => {
-               //console.log("DataWorker -handleConnect: operationCoordinator.handleOperation() done");
-               return {
-                    statusCode: 200,
-                    body: 'Connected.'
-                };
+               console.log("DataWorker -handleConnect: operationCoordinator.handleOperation() done");
+               return successfullConnectResponse;
             //    callback(null, {
             //        statusCode: 200,
             //        body: 'Connected.'
             //    });
            }).catch((err) => {
                 console.log(err)
-                callback(failedResponse(500, JSON.stringify(err)))
+                //callback(failedResponse(500, JSON.stringify(err)))
+                return failedResponse(500, JSON.stringify(err));
            });
 
         }
