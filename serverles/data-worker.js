@@ -345,7 +345,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
     },
 
     handleConnect: {
-        value: function(event, context, callback) {
+        value: async function(event, context, callback) {
             var self = this,
                 connectOperation = new DataOperation(),
             serializedIdentity = event.requestContext.authorizer.principalId;
