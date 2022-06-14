@@ -214,21 +214,26 @@ if(!useMr) {
     callback(error);            //Indicates error with error information returned to the caller
 */
 
-mainModule.exports.connect = exports.connect = (event, context, callback) => {
+mainModule.exports.connect = exports.connect = async (event, context, callback) => {
     const isModStage = event.requestContext.stage === "mod",
-    timer = isModStage ? new Timer('default') : null;
+    timer = isModStage ? new Timer('connect') : null;
 
     workerPromise.then(function(worker) {
       if(typeof worker.handleConnect === "function") {
           return worker.handleConnect(event, context, function() {
             if(timer) console.log(timer.runtimeMsStr());
             callback.apply(global,arguments);
+          }).then((value) => {
+            if(timer) console.log(timer.runtimeMsStr());
+            return value;
           });
       } else {
-        callback(null, {
-              statusCode: 200,
-              body: 'Connected.'
-          });
+        if(timer) console.log(timer.runtimeMsStr());
+        return successfullConnectResponse
+        // callback(null, {
+        //       statusCode: 200,
+        //       body: 'Connected.'
+        //   });
       }
     });
 };
