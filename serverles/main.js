@@ -10,6 +10,17 @@ const successfullResponse = {
         body: 'Success'
     };
 
+const successfullConnectResponse = {
+    statusCode: 200,
+    body: 'Connected'
+};
+
+const disconnectResponse = {
+    statusCode: 200,
+    body: 'Disconnected'
+};
+
+
 const failedResponse = (statusCode, error) => ({
         statusCode,
         body: error
@@ -321,7 +332,7 @@ mainModule.exports.send = exports.send  = async function (event, context, callba
 
 };
 
-mainModule.exports.disconnect = exports.disconnect = (event, context, callback) => {
+mainModule.exports.disconnect = exports.disconnect = async (event, context, callback) => {
   workerPromise.then(function(worker) {
     const isModStage = event.requestContext.stage === "mod",
             timer = isModStage ? new Timer('disconnect') : null;
@@ -330,12 +341,18 @@ mainModule.exports.disconnect = exports.disconnect = (event, context, callback) 
           return worker.handleDisconnect(event, context, function() {
             if(timer) console.log(timer.runtimeMsStr());
             callback.apply(global,arguments);
+          })
+          .then((value) => {
+            if(timer) console.log(timer.runtimeMsStr());
+            return disconnectResponse;
           });
       } else {
-            callback(null, {
-                statusCode: 200,
-                body: 'Disconnected.'
-            });
+            return disconnectResponse;
+
+            // callback(null, {
+            //     statusCode: 200,
+            //     body: 'Disconnected.'
+            // });
         }
   });
 };

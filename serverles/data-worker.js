@@ -638,10 +638,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
             this.setEnvironmentFromEvent(event, context);
 
-            this.endSessionForDisconnectOperation(disconnectOperation)
-            then( () => {
-                this.super(event, context, callback);
-            });
+            return this.endSessionForDisconnectOperation(disconnectOperation);
 
         }
     },
@@ -667,6 +664,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
                 Set the end time of the session from connectOperation.timeStamp, which is event.requestContext.connectedAt in AWS
             */
             // webSocketSession.existenceTimeRange.end = new Date(disconnectOperation.timeStamp);
+            return Promise.resolve(null);
         }
 
     },
