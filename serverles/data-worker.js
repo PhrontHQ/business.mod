@@ -157,6 +157,11 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             currentEnvironment.gatewayRequestId = context.awsRequestId;
             currentEnvironment.lambdaRequestId = event.requestContext.requestId;
 
+            //WIP
+            //currentEnvironment.session = event.requestContext.requestId;
+            console.log("setEnvironmentFromEvent: ",event, context);
+
+
             //console.log(currentEnvironment.gatewayRequestId+ ": currentEnvironment: ",currentEnvironment);
 
             // if(stage === "mod") {
@@ -643,20 +648,25 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
     endSessionForDisconnectOperation: {
         value: function(disconnectOperation) {
             const identity = disconnectOperation.identity;
+
+            /*
+                We should have the sessionId from the cached value like the identity.
+            */
+
             //All we need from original event should be in connectOperation
 
-            var webSocketSession = this.mainService.createDataObject(WebSocketSession);
+            // var webSocketSession = this.mainService.createDataObject(WebSocketSession);
 
             /*
                 connectOperation.clientId is AWS's event.requestContext.requestId.
 
                 It should be unique.
             */
-            webSocketSession.connectionId = disconnectOperation.clientId;
+            // webSocketSession.connectionId = disconnectOperation.clientId;
             /*
                 Set the end time of the session from connectOperation.timeStamp, which is event.requestContext.connectedAt in AWS
             */
-            webSocketSession.existenceTimeRange.end = new Date(disconnectOperation.timeStamp);
+            // webSocketSession.existenceTimeRange.end = new Date(disconnectOperation.timeStamp);
         }
 
     },
