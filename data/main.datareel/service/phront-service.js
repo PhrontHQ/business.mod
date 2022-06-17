@@ -49,6 +49,7 @@ var AWSRawDataService = require("./aws/a-w-s-raw-data-service").AWSRawDataServic
     PostgreSQLCLient,
     PostgreSQLCLientPool,
     ReadWritePostgreSQLClientPool,
+    ReadOnlyPostgreSQLClientPool,
     PhrontService,
     ProcessEnv = process.env;
 
@@ -313,6 +314,12 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
         }
     },
 
+    readOnlyEndpoints: {
+        get: function() {
+            return this.connection.readOnlyEndpoints;
+        }
+    },
+
     _createSharedReadWriteClientPool: {
         value: function() {
             var connectionOptions = {
@@ -342,20 +349,35 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
     /*
         WIP: We need to asses how to use a single dedicated reader vs more than one with special purpose?
+
+        This is only expecting one reader, when we need more than one, then we'll need to loop on
+            this.readOnlyEndpoints
+        and create an array of readOnlyClientPools
     */
+
+    _createSharedReadOnlyClientPool: {
+        value: function() {
+            var connectionOptions = {
+                host: this.readOnlyEndpoints[0].endpoint,
+                port: this.databaseCredentials.value.port,
+                user: this.databaseCredentials.value.username,
+                // database: this.databaseCredentials.value.dbClusterIdentifier,
+                database: this.connection.database,
+                password: this.databaseCredentials.value.password
+            };
+
+            //console.debug("connectionOptions: ",connectionOptions);
+
+            return new PostgreSQLCLientPool(connectionOptions);
+        }
+    },
 
     readOnlyClientPool: {
         get: function() {
             return ReadOnlyPostgreSQLClientPool || (
                 global._ReadOnlyPostgreSQLClientPool
                     ? (ReadOnlyPostgreSQLClientPool = global._ReadOnlyPostgreSQLClientPool)
-                    : (ReadOnlyPostgreSQLClientPool = global._ReadOnlyPostgreSQLClientPool = new PostgreSQLCLientPool({
-                            host: signerOptions.hostname,
-                            port: signerOptions.port,
-                            user: signerOptions.username,
-                            database: 'my-db',
-                            password: getPassword
-                        }))
+                    : (ReadOnlyPostgreSQLClientPool = global._ReadOnlyPostgreSQLClientPool = this._createSharedReadOnlyClientPool())
             )
         }
     },
@@ -5314,7 +5336,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
         value: function (params, callback, dataOperation) {
             this.awsClientPromise.then(() => {
                 // callback - checkout a client
-                this.readWriteClientPool.connect((err, client, done) => {
+                this.readOnlyClientPool.connect((err, client, done) => {
                   if (err) {
                     console.error("sendDirectStatement() readWriteClientPool.connect error: ",err);
                     callback(err);
