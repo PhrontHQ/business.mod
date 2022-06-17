@@ -159,7 +159,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
 
             //WIP
             //currentEnvironment.session = event.requestContext.requestId;
-            console.log("setEnvironmentFromEvent: ",event, context);
+            //console.log("setEnvironmentFromEvent: ",event, context);
 
 
             //console.log(currentEnvironment.gatewayRequestId+ ": currentEnvironment: ",currentEnvironment);
