@@ -31,7 +31,8 @@
     "montage": "github:marchant/montage#montage-19",
     "montage-geo": "github:marchant/montage-geo.git#montage-19",
     "object-sizeof": "^1.5.2",
-    "pg": "^8.7.3"
+    "pg": "^8.7.3",
+    "perfect-freehand": "^1.1.0"
   },
   "devDependencies": {
     "concurrently": "^3.4.0",
