@@ -9,6 +9,10 @@
                 "element": {"#": "owner"},
                 "dateValue": {"@": "dateValue"}
             },
+            "bindings": {
+                "classList.has('is-calendar-shown')": {"<-": "@owner.isCalendarShown"},
+                "isCalendarShown": {"<-": "@dateValue.hasFocus == true ||  isCalendarShown"}
+            },
             "listeners": [
                 {
                     "type": "action",
@@ -30,7 +34,13 @@
             },
             "bindings": {
                 "value": {"<->": "@owner.value"}
-            }
+            },
+            "listeners": [
+                {
+                    "type": "focus",
+                    "listener": { "@": "owner" }
+                }
+            ]
         },
         "currentMonth": {
             "prototype": "montage/ui/text.reel",

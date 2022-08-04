@@ -65,16 +65,12 @@ exports.Date = Component.specialize(/** @lends Date# */ {
     handleDecrementAction: {
         value: function() {
             this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth()-1, 1);
-            // FIXME: Hacky
-            this.dateValue.element.focus();
         }
     },
 
     handleIncrementAction: {
         value: function() {
             this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth()+1, 1);
-            // FIXME: Hacky
-            this.dateValue.element.focus();
         }
     },
 

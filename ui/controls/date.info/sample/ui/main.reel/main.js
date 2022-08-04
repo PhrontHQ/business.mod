@@ -8,6 +8,9 @@ var Component = require("montage/ui/component").Component;
  * @extends Component
  */
 exports.Main = Component.specialize(/** @lends Main# */ {
+    value: {
+        value: new Date()
+    },
     converter: {
         value: {
             revert: function(date) {
