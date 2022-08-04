@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"}
+            }
+        },
+        "icons": {
+            "prototype": "phront/ui/controls/icons.reel",
+            "properties": {
+                "element": {"#": "icons"}
+            }
+        },
+        "default": {
+            "prototype": "phront/ui/controls/datetime.reel",
+            "properties": {
+                "element": {"#": "default"}
+            },
+            "bindings": {
+                "value": {"<->": "@owner.value"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="Main">
+        <div data-montage-id="icons"></div> <!-- sample only -->
+        <div data-montage-id="default"></div>
+        <div>FOO</div>
+    </div>
+</body>
+</html>
