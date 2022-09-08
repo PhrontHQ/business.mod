@@ -1,0 +1,64 @@
+[
+    {
+        "id": "af4696c4-84c5-4e92-947d-e0f8d484385d",
+        "name": {
+            "en": {
+                "*": "AAOIC Consent Questionnaire"
+            }
+        },
+        "title": {
+            "en": {
+                "*": "AAOIC SUPPLEMENTAL INFORMED CONSENT"
+            }
+        },
+        "headerVisualId": null,
+        "description": {
+            "en": {
+                "*": "Thank you for your continued trust in our practice. As with the transmission of any communicable disease like a cold or the flu, you may be exposed to COVID-19, also known as “Coronavirus,” at any time or in any place. Be assured that we have always followed state and federal regulations and recommended universal personal protection and disinfection protocols to limit transmission of all diseases in our office and continue to do so.\n                        Despite our careful attention to sterilization, disinfection, and use of personal barriers, there is still a chance that you could be exposed to an illness in our office, just as you might be at your gym, grocery store, or favorite restaurant. “Social Distancing” nationwide has reduced the transmission of the Coronavirus. Although we have taken measures to provide social distancing in our practice, due to the nature of the procedures we provide, it is not possible to maintain social distancing between the patient, orthodontist, orthodontic staff and sometimes other patients at all times."
+            }
+        },
+        "userContextVariableIds": ["7594b59d-64a7-4dfd-8a85-5acd12ef8fc5", "5dab8805-976b-4a67-bd98-dc070491f9bb", "485d741b-3af4-4eeb-9a7f-5259e3e06c37", "b3d84706-ed22-4221-8f2b-19035b2c0a0d", "05961a93-9f8f-4b76-aedf-ec0c3fa238af", "eb08f2db-8a6c-490c-902b-9cec2a86dcb0"],
+        "referrerQuestionnaireId": null,
+        "originId": null,
+        "isTemplate": null,
+        "templateName": null,
+        "templateDescription": null,
+        "creationDate": "2022-06-22T22:53:27.019+00:00",
+        "modificationDate": "2022-06-22T22:53:27.019+00:00",
+        "publicationDate": null,
+        "subtitle": {
+            "en": {
+                "*": "Orthodontic Treatment in the Era of COVID-19"
+            }
+        }
+    },
+    {
+        "id": "c4a4d550-99fa-401a-bede-d410b67b75dd",
+        "name": {
+            "en": {
+                "*": "AAOIC Supplemental Health Questionnaire"
+            }
+        },
+        "title": {
+            "en": {
+                "*": "AAOIC Supplemental Health Questionnaire"
+            }
+        },
+        "headerVisualId": null,
+        "description": {
+            "en": {
+                "*": "If you have been exposed to a communicable disease, you may spread the disease to the orthodontist, orthodontic staff, or other patients/parents in the practice. Therefore, prior to each appointment, we will be asking the following questions to reduce the chances of transmission:"
+            }
+        },
+        "userContextVariableIds": ["05961a93-9f8f-4b76-aedf-ec0c3fa238af", "eb08f2db-8a6c-490c-902b-9cec2a86dcb0"],
+        "referrerQuestionnaireId": "af4696c4-84c5-4e92-947d-e0f8d484385d",
+        "originId": null,
+        "isTemplate": null,
+        "templateName": null,
+        "templateDescription": null,
+        "creationDate": "2022-06-22T22:53:27.021+00:00",
+        "modificationDate": "2022-06-22T22:53:27.021+00:00",
+        "publicationDate": null,
+        "subtitle": null
+    }
+]
