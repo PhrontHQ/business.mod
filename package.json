@@ -29,7 +29,7 @@
     "id128": "^1.5.0",
     "lodash": "^4.17.2",
     "montage": "github:PhrontHQ/montage#montage-19",
-    "montage-geo": "github:marchant/montage-geo.git#montage-19",
+    "montage-geo": "github:PhrontHQ/montage-geo.git#montage-19",
     "object-sizeof": "^1.5.2",
     "pg": "^8.7.3",
     "perfect-freehand": "^1.1.0"
