@@ -1,7 +1,7 @@
 var Component = require("montage/ui/component").Component
     Translator = {
         translate: function(value, args) {
-            console.log("Needs refactoring to use Montage localization to translate '"+value+"'");
+            //console.log("Needs refactoring to use Montage localization to translate '"+value+"'");
             return value && args
                 ? Promise.resolve(args)
                 : Promise.resolve(value);
