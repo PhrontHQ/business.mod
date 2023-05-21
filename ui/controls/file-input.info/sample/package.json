@@ -2,12 +2,12 @@
     "name": "file-upload-sample",
     "version": "0.1.0",
     "dependencies": {
-        "blue-shark": "*",
+        "phront": "*",
         "montage": "*"
     },
         "mappings": {
-        "montage": "../../../node_modules/montage",
-        "blue-shark": "../../../"
+        "montage": "../../../../node_modules/montage",
+        "phront": "../../../../"
     }
 }
 
