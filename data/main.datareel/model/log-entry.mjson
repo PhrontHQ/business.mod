@@ -1,0 +1,44 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "LogEntry",
+            "propertyDescriptors": [
+                {"@": "time"},
+                {"@": "value"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./log-entry.mjson"
+            },
+            "exportName": "LogEntry",
+            "module": {
+                "%": "./log-entry"
+            },
+            "object":{"@": "LogEntry"}
+        }
+    },
+    "LogEntry": {
+        "object": "./log-entry"
+    },
+    "time": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "time",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "DateDescriptor"}
+       }
+    },
+    "DateDescriptor": {
+        "object": "montage/core/date.mjson"
+    },
+
+    "value": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "value",
+            "cardinality": 1,
+            "valueType": "object"
+        }
+    }
+}

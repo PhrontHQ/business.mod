@@ -8,7 +8,6 @@
                 {"@": "isTemplate"},
                 {"@": "templateName"},
                 {"@": "templateDescription"},
-                {"@": "isTemplate"},
                 {"@": "creationDate"},
                 {"@": "modificationDate"},
                 {"@": "publicationDate"}

@@ -6,6 +6,7 @@
             "propertyDescriptors": [
                 {"@": "name"},
                 {"@": "title"},
+                {"@": "subtitle"},
                 {"@": "headerVisual"},
                 {"@": "description"},
                 {"@": "questions"},
@@ -51,6 +52,15 @@
             "description": "The title presented to people filling the questionnaire"
         }
     },
+    "subtitle": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "subtitle",
+            "isLocalizable": true,
+            "valueType": "string",
+            "description": "The subtitle presented to people filling the questionnaire"
+        }
+    },
 
     "headerVisual": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -83,7 +93,15 @@
             "valueType": "object",
             "cardinality": -1,
             "inversePropertyName": "questionnaire",
-            "valueDescriptor": {"@": "questionnaireQuestionDescriptor"}
+            "valueDescriptor": {"@": "questionnaireQuestionDescriptor"},
+            "dataOrderings": [{"@": "questionsOrdering"}]
+        }
+    },
+    "questionsOrdering": {
+        "prototype": "montage/data/model/data-ordering",
+        "values": {
+            "expression": "questionnairePosition",
+            "order": 0
         }
     },
     "questionnaireQuestionDescriptor": {

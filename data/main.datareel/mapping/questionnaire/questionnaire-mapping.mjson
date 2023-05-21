@@ -8,6 +8,7 @@
                 "rules": {
                     "name": {"<->": "name"},
                     "title": {"<->": "title"},
+                    "subtitle": {"<->": "subtitle"},
                     "headerVisual": {
                         "<->": "headerVisualId",
                         "converter": {"@": "imageConverter"}

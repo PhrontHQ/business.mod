@@ -1,0 +1,73 @@
+{
+
+    "root": {
+        "prototype": "montage/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PersonSignature",
+            "propertyDescriptors": [
+                {"@": "person"},
+                {"@": "inputPoints"},
+                {"@": "fileRepresentations"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./person-signature.mjson"
+            },
+            "exportName": "PersonSignature",
+            "module": {
+                "%": "./person-signature"
+            },
+            "object":{"@": "person-signature"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+
+    "person-signature": {
+        "object": "./person-signature"
+    },
+
+    "objectDescriptor": {
+        "object": "./data-object.mjson"
+    },
+
+    "inputPoints": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "inputPoints",
+            "valueType": "array",
+            "collectionValueType": "array",
+            "cardinality": -1,
+            "isSearchable": false
+        }
+    },
+
+    "fileRepresentations": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "fileRepresentations",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "AssetDescriptor"},
+            "isSearchable": true
+        }
+    },
+
+    "AssetDescriptor": {
+        "object": "./asset.mjson"
+    },
+
+    "person": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "person",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "PersonDescriptor"},
+            "isSearchable": true
+        }
+    },
+
+    "PersonDescriptor": {
+        "object": "./person.mjson"
+    }
+
+}

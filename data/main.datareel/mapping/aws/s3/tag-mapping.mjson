@@ -1,0 +1,38 @@
+{
+    "root": {
+        "prototype": "montage/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "TagDescriptor"},
+            "primaryKeyPropertyDescriptors": [
+                {"@": "TagIdDescriptor"}
+            ],
+            "objectMapping": {
+                "rules": {
+                    "key": {"<->": "Key"},
+                    "value": {"<->": "Value"}
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+                "key", "value"
+            ]
+        }
+    },
+
+    "TagDescriptor": {
+        "object": "../../model/aws/s3/tag.mjson"
+    },
+
+    "TagIdDescriptor": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "key",
+            "valueType": "string"
+        }
+    }
+
+
+}

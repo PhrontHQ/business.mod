@@ -21,7 +21,8 @@
                 {"@": "supplierRelationships"},
                 {"@": "customerSupplierResponsibilities"},
                 {"@": "firstPersonalRelationships"},
-                {"@": "secondPersonalRelationships"}
+                {"@": "secondPersonalRelationships"},
+                {"@": "signatures"}
            ],
             "objectDescriptorModule": {
                 "%": "./person.mjson"
@@ -245,6 +246,21 @@
             "cardinality": -1,
             "inversePropertyName": "secondPerson",
             "valueDescriptor": {"@": "PersonalRelationshipDescriptor"}
+       }
+    },
+
+    "PersonSignatureDescriptor": {
+        "object": "./person-signature.mjson"
+    },
+
+    "signatures": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "signatures",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "person",
+            "valueDescriptor": {"@": "PersonSignatureDescriptor"}
        }
     }
 
