@@ -40,6 +40,7 @@
                 {"@": "partyMapping"},
                 {"@": "imageMapping"},
                 {"@": "personMapping"},
+                {"@": "personSignatureMapping"},
                 {"@": "resourceMapping"},
                 {"@": "personNameMapping"},
                 {"@": "personal-relationshipMapping"},
@@ -114,6 +115,7 @@
                 {"@": "partyPostalAddress"},
                 {"@": "image"},
                 {"@": "person"},
+                {"@": "personSignature"},
                 {"@": "resource"},
                 {"@": "person-name"},
                 {"@": "personal-relationship"},
@@ -437,6 +439,14 @@
 
     "personMapping": {
         "object": "./mapping/person-mapping.mjson"
+    },
+
+    "personSignature": {
+        "object": "./model/person-signature.mjson"
+    },
+
+    "personSignatureMapping": {
+        "object": "./mapping/person-signature-mapping.mjson"
     },
 
     "resource": {
