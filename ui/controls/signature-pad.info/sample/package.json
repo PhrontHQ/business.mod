@@ -1,0 +1,16 @@
+{
+    "name": "button-sample",
+    "version": "0.1.0",
+    "dependencies": {
+        "phront": "*",
+        "montage": "*",
+        "mr": "*"
+    },
+    "mappings": {
+        "montage": "../../../../node_modules/montage",
+        "mr": "../../../../node_modules/mr",
+        "phront": "../../../../"
+    }
+}
+
+
