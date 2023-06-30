@@ -70,7 +70,7 @@ exports.SecretManagerDataService = SecretManagerDataService = AWSRawDataService.
         }
     },
 
-    awsClientPromises: {
+    rawClientPromises: {
         get: function () {
             var promises = this.super();
 
@@ -119,12 +119,12 @@ exports.SecretManagerDataService = SecretManagerDataService = AWSRawDataService.
 
                 (promises || (promises = [])).push(new Promise(function(resolve, reject) {
 
-                    self.awsClientPromise.then(() => {
+                    self.rawClientPromise.then(() => {
 
                         const getSecretValueCommand = new GetSecretValueCommand({
                             SecretId: secretId
                         });
-                        self.awsClient.send(getSecretValueCommand, function (err, data) {
+                        self.rawClient.send(getSecretValueCommand, function (err, data) {
                             if (err) {
                                 /*
 

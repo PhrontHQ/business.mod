@@ -96,7 +96,7 @@ exports.CognitoDataService = CognitoDataService = AWSRawDataService.specialize(/
         }
     },
 
-    awsClientPromises: {
+    rawClientPromises: {
         get: function () {
             var promises = this.super();
 
@@ -124,7 +124,7 @@ exports.CognitoDataService = CognitoDataService = AWSRawDataService.specialize(/
 
             return promises;
 
-                // this.__cognitoIdentityServiceProviderClientPromise = Promise.all(promises).then(() => { return this.awsClient;});
+                // this.__cognitoIdentityServiceProviderClientPromise = Promise.all(promises).then(() => { return this.rawClient;});
 
                 this.__cognitoIdentityServiceProviderClientPromise = Promise.all([
                     // require.async("@aws-sdk/credential-provider-ini"),
@@ -145,7 +145,7 @@ exports.CognitoDataService = CognitoDataService = AWSRawDataService.specialize(/
                     ListUserPoolClientsCommand = resolvedModules[5].ListUserPoolClientsCommand;
                     DescribeUserPoolClientCommand = resolvedModules[6].DescribeUserPoolClientCommand;
                     CreateUserPoolClientCommand = resolvedModules[7].CreateUserPoolClientCommand;
-                    return this.awsClient;
+                    return this.rawClient;
 
                 });
             // return this.__cognitoIdentityServiceProviderClientPromise;
@@ -454,8 +454,8 @@ exports.CognitoDataService = CognitoDataService = AWSRawDataService.specialize(/
                     UserPoolId: UserPoolId /* required */
                 };
 
-                this.awsClientPromise.then(() => {
-                    this.awsClient.send(new DescribeUserPoolCommand(params), this.callbackForDataPropertyNamed(objectDescriptor, readOperation, "UserPool"));
+                this.rawClientPromise.then(() => {
+                    this.rawClient.send(new DescribeUserPoolCommand(params), this.callbackForDataPropertyNamed(objectDescriptor, readOperation, "UserPool"));
                     // this._cognitoIdentityServiceProvider.describeUserPool(params, this.callbackForDataPropertyNamed(objectDescriptor, readOperation, "UserPool"));
                 });
 
@@ -471,16 +471,16 @@ exports.CognitoDataService = CognitoDataService = AWSRawDataService.specialize(/
                 operationLocales = readOperation.locales,
                 rawCriteria = criteria ? this.mapCriteriaToRawCriteria(criteria, mapping, operationLocales) : null,
                 listUserPools = (params, callback) => {
-                    this.awsClientPromise.then(() => {
-                        this.awsClient.send(new ListUserPoolsCommand(params), callback);
+                    this.rawClientPromise.then(() => {
+                        this.rawClient.send(new ListUserPoolsCommand(params), callback);
                         //this._cognitoIdentityServiceProvider.listUserPools(params, callback);
                     });
                 },
                 callback = this.callbackForDataPropertyNamed(objectDescriptor, readOperation, "UserPools", rawCriteria, params, listUserPools);
 
                 var describeUserPool = (params, callback) => {
-                    this.awsClientPromise.then(() => {
-                        this.awsClient.send(new DescribeUserPoolCommand(params), callback);
+                    this.rawClientPromise.then(() => {
+                        this.rawClient.send(new DescribeUserPoolCommand(params), callback);
                         // this._cognitoIdentityServiceProvider.describeUserPool(params, callback);
                     });
                 };
@@ -697,8 +697,8 @@ exports.CognitoDataService = CognitoDataService = AWSRawDataService.specialize(/
             }
 
             //cognitoidentityserviceprovider.createUserPool(params, callback);
-            this.awsClientPromise.then(() => {
-                this.awsClient.send(new CreateUserPoolCommand(params), callback);
+            this.rawClientPromise.then(() => {
+                this.rawClient.send(new CreateUserPoolCommand(params), callback);
             });
 
 
@@ -752,8 +752,8 @@ exports.CognitoDataService = CognitoDataService = AWSRawDataService.specialize(/
                     ClientId: ClientId, // required
                     UserPoolId: UserPoolId // required
                 };
-                this.awsClientPromise.then(() => {
-                    this.awsClient.send(new DescribeUserPoolClientCommand(params), callback);
+                this.rawClientPromise.then(() => {
+                    this.rawClient.send(new DescribeUserPoolClientCommand(params), callback);
                 });
             }
             /*
@@ -805,28 +805,28 @@ exports.CognitoDataService = CognitoDataService = AWSRawDataService.specialize(/
 
                     if(isNotLast) {
                         params.NextToken = nextToken;
-                        //If we're here we've already created the actual client, so no need to use this.awsClientPromise()
-                        self.awsClient.send(new ListUserPoolClientsCommand(params), callback);
+                        //If we're here we've already created the actual client, so no need to use this.rawClientPromise()
+                        self.rawClient.send(new ListUserPoolClientsCommand(params), callback);
                     }
                 }
 
 
-                this.awsClientPromise.then(() => {
-                    this.awsClient.send(new ListUserPoolClientsCommand(params), callback);
+                this.rawClientPromise.then(() => {
+                    this.rawClient.send(new ListUserPoolClientsCommand(params), callback);
                 });
 
 
             } else {
                 var listUserPoolClients = (params, callback) => {
-                    this.awsClientPromise.then(() => {
-                        this.awsClient.send(new ListUserPoolClientsCommand(params), callback);
+                    this.rawClientPromise.then(() => {
+                        this.rawClient.send(new ListUserPoolClientsCommand(params), callback);
                         //this._cognitoIdentityServiceProvider.listUserPoolClients(params, callback);
                     });
                 };
 
                 var describeUserPoolClient = (params, callback) => {
-                    this.awsClientPromise.then(() => {
-                        this.awsClient.send(new DescribeUserPoolClientCommand(params), callback);
+                    this.rawClientPromise.then(() => {
+                        this.rawClient.send(new DescribeUserPoolClientCommand(params), callback);
                         //this._cognitoIdentityServiceProvider.describeUserPoolClient(params, callback);
                     });
                 };
@@ -961,8 +961,8 @@ exports.CognitoDataService = CognitoDataService = AWSRawDataService.specialize(/
 
             }
 
-            this.awsClientPromise.then(() => {
-                this.awsClient.send(new CreateUserPoolClientCommand(params), callback);
+            this.rawClientPromise.then(() => {
+                this.rawClient.send(new CreateUserPoolClientCommand(params), callback);
             });
         }
     }

@@ -85,7 +85,7 @@ exports.S3DataService = S3DataService = AWSRawDataService.specialize(/** @lends 
         }
     },
 
-    awsClientPromises: {
+    rawClientPromises: {
         get: function () {
             var promises = this.super();
 
@@ -166,12 +166,12 @@ exports.S3DataService = S3DataService = AWSRawDataService.specialize(/** @lends 
                         (promises || (promises = [])).push(new Promise(function(resolve, reject) {
 
                             /*
-                                For now, awsClientPromise gets all dependencies
+                                For now, rawClientPromise gets all dependencies
                             */
-                            self.awsClientPromise.then(() => {
+                            self.rawClientPromise.then(() => {
 
                                 const command = new GetObjectCommand(params);
-                                getSignedUrl(self.awsClient, command, { expiresIn: 3600 })
+                                getSignedUrl(self.rawClient, command, { expiresIn: 3600 })
                                 .then((url) => {
                                     //console.log('signedURL is', url);
                                     (rawData || (rawData = {}))["signedUrl"] = url;
@@ -281,9 +281,9 @@ exports.S3DataService = S3DataService = AWSRawDataService.specialize(/** @lends 
                         */
                     if(readExpressions.indexOf("content") !== -1) {
                         /*
-                            For now, awsClientPromise gets all dependencies
+                            For now, rawClientPromise gets all dependencies
                         */
-                        this.awsClientPromise.then(() => {
+                        this.rawClientPromise.then(() => {
                             /*
                                 aws-sdk v3
                                 https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/getobjectcommand.html
@@ -291,15 +291,15 @@ exports.S3DataService = S3DataService = AWSRawDataService.specialize(/** @lends 
                                 Command style
                             */
                             const getObjectCommand = new GetObjectCommand(params);
-                            this.awsClient.send(getObjectCommand, callback);
+                            this.rawClient.send(getObjectCommand, callback);
                         });
 
                     } else if(params.hasOwnProperty("Key") && params.hasOwnProperty("Bucket") && Object.keys(params).length > 2) {
 
                         /*
-                            For now, awsClientPromise gets all dependencies
+                            For now, rawClientPromise gets all dependencies
                         */
-                        this.awsClientPromise.then(() => {
+                        this.rawClientPromise.then(() => {
                             /*
                                 aws-sdk v3
                                 https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/classes/headobjectcommand.html
@@ -307,7 +307,7 @@ exports.S3DataService = S3DataService = AWSRawDataService.specialize(/** @lends 
                             */
                             //No point to do even a head if nothing more is asked but Key and Bucket...
                             const headObjectCommand = new HeadObjectCommand(params);
-                            this.awsClient.send(headObjectCommand, callback);
+                            this.rawClient.send(headObjectCommand, callback);
                         });
 
 
@@ -321,7 +321,7 @@ exports.S3DataService = S3DataService = AWSRawDataService.specialize(/** @lends 
                     */
 
                     // var signedURL1
-                    // this.awsClient.getSignedUrl('getObject', params, function (err, url) {
+                    // this.rawClient.getSignedUrl('getObject', params, function (err, url) {
                     //     if (err) {
                     //         console.error(err, err.stack); // an error occurred
                     //     }
@@ -333,9 +333,9 @@ exports.S3DataService = S3DataService = AWSRawDataService.specialize(/** @lends 
 
                 } else {
                     /*
-                        For now, awsClientPromise gets all dependencies
+                        For now, rawClientPromise gets all dependencies
                     */
-                    this.awsClientPromise.then(() => {
+                    this.rawClientPromise.then(() => {
 
                         //If no expression, we return the default
                         /*
@@ -346,7 +346,7 @@ exports.S3DataService = S3DataService = AWSRawDataService.specialize(/** @lends 
 
                         //No point to do even a head if nothing more is asked but Key and Bucket...
                         const headObjectCommand = new HeadObjectCommand(params);
-                        this.awsClient.send(headObjectCommand, callback);
+                        this.rawClient.send(headObjectCommand, callback);
                     });
 
                 }
@@ -385,9 +385,9 @@ exports.S3DataService = S3DataService = AWSRawDataService.specialize(/** @lends 
             }
 
             /*
-                For now, awsClientPromise gets all dependencies
+                For now, rawClientPromise gets all dependencies
             */
-            this.awsClientPromise.then(() => {
+            this.rawClientPromise.then(() => {
 
                 const command = new PutObjectCommand(params);
                 var operation = new DataOperation();
@@ -396,7 +396,7 @@ exports.S3DataService = S3DataService = AWSRawDataService.specialize(/** @lends 
 
                 operation.target = createOperation.target;
 
-                this.awsClient.send(command)
+                this.rawClient.send(command)
                 .then(function(data) {
                     /*
                         data is like:
@@ -430,7 +430,7 @@ exports.S3DataService = S3DataService = AWSRawDataService.specialize(/** @lends 
 
             });
 
-            // this.awsClient.putObject(params, function (err, data) {
+            // this.rawClient.putObject(params, function (err, data) {
 
             //     var operation = new DataOperation();
             //     operation.referrerId = createOperation.id;

@@ -21,14 +21,14 @@ exports.AWSRawDataService = AWSRawDataService = RawDataService.specialize(/** @l
         value: undefined
     },
 
-    _awsClientPromises: {
+    _rawClientPromises: {
         value: undefined
     },
 
-    awsClientPromises: {
+    rawClientPromises: {
         get: function () {
-            if (!this._awsClientPromises) {
-                var promises = this._awsClientPromises = [];
+            if (!this._rawClientPromises) {
+                var promises = this._rawClientPromises = [];
 
                 if(!this.currentEnvironment.isAWS) {
                     promises.push(
@@ -37,33 +37,33 @@ exports.AWSRawDataService = AWSRawDataService = RawDataService.specialize(/** @l
                 };
 
             }
-            return this._awsClientPromises;
+            return this._rawClientPromises;
         }
     },
 
-    _awsClientPromise: {
+    _rawClientPromise: {
         value: undefined
     },
 
-    awsClientPromise: {
+    rawClientPromise: {
         get: function () {
-            if (!this._awsClientPromise) {
-                this._awsClientPromise = Promise.all(this.awsClientPromises).then(() => { return this.awsClient;});
+            if (!this._rawClientPromise) {
+                this._rawClientPromise = Promise.all(this.rawClientPromises).then(() => { return this.rawClient;});
             }
-            return this._awsClientPromise;
+            return this._rawClientPromise;
         }
     },
 
-    _awsClient: {
+    _rawClient: {
         value: undefined
     },
-    awsClient: {
+    rawClient: {
         get: function () {
-            return this._awsClient || (this._awsClient = this.instantiateAWSClientWithOptions(this.awsClientOptions));
+            return this._rawClient || (this._rawClient = this.instantiateAWSClientWithOptions(this.awsClientOptions));
         }
     },
 
-    _awsClientOptions: {
+    _rawClientOptions: {
         value: undefined
     },
     instantiateAWSClientOptions: {
@@ -103,7 +103,7 @@ exports.AWSRawDataService = AWSRawDataService = RawDataService.specialize(/** @l
     },
     awsClientOptions: {
         get: function () {
-            return this._awsClientOptions || (this._awsClient = this.instantiateAWSClientOptions());
+            return this._rawClientOptions || (this._rawClient = this.instantiateAWSClientOptions());
         }
     },
 

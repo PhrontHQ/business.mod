@@ -1,5 +1,7 @@
 
-var AWSRawDataService = require("./aws/a-w-s-raw-data-service").AWSRawDataService,
+//var AWSRawDataService = require("./aws/a-w-s-raw-data-service").AWSRawDataService,
+var RawDataService = require("montage/data/service/raw-data-service").RawDataService,
+
     Criteria = require("montage/core/criteria").Criteria,
     ObjectDescriptor = require("montage/core/meta/object-descriptor").ObjectDescriptor,
     RawEmbeddedValueToObjectConverter = require("montage/data/converter/raw-embedded-value-to-object-converter").RawEmbeddedValueToObjectConverter,
@@ -50,7 +52,7 @@ var AWSRawDataService = require("./aws/a-w-s-raw-data-service").AWSRawDataServic
     PostgreSQLCLientPool,
     ReadWritePostgreSQLClientPool,
     ReadOnlyPostgreSQLClientPool,
-    PhrontService,
+    PostgreSQLService,
     ProcessEnv = process.env;
 
 
@@ -128,17 +130,17 @@ var createTableTemplatePrefix = `CREATE TABLE :schema.":table"
 * @class
 * @extends RawDataService
 */
-exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends PhrontService.prototype */ {
+exports.PostgreSQLService = PostgreSQLService = RawDataService.specialize(/** @lends PostgreSQLService.prototype */ {
 
     /***************************************************************************
      * Initializing
      */
 
     constructor: {
-        value: function PhrontService() {
+        value: function PostgreSQLService() {
             "use strict";
 
-            AWSRawDataService.call(this);
+            RawDataService.call(this);
 
 
             if(this._mapResponseHandlerByOperationType.size === 0) {
@@ -446,7 +448,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                 readOperation.type = DataOperation.Type.ReadOperation;
                 readOperation.target = SecretObjectDescriptor;
                 readOperation.criteria = new Criteria().initWithExpression("name == $.name", {
-                    name: `${this.currentEnvironment.stage}-${this.connection.database}-database`
+                    name: `${!!this.connection.environment ? `${this.connection.environment}-` : ''}${this.currentEnvironment.stage}-${this.connection.database}-database`
                 });
 
                 SecretObjectDescriptor.addEventListener(DataOperation.Type.ReadCompletedOperation, (readCompletedOperation) => {
@@ -741,7 +743,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
                         rawReadExpressions = new Set(mapping.rawRequisitePropertyNames)
                     }
 
-                PhrontClientService should build the readExpressions it wants as it's hard to just put a few in readExpressions and expect PhrontService to fill-in the rest? Especially since the UI should drive what we get back. So even if PhrontClientService were to build
+                PhrontClientService should build the readExpressions it wants as it's hard to just put a few in readExpressions and expect PostgreSQLService to fill-in the rest? Especially since the UI should drive what we get back. So even if PhrontClientService were to build
                 itself readExpressions as new Set(mapping.rawRequisitePropertyNames), we need to go
                     from: ["name","description","tags"]
                     to something like: ["name.fr.CA","description.fr.CA","tags.fr.CA"]
@@ -5397,5 +5399,5 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 });
 
 
-Object.assign(PhrontService.prototype, pgstringify);
+Object.assign(PostgreSQLService.prototype, pgstringify);
 
