@@ -48,8 +48,8 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
     fs = require('fs'),
     Timer = require("../../../core/timer").Timer,
     SecretObjectDescriptor = require("../model/aws/secret.mjson").montageObject,
-    PostgreSQLCLient,
-    PostgreSQLCLientPool,
+    PostgreSQLClient,
+    PostgreSQLClientPool,
     ReadWritePostgreSQLClientPool,
     ReadOnlyPostgreSQLClientPool,
     PostgreSQLService,
@@ -335,7 +335,7 @@ exports.PostgreSQLService = PostgreSQLService = RawDataService.specialize(/** @l
 
             //console.debug("connectionOptions: ",connectionOptions);
 
-            return new PostgreSQLCLientPool(connectionOptions);
+            return new PostgreSQLClientPool(connectionOptions);
         }
     },
 
@@ -370,7 +370,7 @@ exports.PostgreSQLService = PostgreSQLService = RawDataService.specialize(/** @l
 
             //console.debug("connectionOptions: ",connectionOptions);
 
-            return new PostgreSQLCLientPool(connectionOptions);
+            return new PostgreSQLClientPool(connectionOptions);
         }
     },
 
@@ -512,8 +512,8 @@ exports.PostgreSQLService = PostgreSQLService = RawDataService.specialize(/** @l
             } else {
                 promises.push(
                     require.async("pg").then(function(exports) {
-                        PostgreSQLCLient = exports.Client;
-                        PostgreSQLCLientPool = exports.Pool;
+                        PostgreSQLClient = exports.Client;
+                        PostgreSQLClientPool = exports.Pool;
                     })
                 );
                 promises.push(
@@ -523,6 +523,29 @@ exports.PostgreSQLService = PostgreSQLService = RawDataService.specialize(/** @l
             return promises;
         }
     },
+
+    _rawClientPromise: {
+        value: undefined
+    },
+
+    rawClientPromise: {
+        get: function () {
+            if (!this._rawClientPromise) {
+                this._rawClientPromise = Promise.all(this.rawClientPromises).then(() => { return this.rawClient;});
+            }
+            return this._rawClientPromise;
+        }
+    },
+
+    _rawClient: {
+        value: undefined
+    },
+    rawClient: {
+        get: function () {
+            return this._rawClient;
+        }
+    },
+
 
     _connection: {
         value: undefined

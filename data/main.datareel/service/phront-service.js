@@ -46,8 +46,8 @@ var AWSRawDataService = require("./aws/a-w-s-raw-data-service").AWSRawDataServic
     fs = require('fs'),
     Timer = require("../../../core/timer").Timer,
     SecretObjectDescriptor = require("../model/aws/secret.mjson").montageObject,
-    PostgreSQLCLient,
-    PostgreSQLCLientPool,
+    PostgreSQLClient,
+    PostgreSQLClientPool,
     ReadWritePostgreSQLClientPool,
     ReadOnlyPostgreSQLClientPool,
     PhrontService,
@@ -333,7 +333,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
             //console.debug("connectionOptions: ",connectionOptions);
 
-            return new PostgreSQLCLientPool(connectionOptions);
+            return new PostgreSQLClientPool(connectionOptions);
         }
     },
 
@@ -368,7 +368,7 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
 
             //console.debug("connectionOptions: ",connectionOptions);
 
-            return new PostgreSQLCLientPool(connectionOptions);
+            return new PostgreSQLClientPool(connectionOptions);
         }
     },
 
@@ -510,8 +510,8 @@ exports.PhrontService = PhrontService = AWSRawDataService.specialize(/** @lends 
             } else {
                 promises.push(
                     require.async("pg").then(function(exports) {
-                        PostgreSQLCLient = exports.Client;
-                        PostgreSQLCLientPool = exports.Pool;
+                        PostgreSQLClient = exports.Client;
+                        PostgreSQLClientPool = exports.Pool;
                     })
                 );
                 promises.push(
