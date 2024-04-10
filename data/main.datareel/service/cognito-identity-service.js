@@ -39,7 +39,7 @@ CognitoIdentityService = exports.CognitoIdentityService = IdentityService.specia
 
     constructor: {
         value: function CognitoIdentityService() {
-            IdentityService.call(this);
+            this.super();
             this._usersByName = new Map();
             this._fetchStreamByUser = new WeakMap();
         }

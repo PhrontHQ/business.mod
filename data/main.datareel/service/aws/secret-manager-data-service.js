@@ -26,7 +26,7 @@ exports.SecretManagerDataService = SecretManagerDataService = AWSRawDataService.
 
     constructor: {
         value: function SecretManagerDataService() {
-            AWSRawDataService.call(this);
+            this.super();
 
             //var mainService = DataService.mainService;
             //this.addEventListener(DataOperation.Type.ReadOperation,this,false);

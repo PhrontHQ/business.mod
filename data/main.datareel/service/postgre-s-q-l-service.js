@@ -138,9 +138,9 @@ exports.PostgreSQLService = PostgreSQLService = RawDataService.specialize(/** @l
 
     constructor: {
         value: function PostgreSQLService() {
-            "use strict";
+            //"use strict";
 
-            RawDataService.call(this);
+            this.super();
 
 
             if(this._mapResponseHandlerByOperationType.size === 0) {
@@ -234,8 +234,15 @@ exports.PostgreSQLService = PostgreSQLService = RawDataService.specialize(/** @l
     deserializeSelf: {
         value:function (deserializer) {
             this.super(deserializer);
+
+            var value = deserializer.getProperty("clientPool");
+            if (value) {
+                this.clientPool = value;
+            }
+
         }
     },
+
 
      //We need a mapping to go from model(schema?)/ObjectDescriptor to schema/table
      mapOperationToRawOperationConnection: {
@@ -310,79 +317,6 @@ exports.PostgreSQLService = PostgreSQLService = RawDataService.specialize(/** @l
     //     }
     // },
 
-    readWriteEndoint: {
-        get: function() {
-            return this.connection.readWriteEndpoint;
-        }
-    },
-
-    readOnlyEndpoints: {
-        get: function() {
-            return this.connection.readOnlyEndpoints;
-        }
-    },
-
-    _createSharedReadWriteClientPool: {
-        value: function() {
-            var connectionOptions = {
-                host: this.readWriteEndoint.endpoint,
-                port: this.databaseCredentials.value.port,
-                user: this.databaseCredentials.value.username,
-                // database: this.databaseCredentials.value.dbClusterIdentifier,
-                database: this.connection.database,
-                password: this.databaseCredentials.value.password
-            };
-
-            //console.debug("connectionOptions: ",connectionOptions);
-
-            return new PostgreSQLClientPool(connectionOptions);
-        }
-    },
-
-    readWriteClientPool: {
-        get: function() {
-            return ReadWritePostgreSQLClientPool || (
-                global._ReadWritePostgreSQLClientPool
-                    ? (ReadWritePostgreSQLClientPool = global._ReadWritePostgreSQLClientPool)
-                    : (ReadWritePostgreSQLClientPool = global._ReadWritePostgreSQLClientPool = this._createSharedReadWriteClientPool())
-            )
-        }
-    },
-
-    /*
-        WIP: We need to asses how to use a single dedicated reader vs more than one with special purpose?
-
-        This is only expecting one reader, when we need more than one, then we'll need to loop on
-            this.readOnlyEndpoints
-        and create an array of readOnlyClientPools
-    */
-
-    _createSharedReadOnlyClientPool: {
-        value: function() {
-            var connectionOptions = {
-                host: this.readOnlyEndpoints[0].endpoint,
-                port: this.databaseCredentials.value.port,
-                user: this.databaseCredentials.value.username,
-                // database: this.databaseCredentials.value.dbClusterIdentifier,
-                database: this.connection.database,
-                password: this.databaseCredentials.value.password
-            };
-
-            //console.debug("connectionOptions: ",connectionOptions);
-
-            return new PostgreSQLClientPool(connectionOptions);
-        }
-    },
-
-    readOnlyClientPool: {
-        get: function() {
-            return ReadOnlyPostgreSQLClientPool || (
-                global._ReadOnlyPostgreSQLClientPool
-                    ? (ReadOnlyPostgreSQLClientPool = global._ReadOnlyPostgreSQLClientPool)
-                    : (ReadOnlyPostgreSQLClientPool = global._ReadOnlyPostgreSQLClientPool = this._createSharedReadOnlyClientPool())
-            )
-        }
-    },
 
 
     instantiateAWSClientWithOptions: {
@@ -439,9 +373,9 @@ exports.PostgreSQLService = PostgreSQLService = RawDataService.specialize(/** @l
 
     */
 
-    loadDatabaseCredentialsFromSecret: {
-        value: function () {
-            return new Promise( (resolve, reject) => {
+        postgreSQLClientPoolWillResolveRawClientPromises: {
+        value: function (clientPool, promises) {
+            promises.push(new Promise( (resolve, reject) => {
 
                 //TODO later: replace this with a proper DataService fetchData()
                 var readOperation = new DataOperation();
@@ -453,7 +387,15 @@ exports.PostgreSQLService = PostgreSQLService = RawDataService.specialize(/** @l
 
                 SecretObjectDescriptor.addEventListener(DataOperation.Type.ReadCompletedOperation, (readCompletedOperation) => {
                     readCompletedOperation.stopImmediatePropagation();
-                    resolve((this.databaseCredentials = readCompletedOperation.data[0]));
+
+                     /*
+                        TODO: clean up who gets to know / holds databaseCredentials. It sounds that like now belongs on the client side.
+                     */
+                    const databaseCredentials = readCompletedOperation.data[0];
+                    if(this.clientPool) {
+                        this.clientPool.databaseCredentials = databaseCredentials;
+                    }
+                    resolve((this.databaseCredentials = databaseCredentials));
                 }, {
                     capture: true,
                     once: true
@@ -469,7 +411,7 @@ exports.PostgreSQLService = PostgreSQLService = RawDataService.specialize(/** @l
 
                 SecretObjectDescriptor.dispatchEvent(readOperation);
 
-            });
+            }));
 
         }
     },
@@ -478,48 +420,16 @@ exports.PostgreSQLService = PostgreSQLService = RawDataService.specialize(/** @l
         get: function () {
             var promises = this.super();
 
+            // promises.push(
+            //     require.async("pg").then(function(exports) {
+            //         PostgreSQLClient = exports.Client;
+            //         PostgreSQLClientPool = exports.Pool;
+            //     })
+            // );
+            promises.push(
+                ...this.clientPool.rawClientPromises
+            );
 
-
-
-            if(this.useDataAPI) {
-                // if(!currentEnvironment.isAWS) {
-                //     promises.push(
-                //         require.async("@aws-sdk/credential-provider-ini").then(function(exports) { fromIni = exports.fromIni})
-                //     )
-                // };
-                promises.push(
-                    require.async("@aws-sdk/client-rds-data/dist-cjs/RDSDataClient").then(function(exports) { RDSDataClient = exports.RDSDataClient})
-                );
-                promises.push(
-                    require.async("@aws-sdk/client-rds-data/dist-cjs/commands/BatchExecuteStatementCommand").then(function(exports) { BatchExecuteStatementCommand = exports.BatchExecuteStatementCommand})
-                );
-                promises.push(
-                    require.async("@aws-sdk/client-rds-data/dist-cjs/commands/BeginTransactionCommand").then(function(exports) { BeginTransactionCommand = exports.BeginTransactionCommand})
-                );
-                promises.push(
-                    require.async("@aws-sdk/client-rds-data/dist-cjs/commands/CommitTransactionCommand").then(function(exports) { CommitTransactionCommand = exports.CommitTransactionCommand})
-                );
-                promises.push(
-                    require.async("@aws-sdk/client-rds-data/dist-cjs/commands/ExecuteStatementCommand").then(function(exports) {
-                        ExecuteStatementCommand = exports.ExecuteStatementCommand
-                    })
-                );
-                promises.push(
-                    require.async("@aws-sdk/client-rds-data/dist-cjs/commands/RollbackTransactionCommand").then(function(exports) { RollbackTransactionCommand = exports.RollbackTransactionCommand})
-                );
-
-                // this.__rdsDataClientPromise = Promise.all(promises).then(() => { return this.rawClient;});
-            } else {
-                promises.push(
-                    require.async("pg").then(function(exports) {
-                        PostgreSQLClient = exports.Client;
-                        PostgreSQLClientPool = exports.Pool;
-                    })
-                );
-                promises.push(
-                    this.loadDatabaseCredentialsFromSecret()
-                );
-            }
             return promises;
         }
     },
@@ -576,6 +486,16 @@ exports.PostgreSQLService = PostgreSQLService = RawDataService.specialize(/** @l
                 this._connection = value;
 
                 if(value) {
+
+                    /*
+                        Temporary workaround, the responsibilities need to be clarified and cleanup further.
+                    */
+
+                    if(value.clientPool) {
+                        this.clientPool = value.clientPool;
+                        this.clientPool.connection = value;
+                    }
+
                     var region = value.resourceArn
                     ? value.resourceArn.split(":")[3]
                     : value.endPoint
@@ -5237,7 +5157,7 @@ exports.PostgreSQLService = PostgreSQLService = RawDataService.specialize(/** @l
 
 
                         // callback - checkout a client
-                        self.readWriteClientPool.connect((err, client, done) => {
+                        self.clientPool.connectForDataOperation(performTransactionOperation,(err, client, done) => {
                             if (err) {
                                 operation.type = DataOperation.Type.PerformTransactionFailedOperation;
                                 operation.data = err;
@@ -5361,9 +5281,12 @@ exports.PostgreSQLService = PostgreSQLService = RawDataService.specialize(/** @l
         value: function (params, callback, dataOperation) {
             this.rawClientPromise.then(() => {
                 // callback - checkout a client
-                this.readOnlyClientPool.connect((err, client, done) => {
+                this.clientPool.connectForDataOperation(dataOperation, (err, client, done) => {
                   if (err) {
                     console.error("sendDirectStatement() readWriteClientPool.connect error: ",err);
+                    //call `done()` to release the client back to the pool
+                    done();
+
                     callback(err);
                   } else if(client) {
 

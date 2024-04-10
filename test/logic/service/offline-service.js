@@ -2,7 +2,7 @@ var RawDataService = require("montage/data/service/raw-data-service").RawDataSer
 	Criteria = require("montage/core/criteria").Criteria,
 	DataObjectDescriptor = require("montage/data/model/data-object-descriptor").DataObjectDescriptor,
 	DataQuery = require("montage/data/model/data-query").DataQuery,
-	Montage = require("montage").Montage,
+	Montage = require("montage/core/core").Montage,
 	ObjectDescriptor = require("montage/core/meta/object-descriptor").ObjectDescriptor,
 	OfflineDataService = require("offline-data-service").OfflineDataService,
 	Promise = require("montage/core/promise").Promise;
@@ -55,9 +55,9 @@ exports.OfflineService = RawDataService.specialize(/** @lends HttpService.protot
 
 
 	/**
-	 * Fetches the 'lastFetched' operations from the database. This is used for testing only. 
-	 * 
-	 * 
+	 * Fetches the 'lastFetched' operations from the database. This is used for testing only.
+	 *
+	 *
 	 * @param {Map|WeakMap} - the operations map
 	 * @returns {Promise}
 	 */
@@ -79,7 +79,7 @@ exports.OfflineService = RawDataService.specialize(/** @lends HttpService.protot
                             reject(e);
                         });
                     });
-                }).catch(function (e) { 
+                }).catch(function (e) {
                     console.error(e);
                     reject(e);
                 });
@@ -87,7 +87,7 @@ exports.OfflineService = RawDataService.specialize(/** @lends HttpService.protot
 		}
 	},
 
-	
+
 	/**
 	 * Convenience method for calling deleteOfflineOperations on the offline
 	 * service.  Returns a null promise if the offline service is not defined,

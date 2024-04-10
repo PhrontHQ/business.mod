@@ -32,7 +32,7 @@ exports.S3DataService = S3DataService = AWSRawDataService.specialize(/** @lends 
 
     constructor: {
         value: function S3DataService() {
-            AWSRawDataService.call(this);
+            this.super();
 
             var mainService = DataService.mainService;
             // mainService.addEventListener(DataOperation.Type.ReadOperation,this,false);

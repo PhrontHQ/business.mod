@@ -10,6 +10,9 @@ CREATE EXTENSION IF NOT EXISTS fuzzystrmatch;
 CREATE EXTENSION IF NOT EXISTS postgis_tiger_geocoder;
 CREATE EXTENSION IF NOT EXISTS postgis_topology;
 
+/*
+    FOR AWS ONLY??
+
 alter schema tiger owner to rds_superuser;
 alter schema tiger_data owner to rds_superuser;
 alter schema topology owner to rds_superuser;
@@ -24,7 +27,7 @@ FROM (
     relkind IN ('r','S','v') ORDER BY relkind = 'S'
 )
 s;
-
+*/
 /* SET search_path=public,tiger; */
 /* SELECT set_config('search_path', 'tiger,'||current_setting('search_path'), false);*/
 SELECT set_config('search_path', current_setting('search_path')||',tiger', false);`

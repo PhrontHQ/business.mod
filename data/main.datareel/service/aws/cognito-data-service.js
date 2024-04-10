@@ -33,8 +33,8 @@ exports.CognitoDataService = CognitoDataService = AWSRawDataService.specialize(/
 
     constructor: {
         value: function CognitoDataService() {
-            return AWSRawDataService.call(this);
-
+            this.super();
+            return this;
             /*
                 Currently CognitoObjects don't inherit from DataObjects, so the logical bug in event path delivery because of the inherirance causing to be routed to the PostgreSQL service instead doesn't apply here, so no need to register specificall on these object descriptors difectly.
             */

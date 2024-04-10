@@ -12,7 +12,7 @@ AWSRawDataService;
 exports.AWSRawDataService = AWSRawDataService = RawDataService.specialize(/** @lends PhrontService.prototype */ {
     constructor: {
         value: function AWSRawDataService() {
-            RawDataService.call(this);
+            this.super();
             return this;
         }
     },
@@ -27,8 +27,9 @@ exports.AWSRawDataService = AWSRawDataService = RawDataService.specialize(/** @l
 
     rawClientPromises: {
         get: function () {
+
             if (!this._rawClientPromises) {
-                var promises = this._rawClientPromises = [];
+                var promises = this.super();
 
                 if(!this.currentEnvironment.isAWS) {
                     promises.push(
@@ -48,7 +49,8 @@ exports.AWSRawDataService = AWSRawDataService = RawDataService.specialize(/** @l
     rawClientPromise: {
         get: function () {
             if (!this._rawClientPromise) {
-                this._rawClientPromise = Promise.all(this.rawClientPromises).then(() => { return this.rawClient;});
+                var rawClientPromise = this.super();
+                this._rawClientPromise = rawClientPromise.then(() => { return this.rawClient;});
             }
             return this._rawClientPromise;
         }

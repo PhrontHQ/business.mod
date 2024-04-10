@@ -114,6 +114,28 @@
             "skipFiles": [
                 "<node_internals>/**"
             ]
-        }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch phront.local https server",
+            "runtimeVersion": "14.16.0",
+            "runtimeArgs": [
+                "${workspaceFolder}/node_modules/http-server/bin/http-server",
+                "-p",
+                "9999",
+                "-S",
+                "-C",
+                "${workspaceFolder}/dev/local-ssl-certificate-authority/phront.local.crt",
+                "-K",
+                "${workspaceFolder}/dev/local-ssl-certificate-authority/phront.local.key",
+            ],
+            "trace": false,
+            "enableContentValidation": false,
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+
     ]
 }

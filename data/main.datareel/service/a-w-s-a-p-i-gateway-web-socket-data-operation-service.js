@@ -44,7 +44,8 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
 
             this.addOwnPropertyChangeListener("mainService", this);
 
-            this._serializer = new MontageSerializer().initWithRequire(require);
+            //this._serializer = new MontageSerializer().initWithRequire(require);
+            this._serializer = new MontageSerializer().initWithRequire(global.require);
             this._deserializer = new Deserializer();
 
             this._readOperationQueue = [];
@@ -685,9 +686,9 @@ exports.AWSAPIGatewayWebSocketDataOperationService = AWSAPIGatewayWebSocketDataO
             this._socketOpenPromise.then(() => {
                 var serializedOperation = this._serializer.serializeObject(operation);
 
-                // var operationDataKBSize = sizeof(serializedOperation) / 1024;
+                 var operationDataKBSize = sizeof(serializedOperation) / 1024;
 
-                // console.debug("----> send "+operationDataKBSize+" KB operation "+serializedOperation);
+                 console.debug("----> send "+operationDataKBSize+" KB operation "+serializedOperation);
 
                 // if(operation.type === "batch") {
                 //     var deserializer = new Deserializer();

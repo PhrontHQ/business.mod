@@ -1,6 +1,6 @@
 'use strict';
 
-global.Promise = require("bluebird");
+// global.Promise = require("bluebird");
 const Timer = require("../core/timer").Timer;
 
 exports.initMainModuleWithRequire = function( mainModule, mainRequire) {
@@ -34,13 +34,13 @@ if(process.env.TIME_START) {
 }
 
 if(process.env.PROFILE_START) {
-    const inspector = require('inspector');
-    var fs = require('fs');
-    var session = new inspector.Session();
-    session.connect();
+    var inspector = require('inspector'),
+        fs = require('fs'),
+        profileStartSession = new inspector.Session();
+    profileStartSession.connect();
 
-    session.post('Profiler.enable', () => {
-        session.post('Profiler.start', () => {
+    profileStartSession.post('Profiler.enable', () => {
+        profileStartSession.post('Profiler.start', () => {
         });
     });
 }
@@ -52,6 +52,7 @@ if(process.env.PROFILE_START) {
 global.crypto = require('crypto');
 const   Montage = require('montage/montage'),
         PATH = require("path"),
+        processPath = PATH.join(module.parent.path, "."),
         useMr = true;
 
 var workerPromise;
@@ -167,7 +168,6 @@ if(!useMr) {
 
         and we put the symbols we expect on parent's exports as well
     */
-   const processPath = PATH.join(module.parent.path, ".");
     workerPromise = Montage.loadPackage(processPath, {
     mainPackageLocation: PATH.join(module.parent.filename, ".")
     })
@@ -196,7 +196,7 @@ if(!useMr) {
             console.log(mainTimer.runtimeMsStr());
         }
         if(process.env.PROFILE_START) {
-            session.post('Profiler.stop', (err, { profile }) => {
+            profileStartSession.post('Profiler.stop', (err, { profile }) => {
                 // Write profile to disk, upload, etc.
                 if (!err) {
                 fs.writeFileSync(processPath+'/'+Date.now()+'-profile.cpuprofile', JSON.stringify(profile));
@@ -469,8 +469,34 @@ const _authorize = async (event, context, callback) => {
   };
 
   mainModule.exports.authorize = module.exports.authorize = async (event, context, callback) => {
+
+    if(process.env.PROFILE_AUTHORIZE) {
+        if(!inspector) {
+            inspector = require('inspector');
+            fs = require('fs');
+        }
+        var profileAuthorizeSession = new inspector.Session();
+        profileAuthorizeSession.connect();
+
+        profileAuthorizeSession.post('Profiler.enable', () => {
+            profileAuthorizeSession.post('Profiler.start', () => {
+            });
+        });
+    }
+
     //console.log("authorize:","event:", event, "context:", context, "callback:", callback, "_authorize:", _authorize );
-    return _authorize.call(this, event, context, callback);
+    var result =  _authorize.call(this, event, context, callback);
+
+    if(process.env.PROFILE_AUTHORIZE) {
+        profileAuthorizeSession.post('Profiler.stop', (err, { profile }) => {
+            // Write profile to disk, upload, etc.
+            if (!err) {
+            fs.writeFileSync(processPath+'/'+Date.now()+'-authorize-profile.cpuprofile', JSON.stringify(profile));
+            }
+        });
+    }
+
+    return result;
   }
 
 /*

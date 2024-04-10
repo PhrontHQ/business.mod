@@ -1,0 +1,152 @@
+{
+    "type": "property",
+    "args": [{
+        "type": "property",
+        "args": [{
+            "type": "filterBlock",
+            "args": [{
+                "type": "property",
+                "args": [{
+                    "type": "property",
+                    "args": [{
+                        "type": "property",
+                        "args": [{
+                            "type": "property",
+                            "args": [{
+                                "type": "value"
+                            }, {
+                                "type": "literal",
+                                "value": "calendar"
+                            }]
+                        }, {
+                            "type": "literal",
+                            "value": "b2cCustomerSupplierRelationshipOwner"
+                        }]
+                    }, {
+                        "type": "literal",
+                        "value": "supplier"
+                    }]
+                }, {
+                    "type": "literal",
+                    "value": "b2cCustomerRelationships"
+                }]
+            }, {
+                "type": "and",
+                "args": [{
+                    "type": "and",
+                    "args": [{
+                        "type": "equals",
+                        "args": [{
+                            "type": "property",
+                            "args": [{
+                                "type": "value"
+                            }, {
+                                "type": "literal",
+                                "value": "isTemplate"
+                            }]
+                        }, {
+                            "type": "literal",
+                            "value": true
+                        }]
+                    }, {
+                        "type": "equals",
+                        "args": [{
+                            "type": "property",
+                            "args": [{
+                                "type": "value"
+                            }, {
+                                "type": "literal",
+                                "value": "templateName"
+                            }]
+                        }, {
+                            "type": "literal",
+                            "value": "PracticePatientRelationshipTemplate"
+                        }]
+                    }]
+                }, {
+                    "type": "filterBlock",
+                    "args": [{
+                        "type": "property",
+                        "args": [{
+                            "type": "value"
+                        }, {
+                            "type": "literal",
+                            "value": "calendars"
+                        }]
+                    }, {
+                        "type": "filterBlock",
+                        "args": [{
+                            "type": "property",
+                            "args": [{
+                                "type": "value"
+                            }, {
+                                "type": "literal",
+                                "value": "templateEvents"
+                            }]
+                        }, {
+                            "type": "equals",
+                            "args": [{
+                                "type": "property",
+                                "args": [{
+                                    "type": "filterBlock",
+                                    "args": [{
+                                        "type": "property",
+                                        "args": [{
+                                            "type": "value"
+                                        }, {
+                                            "type": "literal",
+                                            "value": "participationRoles"
+                                        }]
+                                    }, {
+                                        "type": "or",
+                                        "args": [{
+                                            "type": "equals",
+                                            "args": [{
+                                                "type": "property",
+                                                "args": [{
+                                                    "type": "value"
+                                                }, {
+                                                    "type": "literal",
+                                                    "value": "name"
+                                                }]
+                                            }, {
+                                                "type": "literal",
+                                                "value": "Patient"
+                                            }]
+                                        }, {
+                                            "type": "equals",
+                                            "args": [{
+                                                "type": "property",
+                                                "args": [{
+                                                    "type": "value"
+                                                }, {
+                                                    "type": "literal",
+                                                    "value": "name"
+                                                }]
+                                            }, {
+                                                "type": "literal",
+                                                "value": "Attendee"
+                                            }]
+                                        }]
+                                    }]
+                                }, {
+                                    "type": "literal",
+                                    "value": "length"
+                                }]
+                            }, {
+                                "type": "literal",
+                                "value": 2
+                            }]
+                        }]
+                    }]
+                }]
+            }]
+        }, {
+            "type": "literal",
+            "value": 0
+        }]
+    }, {
+        "type": "literal",
+        "value": "participationStatusExpectedTimeOffsets"
+    }]
+}

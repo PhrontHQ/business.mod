@@ -1,5 +1,4 @@
-var AbstractInspector = require("ui/abstract/abstract-inspector").AbstractInspector,
-    _ = require("lodash");
+var AbstractInspector = require("ui/abstract/abstract-inspector").AbstractInspector;
 
 exports.CalendarTask = AbstractInspector.specialize({
     _daysOfMonth: {
@@ -20,7 +19,9 @@ exports.CalendarTask = AbstractInspector.specialize({
 
     _inspectorTemplateDidLoad: {
         value: function() {
-            this.scheduleOptions = _.values(this._sectionService.SCHEDULE_OPTIONS);
+            //Was with lodash:
+            //this.scheduleOptions = _.values(this._sectionService.SCHEDULE_OPTIONS);
+            this.scheduleOptions = Object.values(this._sectionService.SCHEDULE_OPTIONS);
             this.daysOfWeek = this._sectionService.DAYS_OF_WEEK;
         }
     },

@@ -1,0 +1,41 @@
+{
+    "participationStatusExpectedTimeOffsets": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "participationStatusExpectedTimeOffsets",
+            "keyType": "string",
+            "keyDescriptor": {"@": "participationStatusEmum"},
+            "valueDescriptor": {"@": "DurationRangeDescriptor"},
+            "valueType": "duration",
+            "collectionValueType": "map",
+            "cardinality": -1,
+            "isSearchable": true,
+            "defaultExpression": "calendar.b2cCustomerSupplierRelationshipOwner.supplier.b2cCustomerRelationships.filter{(isTemplate == true) && (templateName == 'PracticePatientRelationshipTemplate') && calendars.filter{templateEvents.filter{participationRoles.filter{(name == ‘Patient’) || (name == 'Attendee')}.length == 2}}}.0.participationStatusExpectedTimeOffsets",
+            "defaultQueries": [
+                {"@":"queryDefaultOne"},
+                {"@":"queryDefaultTwo"},
+                {"@":"queryDefaultThree"},
+            ]
+
+            "description": "A range of durations to be applied to the event's scheduledTimeRange that can set expectations for when a participationStatus value should be set."
+        }
+    },
+
+    "queryDefaultOne": {
+        "prototype": "montage/data/model/data-query",
+        "values": {
+            type: ...
+            criteria: "calendar.b2cCustomerSupplierRelationshipOwner.supplier.b2cCustomerRelationships.filter{(isTemplate == true) && (templateName == 'PracticePatientRelationshipTemplate') && calendars.filter{templateEvents.filter{participationRoles.filter{(name == ‘Patient’) || (name == 'Attendee')}.length == 2}}}.0"
+            "readRexpressions": ["participationStatusExpectedTimeOffsets"]
+        }
+    }
+}
+
+
+
+'calendar.b2cCustomerSupplierRelationshipOwner.supplier.b2cCustomerRelationships.filter{(isTemplate == true) && (templateName == 'PracticePatientRelationshipTemplate') && calendars.filter{templateEvents.filter{participationRoles.filter{(name == ‘Patient’) || (name == 'Attendee')}.length == 2}}}.0.participationStatusExpectedTimeOffsets'
+
+
+"calendar.b2cCustomerSupplierRelationshipOwner.supplier.b2cCustomerRelationships.filter{(isTemplate == true) && (templateName == 'PracticePatientRelationshipTemplate')}"
+
+"calendar.b2cCustomerSupplierRelationshipOwner.supplier.b2cCustomerRelationships.filter{(isTemplate == true) && (templateName == 'PracticePatientRelationshipTemplate')}"

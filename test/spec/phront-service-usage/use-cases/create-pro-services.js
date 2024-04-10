@@ -53,7 +53,7 @@ function createFullTimeEmployeeEmploymentType() {
     var cdiEmploymentType = mainService.createDataObject(EmploymentType);
     cdiEmploymentType.name = "Contrat à durée indéterminée";
     return mainService.saveChanges().then(function(operation) {
-        if(operation.type !== DataOperation.Type.PerformTransactionCompletedOperation) {
+        if(operation.type !== DataOperation.Type.CommitTransactionCompletedOperation) {
             return cdiEmploymentType;
         } else {
             throw operation.type;

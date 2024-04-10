@@ -13,13 +13,22 @@ var DataObject = require("../data-object").DataObject;
  *
  */
 
+
+// const WebSocketSession = exports.WebSocketSession = class WebSocketSession extends DataObject {
+//     constructor() {
+//         super();
+//     }
+// }
+
+// WebSocketSession.addClassProperties( /** @lends WebSocketSession.prototype */ {
+
 exports.WebSocketSession = DataObject.specialize(/** @lends WebSocketSession.prototype */ {
-    constructor: {
-        value: function WebSocketSession() {
-            this.super();
-            return this;
-        }
-    },
+    // constructor: {
+    //     value: function WebSocketSession() {
+    //         this.super();
+    //         return this;
+    //     }
+    // },
 
     /**
      * The specific app that is run by the client. We should have the matching object

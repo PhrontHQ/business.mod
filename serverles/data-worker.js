@@ -475,6 +475,7 @@ exports.DataWorker = Worker.specialize( /** @lends DataWorker.prototype */{
             isSync = true,
             self = this;
 
+            //console.log("serializedOperation: ",serializedOperation);
             this.deserializer.init(serializedOperation, this.require, objectRequires, module, isSync);
             try {
                 deserializedOperation = this.deserializer.deserializeObject();
