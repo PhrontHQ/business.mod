@@ -24,7 +24,7 @@
     "@aws-sdk/client-secrets-manager": "^3.75.0",
     "@aws-sdk/credential-provider-ini": "^3.75.0",
     "@aws-sdk/s3-request-presigner": "^3.75.0",
-    "amazon-cognito-identity-js": "^3.2.0",
+    "amazon-cognito-identity-js": "^6.3.12",
     "fullstack-phone": "^1.62.0",
     "id128": "^1.5.0",
     "lodash": "^4.17.2",
