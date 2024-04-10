@@ -46,7 +46,7 @@
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.2",
     "open": "0.0.5",
-    "serverless": "~1.75.0",
+    "serverless": "~3.38.0",
     "tiny-worker": "github:marchant/tiny-worker#master"
   },
   "scripts": {
