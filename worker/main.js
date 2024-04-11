@@ -173,7 +173,7 @@ if(!useMr) {
     })
     .then(function (mr) {
         //Inject current file:
-        var currentMrModule = mr.inject("phront/serverles/main", exports),
+        var currentMrModule = mr.inject("phront/worker/main", exports),
             computedModuleId = `${PATH.relative(module.path, mainModule.path)}/main.mjson`;
         /*
             For reducing code packaged and deployed, we need a valid moduleId for the main project's main.json file.
