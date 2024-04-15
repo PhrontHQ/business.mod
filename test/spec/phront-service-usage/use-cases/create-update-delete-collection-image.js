@@ -1,6 +1,6 @@
-var clientMainService = require("phront/test/data/client-main.datareel/main.mjson").montageObject,
-Collection = require("phront/data/main.datareel/model/collection").Collection,
-Image = require("phront/data/main.datareel/model/image").Image;
+var clientMainService = require("phront/test/data/client-main.mod/main.mjson").montageObject,
+Collection = require("phront/data/main.mod/model/collection").Collection,
+Image = require("phront/data/main.mod/model/image").Image;
 
 
 exports.createUpdateDeleteCollectionImage = function() {

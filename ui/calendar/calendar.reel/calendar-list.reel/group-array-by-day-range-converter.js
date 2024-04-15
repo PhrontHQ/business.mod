@@ -1,5 +1,5 @@
 /**
- * @module ui/calendar/calendar.datareel/calendar-list.reel/group-array-by-day-range-converter
+ * @module ui/calendar/calendar.mod/calendar-list.reel/group-array-by-day-range-converter
  * @requires montage/core/converter/converter
  */
 var Converter = require("montage/core/converter/converter").Converter,

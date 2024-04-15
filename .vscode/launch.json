@@ -30,8 +30,8 @@
             "type": "node",
             "request": "launch",
             "name": "Launch test-google-calendar-service",
-            "program": "${workspaceFolder}/data/google-calendar.datareel/service/test-google-calendar-service/index.js",
-            "cwd": "${workspaceFolder}/data/google-calendar.datareel/service/test-google-calendar-service",
+            "program": "${workspaceFolder}/data/google-calendar.mod/service/test-google-calendar-service/index.js",
+            "cwd": "${workspaceFolder}/data/google-calendar.mod/service/test-google-calendar-service",
             "autoAttachChildProcesses": true,
             "skipFiles": [
                 "<node_internals>/**"
@@ -41,7 +41,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Google Calendar API Sandbox",
-            "program": "${workspaceFolder}/data/google-calendar.datareel/service/api-sandbox/index.js",
+            "program": "${workspaceFolder}/data/google-calendar.mod/service/api-sandbox/index.js",
             "skipFiles": [
                 "<node_internals>/**"
             ]

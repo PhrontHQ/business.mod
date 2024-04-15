@@ -3,13 +3,13 @@ const   Worker = require("./worker").Worker,
         IdentityDescriptor = require("montage/data/model/identity.mjson").montageObject,
         AuthorizationPolicy = require("montage/data/service/authorization-policy").AuthorizationPolicy,
         DataOperation = require("montage/data/service/data-operation").DataOperation,
-        OperationCoordinator = require("../data/main.datareel/service/operation-coordinator").OperationCoordinator,
+        OperationCoordinator = require("../data/main.mod/service/operation-coordinator").OperationCoordinator,
         Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
         MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
         Range = require("montage/core/range").Range,
         // Montage = (require)("montage/core/core").Montage,
         currentEnvironment = require("montage/core/environment").currentEnvironment,
-        WebSocketSession = require("../data/main.datareel/model/app/web-socket-session").WebSocketSession,
+        WebSocketSession = require("../data/main.mod/model/app/web-socket-session").WebSocketSession,
     util = require('util');
 
 const successfullResponse = {
