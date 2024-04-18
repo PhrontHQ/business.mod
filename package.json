@@ -19,6 +19,7 @@
   "dependencies": {
     "aws-mod": "github:PhrontHQ/aws-mod#main",
     "postgre-s-q-l-mod": "github:PhrontHQ/postgre-s-q-l-mod#main",
+    "app-infrastructure-data-mod": "github:PhrontHQ/app-infrastructure-data-mod#main",
     "@aws-sdk/client-apigatewaymanagementapi": "^3.523.0",
     "@aws-sdk/client-cognito-identity-provider": "^3.75.0",
     "@aws-sdk/client-rds-data": "^3.75.0",
@@ -30,7 +31,7 @@
     "fullstack-phone": "^1.62.0",
     "id128": "^1.5.0",
     "lodash": "^4.17.2",
-    "montage": "github:PhrontHQ/montage#montage-19",
+    "montage": "github:PhrontHQ/montage#mod",
     "montage-geo": "github:PhrontHQ/montage-geo.git#montage-19",
     "object-sizeof": "^1.5.2",
     "pg": "^8.7.3",
