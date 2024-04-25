@@ -88,10 +88,6 @@
         "object": "montage/core/date/time-zone.mjson"
     },
 
-    "DataObject": {
-        "object": "./model/data-object.mjson"
-    },
-
     "asset": {
         "object": "./model/asset.mjson"
     },
@@ -386,5 +382,12 @@
 
     "WebSocketSessionConnection": {
         "object": "./model/app/web-socket-session-connection.mjson"
+    },
+
+    "cognitoIdentityService": {
+        "object": "./cognito-identity-service.mjson",
+        "values": {
+            "authorizationPolicy": {"=":"@AuthenticationPolicy.ON_DEMAND"}
+        }
     }
 }
