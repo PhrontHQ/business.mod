@@ -1,0 +1,390 @@
+{
+    "root": {
+        "prototype": "montage/core/meta/model",
+        "values": {
+            "name": "BusinessDataModel",
+            "exportName": "BusinessDataModel",
+            "objectDescriptors": [
+                {"@": "TimeZone"},
+                {"@": "DataObject"},
+                {"@": "asset"},
+                {"@": "expiringAssetDownload"},
+                {"@": "LocalizedString"},
+                {"@": "collection"},
+                {"@": "country"},
+                {"@": "product"},
+                {"@": "tangibleProduct"},
+                {"@": "intangibleProduct"},
+                {"@": "service"},
+                {"@": "serviceEngagement"},
+                {"@": "messagingChannel"},
+                {"@": "partyMessagingChannel"},
+                {"@": "PhoneNumber"},
+                {"@": "partyPhoneNumber"},
+                {"@": "partySMSNumber"},
+                {"@": "InstantMessageAddress"},
+                {"@": "partyInstantMessageAddress"},
+                {"@": "contactForm"},
+                {"@": "partyContactForm"},
+                {"@": "EmailAddress"},
+                {"@": "partyEmailAddress"},
+                {"@": "productVariant"},
+                {"@": "tangibleProductVariant"},
+                {"@": "intangibleProductVariant"},
+                {"@": "serviceProductVariant"},
+                {"@": "productVariantPricePair"},
+                {"@": "money"},
+                {"@": "party"},
+                {"@": "partyPartyRelationship"},
+                {"@": "organization"},
+                {"@": "postalAddress"},
+                {"@": "partyPostalAddress"},
+                {"@": "image"},
+                {"@": "person"},
+                {"@": "personSignature"},
+                {"@": "resource"},
+                {"@": "person-name"},
+                {"@": "personal-relationship"},
+                {"@": "event"},
+                {"@": "role"},
+                {"@": "calendar"},
+                {"@": "conference-entry-point"},
+                {"@": "event-conference-data"},
+                {"@": "event-person"},
+                {"@": "order"},
+                {"@": "orderLineItem"},
+                {"@": "orderTransaction"},
+                {"@": "position"},
+                {"@": "EmploymentPosition"},
+                {"@": "EmploymentType"},
+                {"@": "EmploymentPositionRelationship"},
+                {"@": "EmploymentPositionStaffing"},
+                {"@": "CustomerSupplierRelationship"},
+                {"@": "B2CCustomerSupplierRelationship"},
+                {"@": "B2CCustomerSupplierResponsibleParty"},
+                {"@": "B2BCustomerSupplierRelationship"},
+                {"@": "Gender"},
+                {"@": "Questionnaire"},
+                {"@": "Question"},
+                {"@": "Variable"},
+                {"@": "QuestionnaireQuestion"},
+                {"@": "RespondentQuestionnaire"},
+                {"@": "Answer"},
+                {"@": "RespondentQuestionnaireAnswer"},
+                {"@": "RespondentQuestionnaireVariableValue"},
+                {"@": "CustomerEngagementQuestionnaire"},
+                {"@": "RoleRanking"},
+                {"@": "Application"},
+                {"@": "UserPool"},
+                {"@": "AppClient"},
+                {"@": "WebSocketSession"},
+                {"@": "WebSocketSessionConnection"}
+
+          ]
+        }
+    },
+
+    "TimeZone": {
+        "object": "montage/core/date/time-zone.mjson"
+    },
+
+    "DataObject": {
+        "object": "./model/data-object.mjson"
+    },
+
+    "asset": {
+        "object": "./model/asset.mjson"
+    },
+
+    "expiringAssetDownload": {
+        "object": "./model/expiring-asset-download.mjson"
+    },
+
+    "LocalizedString": {
+        "object": "./model/localized-string.mjson"
+    },
+
+    "collection": {
+        "object": "./model/collection.mjson"
+    },
+
+    "country": {
+        "object": "./model/country.mjson"
+    },
+
+    "product": {
+        "object": "./model/product.mjson"
+    },
+
+    "tangibleProduct": {
+        "object": "./model/tangible-product.mjson"
+    },
+
+    "intangibleProduct": {
+        "object": "./model/intangible-product.mjson"
+    },
+
+    "service": {
+        "object": "./model/service.mjson"
+    },
+
+    "serviceEngagement": {
+        "object": "./model/service-engagement.mjson"
+    },
+
+    "messagingChannel": {
+        "object": "./model/messaging-channel/messaging-channel.mjson"
+    },
+
+    "partyMessagingChannel": {
+        "object": "./model/messaging-channel/party-messaging-channel.mjson"
+    },
+
+    "PhoneNumber": {
+        "object": "./model/messaging-channel/phone-number.mjson"
+    },
+
+    "partyPhoneNumber": {
+        "object": "./model/messaging-channel/party-phone-number.mjson"
+    },
+
+    "partySMSNumber": {
+        "object": "./model/messaging-channel/party-s-m-s-number.mjson"
+    },
+
+    "InstantMessageAddress": {
+        "object": "./model/messaging-channel/instant-message-address.mjson"
+    },
+
+    "partyInstantMessageAddress": {
+        "object": "./model/messaging-channel/party-instant-message-address.mjson"
+    },
+
+    "contactForm": {
+        "object": "./model/messaging-channel/contact-form.mjson"
+    },
+
+    "partyContactForm": {
+        "object": "./model/messaging-channel/party-contact-form.mjson"
+    },
+
+    "EmailAddress": {
+        "object": "./model/messaging-channel/email-address.mjson"
+    },
+
+    "partyEmailAddress": {
+        "object": "./model/messaging-channel/party-email-address.mjson"
+    },
+
+    "productVariant": {
+        "object": "./model/product-variant.mjson"
+    },
+
+    "tangibleProductVariant": {
+        "object": "./model/tangible-product-variant.mjson"
+    },
+
+    "intangibleProductVariant": {
+        "object": "./model/intangible-product-variant.mjson"
+    },
+
+    "serviceProductVariant": {
+        "object": "./model/service-product-variant.mjson"
+    },
+
+    "productVariantPricePair": {
+        "object": "./model/product-variant-price-pair.mjson"
+    },
+
+    "money": {
+        "object": "./model/money.mjson"
+    },
+
+    "organization": {
+        "object": "./model/organization.mjson"
+    },
+
+    "postalAddress": {
+        "object": "./model/messaging-channel/postal-address.mjson"
+    },
+
+    "partyPostalAddress": {
+        "object": "./model/messaging-channel/party-postal-address.mjson"
+    },
+
+    "party": {
+        "object": "./model/party.mjson"
+    },
+
+    "partyPartyRelationship": {
+        "object": "./model/party-party-relationship.mjson"
+    },
+
+    "image": {
+        "object": "./model/image.mjson"
+    },
+
+    "person": {
+        "object": "./model/person.mjson"
+    },
+
+    "personSignature": {
+        "object": "./model/person-signature.mjson"
+    },
+
+    "resource": {
+        "object": "./model/resource.mjson"
+    },
+
+    "person-name": {
+        "object": "./model/person-name.mjson"
+    },
+
+    "personal-relationship": {
+        "object": "./model/personal-relationship.mjson"
+    },
+
+    "personal-relationshipMapping": {
+        "object": "./mapping/personal-relationship-mapping.mjson"
+    },
+
+    "AuthenticationPolicy": {
+        "object": "montage/data/service/user-authentication-policy"
+    },
+
+    "event": {
+        "object": "./model/event.mjson"
+    },
+
+    "role": {
+        "object": "./model/role.mjson"
+    },
+
+    "calendar": {
+        "object": "./model/calendar.mjson"
+    },
+
+    "conference-entry-point": {
+        "object": "./model/conference-entry-point.mjson"
+    },
+
+    "event-conference-data": {
+        "object": "./model/event-conference-data.mjson"
+    },
+
+    "event-person": {
+        "object": "./model/event-person.mjson"
+    },
+
+    "order": {
+        "object": "./model/order.mjson"
+    },
+
+    "orderLineItem": {
+        "object": "./model/order-line-item.mjson"
+    },
+
+    "orderTransaction": {
+        "object": "./model/order-transaction.mjson"
+    },
+
+    "position": {
+        "object": "./model/position.mjson"
+    },
+
+    "EmploymentPosition": {
+        "object": "./model/employment-position.mjson"
+    },
+
+    "EmploymentType": {
+        "object": "./model/employment-type.mjson"
+    },
+
+    "EmploymentPositionRelationship": {
+        "object": "./model/employment-position-relationship.mjson"
+    },
+
+    "EmploymentPositionStaffing": {
+        "object": "./model/employment-position-staffing.mjson"
+    },
+
+    "CustomerSupplierRelationship": {
+        "object": "./model/customer-supplier-relationship.mjson"
+    },
+
+    "B2CCustomerSupplierRelationship": {
+        "object": "./model/b-2-c-customer-supplier-relationship.mjson"
+    },
+
+    "B2CCustomerSupplierResponsibleParty": {
+        "object": "./model/b-2-c-customer-supplier-responsible-party.mjson"
+    },
+
+    "B2BCustomerSupplierRelationship": {
+        "object": "./model/b-2-b-customer-supplier-relationship.mjson"
+    },
+
+    "Gender": {
+        "object": "./model/gender.mjson"
+    },
+
+    "Questionnaire": {
+        "object": "./model/questionnaire/questionnaire.mjson"
+    },
+
+    "Question": {
+        "object": "./model/questionnaire/question.mjson"
+    },
+
+    "Variable": {
+        "object": "./model/questionnaire/variable.mjson"
+    },
+
+    "QuestionnaireQuestion": {
+        "object": "./model/questionnaire/questionnaire-question.mjson"
+    },
+
+    "RespondentQuestionnaire": {
+        "object": "./model/questionnaire/respondent-questionnaire.mjson"
+    },
+
+    "Answer": {
+        "object": "./model/questionnaire/answer.mjson"
+    },
+
+    "RespondentQuestionnaireAnswer": {
+        "object": "./model/questionnaire/respondent-questionnaire-answer.mjson"
+    },
+
+    "RespondentQuestionnaireVariableValue": {
+        "object": "./model/questionnaire/respondent-questionnaire-variable-value.mjson"
+    },
+
+    "CustomerEngagementQuestionnaire": {
+        "object": "./model/customer-engagement-questionnaire.mjson"
+    },
+
+    "RoleRanking": {
+        "object": "./model/role-ranking.mjson"
+    },
+
+    "Application": {
+        "object": "./model/app/application.mjson"
+    },
+
+    "UserPool": {
+        "object": "./model/app/user-pool.mjson"
+    },
+
+    "AppClient": {
+        "object": "./model/app/app-client.mjson"
+    },
+
+    "WebSocketSession": {
+        "object": "./model/app/web-socket-session.mjson"
+    },
+
+    "WebSocketSessionConnection": {
+        "object": "./model/app/web-socket-session-connection.mjson"
+    }
+}
