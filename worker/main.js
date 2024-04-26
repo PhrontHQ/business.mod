@@ -1,7 +1,7 @@
 'use strict';
 
 // global.Promise = require("bluebird");
-const Timer = require("../core/timer").Timer;
+const Timer = require("montage/core/timer").Timer;
 
 exports.initMainModuleWithRequire = function( mainModule, mainRequire) {
 
@@ -111,7 +111,7 @@ if(!useMr) {
         FIXME!!!
         WARNING, when debugging locally with links, we end up with the same module loaded twice, causing errors, with filenames like:
 
-            /Users/benoit/Sites/marchant/plum/plumming-data-worker/node_modules/phront/node_modules/montage/core/target.js
+            /Users/benoit/Sites/marchant/plum/plumming-data-worker/node_modules/business-data.mod/node_modules/montage/core/target.js
             and
             /Users/benoit/Sites/marchant/plum/plumming-data-worker/node_modules/montage/core/target.js
 
@@ -173,7 +173,7 @@ if(!useMr) {
     })
     .then(function (mr) {
         //Inject current file:
-        var currentMrModule = mr.inject("phront/worker/main", exports),
+        var currentMrModule = mr.inject("business-data.mod/worker/main", exports),
             computedModuleId = `${PATH.relative(module.path, mainModule.path)}/main.mjson`;
         /*
             For reducing code packaged and deployed, we need a valid moduleId for the main project's main.json file.

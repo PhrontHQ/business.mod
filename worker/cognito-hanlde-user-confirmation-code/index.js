@@ -7,8 +7,7 @@ exports.handler = async (event) => {
     // write a single sophisticated lambda that can determine the correct URL
     // from the event request information. Or we deploy separate lambdas for
     // each app, preconfigured with the application url.
-    //const appUrl = 'https://etiama.com';
-    const appUrl = 'http://localhost/phront/etiama-pro'; // temp for development
+    const appUrl = 'http://localhost/mod/testApp'; // temp for development
 
     // Maybe we could let users configure what their confirmation URL looks
     // like. Then again, what's the value in that? Could be simpler to just

@@ -4,7 +4,7 @@ var Worker = require("tiny-worker"),
     /*
         !!! There's a pbm because 2 RawDataService, clientMainService(client) and mainService (server) are in the same memory space. The first one takes the tiggers on the prototype, so loading clientMainService first.
     */
-    clientMainService = require("phront/test/data/client-main.mod/main.mjson").montageObject,
+    clientMainService = require("business-data.mod/test/data/client-main.mod/main.mjson").montageObject,
 
     DataOperation = require("montage/data/service/data-operation").DataOperation,
     MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
@@ -14,7 +14,7 @@ var Worker = require("tiny-worker"),
     DataQuery = require("montage/data/model/data-query").DataQuery,
     Montage = require("montage/core/core").Montage,
     //to test client side
-    ClientService = require("phront/data/main.mod/model/service").Service,
+    ClientService = require("business-data.mod/data/main.mod/model/service").Service,
     Promise = require("montage/core/promise").Promise,
     phrontClientService = clientMainService.childServices[0],
     sizeof = require("object-sizeof"),
@@ -71,7 +71,7 @@ exports.promise = new Promise(function(resolve,reject) {
                 var serviceDescriptor = phrontService.objectDescriptorWithModuleId("data/main.mod/model/service"),
 
                 //This ends up calling module-object-descriptor.js:149 - getObjectDescriptorWithModuleId()
-                //which causes node to try to phront/node_modules/montage/core/meta/module-object-descriptor.mjson
+                //which causes node to try to business-data.mod/node_modules/montage/core/meta/module-object-descriptor.mjson
                 //whih is bogus....
                 //console.log("Montage.getInfoForObject(objectDescriptor): ", Montage.getInfoForObject(objectDescriptor));
 
@@ -93,7 +93,7 @@ exports.promise = new Promise(function(resolve,reject) {
             var objectDescriptor = phrontService.objectDescriptorWithModuleId("data/main.mod/model/image");
 
             //This ends up calling module-object-descriptor.js:149 - getObjectDescriptorWithModuleId()
-            //which causes node to try to phront/node_modules/montage/core/meta/module-object-descriptor.mjson
+            //which causes node to try to business-data.mod/node_modules/montage/core/meta/module-object-descriptor.mjson
             //whih is bogus....
             //console.log("Montage.getInfoForObject(objectDescriptor): ", Montage.getInfoForObject(objectDescriptor));
 

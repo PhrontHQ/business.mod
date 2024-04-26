@@ -1,5 +1,5 @@
 /**
-    @module phront/data/main.mod/model/app/web-socket-session
+    @module business-data.mod/data/main.mod/model/app/web-socket-session
 */
 
 var DataObject = require("../data-object").DataObject;

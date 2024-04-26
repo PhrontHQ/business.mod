@@ -1,32 +1,12 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "object": "montage/data/model/app/application.mjson",
         "values": {
             "name": "Application",
             "propertyDescriptors": [
-                {"@": "name"},
                 {"@": "appClients"},
-                {"@": "controllingOrganization"},
-                {"@": "webSocketSessions"}
-            ],
-            "objectDescriptorModule": {
-                "%": "./application.mjson"
-            },
-            "exportName": "Application",
-            "module": {
-                "%": "./application"
-            },
-            "parent":{"@": "DataObjectDescriptor"}
-        }
-    },
-    "DataObjectDescriptor": {
-        "object": "../data-object.mjson"
-    },
-    "name": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "name",
-            "valueType": "string"
+                {"@": "controllingOrganization"}
+            ]
         }
     },
     "appClients": {
@@ -55,19 +35,6 @@
     },
     "OrganizationDescriptor": {
         "object": "../organization.mjson"
-    },
-    "webSocketSessions": {
-        "prototype": "montage/core/meta/property-descriptor",
-        "values": {
-            "name": "webSocketSessions",
-            "cardinality": -1,
-            "valueType": "object",
-            "valueDescriptor": {"@": "WebSocketSessionsDescriptor"},
-            "inversePropertyName": "app"
-       }
-    },
-    "WebSocketSessionsDescriptor": {
-        "object": "./web-socket-session.mjson"
     }
 
 }

@@ -1,5 +1,5 @@
 /**
- * @module phront/data/main.mod/converter/person-name-to-string-converter-private
+ * @module business-data.mod/data/main.mod/converter/person-name-to-string-converter-private
  * @requires montage/core/converter/converter
  * @requires montage/core/enum
  */

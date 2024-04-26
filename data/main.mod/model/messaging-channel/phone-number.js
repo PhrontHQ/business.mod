@@ -6,7 +6,7 @@ var MessagingChannel = require("./messaging-channel").MessagingChannel;
  * @extends DataObject
  * @classdesc Represents a PhoneNumber, in any country.
  *
- * Using https://github.com/paypal/fullstack-phone
+ * TODO: Using https://github.com/paypal/fullstack-phone
  * https://www.npmjs.com/package/fullstack-phone
  *
  * for the actual phone number, which parts are stored inline but gathered as one type here that

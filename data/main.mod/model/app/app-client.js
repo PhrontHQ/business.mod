@@ -1,5 +1,5 @@
 /**
-    @module phront/data/main.mod/model/app/app-client
+    @module business-data.mod/data/main.mod/model/app/app-client
 */
 
 var DataObject = require("../data-object").DataObject;

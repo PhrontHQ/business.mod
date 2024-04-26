@@ -1,6 +1,6 @@
 /**
- * @module phront/data/main.mod/converter/person-name-to-string-converter
- * @requires phront/data/main.mod/model/person-name
+ * @module business-data.mod/data/main.mod/converter/person-name-to-string-converter
+ * @requires business-data.mod/data/main.mod/model/person-name
  */
 var _PersonNameToSringConverter = require("./person-name-to-string-converter-private").PersonNameToSringConverter,
     PersonName = require("../model/person-name").PersonName;

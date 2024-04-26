@@ -2,7 +2,7 @@ var Component = require("montage/ui/component").Component,
     currentEnvironment = require("montage/core/environment").currentEnvironment,
     KeyComposer = require("montage/composer/key-composer").KeyComposer,
     DataOperation = require("montage/data/service/data-operation").DataOperation,
-    UserIdentity = require("data/main.mod/model/app/user-identity").UserIdentity;
+    UserIdentity = require("../model/app/user-identity").UserIdentity;
 
 
 var SignUp = exports.SignUp = Component.specialize({

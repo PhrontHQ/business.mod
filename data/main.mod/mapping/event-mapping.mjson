@@ -233,7 +233,7 @@
         }
     },
     "postgresql-interval-range-to-duration-range-converter": {
-        "prototype": "../converter/postgresql-interval-range-to-duration-range-converter"
+        "prototype": "postgre-s-q-l-mod/data/main.mod/converter/postgresql-interval-range-to-duration-range-converter"
     },
 
 

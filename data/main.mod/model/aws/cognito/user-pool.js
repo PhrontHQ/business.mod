@@ -1,5 +1,5 @@
 /**
-    @module phront/data/main.mod/model/aws/secret
+    @module business-data.mod/data/main.mod/model/aws/secret
 */
 
 var Target = require("montage/core/target").Target;

@@ -4,7 +4,7 @@ var Worker = require("tiny-worker"),
     /*
         !!! There's a pbm because 2 RawDataService, clientMainService(client) and mainService (server) are in the same memory space. The first one takes the tiggers on the prototype, so loading clientMainService first.
     */
-    clientMainService = require("phront/test/data/client-main.mod/main.mjson").montageObject,
+    clientMainService = require("business-data.mod/test/data/client-main.mod/main.mjson").montageObject,
     //to test client side
     Promise = require("montage/core/promise").Promise,
     phrontClientService = clientMainService.childServices[0],

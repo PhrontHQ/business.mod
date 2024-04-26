@@ -44,7 +44,7 @@ var AWSRawDataService = require("./aws/a-w-s-raw-data-service").AWSRawDataServic
     parse = require("montage/core/frb/parse"),
     path = require("path"),
     fs = require('fs'),
-    Timer = require("../../../core/timer").Timer,
+    Timer = require("montage/core/timer").Timer,
     SecretObjectDescriptor = require("../model/aws/secret.mjson").montageObject,
     PostgreSQLClient,
     PostgreSQLClientPool,

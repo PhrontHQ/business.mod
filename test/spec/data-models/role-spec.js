@@ -1,14 +1,14 @@
-var mainService = require("phront/test/data/client-main.mod/main.mjson").montageObject,
+var mainService = require("business-data.mod/test/data/client-main.mod/main.mjson").montageObject,
 Locale = require("montage/core/locale").Locale,
 Calendar = require("montage/core/date/calendar").Calendar,
 Criteria = require("montage/core/criteria").Criteria,
 DataStream = require("montage/data/service/data-stream").DataStream,
 DataQuery = require("montage/data/model/data-query").DataQuery,
 Range = require("montage/core/range").Range,
-Role = require("phront/data/main.mod/model/role").Role,
-Organization = require("phront/data/main.mod/model/organization").Organization,
-EventConferenceData = require("phront/data/main.mod/model/event-conference-data").EventConferenceData,
-Person = require("phront/data/main.mod/model/person").Person,
+Role = require("business-data.mod/data/main.mod/model/role").Role,
+Organization = require("business-data.mod/data/main.mod/model/organization").Organization,
+EventConferenceData = require("business-data.mod/data/main.mod/model/event-conference-data").EventConferenceData,
+Person = require("business-data.mod/data/main.mod/model/person").Person,
 phrontServiceConnectionPromise = require("../phront-service-connection").promise;
 
 

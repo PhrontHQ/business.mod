@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "./service/postgre-s-q-l-service",
+        "prototype": "postgre-s-q-l-mod/data/main.mod/service/postgre-s-q-l-service",
         "values": {
             "identifier": "PostgreSQLService",
             "name": "PostgreSQLService",
@@ -474,7 +474,7 @@
     },
 
     "AuthenticationPolicy": {
-        "value": {"%": "montage/data/service/user-authentication-policy"}
+        "value": {"%": "./service/user-authentication-policy"}
     },
 
     "event": {

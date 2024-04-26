@@ -1,7 +1,7 @@
 /**
  * Defines the BitField class, that compactly stores multiple values as a short
  * series of bits.
- * @module phront/data/main-data.reel/service/s-q-l-join
+ * @module business-data.mod/data/main-data.reel/service/s-q-l-join
  * @requires montage/core/core
  */
 

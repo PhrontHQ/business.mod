@@ -1,8 +1,8 @@
 /**
  * @module data/main.mod/converter/i-s-o-date-string-to-date-converter
- * @requires data/main.mod/converter/postgresql-i-s-o-8601-date-string-to-date-component-values-callback-converter
+ * @requires montage/core/converter/i-s-o-8601-date-string-to-date-component-values-callback-converter
  */
-var PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter = require("./postgresql-i-s-o-8601-date-string-to-date-component-values-callback-converter").PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter,
+var ISO8601DateStringToDateComponentValuesCallbackConverter = require("montage/core/converter/i-s-o-8601-date-string-to-date-component-values-callback-converter").ISO8601DateStringToDateComponentValuesCallbackConverter,
     singleton;
 
     //ISO 8601
@@ -14,7 +14,7 @@ var PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter = require(
  * @class ISO8601DateStringToDateConverter
  * @classdesc Converts an ISO8601 UTC string to a date and reverts it.
  */
-var ISODateStringToDateConverter = exports.ISODateStringToDateConverter = PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter.specialize({
+var ISODateStringToDateConverter = exports.ISODateStringToDateConverter = ISO8601DateStringToDateComponentValuesCallbackConverter.specialize({
 
     constructor: {
         value: function () {

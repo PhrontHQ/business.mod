@@ -1,18 +1,18 @@
-var mainService = require("phront/test/data/client-main.mod/main.mjson").montageObject,
+var mainService = require("business-data.mod/test/data/client-main.mod/main.mjson").montageObject,
 Criteria = require("montage/core/criteria").Criteria,
 DataStream = require("montage/data/service/data-stream").DataStream,
 DataQuery = require("montage/data/model/data-query").DataQuery,
 Range = require("montage/core/range").Range,
-Event = require("phront/data/main.mod/model/event").Event,
-Calendar = require("phront/data/main.mod/model/calendar").Calendar,
-EventAttendee = require("phront/data/main.mod/model/event-attendee").EventAttendee,
-EventConferenceData = require("phront/data/main.mod/model/event-conference-data").EventConferenceData,
-Person = require("phront/data/main.mod/model/person").Person,
+Event = require("business-data.mod/data/main.mod/model/event").Event,
+Calendar = require("business-data.mod/data/main.mod/model/calendar").Calendar,
+EventAttendee = require("business-data.mod/data/main.mod/model/event-attendee").EventAttendee,
+EventConferenceData = require("business-data.mod/data/main.mod/model/event-conference-data").EventConferenceData,
+Person = require("business-data.mod/data/main.mod/model/person").Person,
 EventSystemDescriptors = [Event,Calendar],
 phrontServiceConnectionPromise = require("../phront-service-connection").promise;
 
 //Test for loading .js witrh export / mport with require.
-// var LocalizedString = require("phront/data/main.mod/model/localized-string").LocalizedString;
+// var LocalizedString = require("business-data.mod/data/main.mod/model/localized-string").LocalizedString;
 
 
 

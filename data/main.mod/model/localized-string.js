@@ -10,7 +10,7 @@
     are based on the script that does the eval...
 */
 // var LIGHTSPEED;
-// import ('http://127.0.0.1:8888/node_modules/phront/data/main.mod/model/module-x.js').then(function(module) {
+// import ('http://127.0.0.1:8888/node_modules/business-data.mod/data/main.mod/model/module-x.js').then(function(module) {
 //     LIGHTSPEED = module.LIGHTSPEED;
 // });
 

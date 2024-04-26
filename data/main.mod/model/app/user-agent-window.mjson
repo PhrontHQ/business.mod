@@ -48,11 +48,31 @@
             "cardinality": -1,
             "valueType": "object",
             "valueDescriptor": {"@": "LogEntryDescriptor"},
-            "description": "The parties using a UserPool"
+            "description": "The history of a UserAgentWindow's position over time. Only relevant on PC devices"
+       }
+    },
+    "sizeTimeLog": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "sizeTimeLog",
+            "cardinality": -1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "LogEntryDescriptor"},
+            "description": "The history of a UserAgentWindow's size over time. Only relevant on PC devices"
+       }
+    },
+    "screenTimeLog": {
+        "prototype": "montage/core/meta/property-descriptor",
+        "values": {
+            "name": "screenTimeLog",
+            "cardinality": -1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "LogEntryDescriptor"},
+            "description": "The history of the screen a UserAgentWindow is on over time. Only relevant on PC devices"
        }
     },
     "LogEntryDescriptor": {
-        "object": "../organization.mjson"
+        "object": "../log-entry.mjson"
     }
 
 }

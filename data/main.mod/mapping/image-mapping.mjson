@@ -28,7 +28,7 @@
         "object": "../model/image.mjson"
     },
     "jsonbConverter": {
-        "prototype": "../converter/postgresql-jsonb-converter"
+        "prototype": "postgre-s-q-l-mod/data/main.mod/converter/postgresql-jsonb-converter"
     }
 
 }

@@ -1,16 +1,16 @@
 /**
- * @module data/main.mod/converter/postgresql-i-s-o-8601-date-string-to-date-component-values-callback-converter
+ * @module data/main.mod/converter/i-s-o-8601-date-string-to-date-component-values-callback-converter
  * @requires montage/core/converter/converter
  */
 var Converter = require("montage/core/converter/converter").Converter;
 
 
 /**
- * @class PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter
+ * @class ISO8601DateStringToDateComponentValuesCallbackConverter
  * @classdesc Parse string like '2019-09-12 09:52:52.992823+00' to help convert it to a date
  *
  */
-var PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter = exports.PostgresqlISO8601DateStringToDateComponentValuesCallbackConverter = Converter.specialize({
+var ISO8601DateStringToDateComponentValuesCallbackConverter = exports.ISO8601DateStringToDateComponentValuesCallbackConverter = Converter.specialize({
 
     callback: {
         value: function (year, month, day, hours, minutes, seconds, milliseconds) {

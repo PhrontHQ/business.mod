@@ -18,10 +18,10 @@ bootstrapPromise = Montage.loadPackage(PATH.join(__dirname, "."), {
 
     dependenciesPromises.push(mr.async("montage/data/service/data-operation"));
     dependenciesPromises.push(mr.async("montage/data/service/data-stream"));
-    dependenciesPromises.push(mr.async("phront/data/main.mod/main.mjson"));
+    dependenciesPromises.push(mr.async("business-data.mod/data/main.mod/main.mjson"));
     dependenciesPromises.push(mr.async("montage/data/model/data-query"));
     dependenciesPromises.push(mr.async("montage/core/criteria"));
-    dependenciesPromises.push(mr.async("phront/data/main.mod/service/operation-coordinator"));
+    dependenciesPromises.push(mr.async("business-data.mod/data/main.mod/service/operation-coordinator"));
 
     return Promise.all(dependenciesPromises);
 })

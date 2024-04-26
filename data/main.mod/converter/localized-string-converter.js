@@ -1,5 +1,5 @@
 /**
- * @module phront/data/main.mod/converter/localized-string-converter
+ * @module business-data.mod/data/main.mod/converter/localized-string-converter
  * @requires montage/core/converter/converter
  * @requires montage/core/converter/number-converter
  */
