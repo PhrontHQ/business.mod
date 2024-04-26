@@ -670,7 +670,7 @@
     },
 
     "Bucket": {
-        "object": "./model/aws/s3/bucket.mjson"
+        "object": "aws.mod/data/main.mod/model/s3/bucket.mjson"
     },
 
     "BucketMapping": {

@@ -17,7 +17,7 @@
     "url": "PhrontHQ/phront"
   },
   "dependencies": {
-    "aws-mod": "github:PhrontHQ/aws-mod#main",
+    "aws.mod": "github:PhrontHQ/aws.mod#main",
     "postgre-s-q-l-mod": "github:PhrontHQ/postgre-s-q-l-mod#main",
     "app-infrastructure-data-mod": "github:PhrontHQ/app-infrastructure-data-mod#main",
     "@aws-sdk/client-apigatewaymanagementapi": "^3.523.0",
