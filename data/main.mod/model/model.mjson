@@ -6,7 +6,6 @@
             "exportName": "BusinessDataModel",
             "objectDescriptors": [
                 {"@": "TimeZone"},
-                {"@": "DataObject"},
                 {"@": "asset"},
                 {"@": "expiringAssetDownload"},
                 {"@": "LocalizedString"},

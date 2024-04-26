@@ -170,7 +170,7 @@
     },
 
     "DataObject": {
-        "%": "./model/data-object.mjson"
+        "%": "montage/data/model/data-object.mjson"
     },
 
     "DataObjectMapping": {
