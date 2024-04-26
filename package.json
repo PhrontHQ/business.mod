@@ -19,7 +19,6 @@
   "dependencies": {
     "aws.mod": "github:PhrontHQ/aws.mod#main",
     "postgre-s-q-l-mod": "github:PhrontHQ/postgre-s-q-l-mod#main",
-    "app-infrastructure-data-mod": "github:PhrontHQ/app-infrastructure-data-mod#main",
     "@aws-sdk/client-apigatewaymanagementapi": "^3.523.0",
     "@aws-sdk/client-cognito-identity-provider": "^3.75.0",
     "@aws-sdk/client-rds-data": "^3.75.0",
