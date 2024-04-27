@@ -197,7 +197,7 @@
         }
     },
     "PointDescriptor": {
-        "object": "montage-geo/logic/model/descriptors/point.mjson"
+        "object": "geo.mod/logic/model/descriptors/point.mjson"
     },
     "timeZone": {
         "prototype": "montage/core/meta/property-descriptor",

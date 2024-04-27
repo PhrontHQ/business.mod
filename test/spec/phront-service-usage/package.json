@@ -18,7 +18,7 @@
  "scripts": {},
   "mappings": {
     "montage": "../../../node_modules/montage",
-    "montage-geo": "../../../node_modules/montage-geo",
+    "geo.mod": "../../../node_modules/geo.mod",
     "montage-testing": "../../../node_modules/montage-testing",
     "object-sizeof": "../../../node_modules/object-sizeof",
     "phront": "../../../",

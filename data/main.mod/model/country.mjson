@@ -70,7 +70,7 @@
     },
 
     "GeometryDescriptor": {
-        "object": "montage-geo/logic/model/descriptors/geometry.mjson"
+        "object": "geo.mod/logic/model/descriptors/geometry.mjson"
     },
 
     "officialStateName": {

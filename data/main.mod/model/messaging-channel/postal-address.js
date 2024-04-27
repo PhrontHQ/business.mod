@@ -197,7 +197,7 @@ exports.PostalAddress = MessagingChannel.specialize(/** @lends PostalAddress.pro
     /**
      * The geographic position of the address, as a
      *
-     *  "montage-geo/logic/model/descriptors/geometry.mjson"
+     *  "geo.mod/logic/model/descriptors/geometry.mjson"
      *     *
      * @property {Geometry}
      */

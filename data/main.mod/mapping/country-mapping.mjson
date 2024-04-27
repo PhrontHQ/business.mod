@@ -37,7 +37,7 @@
     },
 
     "geometryConverter": {
-        "prototype": "montage-geo/logic/converter/wkt-to-geometry-converter",
+        "prototype": "geo.mod/logic/converter/wkt-to-geometry-converter",
         "values": {
             "convertingSRID": "4326",
             "revertsSRID": true,
