@@ -22,7 +22,7 @@
     },
 
     "DataObjectDescriptor": {
-        "object": "./data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
 
     "identity": {

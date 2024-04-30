@@ -39,7 +39,7 @@
     },
 
     "objectDescriptor": {
-        "object": "./data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
 
     "template": {

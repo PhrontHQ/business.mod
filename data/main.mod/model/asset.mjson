@@ -28,7 +28,7 @@
         "object": "./asset"
     },
     "objectDescriptor": {
-        "object": "./data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
     "s3BucketName": {
         "prototype": "montage/core/meta/property-descriptor",

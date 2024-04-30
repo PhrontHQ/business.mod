@@ -2,7 +2,7 @@
     @module business-data.mod/data/main.mod/model/aws/s3/object
 */
 
-var DataObject = require("./data-object").DataObject;
+var DataObject = require("montage/data/model/data-object").DataObject;
 
 /**
  * @class ExpiringAssetDownload

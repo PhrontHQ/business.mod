@@ -27,7 +27,7 @@
         "object": "./contact-information"
     },
     "objectDescriptor": {
-        "object": "./data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
     "postalAddresses": {
         "prototype": "montage/core/meta/property-descriptor",

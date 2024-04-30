@@ -17,7 +17,7 @@
             },
             "exportName": "DataObject",
             "module": {
-                "%": "./data-object"
+                "%": "montage/data/model/data-object"
             }
         }
     },

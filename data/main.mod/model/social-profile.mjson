@@ -26,7 +26,7 @@
         "object": "./social-profile"
     },
     "ObjectDescriptor": {
-        "object": "./data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
     "serviceName": {
         "prototype": "montage/core/meta/property-descriptor",

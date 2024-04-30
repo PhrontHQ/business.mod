@@ -36,7 +36,7 @@
         "object": "./calendar"
     },
     "Object": {
-        "object": "./data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
     "etag": {
         "prototype": "montage/core/meta/property-descriptor",

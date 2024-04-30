@@ -30,7 +30,7 @@
     },
 
     "objectDescriptor": {
-        "object": "./data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
 
     "iso3166_1_alpha2Ccode": {

@@ -28,7 +28,7 @@
         "object": "./product-variant"
     },
     "objectDescriptor": {
-        "object": "./data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
     "title": {
         "prototype": "montage/core/meta/property-descriptor",

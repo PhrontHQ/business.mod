@@ -23,7 +23,7 @@
         "object": "./order-transaction"
     },
     "Object": {
-        "object": "./data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
     "order": {
         "prototype": "montage/core/meta/property-descriptor",

@@ -23,7 +23,7 @@
         "object": "./expiring-asset-download"
     },
     "ObjectDescriptor": {
-        "object": "./data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
     "asset": {
         "prototype": "montage/core/meta/property-descriptor",

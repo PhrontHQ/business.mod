@@ -24,7 +24,7 @@
         }
     },
     "DataObjectDescriptor": {
-        "object": "./data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
     "owner": {
         "prototype": "montage/core/meta/property-descriptor",
