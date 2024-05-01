@@ -32,7 +32,7 @@
         "object": "./questionnaire"
     },
     "objectDescriptor": {
-        "object": "../data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",

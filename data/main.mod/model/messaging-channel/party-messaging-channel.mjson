@@ -28,7 +28,7 @@
         "object": "./party-messaging-channel"
     },
     "objectDescriptor": {
-        "object": "../data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
     "party": {
         "prototype": "montage/core/meta/property-descriptor",

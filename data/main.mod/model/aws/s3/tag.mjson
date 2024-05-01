@@ -18,7 +18,7 @@
         }
     },
     "ObjectDescriptor": {
-        "object": "../data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
     "key": {
         "prototype": "montage/core/meta/property-descriptor",

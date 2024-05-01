@@ -21,7 +21,7 @@
         }
     },
     "DataObjectDescriptor": {
-        "object": "../data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -53,7 +53,7 @@
        }
     },
     "CognitoUserPoolDescriptor": {
-        "object": "../aws/cognito/user-pool.mjson"
+        "object": "aws.mod/data/main.mod/model/cognito/user-pool.mjson"
     },
     "servedOrganizations": {
         "prototype": "montage/core/meta/property-descriptor",

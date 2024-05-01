@@ -2,7 +2,6 @@ var Montage = require("montage/core/core").Montage;
 
 /**
  * @class PGClass
- * Models afrer https://help.shopify.com/en/api/graphql-admin-api/reference/object/collection
  * @extends Montage
  */
 

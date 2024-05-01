@@ -5,9 +5,9 @@
             "name": "BusinessDataModel",
             "exportName": "BusinessDataModel",
             "objectDescriptors": [
+                {"@": "DataObject"},
                 {"@": "TimeZone"},
                 {"@": "asset"},
-                {"@": "expiringAssetDownload"},
                 {"@": "LocalizedString"},
                 {"@": "collection"},
                 {"@": "country"},
@@ -83,16 +83,16 @@
         }
     },
 
+    "DataObject": {
+        "object": "montage/data/model/data-object.mjson"
+    },
+
     "TimeZone": {
         "object": "montage/core/date/time-zone.mjson"
     },
 
     "asset": {
         "object": "./model/asset.mjson"
-    },
-
-    "expiringAssetDownload": {
-        "object": "./model/expiring-asset-download.mjson"
     },
 
     "LocalizedString": {
@@ -239,10 +239,6 @@
         "object": "./model/personal-relationship.mjson"
     },
 
-    "personal-relationshipMapping": {
-        "object": "./mapping/personal-relationship-mapping.mjson"
-    },
-
     "AuthenticationPolicy": {
         "object": "montage/data/service/user-authentication-policy"
     },
@@ -376,17 +372,10 @@
     },
 
     "WebSocketSession": {
-        "object": "./model/app/web-socket-session.mjson"
+        "object": "montage/data/model/app/web-socket-session.mjson"
     },
 
     "WebSocketSessionConnection": {
-        "object": "./model/app/web-socket-session-connection.mjson"
-    },
-
-    "cognitoIdentityService": {
-        "object": "./cognito-identity-service.mjson",
-        "values": {
-            "authorizationPolicy": {"=":"@AuthenticationPolicy.ON_DEMAND"}
-        }
+        "object": "montage/data/model/app/web-socket-session-connection.mjson"
     }
 }

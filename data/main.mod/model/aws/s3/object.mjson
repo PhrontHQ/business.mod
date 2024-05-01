@@ -25,7 +25,7 @@
         }
     },
     "ObjectDescriptor": {
-        "object": "../../data-object.mjson"
+        "object": "../montage/data/model/data-object.mjson"
     },
     "bucketName": {
         "prototype": "montage/core/meta/property-descriptor",

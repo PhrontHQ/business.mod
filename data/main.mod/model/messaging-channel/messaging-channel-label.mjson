@@ -24,7 +24,7 @@
         "object": "./messaging-channel"
     },
     "objectDescriptor": {
-        "object": "../data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
     "preferredForParties": {
         "prototype": "montage/core/meta/property-descriptor",

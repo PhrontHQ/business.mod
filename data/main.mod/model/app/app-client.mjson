@@ -22,7 +22,7 @@
         }
     },
     "DataObjectDescriptor": {
-        "object": "../data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
     "name": {
         "prototype": "montage/core/meta/property-descriptor",
@@ -84,7 +84,7 @@
        }
     },
     "CognitoUserPoolClientDescriptor": {
-        "object": "../aws/cognito/user-pool-client.mjson"
+        "object": "aws.mod/data/main.mod/model/cognito/user-pool-client.mjson"
     }
 
 }

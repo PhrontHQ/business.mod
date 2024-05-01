@@ -27,7 +27,7 @@
         "object": "./question"
     },
     "objectDescriptor": {
-        "object": "../data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
     "text": {
         "prototype": "montage/core/meta/property-descriptor",

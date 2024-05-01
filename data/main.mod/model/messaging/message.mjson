@@ -30,7 +30,7 @@
         "object": "./message"
     },
     "objectDescriptor": {
-        "object": "../data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
     "sender": {
         "prototype": "montage/core/meta/property-descriptor",

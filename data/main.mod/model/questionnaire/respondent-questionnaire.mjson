@@ -29,7 +29,7 @@
         "object": "./respondent-questionnaire"
     },
     "objectDescriptor": {
-        "object": "../data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
 
     "respondent": {

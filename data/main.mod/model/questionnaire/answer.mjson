@@ -36,7 +36,7 @@
         "object": "./answer"
     },
     "objectDescriptor": {
-        "object": "../data-object.mjson"
+        "object": "montage/data/model/data-object.mjson"
     },
     "type": {
         "prototype": "montage/core/meta/property-descriptor",
