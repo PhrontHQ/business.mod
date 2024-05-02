@@ -1,10 +1,10 @@
 var AbstractInspector = require("ui/controls/abstract/abstract-inspector").AbstractInspector,
     //RoutingService = require("core/service/routing-service").RoutingService,
     _ = require("lodash"),
-    Criteria = require("montage/core/criteria").Criteria,
-    ObjectDescriptor = require("montage/core/meta/object-descriptor").ObjectDescriptor,
-    DataQuery = require("montage/data/model/data-query").DataQuery,
-    DataStream = require("montage/data/service/data-stream").DataStream;
+    Criteria = require("mod/core/criteria").Criteria,
+    ObjectDescriptor = require("mod/core/meta/object-descriptor").ObjectDescriptor,
+    DataQuery = require("mod/data/model/data-query").DataQuery,
+    DataStream = require("mod/data/service/data-stream").DataStream;
 
 exports.Calendar = AbstractInspector.specialize({
     _inspectorTemplateDidLoad: {

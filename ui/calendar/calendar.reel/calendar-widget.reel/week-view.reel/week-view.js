@@ -1,6 +1,6 @@
-var Component = require("montage/ui/component").Component,
-    Promise = require("montage/core/promise").Promise,
-    Range = require("montage/core/range").Range,
+var Component = require("mod/ui/component").Component,
+    Promise = require("mod/core/promise").Promise,
+    Range = require("mod/core/range").Range,
     MONTHS = [
         "January",
         "February",

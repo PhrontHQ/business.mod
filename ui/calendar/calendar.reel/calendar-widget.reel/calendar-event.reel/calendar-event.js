@@ -1,8 +1,8 @@
 /**
  * @module ui/event.reel
  */
-var Component = require("montage/ui/component").Component,
-    PressComposer = require("montage/composer/press-composer").PressComposer;
+var Component = require("mod/ui/component").Component,
+    PressComposer = require("mod/composer/press-composer").PressComposer;
 
 /**
  * @class Event

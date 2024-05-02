@@ -1,10 +1,10 @@
 debugger;
 
-var Montage = require("montage/montage"),
+var Montage = require("mod/montage"),
     PATH = require("path"),
     DataOperation, DataStream, mainService, DataQuery, Criteria, OperationCoordinator, operationCoordinator,
-    uuid = require("montage/core/uuid"),
-    Promise = require("montage/core/promise").Promise,
+    uuid = require("mod/core/uuid"),
+    Promise = require("mod/core/promise").Promise,
     bootstrapPromise;
 
 console.log("Montage:",Montage);
@@ -19,11 +19,11 @@ bootstrapPromise = Montage.loadPackage(PATH.join(__dirname, "."), {
     console.log("mr:",mr);
     var dependenciesPromises = [];
 
-    dependenciesPromises.push(mr.async("montage/data/service/data-operation"));
-    dependenciesPromises.push(mr.async("montage/data/service/data-stream"));
+    dependenciesPromises.push(mr.async("mod/data/service/data-operation"));
+    dependenciesPromises.push(mr.async("mod/data/service/data-stream"));
     dependenciesPromises.push(mr.async("data/main.mod/main.mjson"));
-    dependenciesPromises.push(mr.async("montage/data/model/data-query"));
-    dependenciesPromises.push(mr.async("montage/core/criteria"));
+    dependenciesPromises.push(mr.async("mod/data/model/data-query"));
+    dependenciesPromises.push(mr.async("mod/core/criteria"));
     dependenciesPromises.push(mr.async("data/main.mod/service/operation-coordinator"));
 
     return Promise.all(dependenciesPromises);

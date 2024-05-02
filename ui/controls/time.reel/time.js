@@ -1,8 +1,8 @@
 /**
  * @module ui/time.reel
  */
-var Component = require("montage/ui/component").Component,
-    KeyComposer = require("montage/composer/key-composer").KeyComposer;
+var Component = require("mod/ui/component").Component,
+    KeyComposer = require("mod/composer/key-composer").KeyComposer;
 
 /**
  * @class Time
@@ -167,7 +167,7 @@ exports.Time = Component.specialize(/** @lends Time# */ {
                 length = this.options.length;
             for (; i < length; i++) {
                 option = this.options[i];
-                if (option.getHours() > this.value.getHours() || 
+                if (option.getHours() > this.value.getHours() ||
                     option.getHours() === this.value.getHours() && option.getMinutes() >= this.value.getMinutes()) {
                     break;
                 }

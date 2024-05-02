@@ -1,7 +1,7 @@
 /**
  * @module ui/field-select.reel
  */
-var Component = require("montage/ui/component").Component;
+var Component = require("mod/ui/component").Component;
 
 /**
  * @class FieldSelect

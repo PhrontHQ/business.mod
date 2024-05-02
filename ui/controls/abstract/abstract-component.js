@@ -1,4 +1,4 @@
-var Component = require("montage/ui/component").Component,
+var Component = require("mod/ui/component").Component,
     i18next = require('i18next'),
     xhrBackend = require("i18next-xhr-backend");
 

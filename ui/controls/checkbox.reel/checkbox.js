@@ -1,19 +1,19 @@
 /**
  * @module ui/checkbox.reel
  */
-var Component = require("montage/ui/component").Component;
+var Component = require("mod/ui/component").Component;
 
 /**
  * @class Checkbox
  * @extends Component
- * 
+ *
  * @fixme: need to be refactored
  * Kind of hacky with the label.
  * could be just a subclass of checkbox.
- * 
+ *
  */
 exports.Checkbox = Component.specialize({
-    
+
     _uid: {
         value: null
     },

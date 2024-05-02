@@ -1,10 +1,10 @@
 /**
  * @module ui/table-editable.reel
  */
-var Component = require("montage/ui/component").Component,
-    Checkbox = require("montage/ui/checkbox.reel").Checkbox,
-    KeyComposer = require("montage/composer/key-composer").KeyComposer,
-    Composer = require("montage/composer/composer").Composer,
+var Component = require("mod/ui/component").Component,
+    Checkbox = require("mod/ui/checkbox.reel").Checkbox,
+    KeyComposer = require("mod/composer/key-composer").KeyComposer,
+    Composer = require("mod/composer/composer").Composer,
     _ = require("lodash");
 
 function RowEntry(object) {

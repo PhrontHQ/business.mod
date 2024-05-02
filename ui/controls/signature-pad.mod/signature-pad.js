@@ -1,4 +1,4 @@
-var Component = require("montage/ui/component").Component,
+var Component = require("mod/ui/component").Component,
     getStroke = require("perfect-freehand").getStroke;
 
 exports.SignaturePad = Component.specialize({

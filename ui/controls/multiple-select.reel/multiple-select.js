@@ -2,9 +2,9 @@
  * @module ui/multiple-select.reel
  */
 // var AbstractDropZoneComponent = require("core/drag-drop/abstract-dropzone-component").AbstractDropZoneComponent,
-var Component = require("montage/ui/component").Component,
+var Component = require("mod/ui/component").Component,
     MultipleSelectValue = require("./multiple-select-value.reel").MultipleSelectValue,
-    KeyComposer = require("montage/composer/key-composer").KeyComposer;
+    KeyComposer = require("mod/composer/key-composer").KeyComposer;
 
 /**
  * @class MultipleSelect
@@ -149,7 +149,7 @@ exports.MultipleSelect = Component.specialize(/** @lends MultipleSelect# */ {
     //handleComponentDragOver: {
     handleDragover: {
             value: function (dragEvent) {
-            var draggableComponent = dragEvent.target, 
+            var draggableComponent = dragEvent.target,
                 pointerPositionX = dragEvent.startPositionX + dragEvent.translateX,
                 pointerPositionY = dragEvent.startPositionY + dragEvent.translateY,
                 multipleSelectValue = this._findMultipleSelectValueComponentFromPoint(pointerPositionX, pointerPositionY);

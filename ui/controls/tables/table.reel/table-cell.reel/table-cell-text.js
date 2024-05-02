@@ -1,4 +1,4 @@
-var Text = require("montage/ui/text.reel").Text;
+var Text = require("mod/ui/text.reel").Text;
 
 exports.TableCellText = Text.specialize({
 

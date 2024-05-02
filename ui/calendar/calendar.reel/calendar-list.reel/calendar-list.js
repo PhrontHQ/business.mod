@@ -1,4 +1,4 @@
-var Component = require("montage/ui/component").Component;
+var Component = require("mod/ui/component").Component;
 
 
 exports.CalendarList = Component.specialize({
@@ -91,7 +91,7 @@ exports.CalendarList = Component.specialize({
         dayData organizes data by day. There could be no data for a day, so we're building it off the timeRange we have.
 
         "days": {
-            "prototype": "montage/ui/repetition.reel",
+            "prototype": "mod/ui/repetition.reel",
             "properties": {
                 "element": {"#": "days"}
             },

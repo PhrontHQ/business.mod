@@ -1,11 +1,11 @@
 var mainService = require("business-data.mod/test/data/client-main.mod/main.mjson").montageObject,
-    Locale = require("montage/core/locale").Locale,
-    MontageCalendar = require("montage/core/date/calendar").Calendar,
-    Promise = require("montage/core/promise").Promise,
-    Criteria = require("montage/core/criteria").Criteria,
-    DataStream = require("montage/data/service/data-stream").DataStream,
-    DataOperation = require("montage/data/service/data-operation").DataOperation,
-    DataQuery = require("montage/data/model/data-query").DataQuery,
+    Locale = require("mod/core/locale").Locale,
+    MontageCalendar = require("mod/core/date/calendar").Calendar,
+    Promise = require("mod/core/promise").Promise,
+    Criteria = require("mod/core/criteria").Criteria,
+    DataStream = require("mod/data/service/data-stream").DataStream,
+    DataOperation = require("mod/data/service/data-operation").DataOperation,
+    DataQuery = require("mod/data/model/data-query").DataQuery,
     Collection = require("business-data.mod/data/main.mod/model/collection").Collection,
     Image = require("business-data.mod/data/main.mod/model/image").Image,
     Organization = require("business-data.mod/data/main.mod/model/organization").Organization,
@@ -46,7 +46,7 @@ var mainService = require("business-data.mod/test/data/client-main.mod/main.mjso
         calendar: systemCalendar,
         numberingSystem: "latn"
     }),
-    Range = require("montage/core/range").Range;
+    Range = require("mod/core/range").Range;
 
 
 function createFullTimeEmployeeEmploymentType() {

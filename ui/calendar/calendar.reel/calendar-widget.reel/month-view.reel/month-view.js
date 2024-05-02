@@ -1,8 +1,8 @@
 /**
  * @module ui/month-view.reel
  */
-var Component = require("montage/ui/component").Component,
-    Range = require("montage/core/range").Range,
+var Component = require("mod/ui/component").Component,
+    Range = require("mod/core/range").Range,
 
 MONTHS = [
     "January",

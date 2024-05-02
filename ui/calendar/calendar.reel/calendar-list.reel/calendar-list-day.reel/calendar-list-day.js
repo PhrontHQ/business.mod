@@ -1,8 +1,8 @@
 /**
  * @module ui/calendar-list-day.reel
  */
-var Component = require("montage/ui/component").Component,
-    Locale = require("montage/core/locale").Locale,
+var Component = require("mod/ui/component").Component,
+    Locale = require("mod/core/locale").Locale,
     monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 /**

@@ -1,9 +1,9 @@
 /**
  * @module ui/select-options.reel
  */
-var Overlay = require("montage/ui/overlay.reel").Overlay,
-    KeyComposer = require("montage/composer/key-composer").KeyComposer,
-    Composer = require("montage/composer/composer").Composer;
+var Overlay = require("mod/ui/overlay.reel").Overlay,
+    KeyComposer = require("mod/composer/key-composer").KeyComposer,
+    Composer = require("mod/composer/composer").Composer;
 
 /**
  * @class SelectOptions

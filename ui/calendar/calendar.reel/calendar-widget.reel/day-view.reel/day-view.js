@@ -1,6 +1,6 @@
 var TimeRangeView = require("../time-range-view").TimeRangeView,
-    // CalendarDate = require("montage/core/date/calendar-date").CalendarDate,
-    Promise = require("montage/core/promise").Promise,
+    // CalendarDate = require("mod/core/date/calendar-date").CalendarDate,
+    Promise = require("mod/core/promise").Promise,
     MONTHS = [
             "January",
             "February",
@@ -15,11 +15,11 @@ var TimeRangeView = require("../time-range-view").TimeRangeView,
             "November",
             "December"
         ],
-        Criteria = require("montage/core/criteria").Criteria,
-        DataQuery = require("montage/data/model/data-query").DataQuery,
+        Criteria = require("mod/core/criteria").Criteria,
+        DataQuery = require("mod/data/model/data-query").DataQuery,
         Calendar = require("data/main.mod/model/calendar").Calendar,
         Event = require("data/main.mod/model/event").Event,
-        Range = require("montage/core/range").Range;
+        Range = require("mod/core/range").Range;
 
 /**
  * @class DayView

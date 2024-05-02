@@ -1,4 +1,4 @@
-var AbstractRadioButton = require("montage/ui/base/abstract-radio-button").AbstractRadioButton;
+var AbstractRadioButton = require("mod/ui/base/abstract-radio-button").AbstractRadioButton;
 
 CLASS_PREFIX = "RadioButton";
 /**

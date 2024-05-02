@@ -1,7 +1,7 @@
 var mainService = require("business-data.mod/test/data/client-main.mod/main.mjson").montageObject,
-Criteria = require("montage/core/criteria").Criteria,
-DataStream = require("montage/data/service/data-stream").DataStream,
-DataQuery = require("montage/data/model/data-query").DataQuery,
+Criteria = require("mod/core/criteria").Criteria,
+DataStream = require("mod/data/service/data-stream").DataStream,
+DataQuery = require("mod/data/model/data-query").DataQuery,
 Collection = require("business-data.mod/data/main.mod/model/collection").Collection,
 Image = require("business-data.mod/data/main.mod/model/image").Image,
 Organization = require("business-data.mod/data/main.mod/model/organization").Organization,
@@ -16,8 +16,8 @@ EmploymentType = require("business-data.mod/data/main.mod/model/employment-type"
 Role = require("business-data.mod/data/main.mod/model/role").Role,
 ContactInformation = require("business-data.mod/data/main.mod/model/contact-information").ContactInformation,
 Calendar = require("business-data.mod/data/main.mod/model/calendar").Calendar,
-CalendarDate = require("montage/core/date/calendar-date").CalendarDate,
-Range = require("montage/core/range").Range,
+CalendarDate = require("mod/core/date/calendar-date").CalendarDate,
+Range = require("mod/core/range").Range,
 Event = require("business-data.mod/data/main.mod/model/event").Event,
 Person = require("business-data.mod/data/main.mod/model/person").Person,
 PersonName = require("business-data.mod/data/main.mod/model/person-name").PersonName,
@@ -26,7 +26,7 @@ Position =  require("geo.mod/logic/model/position").Position,
 eventOrganizerRoleInstance,
 eventAttendeeRoleInstance,
 patientRoleInstance,
-TimeZone = require("montage/core/date/time-zone").TimeZone;
+TimeZone = require("mod/core/date/time-zone").TimeZone;
 
 function createEventRoleWithNameAndTags(name, tags, locales) {
     var role = mainService.createDataObject(Role);

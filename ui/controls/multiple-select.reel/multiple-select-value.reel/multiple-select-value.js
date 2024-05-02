@@ -2,8 +2,8 @@
  * @module ui/multiple-select-value.reel
  */
 //var AbstractDraggableComponent = require("core/drag-drop/abstract-draggable-component").AbstractDraggableComponent,
-var Component = require("montage/ui/component").Component,
-    KeyComposer = require("montage/composer/key-composer").KeyComposer;
+var Component = require("mod/ui/component").Component,
+    KeyComposer = require("mod/composer/key-composer").KeyComposer;
 
 /**
  * @class MultipleSelectValue

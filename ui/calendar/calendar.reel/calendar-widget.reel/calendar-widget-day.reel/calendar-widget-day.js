@@ -1,5 +1,5 @@
 // var AbstractDropZoneComponent = require("core/drag-drop/abstract-dropzone-component").AbstractDropZoneComponent;
-var Component = require("montage/ui/component").Component;
+var Component = require("mod/ui/component").Component;
 
 
 exports.CalendarWidgetDay = Component.specialize({
@@ -153,7 +153,7 @@ exports.CalendarWidgetDay = Component.specialize({
     //     value: function(taskCategoryComponent) {
     handleDrop: {
         value: function (event) {
-                 
+
             var self = this.
                 taskCategoryComponent = event.target;
             console.log("Should create new task matching drop");

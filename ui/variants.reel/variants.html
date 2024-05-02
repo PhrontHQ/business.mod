@@ -8,35 +8,35 @@
             }
         },
         "headerRepetition": {
-            "prototype": "montage/ui/repetition.reel",
+            "prototype": "mod/ui/repetition.reel",
             "values": {
                 "element": {"#": "headerRepetition"},
                 "content": {"<-": "@owner.columns"}
             }
         },
         "columnName": {
-            "prototype": "montage/ui/text.reel",
+            "prototype": "mod/ui/text.reel",
             "values": {
                 "element": {"#": "columnName"},
                 "value": {"<-": "@headerRepetition:iteration.object"}
             }
         },
         "rowRepetition": {
-            "prototype": "montage/ui/repetition.reel",
+            "prototype": "mod/ui/repetition.reel",
             "values": {
                 "element": {"#": "rowRepetition"},
                 "content": {"<-": "@owner.rows"}
             }
         },
         "cellRepetition": {
-            "prototype": "montage/ui/repetition.reel",
+            "prototype": "mod/ui/repetition.reel",
             "values": {
                 "element": {"#": "cellRepetition"},
                 "content": {"<-": "@rowRepetition:iteration.object"}
             }
         },
         "cell": {
-            "prototype": "montage/ui/text.reel",
+            "prototype": "mod/ui/text.reel",
             "values": {
                 "element": {"#": "cell"},
                 "value": {"<-": "@cellRepetition:iteration.object"}

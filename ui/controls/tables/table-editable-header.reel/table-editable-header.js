@@ -1,7 +1,7 @@
 /**
  * @module ui/table-container-default-header.reel
  */
-var Component = require("montage/ui/component").Component;
+var Component = require("mod/ui/component").Component;
 
 /**
  * @class TableEditableHeader

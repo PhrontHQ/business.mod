@@ -32,7 +32,7 @@
             ]
         },
         "inputContainer": {
-            "prototype": "montage/ui/component",
+            "prototype": "mod/ui/component",
             "properties": {
                 "element": {"#": "inputContainer"},
                 "hasTemplate": false
@@ -54,7 +54,7 @@
             }
         },
         "inputErrorMessage": {
-            "prototype": "montage/ui/text.reel",
+            "prototype": "mod/ui/text.reel",
             "properties": {
                 "element": {"#": "inputErrorMessage"}
             },
@@ -70,13 +70,13 @@
             }
         },
         "optionsController": {
-            "prototype": "montage/core/range-controller",
+            "prototype": "mod/core/range-controller",
             "bindings": {
                 "content": {"<-": "!!@owner.labelPath ? @owner.options.filter{path(@owner.labelPath).startsWith(@owner._optionsPrefix)} : @owner.options"}
             }
         },
         "options": {
-            "prototype": "montage/ui/repetition.reel",
+            "prototype": "mod/ui/repetition.reel",
             "properties": {
                 "element": {"#": "options"},
                 "contentController": {"@": "optionsController"},
@@ -95,13 +95,13 @@
             }
         },
         "valuesController": {
-            "prototype": "montage/core/range-controller",
+            "prototype": "mod/core/range-controller",
             "bindings": {
                 "content": {"<->": "@owner.values"}
             }
         },
         "values": {
-            "prototype": "montage/ui/repetition.reel",
+            "prototype": "mod/ui/repetition.reel",
             "properties": {
                 "element": {"#": "values"},
                 "contentController": {"@": "valuesController"}
@@ -150,7 +150,7 @@
             }
         },
         "inputTitle": {
-            "prototype": "montage/ui/text.reel",
+            "prototype": "mod/ui/text.reel",
             "properties": {
                 "element": {"#": "inputTitle"}
             },
@@ -160,7 +160,7 @@
             }
         },
         "valuesEmptyState": {
-            "prototype": "montage/ui/text.reel",
+            "prototype": "mod/ui/text.reel",
             "properties": {
                 "element": {"#": "valuesEmptyState"}
             },

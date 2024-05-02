@@ -1,4 +1,4 @@
-var Component = require("montage/ui/component").Component,
+var Component = require("mod/ui/component").Component,
     Units = require('core/Units');
 
 exports.ReplicationArgs = Component.specialize({

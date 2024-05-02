@@ -23,7 +23,7 @@
             ]
         },
         "dateConverter": {
-            "prototype": "montage/core/converter/date-converter",
+            "prototype": "mod/core/converter/date-converter",
             "bindings": {
                 "pattern": {"<-": "!!@owner.pattern ? @owner.pattern : 'hh:mm tt'"}
             }
@@ -39,13 +39,13 @@
             }
         },
         "optionsController": {
-            "prototype": "montage/core/range-controller",
+            "prototype": "mod/core/range-controller",
             "bindings": {
                 "content": {"<-": "@owner.options"}
             }
         },
         "options": {
-            "prototype": "montage/ui/repetition.reel",
+            "prototype": "mod/ui/repetition.reel",
             "properties": {
                 "element": {"#": "options"},
                 "isSelectionEnabled": true,

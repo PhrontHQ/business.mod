@@ -1,4 +1,4 @@
-var Component = require("montage/ui/component").Component
+var Component = require("mod/ui/component").Component
     Translator = {
         translate: function(value, args) {
             //console.log("Needs refactoring to use Montage localization to translate '"+value+"'");

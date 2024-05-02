@@ -1,7 +1,7 @@
 /**
  * @module ui/number-input.reel
  */
-var AbstractNumberField = require("montage/ui/base/abstract-number-field").AbstractNumberField;
+var AbstractNumberField = require("mod/ui/base/abstract-number-field").AbstractNumberField;
 
 /**
  * @class NumberInput

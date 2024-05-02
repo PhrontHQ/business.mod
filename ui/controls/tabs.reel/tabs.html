@@ -14,13 +14,13 @@
             }
         },
         "contentController": {
-            "prototype": "montage/core/range-controller",
+            "prototype": "mod/core/range-controller",
             "bindings": {
                 "content": {"<-": "@owner.options"}
             }
         },
         "tabs": {
-            "prototype": "montage/ui/repetition.reel",
+            "prototype": "mod/ui/repetition.reel",
             "properties": {
                 "element": {"#": "tabs"},
                 "contentController": {"@": "contentController"},

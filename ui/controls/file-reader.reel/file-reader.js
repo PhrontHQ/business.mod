@@ -1,5 +1,5 @@
-var Component = require("montage/ui/component").Component,
-    UUID = require("montage/core/uuid");
+var Component = require("mod/ui/component").Component,
+    UUID = require("mod/core/uuid");
 
 exports.FileReader = Component.specialize({
 

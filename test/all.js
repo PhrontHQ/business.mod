@@ -1,6 +1,6 @@
 console.log('Phront testing', 'Start');
 
-module.exports = require("montage/testing/run").run(require, [
+module.exports = require("mod/testing/run").run(require, [
     // TODO: Broken
     // "spec/phront-service",
     "spec/data-models/role-spec",

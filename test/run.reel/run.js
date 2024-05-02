@@ -1,4 +1,4 @@
-var Component = require("montage/ui/component").Component,
+var Component = require("mod/ui/component").Component,
     mainServiceSerialization = require("data/montage-data.mjson");
 
 /**

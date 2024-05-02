@@ -1,11 +1,11 @@
-var RawDataService = require("montage/data/service/raw-data-service").RawDataService,
-	Criteria = require("montage/core/criteria").Criteria,
-	DataObjectDescriptor = require("montage/data/model/data-object-descriptor").DataObjectDescriptor,
-	DataQuery = require("montage/data/model/data-query").DataQuery,
-	Montage = require("montage/core/core").Montage,
-	ObjectDescriptor = require("montage/core/meta/object-descriptor").ObjectDescriptor,
+var RawDataService = require("mod/data/service/raw-data-service").RawDataService,
+	Criteria = require("mod/core/criteria").Criteria,
+	DataObjectDescriptor = require("mod/data/model/data-object-descriptor").DataObjectDescriptor,
+	DataQuery = require("mod/data/model/data-query").DataQuery,
+	Montage = require("mod/core/core").Montage,
+	ObjectDescriptor = require("mod/core/meta/object-descriptor").ObjectDescriptor,
 	OfflineDataService = require("offline-data-service").OfflineDataService,
-	Promise = require("montage/core/promise").Promise;
+	Promise = require("mod/core/promise").Promise;
 
 /**
  * Provides hazard data.

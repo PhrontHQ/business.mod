@@ -1,5 +1,5 @@
 // var AbstractDropZoneComponent = require("core/drag-drop/abstract-dropzone-component").AbstractDropZoneComponent;
-var Component = require("montage/ui/component").Component;
+var Component = require("mod/ui/component").Component;
 
 //exports.DayColumn = AbstractDropZoneComponent.specialize({
 exports.DayColumn = Component.specialize({

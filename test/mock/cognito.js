@@ -1,4 +1,4 @@
-var uuid = require("montage/core/uuid");
+var uuid = require("mod/core/uuid");
 
 var BASE_USER_INFOS = {
     "confirmed": {

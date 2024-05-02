@@ -2,11 +2,11 @@
  * @module ui/calendar/calendar.mod/calendar-list.reel/group-array-by-day-range-converter
  * @requires montage/core/converter/converter
  */
-var Converter = require("montage/core/converter/converter").Converter,
-    CalendarDate = require("montage/core/date/calendar-date").CalendarDate,
-    Range = require("montage/core/range").Range;
+var Converter = require("mod/core/converter/converter").Converter,
+    CalendarDate = require("mod/core/date/calendar-date").CalendarDate,
+    Range = require("mod/core/range").Range;
 
-require("montage/core/collections/shim-array");
+require("mod/core/collections/shim-array");
 
 
 /**
