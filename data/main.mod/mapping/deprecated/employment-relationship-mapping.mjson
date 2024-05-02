@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "EmploymentRelationshipDescriptor"},
             "rawDataPrimaryKeys":["id"],
@@ -30,37 +30,37 @@
         "object": "../../model/employment-relationship.mjson"
     },
     "addressesConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "$.has(id)"
         }
     },
     "suborganizationsConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "$.has(id)"
         }
     },
     "employmentTypeConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
     "employerConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
     "employeeConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
     "roleConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }

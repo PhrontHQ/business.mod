@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Person",
             "propertyDescriptors": [
@@ -36,10 +36,10 @@
                 "*": {
                     "%": "./person-ui-descriptor.mjson"
                 },
-                "montage/ui/list-item.reel": {
+                "mod/ui/list-item.reel": {
                     "%": "./person-list-item-ui-descriptor.mjson"
                 },
-                "montage/ui/cascading-list.reel": {
+                "mod/ui/cascading-list.reel": {
                     "%": "./person-cascading-list-ui-descriptor.mjson"
                 }
             }
@@ -50,7 +50,7 @@
         "object": "./party.mjson"
     },
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "cardinality": 1,
@@ -61,7 +61,7 @@
         "object": "./person-name.mjson"
     },
     "gender": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "gender",
             "cardinality": 1,
@@ -73,7 +73,7 @@
     },
 
     "aliases": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "aliases",
             "cardinality": -1,
@@ -82,7 +82,7 @@
     },
 
     "preferredLocales": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "preferredLocales",
             "cardinality": -1,
@@ -91,35 +91,35 @@
     },
 
     "firstName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "firstName",
             "valueType": "string"
         }
     },
     "lastName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "lastName",
             "valueType": "string"
         }
     },
     "email": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "email",
             "valueType": "string"
         }
     },
     "phone": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "phone",
             "valueType": "string"
         }
     },
     "addresses": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "addresses",
             "valueType": "object",
@@ -132,7 +132,7 @@
     },
 
     "respondentQuestionnaires": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "respondentQuestionnaires",
             "valueType": "object",
@@ -146,7 +146,7 @@
     },
 
     "tags": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "tags",
             "valueType": "string",
@@ -154,7 +154,7 @@
        }
     },
     "userIdentities": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "userIdentities",
             "valueType": "object",
@@ -167,7 +167,7 @@
         "object": "./app/user-identity.mjson"
     },
     "employmentHistory": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "employmentHistory",
             "valueType": "object",
@@ -181,7 +181,7 @@
     },
 
     "serviceProductVariantsProvided": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "serviceProductVariantsProvided",
             "valueType": "object",
@@ -196,7 +196,7 @@
     },
 
     "supplierRelationships": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "supplierRelationships",
             "valueType": "object",
@@ -211,7 +211,7 @@
 
 
     "customerSupplierResponsibilities": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "customerSupplierResponsibilities",
             "valueType": "object",
@@ -225,7 +225,7 @@
     },
 
     "firstPersonalRelationships": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "firstPersonalRelationships",
             "valueType": "object",
@@ -239,7 +239,7 @@
     },
 
     "secondPersonalRelationships": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "secondPersonalRelationships",
             "valueType": "object",
@@ -254,7 +254,7 @@
     },
 
     "signatures": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "signatures",
             "valueType": "object",

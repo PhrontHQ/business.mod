@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "PartyMessagingChannel",
             "propertyDescriptors": [
@@ -28,10 +28,10 @@
         "object": "./party-messaging-channel"
     },
     "objectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "party": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "party",
             "valueType": "object",
@@ -44,7 +44,7 @@
         "object": "../party.mjson"
     },
     "organizationParty": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "organizationParty",
             "valueType": "object",
@@ -57,7 +57,7 @@
     },
 
     "personParty": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "personParty",
             "valueType": "object",
@@ -70,7 +70,7 @@
     },
 
     "label": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "label",
             "isLocalizable": true,
@@ -78,7 +78,7 @@
        }
     },
     "messagingChannel": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "messagingChannel",
             "valueType": "object",
@@ -90,7 +90,7 @@
         "object": "./messaging-channel.mjson"
     },
     "description": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "description",
             "cardinality": -1,
@@ -98,7 +98,7 @@
         }
     },
     "notes": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "notes",
             "cardinality": -1,
@@ -106,7 +106,7 @@
         }
     },
     "roleRankings": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "roleRankings",
             "cardinality": -1,

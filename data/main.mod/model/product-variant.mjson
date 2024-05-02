@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "ProductVariant",
             "propertyDescriptors": [
@@ -28,17 +28,17 @@
         "object": "./product-variant"
     },
     "objectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "title": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "title",
             "valueType": "string"
         }
     },
     "product": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "product",
             "cardinality": 1,
@@ -47,7 +47,7 @@
         }
     },
      "images": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "images",
             "cardinality": -1,
@@ -55,14 +55,14 @@
         }
     },
     "price": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "price",
             "valueType": "number"
         }
     },
     "selectedOptions": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "selectedOptions",
             "valueType": "object",
@@ -70,21 +70,21 @@
         }
     },
     "sku": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "sku",
             "valueType": "string"
         }
     },
     "availableForSale": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "availableForSale",
             "valueType": "boolean"
         }
     },
     "presentmentPrices": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "presentmentPrices",
             "cardinality": -1,

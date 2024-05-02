@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "CountryDescriptor"},
             "rawDataPrimaryKeys":["id"],
@@ -46,11 +46,11 @@
     },
 
     "timeZoneConverter": {
-        "prototype": "montage/data/converter/time-zone-identifier-to-time-zone-converter"
+        "prototype": "mod/data/converter/time-zone-identifier-to-time-zone-converter"
     },
 
     "timeZonesConverter": {
-        "prototype": "montage/core/converter/collection-iteration-converter",
+        "prototype": "mod/core/converter/collection-iteration-converter",
         "values": {
             "mapConverter": {"@": "timeZoneConverter"}
         }

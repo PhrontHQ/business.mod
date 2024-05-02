@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "EmploymentPositionStaffingDescriptor"},
             "rawDataPrimaryKeys":["id"],
@@ -68,69 +68,69 @@
     },
 
     "postalAddresses-value-converter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "employmentPositionStaffingId == $"
         }
     },
     "emailAddresses-value-converter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "employmentPositionStaffingId == $"
         }
     },
     "phoneNumbers-value-converter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "employmentPositionStaffingId == $"
         }
     },
     "smsNumbers-value-converter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "employmentPositionStaffingId == $"
         }
     },
     "instantMessageAddresses-value-converter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "employmentPositionStaffingId == $"
         }
     },
     "contactForms-value-converter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "employmentPositionStaffingId == $"
         }
     },
 
     "calendarsConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "ownerEmploymentPositionStaffingId == $"
         }
     },
 
     "employmentTypeConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
     "employmentPositionConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
     "employeeConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
     "b2cCustomerRelationshipsConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "staffRelationshipIds.has($)"
         }

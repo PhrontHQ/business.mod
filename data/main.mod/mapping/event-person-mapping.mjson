@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "EventPerson"},
             "objectMapping": {
@@ -27,7 +27,7 @@
         "object": "../model/event-person.mjson"
     },
     "person-converter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
         }
     }

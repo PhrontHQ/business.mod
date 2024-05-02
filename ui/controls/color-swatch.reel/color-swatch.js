@@ -1,7 +1,7 @@
 /**
  * @module ui/color-swatch.reel
  */
-var Component = require("montage/ui/component").Component;
+var Component = require("mod/ui/component").Component;
 
 /**
  * @class ColorSwatch

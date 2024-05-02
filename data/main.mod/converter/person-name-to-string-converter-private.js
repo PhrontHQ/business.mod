@@ -3,13 +3,13 @@
  * @requires montage/core/converter/converter
  * @requires montage/core/enum
  */
-var Converter = require("montage/core/converter/converter").Converter,
-    Enum = require("montage/core/enum").Enum;
+var Converter = require("mod/core/converter/converter").Converter,
+    Enum = require("mod/core/enum").Enum;
 
 
 /*
     Not sure we'll need this here to properly deal with a wider range of languages/scripts
-    Locale = (require)("montage/core/locale").Locale;
+    Locale = (require)("mod/core/locale").Locale;
 
     First implementation adapted from
     https://github.com/gnustep/libs-base/blob/master/Source/NSPersonNameComponentsFormatter.m

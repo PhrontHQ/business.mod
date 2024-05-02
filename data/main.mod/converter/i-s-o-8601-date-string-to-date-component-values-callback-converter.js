@@ -2,7 +2,7 @@
  * @module data/main.mod/converter/i-s-o-8601-date-string-to-date-component-values-callback-converter
  * @requires montage/core/converter/converter
  */
-var Converter = require("montage/core/converter/converter").Converter;
+var Converter = require("mod/core/converter/converter").Converter;
 
 
 /**

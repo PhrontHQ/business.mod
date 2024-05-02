@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "Asset"},
             "rawDataPrimaryKeys":["id"],
@@ -37,13 +37,13 @@
         "object": "../model/asset.mjson"
     },
     "s3BucketForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "Bucket == $"
         }
     },
     "s3ObjectForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "Key == $.Key && Bucket == $.Bucket"
         }

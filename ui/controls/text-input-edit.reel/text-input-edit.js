@@ -1,8 +1,8 @@
 /**
  * @module ui/text-input-edit.reel
  */
-var AbstractControl = require("montage/ui/base/abstract-control").AbstractControl,
-    KeyComposer = require("montage/composer/key-composer").KeyComposer;
+var AbstractControl = require("mod/ui/base/abstract-control").AbstractControl,
+    KeyComposer = require("mod/composer/key-composer").KeyComposer;
 
 /**
  * @class TextInputEdit

@@ -1,6 +1,6 @@
 var AbstractInspector = require("ui/abstract/abstract-inspector").AbstractInspector,
     _ = require("lodash"),
-    Promise = require("montage/core/promise").Promise;
+    Promise = require("mod/core/promise").Promise;
 
 exports.User = AbstractInspector.specialize({
 

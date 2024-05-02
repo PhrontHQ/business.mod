@@ -2,7 +2,7 @@
     @module business-data.mod/data/main.mod/model/app/software
 */
 
-var DataObject = require("montage/data/model/data-object").DataObject;
+var DataObject = require("mod/data/model/data-object").DataObject;
 
 /**
  * @class Software

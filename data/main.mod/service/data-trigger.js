@@ -1,8 +1,8 @@
-var MontageDataTriggerModule = require("montage/data/service/data-trigger"),
+var MontageDataTriggerModule = require("mod/data/service/data-trigger"),
     MontageDataTrigger = MontageDataTriggerModule.DataTrigger,
     MontageDataTriggerClassMethods = MontageDataTriggerModule._DataTriggerClassMethods,
-    Map = require("montage/core/collections/map"),
-    ChangeEvent = require("montage/core/event/change-event").ChangeEvent,
+    Map = require("mod/core/collections/map"),
+    ChangeEvent = require("mod/core/event/change-event").ChangeEvent,
     DataTrigger;
 
 /**

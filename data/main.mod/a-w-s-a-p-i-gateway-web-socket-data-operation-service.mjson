@@ -151,7 +151,7 @@
     },
 
     "DataObject": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
 
     "DataObjectMapping": {

@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/user-interface-descriptor",
+        "prototype": "mod/core/meta/user-interface-descriptor",
         "values": {
             "inspectorComponentModule": {
                 "%": "data/main.mod/inspectors/person.reel"
@@ -9,7 +9,7 @@
                 "%": "data/main.mod/creators/person.reel"
             },
             "collectionInspectorComponentModule": {
-                "%": "montage/ui/list.reel"
+                "%": "mod/ui/list.reel"
             },
             "collectionNameExpression": "'Persons'",
             "nameExpression": "lastname + ' ' + firstname",

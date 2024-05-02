@@ -1,4 +1,4 @@
-var Component = require("montage/ui/component").Component,
+var Component = require("mod/ui/component").Component,
     CascadingListItem = require("ui/controls/cascading-list.reel/cascading-list-item.reel").CascadingListItem;
 
 

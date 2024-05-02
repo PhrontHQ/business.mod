@@ -2,7 +2,7 @@
     @module business-data.mod/data/main.mod/model/aws/secret
 */
 
-var Target = require("montage/core/target").Target;
+var Target = require("mod/core/target").Target;
 
 /**
  * @class UserPoolClient

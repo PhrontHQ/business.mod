@@ -1,7 +1,7 @@
 var aTestStr =
 `{
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Address",
             "propertyDescriptors": [
@@ -37,91 +37,91 @@ var aTestStr =
         "object": "data/main.mod/model/data-object.mjson"
     },
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "valueType": "string"
         }
     },
     "firstName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "firstName",
             "valueType": "string"
         }
     },
     "lastName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "lastName",
             "valueType": "string"
         }
     },
         "phone": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "phone",
             "valueType": "string"
         }
     },
     "company": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "company",
             "valueType": "string"
         }
     },
     "address1": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "address1",
             "valueType": "string"
         }
     },
     "address2": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "address2",
             "valueType": "string"
         }
     },
     "locality": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "locality",
             "valueType": "string"
         }
     },
     "subLocality": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "subLocality",
             "valueType": "string"
         }
     },
     "primaryPostalCode": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "primaryPostalCode",
             "valueType": "string"
         }
     },
     "country": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "country",
             "valueType": "string"
         }
     },
     "latitude": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "latitude",
             "valueType": "number"
         }
     },
     "longitude": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "longitude",
             "valueType": "number"

@@ -1,4 +1,4 @@
-var Component = require("montage/ui/component").Component,
+var Component = require("mod/ui/component").Component,
     ModelDescriptorService = require("core/service/model-descriptor-service").ModelDescriptorService,
     //RoutingService = require("core/service/routing-service").RoutingService,
     //EventDispatcherService = require("core/service/event-dispatcher-service").EventDispatcherService,

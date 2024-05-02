@@ -1,8 +1,8 @@
-var Component = require("montage/ui/component").Component,
-    Promise = require("montage/core/promise").Promise,
+var Component = require("mod/ui/component").Component,
+    Promise = require("mod/core/promise").Promise,
     //ModelDescriptorService = require("core/service/model-descriptor-service").ModelDescriptorService,
     //CascadingList = require("ui/controls/cascading-list.reel").CascadingList,
-    CascadingList = require("montage/ui/cascading-list.reel").CascadingList,
+    CascadingList = require("mod/ui/cascading-list.reel").CascadingList,
     //RoutingService = require("core/service/routing-service").RoutingService,
     _ = require("lodash");
 

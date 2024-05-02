@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "EventObjectDescriptor"},
             "rawDataPrimaryKeys":["id"],
@@ -144,67 +144,67 @@
     },
 
     "calendar-converter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
     "PersonForeignKeyMapping": {
-        "prototype": "montage/data/service/raw-data-type-mapping",
+        "prototype": "mod/data/service/raw-data-type-mapping",
         "values": {
             "type": {"@": "PersonDescriptor"},
             "expression": "participatingPersonId.defined()"
         }
     },
     "ResourceForeignKeyMapping": {
-        "prototype": "montage/data/service/raw-data-type-mapping",
+        "prototype": "mod/data/service/raw-data-type-mapping",
         "values": {
             "type": {"@": "ResourceDescriptor"},
             "expression": "participatingResourceId.defined()"
         }
     },
     "participatingPartyForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $",
             "foreignDescriptorMappings": [{"@": "PersonForeignKeyMapping"},{"@": "ResourceForeignKeyMapping"}]
         }
     },
     "parentForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
     "childrenForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "parentId == $"
         }
     },
     "participationRolesConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "$.has(id)"
         }
     },
     "eventURLConverter": {
-        "prototype": "montage/core/converter/string-to-u-r-l-converter"
+        "prototype": "mod/core/converter/string-to-u-r-l-converter"
     },
 
     "DateToStringConverter": {
-        "prototype": "montage/core/converter/r-f-c-3339-u-t-c-string-to-date-converter"
+        "prototype": "mod/core/converter/r-f-c-3339-u-t-c-string-to-date-converter"
     },
 
     "participationStatusLogValuesConverter": {
-        "prototype": "montage/core/converter/collection-iteration-converter",
+        "prototype": "mod/core/converter/collection-iteration-converter",
         "values": {
             "mapConverter": {"@": "DateToStringConverter"}
         }
     },
 
     "participationStatusExpectedTimeOffsetsValuesConverter": {
-        "prototype": "montage/core/converter/collection-iteration-converter",
+        "prototype": "mod/core/converter/collection-iteration-converter",
         "values": {
             "mapConverter": {"@": "postgresql-interval-range-to-duration-range-converter"}
         }
@@ -215,18 +215,18 @@
     },
 
     "participationStatusLogConverter": {
-        "prototype": "montage/core/converter/key-value-array-to-map-converter",
+        "prototype": "mod/core/converter/key-value-array-to-map-converter",
         "values": {
             "convertedValueDescriptor": {"@": "MapObjectDescriptor"},
             "valuesConverter": {"@": "ISODateStringToDateConverter"}
         }
     },
     "MapObjectDescriptor": {
-        "object": "montage/core/collections/map.mjson"
+        "object": "mod/core/collections/map.mjson"
     },
 
     "participationStatusExpectedTimeOffsetsConverter": {
-        "prototype": "montage/core/converter/key-value-array-to-map-converter",
+        "prototype": "mod/core/converter/key-value-array-to-map-converter",
         "values": {
             "convertedValueDescriptor": {"@": "MapObjectDescriptor"},
             "valuesConverter": {"@": "postgresql-interval-range-to-duration-range-converter"}
@@ -238,7 +238,7 @@
 
 
     "location-converter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
@@ -257,27 +257,27 @@
     },
 
     "event-creator-converter": {
-        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
         "values": {
         }
     },
 
     "recurringEventForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
 
     "rescheduledEventForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
 
     "rescheduledEventReferrerForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "rescheduledEventId == $"
         }
@@ -288,40 +288,40 @@
     },
 
     "event-conferenceData-converter": {
-        "prototype": "montage/data/converter/raw-embedded-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
         "values": {
         }
     },
 
     "RFC3339UTCStringToDateConverter": {
-        "prototype": "montage/core/converter/r-f-c-3339-u-t-c-string-to-date-converter",
+        "prototype": "mod/core/converter/r-f-c-3339-u-t-c-string-to-date-converter",
         "values": {
         }
     },
 
     "color-converter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
 
     "remindersConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "$.has(id)"
         }
     },
 
     "service-engagement-converter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "eventId == $"
         }
     },
 
     "respondentQuestionnairesForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
                 "convertExpression": "$.has(id)"
         }

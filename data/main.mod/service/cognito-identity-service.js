@@ -1,14 +1,14 @@
-var IdentityService = require("montage/data/service/identity-service").IdentityService,
-    DataOperation = require("montage/data/service/data-operation").DataOperation,
-    DataOperationType = require("montage/data/service/data-operation").DataOperationType,
+var IdentityService = require("mod/data/service/identity-service").IdentityService,
+    DataOperation = require("mod/data/service/data-operation").DataOperation,
+    DataOperationType = require("mod/data/service/data-operation").DataOperationType,
     AmazonCognitoIdentity = require("amazon-cognito-identity-js"),
     AuthenticationDetails = AmazonCognitoIdentity.AuthenticationDetails,
     CognitoUserAttribute = AmazonCognitoIdentity.CognitoUserAttribute,
     CognitoUserPool = AmazonCognitoIdentity.CognitoUserPool,
     CognitoUser = AmazonCognitoIdentity.CognitoUser,
     UserIdentity = require("../model/app/user-identity").UserIdentity,
-    Criteria = require("montage/core/criteria").Criteria,
-    uuid = require("montage/core/uuid");
+    Criteria = require("mod/core/criteria").Criteria,
+    uuid = require("mod/core/uuid");
 
 
 /*

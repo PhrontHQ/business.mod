@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "OrderTransaction",
             "propertyDescriptors": [
@@ -23,10 +23,10 @@
         "object": "./order-transaction"
     },
     "Object": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "order": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "order",
             "valueType": "object",
@@ -39,7 +39,7 @@
         "object": "./order.mjson"
     },
     "amount": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "amount",
             "valueType": "object",
@@ -51,7 +51,7 @@
         "object": "./money.mjson"
     },
     "paymentGateway": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "paymentGateway",
             "valueType": "object",
@@ -59,7 +59,7 @@
         }
     },
     "kind": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "kind",
             "cardinality": 1,

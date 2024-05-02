@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "EmploymentPosition",
             "propertyDescriptors": [
@@ -29,7 +29,7 @@
         "object": "./party-party-relationship.mjson"
     },
     "allowedEmploymentTypes": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "allowedEmploymentTypes",
             "valueType": "object",
@@ -42,7 +42,7 @@
         "object": "./employment-type.mjson"
     },
     "employer": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "employer",
             "valueType": "object",
@@ -55,7 +55,7 @@
         "object": "./organization.mjson"
     },
     "position": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "position",
             "valueType": "object",
@@ -67,7 +67,7 @@
         "object": "./position.mjson"
     },
     "staffingHistory": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "staffingHistory",
             "valueType": "object",
@@ -80,7 +80,7 @@
         "object": "./employment-position-staffing.mjson"
     },
     "firstEmploymentPositionRelationships": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "firstEmploymentPositionRelationships",
             "valueType": "object",
@@ -90,7 +90,7 @@
         }
     },
     "secondEmploymentPositionRelationships": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "secondEmploymentPositionRelationships",
             "valueType": "object",

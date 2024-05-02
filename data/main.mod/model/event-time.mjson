@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "EventTime",
             "propertyDescriptors": [
@@ -22,14 +22,14 @@
         "object": "./event-time"
     },
     "date": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "date",
             "valueType": "string"
         }
     },
     "datetime": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "datetime",
             "valueType": "string",
@@ -37,7 +37,7 @@
         }
     },
     "timeZone": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "timeZone",
             "valueType": "string"

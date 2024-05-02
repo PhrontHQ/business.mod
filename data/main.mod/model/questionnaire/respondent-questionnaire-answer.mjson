@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "RespondentQuestionnaireAnswer",
             "propertyDescriptors": [
@@ -26,11 +26,11 @@
         "object": "./respondent-questionnaire-answer"
     },
     "objectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
 
     "respondentQuestionnaire": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "respondentQuestionnaire",
             "valueType": "object",
@@ -44,7 +44,7 @@
     },
 
     "questionnaireQuestion": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "questionnaireQuestion",
             "valueType": "object",
@@ -58,7 +58,7 @@
     },
 
     "answers": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "answers",
             "valueType": "object",
@@ -71,18 +71,18 @@
     },
 
     "completionDate": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "completionDate",
             "valueDescriptor": {"@": "DateDescriptor"}
         }
     },
     "DateDescriptor": {
-        "object": "montage/core/date.mjson"
+        "object": "mod/core/date.mjson"
     },
 
     "respondentNotes": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "respondentNotes",
             "isLocalizable": true,

@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Order",
             "propertyDescriptors": [
@@ -29,24 +29,24 @@
         "object": "./order"
     },
     "Object": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "valueType": "string"
         }
     },
     "customer": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "customer",
             "valueType": "object"
         }
     },
      "orderLineItems": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "orderLineItems",
             "cardinality": -1,
@@ -57,7 +57,7 @@
         "object": "./order-line-item.mjson"
     },
     "transactions": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "transactions",
             "cardinality": -1,
@@ -70,7 +70,7 @@
     },
 
     "billingAddress": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "billingAddress",
             "cardinality": 1,
@@ -78,7 +78,7 @@
         }
     },
     "shippingAddress": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "shippingAddress",
             "cardinality": 1,
@@ -89,21 +89,21 @@
         "object": "./messaging-channel/postal-address.mjson"
     },
     "doesBillingAddressMatchShippingAddress": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "doesBillingAddressMatchShippingAddress",
             "valueType": "boolean"
         }
     },
     "cancellationDate": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "cancellationDate",
             "valueType": "date"
         }
     },
     "cancellationReason": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "cancellationReason",
             "cardinality": 1,

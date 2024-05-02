@@ -1,6 +1,6 @@
-var DataObject = require("montage/data/model/data-object").DataObject;
-DataService = require("montage/data/service/data-service").DataService,
-DataEvent = require("montage/data/model/data-event").DataEvent;
+var DataObject = require("mod/data/model/data-object").DataObject;
+DataService = require("mod/data/service/data-service").DataService,
+DataEvent = require("mod/data/model/data-event").DataEvent;
 
 /**
  * @class DataObject

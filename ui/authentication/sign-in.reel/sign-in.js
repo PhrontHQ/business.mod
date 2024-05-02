@@ -1,6 +1,6 @@
-var Component = require("montage/ui/component").Component,
-    KeyComposer = require("montage/composer/key-composer").KeyComposer,
-    DataOperation = require("montage/data/service/data-operation").DataOperation;
+var Component = require("mod/ui/component").Component,
+    KeyComposer = require("mod/composer/key-composer").KeyComposer,
+    DataOperation = require("mod/data/service/data-operation").DataOperation;
 
 var SignIn = exports.SignIn = Component.specialize({
 

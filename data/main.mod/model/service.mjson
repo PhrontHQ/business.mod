@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Service",
             "propertyDescriptors": [
@@ -21,10 +21,10 @@
                 "*": {
                     "%": "./service-ui-descriptor.mjson"
                 },
-                "montage/ui/list-item.reel": {
+                "mod/ui/list-item.reel": {
                     "%": "./service-list-item-ui-descriptor.mjson"
                 },
-                "montage/ui/cascading-list.reel": {
+                "mod/ui/cascading-list.reel": {
                     "%": "./service-cascading-list-ui-descriptor.mjson"
                 }
             }
@@ -41,7 +41,7 @@
     },
 
     "template": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "template",
             "valueType": "object",
@@ -52,7 +52,7 @@
     },
 
     "variants": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "variants",
             "cardinality": -1,
@@ -65,7 +65,7 @@
     },
 
     "customerEngagementQuestionnaires": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "customerEngagementQuestionnaires",
             "cardinality": -1,

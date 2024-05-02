@@ -1,7 +1,7 @@
 
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "EmailAddress",
             "propertyDescriptors": [
@@ -28,14 +28,14 @@
         "object": "./messaging-channel.mjson"
     },
     "email": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "email",
             "valueType": "string"
         }
     },
     "userName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "userName",
             "valueType": "string",
@@ -43,7 +43,7 @@
         }
     },
     "domain": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "domain",
             "valueType": "string",
@@ -51,7 +51,7 @@
         }
     },
     "partyEmailAddresses": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "partyEmailAddresses",
             "valueType": "object",

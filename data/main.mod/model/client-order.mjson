@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "ClientOrder",
             "propertyDescriptors": [
@@ -29,14 +29,14 @@
         "object": "./client-order"
     },
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "valueType": "string"
         }
     },
     "client": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "client",
             "cardinality": 1,
@@ -44,7 +44,7 @@
         }
     },
     "orderLineItems": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "orderLineItems",
             "cardinality": -1,
@@ -52,14 +52,14 @@
         }
     },
     "fulfillBy": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "fulfillBy",
             "valueType": "string"
         }
     },
     "invoice": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "invoice",
             "cardinality": -1,
@@ -67,28 +67,28 @@
         }
     },
     "orderNumber": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "orderNumber",
             "valueType": "string"
         }
     },
     "status": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "status",
             "valueType": "string"
         }
     },
     "orderTotalCost": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "orderTotalCost",
             "valueType": "number"
         }
     },
     "billTo": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "billTo",
             "valueType": "array"

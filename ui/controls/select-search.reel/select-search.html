@@ -24,7 +24,7 @@
             ]
         },
         "inputContainer": {
-            "prototype": "montage/ui/component",
+            "prototype": "mod/ui/component",
             "properties": {
                 "element": {"#": "inputContainer"},
                 "hasTemplate": false
@@ -46,19 +46,19 @@
             }
         },
         "clearButton": {
-            "prototype": "montage/ui/button.mod",
+            "prototype": "mod/ui/button.mod",
             "properties": {
                 "element": {"#": "clearButton"}
             }
         },
         "optionsController": {
-            "prototype": "montage/core/range-controller",
+            "prototype": "mod/core/range-controller",
             "bindings": {
                 "content": {"<-": "!!@owner.labelPath ? @owner.options.filter{path(@owner.labelPath).startsWith(@owner._optionsPrefix)} : @owner.options"}
             }
         },
         "options": {
-            "prototype": "montage/ui/repetition.reel",
+            "prototype": "mod/ui/repetition.reel",
             "properties": {
                 "element": {"#": "options"},
                 "contentController": {"@": "optionsController"},
@@ -88,7 +88,7 @@
             }
         },
         "arrowIcon": {
-            "prototype": "montage/ui/component",
+            "prototype": "mod/ui/component",
             "properties": {
                 "element": {"#": "arrowIcon"},
                 "hasTemplate": false
@@ -98,7 +98,7 @@
             }
         },
         "button": {
-            "prototype": "montage/ui/button.mod",
+            "prototype": "mod/ui/button.mod",
             "properties": {
                 "element": {"#": "button"}
             },

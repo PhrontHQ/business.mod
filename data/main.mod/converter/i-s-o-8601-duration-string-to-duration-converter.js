@@ -2,8 +2,8 @@
  * @module data/main.mod/converter/i-s-o-8601-duration-string-to-duration-converter
  * @requires montage/core/converter/converter
  */
-var Converter = require("montage/core/converter/converter").Converter,
-    Duration = require("montage/core/duration").Duration;
+var Converter = require("mod/core/converter/converter").Converter,
+    Duration = require("mod/core/duration").Duration;
 
 /**
  * @class ISO8601DurationStringToDurationConverter

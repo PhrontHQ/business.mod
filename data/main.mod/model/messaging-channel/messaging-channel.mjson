@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "MessagingChannel",
             "propertyDescriptors": [
@@ -24,10 +24,10 @@
         "object": "./messaging-channel"
     },
     "objectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "preferredForParties": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "preferredForParties",
             "valueType": "array",
@@ -40,7 +40,7 @@
         "object": "../party.mjson"
     },
     "description": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "description",
             "isLocalizable": true,
@@ -48,7 +48,7 @@
         }
     },
     "tags": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "tags",
             "isLocalizable": true,
@@ -57,7 +57,7 @@
         }
     },
     "serviceProvider": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "serviceProvider",
             "valueType": "object",

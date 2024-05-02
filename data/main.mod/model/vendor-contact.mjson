@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "VendorContact",
             "propertyDescriptors": [
@@ -24,14 +24,14 @@
         "object": "./vendor-contact"
     },
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "valueType": "string"
         }
     },
     "vendors": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "vendors",
             "cardinality": -1,
@@ -39,7 +39,7 @@
         }
     },
     "photos": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "photos",
             "cardinality": -1,
@@ -47,14 +47,14 @@
         }
     },
     "phoneNumber": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "phoneNumber",
             "valueType": "string"
         }
     },
     "email": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "email",
             "valueType": "string"

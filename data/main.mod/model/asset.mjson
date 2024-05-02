@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Asset",
             "propertyDescriptors": [
@@ -28,17 +28,17 @@
         "object": "./asset"
     },
     "objectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "s3BucketName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "s3BucketName",
             "valueType": "string"
         }
     },
     "s3Bucket": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "s3Bucket",
             "cardinality": 1,
@@ -51,14 +51,14 @@
     },
 
      "s3ObjectKey": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "s3ObjectKey",
             "valueType": "string"
         }
     },
     "s3Object": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "s3Object",
             "valueType": "object",
@@ -70,7 +70,7 @@
     },
 
     "description": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "description",
             "isLocalizable": true,
@@ -78,14 +78,14 @@
         }
     },
     "s3Location": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "s3Location",
             "valueType": "URL"
         }
     },
     "signedS3Location": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "signedS3Location",
             "definition": "s3Object.signedUrl",
@@ -93,7 +93,7 @@
         }
     },
     "originLocation": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "originLocation",
             "valueType": "URL"

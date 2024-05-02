@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "UserPool",
             "propertyDescriptors": [
@@ -21,17 +21,17 @@
         }
     },
     "DataObjectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "valueType": "string"
         }
     },
     "appClients": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "appClients",
             "cardinality": -1,
@@ -44,7 +44,7 @@
         "object": "./app-client.mjson"
     },
     "cognitoUserPool": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "cognitoUserPool",
             "cardinality": 1,
@@ -56,7 +56,7 @@
         "object": "aws.mod/data/main.mod/model/cognito/user-pool.mjson"
     },
     "servedOrganizations": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "servedOrganizations",
             "cardinality": -1,

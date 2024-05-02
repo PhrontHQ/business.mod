@@ -1,8 +1,8 @@
 var SecretsManagerClient,
     GetSecretValueCommand,
     AWSRawDataService = require("./a-w-s-raw-data-service").AWSRawDataService,
-    //SyntaxInOrderIterator = (require)("montage/core/frb/syntax-iterator").SyntaxInOrderIterator,
-    DataOperation = require("montage/data/service/data-operation").DataOperation,
+    //SyntaxInOrderIterator = (require)("mod/core/frb/syntax-iterator").SyntaxInOrderIterator,
+    DataOperation = require("mod/data/service/data-operation").DataOperation,
     //Causes issues
     // secretObjectDescriptor = (require) ("../model/aws/secret.mjson").montageObject,
     S3DataService;

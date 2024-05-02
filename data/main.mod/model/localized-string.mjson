@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "LocalizedString",
             "propertyDescriptors": [
@@ -21,7 +21,7 @@
         "object": "./localized-string"
     },
     "locale": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "locale",
             "valueType": "object",
@@ -30,11 +30,11 @@
         }
     },
     "locale_descriptor": {
-        "object": "montage/core/locale.mjson"
+        "object": "mod/core/locale.mjson"
     },
 
     "localization": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "localization",
             "valueType": "object"

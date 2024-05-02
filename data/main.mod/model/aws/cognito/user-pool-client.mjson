@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "UserPoolClient",
             "propertyDescriptors": [
@@ -25,21 +25,21 @@
         }
     },
     "clientId": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "clientId",
             "valueType": "string"
         }
     },
     "userPoolId": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "userPoolId",
             "valueType": "string"
         }
     },
     "userPool": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "userPool",
             "cardinality": 1,
@@ -52,49 +52,49 @@
         "object": "./user-pool.mjson"
     },
     "clientName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "clientName",
             "valueType": "string"
         }
     },
     "generateSecret": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "generateSecret",
             "valueType": "boolean"
         }
     },
     "clientSecret": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "clientSecret",
             "valueType": "string"
         }
     },
     "refreshTokenValidity": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "refreshTokenValidity",
             "valueType": "number"
         }
     },
     "accessTokenValidity": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "accessTokenValidity",
             "valueType": "number"
         }
     },
     "idTokenValidity": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "idTokenValidity",
             "valueType": "number"
         }
     },
     "tokenValidityUnits": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "tokenValidityUnits",
             "cardinality": -1,

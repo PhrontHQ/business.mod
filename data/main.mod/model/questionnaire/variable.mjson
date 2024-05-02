@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Variable",
             "propertyDescriptors": [
@@ -30,10 +30,10 @@
         "object": "./variable"
     },
     "objectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "isLocalizable": true,
@@ -42,7 +42,7 @@
         }
     },
     "displayName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "displayName",
             "isLocalizable": true,
@@ -51,17 +51,17 @@
         }
     },
     "type": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "type",
             "valueDescriptor": {"@": "typeDescriptor"}
         }
     },
     "typeDescriptor": {
-        "object": "montage/core/meta/module-object-descriptor.mjson"
+        "object": "mod/core/meta/module-object-descriptor.mjson"
     },
     "questionnaires": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "questionnaires",
             "valueType": "object",
@@ -74,7 +74,7 @@
         "object": "./questionnaire.mjson"
     },
     "questions": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "questions",
             "valueType": "object",
@@ -87,7 +87,7 @@
         "object": "./question.mjson"
     },
     "respondentQuestionnaireVariableValues": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "respondentQuestionnaireVariableValues",
             "valueType": "object",

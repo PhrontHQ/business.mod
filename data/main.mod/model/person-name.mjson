@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "PersonName",
             "propertyDescriptors": [
@@ -31,56 +31,56 @@
         "object": "./person-name"
     },
     "namePrefix": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "namePrefix",
             "valueType": "string"
         }
     },
     "givenName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "givenName",
             "valueType": "string"
         }
     },
     "middleName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "middleName",
             "valueType": "string"
         }
     },
     "familyName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "familyName",
             "valueType": "string"
         }
     },
     "previousFamilyName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "previousFamilyName",
             "valueType": "string"
         }
     },
     "nameSuffix": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "nameSuffix",
             "valueType": "string"
         }
     },
     "nickname": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "nickname",
             "valueType": "string"
         }
     },
     "honorific": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "honorific",
             "valueType": "string"

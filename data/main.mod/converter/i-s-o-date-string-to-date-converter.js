@@ -2,13 +2,13 @@
  * @module data/main.mod/converter/i-s-o-date-string-to-date-converter
  * @requires montage/core/converter/i-s-o-8601-date-string-to-date-component-values-callback-converter
  */
-var ISO8601DateStringToDateComponentValuesCallbackConverter = require("montage/core/converter/i-s-o-8601-date-string-to-date-component-values-callback-converter").ISO8601DateStringToDateComponentValuesCallbackConverter,
+var ISO8601DateStringToDateComponentValuesCallbackConverter = require("mod/core/converter/i-s-o-8601-date-string-to-date-component-values-callback-converter").ISO8601DateStringToDateComponentValuesCallbackConverter,
     singleton;
 
     //ISO 8601
 
     //for Date.parseRFC3339
-    require("montage/core/extras/date");
+    require("mod/core/extras/date");
 
 /**
  * @class ISO8601DateStringToDateConverter

@@ -1,4 +1,4 @@
-var Montage = require("montage/core/core").Montage,
+var Montage = require("mod/core/core").Montage,
     PersonNameToSringConverter = require("../converter/person-name-to-string-converter-private").PersonNameToSringConverter,
     _sharedPersonNameToSringConverter = new PersonNameToSringConverter;
 

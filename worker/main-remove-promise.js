@@ -36,9 +36,9 @@ if(!useMr) {
 
     const Module = require("module");
     const fs = require("fs");
-    const createModuleMetadata = require("montage/core/mr/require").createModuleMetadata;
+    const createModuleMetadata = require("mod/core/mr/require").createModuleMetadata;
 
-    const MontageDeserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer;
+    const MontageDeserializer = require("mod/core/serialization/deserializer/montage-deserializer").MontageDeserializer;
     Montage.MontageDeserializer = MontageDeserializer;
 
     const node_createRequire = (require) ('module').createRequire;

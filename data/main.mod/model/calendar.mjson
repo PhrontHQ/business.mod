@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Calendar",
             "propertyDescriptors": [
@@ -36,38 +36,38 @@
         "object": "./calendar"
     },
     "Object": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "etag": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "etag",
             "valueType": "string"
         }
     },
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "valueType": "string"
         }
     },
     "description": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "description",
             "valueType": "string"
         }
     },
     "location": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "location",
             "valueType": "string"
         }
     },
      "timeZone": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "timeZone",
             "valueType": "object",
@@ -75,17 +75,17 @@
         }
     },
     "timeZone-descriptor": {
-        "object": "montage/core/date/time-zone.mjson"
+        "object": "mod/core/date/time-zone.mjson"
     },
     "conferenceProperties": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "conferenceProperties",
             "valueType": "object"
         }
     },
     "events": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "events",
             "valueType": "object",
@@ -94,7 +94,7 @@
         }
     },
     "templateEvents": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "templateEvents",
             "valueType": "array",
@@ -107,7 +107,7 @@
         "object": "./event.mjson"
     },
     "color": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "color",
             "valueType": "string",
@@ -118,7 +118,7 @@
         "object": "./color/color.mjson"
     },
     "owner": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "owner",
             "valueType": "object",
@@ -133,7 +133,7 @@
         "object": "./party.mjson"
     },
     "organizationOwner": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "organizationOwner",
             "valueType": "object",
@@ -148,7 +148,7 @@
     },
 
     "personOwner": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "personOwner",
             "valueType": "object",
@@ -163,7 +163,7 @@
     },
 
     "resourceOwner": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "resourceOwner",
             "valueType": "object",
@@ -178,7 +178,7 @@
     },
 
     "employmentPositionStaffingOwner": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "employmentPositionStaffingOwner",
             "valueType": "object",
@@ -194,7 +194,7 @@
     },
 
     "b2cCustomerSupplierRelationshipOwner": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "b2cCustomerSupplierRelationshipOwner",
             "valueType": "object",
@@ -210,7 +210,7 @@
     },
 
     "serviceEngagements": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "serviceEngagements",
             "valueType": "object",

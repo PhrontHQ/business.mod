@@ -2,7 +2,7 @@
     @module business-data.mod/data/main.mod/model/app/web-socket-session
 */
 
-var Montage = require("montage/core/core").Montage;
+var Montage = require("mod/core/core").Montage;
 
 /**
  * @class WebSocketSessionConnection

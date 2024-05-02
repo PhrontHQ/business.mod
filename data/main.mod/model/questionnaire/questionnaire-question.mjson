@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "QuestionnaireQuestion",
             "propertyDescriptors": [
@@ -29,11 +29,11 @@
         "object": "./questionnaire-question"
     },
     "objectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
 
     "questionnaire": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "questionnaire",
             "valueType": "object",
@@ -47,7 +47,7 @@
     },
 
     "question": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "question",
             "valueType": "object",
@@ -60,14 +60,14 @@
     },
 
     "questionnairePosition": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "questionnairePosition",
             "valueType": "number"
         }
     },
     "questionnaireLabel": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "questionnaireLabel",
             "isLocalizable": true,
@@ -75,7 +75,7 @@
         }
     },
     "displayLogicExpression": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "displayLogicExpression",
             "valueType": "string"
@@ -83,7 +83,7 @@
     },
 
     "maximumNumberOfAnswer": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "maximumNumberOfAnswer",
             "defaultValue": 1,
@@ -92,7 +92,7 @@
     },
 
     "possibleAnswers": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "possibleAnswers",
             "valueType": "object",
@@ -106,7 +106,7 @@
     },
 
     "respondentQuestionnaireAnswers": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "respondentQuestionnaireAnswers",
             "valueType": "object",
@@ -121,7 +121,7 @@
     },
 
     "notes": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "notes",
             "isLocalizable": true,

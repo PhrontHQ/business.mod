@@ -1,6 +1,6 @@
 {
     "participationStatusExpectedTimeOffsets": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "participationStatusExpectedTimeOffsets",
             "keyType": "string",
@@ -22,7 +22,7 @@
     },
 
     "queryDefaultOne": {
-        "prototype": "montage/data/model/data-query",
+        "prototype": "mod/data/model/data-query",
         "values": {
             type: ...
             criteria: "calendar.b2cCustomerSupplierRelationshipOwner.supplier.b2cCustomerRelationships.filter{(isTemplate == true) && (templateName == 'PracticePatientRelationshipTemplate') && calendars.filter{templateEvents.filter{participationRoles.filter{(name == ‘Patient’) || (name == 'Attendee')}.length == 2}}}.0"

@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "ServiceEngagement",
             "propertyDescriptors": [
@@ -22,10 +22,10 @@
                 "*": {
                     "%": "./service-engagement-ui-descriptor.mjson"
                 },
-                "montage/ui/list-item.reel": {
+                "mod/ui/list-item.reel": {
                     "%": "./service-engagement-list-item-ui-descriptor.mjson"
                 },
-                "montage/ui/cascading-list.reel": {
+                "mod/ui/cascading-list.reel": {
                     "%": "./service-engagement-calendar-ui-descriptor.mjson"
                 }
             }
@@ -36,10 +36,10 @@
         "object": "./service-engagement"
     },
     "objectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "serviceVariant": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "serviceVariant",
             "valueType": "object",
@@ -51,7 +51,7 @@
         "object": "./service-product-variant.mjson"
     },
     "event": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "event",
             "valueType": "object",
@@ -63,7 +63,7 @@
         "object": "./event.mjson"
     },
     "participants": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "participants",
             "valueType": "object",
@@ -72,7 +72,7 @@
         }
     },
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "valueType": "string",

@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Client",
             "propertyDescriptors": [
@@ -25,21 +25,21 @@
         "object": "./client"
     },
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "valueType": "string"
         }
     },
     "notes": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "notes",
             "valueType": "string"
         }
     },
     "photoOfClientSpace": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "photoOfClientSpace",
             "cardinality": -1,
@@ -47,7 +47,7 @@
         }
     },
     "clientOrders": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "clientOrders",
             "cardinality": -1,
@@ -55,14 +55,14 @@
         }
     },
     "billingAddress": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "billingAddress",
             "valueType": "string"
         }
     },
     "mapCache": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "closestShowroomAddress",
             "valueType": "string"

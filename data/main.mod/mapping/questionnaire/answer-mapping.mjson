@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "AnswerDescriptor"},
             "rawDataPrimaryKeys":["id"],
@@ -43,13 +43,13 @@
         "object": "../../model/questionnaire/answer.mjson"
     },
     "respondentQuestionnaireAnswersConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "answerIds.has($)"
         }
     },
     "respondentQuestionnaireVariableValuesConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "valueIds.has($)"
         }

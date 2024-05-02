@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Question",
             "propertyDescriptors": [
@@ -27,10 +27,10 @@
         "object": "./question"
     },
     "objectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "text": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "text",
             "isLocalizable": true,
@@ -39,7 +39,7 @@
         }
     },
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "isLocalizable": true,
@@ -48,7 +48,7 @@
         }
     },
     "superQuestion": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "superQuestion",
             "valueType": "object",
@@ -58,7 +58,7 @@
         }
     },
     "subQuestions": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "subQuestions",
             "valueType": "object",
@@ -68,7 +68,7 @@
         }
     },
    "variables": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "variables",
             "valueType": "object",
@@ -81,14 +81,14 @@
         "object": "./variable.mjson"
     },
     "isOpenEnded": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "isOpenEnded",
             "valueType": "boolean"
         }
     },
     "notes": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "notes",
             "isLocalizable": true,

@@ -1,8 +1,8 @@
 var PostgreSQLClientPool = require("../postgre-s-q-l-client-pool").PostgreSQLClientPool
 
-    DataOperation = require("montage/data/service/data-operation").DataOperation,
-    DataOperationErrorNames = require("montage/data/service/data-operation").DataOperationErrorNames,
-    DataOperationType = require("montage/data/service/data-operation").DataOperationType;
+    DataOperation = require("mod/data/service/data-operation").DataOperation,
+    DataOperationErrorNames = require("mod/data/service/data-operation").DataOperationErrorNames,
+    DataOperationType = require("mod/data/service/data-operation").DataOperationType;
 
 
 var AuroraV1PostgreSQLClientPool = exports.AuroraV1PostgreSQLClientPool = PostgreSQLClientPool.specialize({

@@ -6,7 +6,7 @@ var Worker = require("tiny-worker"),
     */
     clientMainService = require("business-data.mod/test/data/client-main.mod/main.mjson").montageObject,
     //to test client side
-    Promise = require("montage/core/promise").Promise,
+    Promise = require("mod/core/promise").Promise,
     phrontClientService = clientMainService.childServices[0],
     pseudoSocket = {
         send: function(serializedOperation) {

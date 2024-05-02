@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "ContactInformation",
             "propertyDescriptors": [
@@ -27,10 +27,10 @@
         "object": "./contact-information"
     },
     "objectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "postalAddresses": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "postalAddresses",
             "valueType": "object",
@@ -43,7 +43,7 @@
         "object": "./messaging-channel/postal-address.mjson"
     },
     "emailAddresses": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "emailAddresses",
             "valueType": "object",
@@ -56,7 +56,7 @@
         "object": "./messaging-channel/email-address.mjson"
     },
     "phoneNumbers": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "phoneNumbers",
             "valueType": "object",
@@ -69,7 +69,7 @@
         "object": "./messaging-channel/phone-number.mjson"
     },
     "instantMessageAddresses": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "instantMessageAddresses",
             "valueType": "object",
@@ -82,7 +82,7 @@
         "object": "./messaging-channel/instant-message-address.mjson"
     },
     "urlAddresses": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "urlAddresses",
             "valueType": "URL",
@@ -91,7 +91,7 @@
         }
     },
     "contactForms": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "contactForms",
             "valueType": "object",
@@ -104,7 +104,7 @@
         "object": "./messaging-channel/contact-form.mjson"
     },
     "socialProfiles": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "socialProfiles",
             "valueType": "object",

@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "RespondentQuestionnaire",
             "propertyDescriptors": [
@@ -29,11 +29,11 @@
         "object": "./respondent-questionnaire"
     },
     "objectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
 
     "respondent": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "respondent",
             "valueType": "object",
@@ -47,7 +47,7 @@
     },
 
     "questionnaire": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "questionnaire",
             "valueType": "object",
@@ -61,7 +61,7 @@
     },
 
     "respondentVariableValues": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "respondentVariableValues",
             "valueType": "object",
@@ -75,7 +75,7 @@
     },
 
     "respondentAnswers": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "respondentAnswers",
             "valueType": "object",
@@ -89,18 +89,18 @@
     },
 
     "completionDate": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "completionDate",
             "valueDescriptor": {"@": "DateDescriptor"}
         }
     },
     "DateDescriptor": {
-        "object": "montage/core/date.mjson"
+        "object": "mod/core/date.mjson"
     },
 
     "isMandatory": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "isMandatory",
             "valueType": "boolean",
@@ -109,7 +109,7 @@
     },
 
     "pdfExport": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "pdfExport",
             "valueType": "object",
@@ -122,7 +122,7 @@
     },
 
     "notes": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "notes",
             "isLocalizable": true,
@@ -132,7 +132,7 @@
     },
 
     "events": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "events",
             "valueType": "object",

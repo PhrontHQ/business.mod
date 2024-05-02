@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/user-interface-descriptor",
+        "prototype": "mod/core/meta/user-interface-descriptor",
         "values": {
             "listItemDescriptionPosition": "bottom",
             "listItemIsExpandable": false

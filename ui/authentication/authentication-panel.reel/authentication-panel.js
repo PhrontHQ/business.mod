@@ -1,4 +1,4 @@
-var AuthenticationPanel = require("montage/ui/authentication-panel").AuthenticationPanel;
+var AuthenticationPanel = require("mod/ui/authentication-panel").AuthenticationPanel;
 
 /**
  * @class AuthenticationPanel

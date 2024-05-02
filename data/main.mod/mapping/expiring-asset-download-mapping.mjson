@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "ExpiringAssetDownload"},
             "rawDataPrimaryKeys":["id"],
@@ -37,19 +37,19 @@
         "object": "../model/expiring-asset-download.mjson"
     },
     "assetForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "s3BucketName == $.s3BucketName && s3ObjectKey == $.s3ObjectKey"
         }
     },
     "signedUrlForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "Key == $.Key && Bucket == $.Bucket && expirationDelay == $.expirationDelay"
         }
     },
     "s3ObjectForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "Key == $.Key && Bucket == $.Bucket"
         }

@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "DataObject",
             "propertyDescriptors": [
@@ -17,13 +17,13 @@
             },
             "exportName": "DataObject",
             "module": {
-                "%": "montage/data/model/data-object"
+                "%": "mod/data/model/data-object"
             }
         }
     },
 
     "originId": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "originId",
             "valueType": "string",
@@ -32,7 +32,7 @@
     },
 
     "isTemplate": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "isTemplate",
             "valueType": "boolean",
@@ -42,7 +42,7 @@
     },
 
     "templateName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "templateName",
             "isLocalizable": true,
@@ -52,7 +52,7 @@
     },
 
     "templateDescription": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "templateDescription",
             "isLocalizable": true,
@@ -61,7 +61,7 @@
     },
 
     "creationDate": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "creationDate",
             "valueDescriptor": {"@": "DateDescriptor"},
@@ -69,7 +69,7 @@
         }
     },
     "modificationDate": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "modificationDate",
             "valueDescriptor": {"@": "DateDescriptor"},
@@ -77,14 +77,14 @@
        }
     },
    "publicationDate": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "publicationDate",
             "valueDescriptor": {"@": "DateDescriptor"}
         }
     },
     "DateDescriptor": {
-        "object": "montage/core/date.mjson"
+        "object": "mod/core/date.mjson"
     }
 
 }

@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "DataObject",
             "propertyDescriptors": [
@@ -24,10 +24,10 @@
         }
     },
     "DataObjectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "owner": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "owner",
             "valueType": "object",
@@ -42,7 +42,7 @@
         "object": "./party.mjson"
     },
     "organizationOwner": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "organizationOwner",
             "valueType": "object",
@@ -57,7 +57,7 @@
     },
 
     "personOwner": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "personOwner",
             "valueType": "object",
@@ -72,7 +72,7 @@
     },
 
     "resourceOwner": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "resourceOwner",
             "valueType": "object",
@@ -87,7 +87,7 @@
     },
 
     "employmentPositionStaffingOwner": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "employmentPositionStaffingOwner",
             "valueType": "object",
@@ -102,21 +102,21 @@
     },
 
     "dataObjectPackageName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "dataObjectPackageName",
             "valueType": "string"
         }
     },
     "dataObjectModuleId": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "dataObjectModuleId",
             "valueType": "string"
         }
     },
     "dataObjectPrototype": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "dataObjectPrototype",
             "valueType": "object",

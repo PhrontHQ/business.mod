@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "ExpiringObjectDownload"},
             "primaryKeyPropertyDescriptors": [
@@ -39,14 +39,14 @@
     },
 
     "Key": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "Key",
             "valueType": "string"
         }
     },
     "Bucket": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "Bucket",
             "valueType": "string"
@@ -57,19 +57,19 @@
         "object": "../../../model/aws/s3/expiring-object-download.mjson"
     },
     "bucket-converter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "Bucket == $"
         }
     },
     "signedUrlForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "Key == $.Key && Bucket == $.Bucket && expirationDelay == $.expirationDelay"
         }
     },
     "objectForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "Key == $.Key && Bucket == $.Bucket"
         }

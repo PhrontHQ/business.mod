@@ -1,28 +1,28 @@
-var DataService = require("montage/data/service/data-service").DataService,
-    RawDataService = require("montage/data/service/raw-data-service").RawDataService,
-    //DataQuery = (require) ("montage/data/model/data-query").DataQuery,
-    Promise = require("montage/core/promise").Promise,
-    evaluate = require("montage/core/frb/evaluate"),
-    Set = require("montage/core/collections/set"),
-    Map = require("montage/core/collections/map"),
-    MontageSerializer = require("montage/core/serialization/serializer/montage-serializer").MontageSerializer,
-    Deserializer = require("montage/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
-    DataOperation = require("montage/data/service/data-operation").DataOperation,
+var DataService = require("mod/data/service/data-service").DataService,
+    RawDataService = require("mod/data/service/raw-data-service").RawDataService,
+    //DataQuery = (require) ("mod/data/model/data-query").DataQuery,
+    Promise = require("mod/core/promise").Promise,
+    evaluate = require("mod/core/frb/evaluate"),
+    Set = require("mod/core/collections/set"),
+    Map = require("mod/core/collections/map"),
+    MontageSerializer = require("mod/core/serialization/serializer/montage-serializer").MontageSerializer,
+    Deserializer = require("mod/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
+    DataOperation = require("mod/data/service/data-operation").DataOperation,
     //We don't use special Ids yet, when/if we do, the goal would be to avoid collision and maybe encode more data like the type in it.
     // Phluid = (require) ("./phluid").Phluid,
-    WebSocket = require("montage/core/web-socket").WebSocket,
-    defaultEventManager = require("montage/core/event/event-manager").defaultEventManager,
-    //RawEmbeddedValueToObjectConverter = (require) ("montage/data/converter/raw-embedded-value-to-object-converter").RawEmbeddedValueToObjectConverter,
-    //ReadEvent = (require) ("montage/data/model/read-event").ReadEvent,
-    BytesConverter = require("montage/core/converter/bytes-converter").BytesConverter,
+    WebSocket = require("mod/core/web-socket").WebSocket,
+    defaultEventManager = require("mod/core/event/event-manager").defaultEventManager,
+    //RawEmbeddedValueToObjectConverter = (require) ("mod/data/converter/raw-embedded-value-to-object-converter").RawEmbeddedValueToObjectConverter,
+    //ReadEvent = (require) ("mod/data/model/read-event").ReadEvent,
+    BytesConverter = require("mod/core/converter/bytes-converter").BytesConverter,
     WebSocketSession = require("../model/app/web-socket-session").WebSocketSession,
     sizeof = require('object-sizeof'),
-    currentEnvironment = require("montage/core/environment").currentEnvironment,
+    currentEnvironment = require("mod/core/environment").currentEnvironment,
     isMod = ((currentEnvironment.stage === "mod" ||
     currentEnvironment.stage === "local"));
 
 
-var Identity = require("montage/data/model/identity").Identity;
+var Identity = require("mod/data/model/identity").Identity;
 
 //Set our DataTrigger custom subclass:
 //DataService.prototype.DataTrigger = DataTrigger;

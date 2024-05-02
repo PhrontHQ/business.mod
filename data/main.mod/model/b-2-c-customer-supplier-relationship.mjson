@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "B2CCustomerSupplierRelationship",
             "propertyDescriptors": [
@@ -30,7 +30,7 @@
         "object": "./customer-supplier-relationship.mjson"
     },
     "customer": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "customer",
             "valueType": "object",
@@ -44,7 +44,7 @@
     },
 
     "notes": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "notes",
             "valueType": "string"
@@ -52,7 +52,7 @@
     },
 
     "staffRelationships": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "staffRelationships",
             "valueType": "object",
@@ -66,7 +66,7 @@
     },
 
     "responsiblePartyRelationships": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "responsiblePartyRelationships",
             "valueType": "object",
@@ -80,21 +80,21 @@
     },
 
     "customerWantsPhoneReminders": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "customerWantsPhoneReminders",
             "valueType": "boolean"
         }
     },
     "customerWantsEmailReminders": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "customerWantsEmailReminders",
             "valueType": "boolean"
         }
     },
     "customerWantsSMSReminders": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "customerWantsSMSReminders",
             "valueType": "boolean"

@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "EventConferenceData",
             "propertyDescriptors": [
@@ -26,7 +26,7 @@
         "object": "./event-conference-data"
     },
     "createRequest": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "createRequest",
             "valueType": "object",
@@ -34,7 +34,7 @@
         }
     },
     "entryPoints": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "entryPoints",
             "valueType": "array",
@@ -48,7 +48,7 @@
     },
 
     "conferenceSolution": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "conferenceSolution",
             "valueType": "object",
@@ -56,28 +56,28 @@
         }
     },
     "conferenceId": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "conferenceId",
             "valueType": "string"
         }
     },
     "signature": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "signature",
             "valueType": "string"
         }
     },
     "notes": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "notes",
             "valueType": "string"
         }
     },
     "gadget": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "gadget",
             "valueType": "object",

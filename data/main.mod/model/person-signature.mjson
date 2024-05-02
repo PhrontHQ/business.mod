@@ -1,7 +1,7 @@
 {
 
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "PersonSignature",
             "propertyDescriptors": [
@@ -26,11 +26,11 @@
     },
 
     "objectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
 
     "inputPoints": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "inputPoints",
             "valueType": "array",
@@ -41,7 +41,7 @@
     },
 
     "fileRepresentations": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "fileRepresentations",
             "valueType": "object",
@@ -56,7 +56,7 @@
     },
 
     "person": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "person",
             "valueType": "object",

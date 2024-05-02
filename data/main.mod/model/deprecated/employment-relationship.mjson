@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "EmploymentRelationship",
             "propertyDescriptors": [
@@ -27,7 +27,7 @@
         "object": "./party-party-relationship.mjson"
     },
     "employmentType": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "employmentType",
             "valueType": "object",
@@ -39,7 +39,7 @@
         "object": "./employment-type.mjson"
     },
     "employer": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "employer",
             "valueType": "object",
@@ -52,7 +52,7 @@
         "object": "./organization.mjson"
     },
     "employee": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "employee",
             "valueType": "object",
@@ -65,7 +65,7 @@
         "object": "./person.mjson"
     },
     "role": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "role",
             "valueType": "object",

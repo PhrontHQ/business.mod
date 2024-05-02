@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "CustomerSupplierRelationship",
             "propertyDescriptors": [
@@ -26,7 +26,7 @@
         "object": "./party-party-relationship.mjson"
     },
     "customer": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "customer",
             "valueType": "object",
@@ -41,7 +41,7 @@
         "object": "./organization.mjson"
     },
     "supplier": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "supplier",
             "valueType": "object",
@@ -50,7 +50,7 @@
         }
     },
     "orders": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "orders",
             "valueType": "object",

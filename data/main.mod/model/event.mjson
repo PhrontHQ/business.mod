@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Event",
             "propertyDescriptors": [
@@ -62,10 +62,10 @@
         }
     },
     "ObjectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "participatingParty": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "participatingParty",
             "valueType": "object",
@@ -85,7 +85,7 @@
     },
 
     "calendar": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "calendar",
             "valueType": "object",
@@ -98,7 +98,7 @@
         "object": "./calendar.mjson"
     },
     "scheduledTimeRange": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "scheduledTimeRange",
             "valueType": "date",
@@ -107,7 +107,7 @@
         }
     },
     "actualTimeRange": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "actualTimeRange",
             "valueType": "date",
@@ -115,7 +115,7 @@
         }
     },
     "parent": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "parent",
             "cardinality": 1,
@@ -126,7 +126,7 @@
         }
     },
     "children": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "children",
             "cardinality": -1,
@@ -137,7 +137,7 @@
         }
     },
     "isBlocking": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "isBlocking",
             "valueType": "boolean",
@@ -146,7 +146,7 @@
        }
     },
     "participationEmum": {
-        "prototype": "montage/core/enum",
+        "prototype": "mod/core/enum",
         "values": {
             "members":[
                 "Required",
@@ -156,7 +156,7 @@
         }
     },
     "participation": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "participation",
             "valueType": "string",
@@ -166,7 +166,7 @@
        }
     },
     "participationRoles": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "participationRoles",
             "cardinality": -1,
@@ -203,7 +203,7 @@
             ]
     },
     "participationStatusEmum": {
-        "prototype": "montage/core/enum",
+        "prototype": "mod/core/enum",
         "values": {
             "members": {"@": "participationStatusKeys"},
             "values": {"@": "participationStatusKeys"}
@@ -211,7 +211,7 @@
     },
 
     "participationStatus": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "participationStatus",
             "valueType": "string",
@@ -221,7 +221,7 @@
     },
 
     "participationStatusLog": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "participationStatusLog",
             "keyType": "string",
@@ -235,11 +235,11 @@
     },
 
     "DateDescriptor": {
-        "object": "montage/core/date.mjson"
+        "object": "mod/core/date.mjson"
     },
 
     "participationStatusExpectedTimeOffsets": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "participationStatusExpectedTimeOffsets",
             "keyType": "string",
@@ -255,15 +255,15 @@
     },
 
     "DurationRangeDescriptor": {
-        "object": "montage/core/duration-range.mjson"
+        "object": "mod/core/duration-range.mjson"
     },
 
     "DurationDescriptor": {
-        "object": "montage/core/duration.mjson"
+        "object": "mod/core/duration.mjson"
     },
 
     "reminders": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "reminders",
             "cardinality": -1,
@@ -277,28 +277,28 @@
         "object": "./alarm.mjson"
     },
     "eventURL": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "eventURL",
             "valueType": "URL"
         }
     },
     "summary": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "summary",
             "valueType": "string"
         }
     },
     "description": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "description",
             "valueType": "string"
         }
     },
     "location": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "location",
             "valueType": "object",
@@ -311,7 +311,7 @@
         "object": "./messaging-channel/party-postal-address.mjson"
     },
     "color": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "color",
             "valueType": "string",
@@ -322,7 +322,7 @@
         "object": "./color/color.mjson"
     },
     "organizer": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "organizer",
             "valueType": "object",
@@ -336,7 +336,7 @@
     },
 
     "isAllDay": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "isAllDay",
             "valueType": "boolean",
@@ -345,14 +345,14 @@
     },
 
     "recurrenceRule": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "recurrenceRule",
             "valueType": "array"
         }
     },
     "recurringEvent": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "recurringEvent",
             "valueType": "object",
@@ -362,7 +362,7 @@
         }
     },
     "rescheduledEvent": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "rescheduledEvent",
             "valueType": "object",
@@ -373,7 +373,7 @@
         }
     },
     "rescheduledEventReferrer": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "rescheduledEventReferrer",
             "valueType": "object",
@@ -383,21 +383,21 @@
         }
     },
     "visibility": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "visibility",
             "valueType": "string"
         }
     },
     "iCalUID": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "iCalUID",
             "valueType": "string"
         }
     },
     "sequence": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "sequence",
             "valueType": "number",
@@ -405,7 +405,7 @@
         }
     },
     "attendees": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "attendees",
             "valueType": "array",
@@ -414,7 +414,7 @@
         }
     },
     "conferenceData": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "conferenceData",
             "valueType": "object",
@@ -426,49 +426,49 @@
         "object": "./event-conference-data.mjson"
     },
     "anyoneCanAddSelf": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "anyoneCanAddSelf",
             "valueType": "boolean"
         }
     },
     "guestsCanInviteOthers": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "guestsCanInviteOthers",
             "valueType": "boolean"
         }
     },
     "guestsCanModify": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "guestsCanModify",
             "valueType": "boolean"
         }
     },
     "guestsCanSeeOtherGuests": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "guestsCanSeeOtherGuests",
             "valueType": "boolean"
         }
     },
     "privateCopy": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "privateCopy",
             "valueType": "boolean"
         }
     },
     "locked": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "locked",
             "valueType": "boolean"
         }
     },
     "attachments": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "attachments",
             "valueType": "object",
@@ -480,7 +480,7 @@
         "object": "./asset.mjson"
     },
     "serviceEngagement": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "serviceEngagement",
             "valueType": "object",
@@ -494,7 +494,7 @@
         "object": "./service-engagement.mjson"
     },
     "respondentQuestionnaires": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "respondentQuestionnaires",
             "valueType": "object",

@@ -1,4 +1,4 @@
-var TextField = require("montage/ui/text-field.reel").TextField,
+var TextField = require("mod/ui/text-field.reel").TextField,
 Translator = {
     translate: function(value, args) {
         console.log("Needs refactoring to use Montage localization");

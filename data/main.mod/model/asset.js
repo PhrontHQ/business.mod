@@ -1,4 +1,4 @@
-var DataObject = require("montage/data/model/data-object").DataObject;
+var DataObject = require("mod/data/model/data-object").DataObject;
 
 /**
  * @class Asset

@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/model",
+        "prototype": "mod/core/meta/model",
         "values": {
             "name": "BusinessDataModel",
             "exportName": "BusinessDataModel",
@@ -84,11 +84,11 @@
     },
 
     "DataObject": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
 
     "TimeZone": {
-        "object": "montage/core/date/time-zone.mjson"
+        "object": "mod/core/date/time-zone.mjson"
     },
 
     "asset": {
@@ -240,7 +240,7 @@
     },
 
     "AuthenticationPolicy": {
-        "object": "montage/data/service/user-authentication-policy"
+        "object": "mod/data/service/user-authentication-policy"
     },
 
     "event": {
@@ -372,10 +372,10 @@
     },
 
     "WebSocketSession": {
-        "object": "montage/data/model/app/web-socket-session.mjson"
+        "object": "mod/data/model/app/web-socket-session.mjson"
     },
 
     "WebSocketSessionConnection": {
-        "object": "montage/data/model/app/web-socket-session-connection.mjson"
+        "object": "mod/data/model/app/web-socket-session-connection.mjson"
     }
 }

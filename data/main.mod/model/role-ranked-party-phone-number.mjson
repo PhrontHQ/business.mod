@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "RoleRankedPartyPhoneNumber",
             "propertyDescriptors": [
@@ -19,10 +19,10 @@
         }
     },
     "ObjectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "role": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "role",
             "cardinality": 1,
@@ -35,7 +35,7 @@
     },
 
     "ranking": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "ranking",
             "valueType": "number"
@@ -43,7 +43,7 @@
     },
 
     "partyPhoneNumber": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "partyPhoneNumber",
             "valueType": "object",

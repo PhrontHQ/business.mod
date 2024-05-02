@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "ServiceProductVariant",
             "propertyDescriptors": [
@@ -35,7 +35,7 @@
         "object": "./product-variant.mjson"
     },
     "product": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "product",
             "cardinality": 1,
@@ -47,7 +47,7 @@
         "object": "./service.mjson"
     },
     "professionalName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "professionalName",
             "valueType": "string",
@@ -56,7 +56,7 @@
     },
 
     "professionalShortName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "professionalShortName",
             "valueType": "string",
@@ -65,7 +65,7 @@
     },
 
     "isEmergencyService": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "isEmergencyService",
             "valueType": "boolean",
@@ -74,7 +74,7 @@
     },
 
     "preparationDuration": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "preparationDuration",
             "valueType": "number"
@@ -82,7 +82,7 @@
     },
 
     "duration": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "duration",
             "valueType": "number",
@@ -91,7 +91,7 @@
     },
 
     "gapTimeRange": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "gapTimeRange",
             "valueType": "number",
@@ -101,7 +101,7 @@
     },
 
     "recoveryDuration": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "recoveryDuration",
             "valueType": "number"
@@ -109,7 +109,7 @@
     },
 
     "requiredResources": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "requiredResources",
             "cardinality": -1,
@@ -122,7 +122,7 @@
     },
 
     "providers": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "providers",
             "valueType": "object",
@@ -138,7 +138,7 @@
     },
 
     "serviceEngagements": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "serviceEngagements",
             "valueType": "object",

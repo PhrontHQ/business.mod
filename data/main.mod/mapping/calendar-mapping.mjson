@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "CalendarDescriptor"},
             "rawDataTypeName": "Calendar",
@@ -82,7 +82,7 @@
     },
 
     "timeZoneConverter": {
-        "prototype": "montage/data/converter/time-zone-identifier-to-time-zone-converter"
+        "prototype": "mod/data/converter/time-zone-identifier-to-time-zone-converter"
     },
 
     "CalendarDescriptor": {
@@ -90,55 +90,55 @@
     },
 
     "eventsConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "calendarId == $"
         }
     },
     "color-converter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
 
     "personOwnerConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
 
     "organizationOwnerConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
 
     "resourceOwnerConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
 
     "employmentPositionStaffingOwnerConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
 
     "b2cCustomerSupplierRelationshipOwnerConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
 
     "ownerPersonForeignKeyMapping": {
-        "prototype": "montage/data/service/raw-data-type-mapping",
+        "prototype": "mod/data/service/raw-data-type-mapping",
         "values": {
             "type": {"@": "PersonDescriptor"},
             "expression": "ownerPersonId.defined()"
@@ -149,7 +149,7 @@
     },
 
     "ownerOrganizationForeignKeyMapping": {
-        "prototype": "montage/data/service/raw-data-type-mapping",
+        "prototype": "mod/data/service/raw-data-type-mapping",
         "values": {
             "type": {"@": "OrganizationDescriptor"},
             "expression": "ownerOrganizationId.defined()"
@@ -160,7 +160,7 @@
     },
 
     "ownerResourceForeignKeyMapping": {
-        "prototype": "montage/data/service/raw-data-type-mapping",
+        "prototype": "mod/data/service/raw-data-type-mapping",
         "values": {
             "type": {"@": "ResourceDescriptor"},
             "expression": "ownerResourceId.defined()"
@@ -171,7 +171,7 @@
     },
 
     "ownerEmploymentPositionStaffingForeignKeyMapping": {
-        "prototype": "montage/data/service/raw-data-type-mapping",
+        "prototype": "mod/data/service/raw-data-type-mapping",
         "values": {
             "type": {"@": "EmploymentPositionStaffingDescriptor"},
             "expression": "ownerEmploymentPositionStaffingId.defined()"
@@ -182,7 +182,7 @@
     },
 
     "b2cCustomerSupplierRelationshipForeignKeyMapping": {
-        "prototype": "montage/data/service/raw-data-type-mapping",
+        "prototype": "mod/data/service/raw-data-type-mapping",
         "values": {
             "type": {"@": "B2CCustomerSupplierRelationshipDescriptor"},
             "expression": "ownerB2cCustomerSupplierRelationshipId.defined()"
@@ -193,7 +193,7 @@
     },
 
     "ownerConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $",
             "foreignDescriptorMappings": [

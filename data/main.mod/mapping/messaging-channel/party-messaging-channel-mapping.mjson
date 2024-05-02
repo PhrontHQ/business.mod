@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "PartyMessagingChannelDescriptor"},
             "rawDataPrimaryKeys":["id"],
@@ -67,7 +67,7 @@
     },
 
     "personPartyForeignKeyMapping": {
-        "prototype": "montage/data/service/raw-data-type-mapping",
+        "prototype": "mod/data/service/raw-data-type-mapping",
         "values": {
             "type": {"@": "PersonDescriptor"},
             "expression": "personId.defined()"
@@ -78,7 +78,7 @@
     },
 
     "organizationPartyForeignKeyMapping": {
-        "prototype": "montage/data/service/raw-data-type-mapping",
+        "prototype": "mod/data/service/raw-data-type-mapping",
         "values": {
             "type": {"@": "OrganizationDescriptor"},
             "expression": "organizationId.defined()"
@@ -89,7 +89,7 @@
     },
 
     "resourcePartyForeignKeyMapping": {
-        "prototype": "montage/data/service/raw-data-type-mapping",
+        "prototype": "mod/data/service/raw-data-type-mapping",
         "values": {
             "type": {"@": "ResourceDescriptor"},
             "expression": "resourceId.defined()"
@@ -100,7 +100,7 @@
     },
 
     "employmentPositionStaffingPartyForeignKeyMapping": {
-        "prototype": "montage/data/service/raw-data-type-mapping",
+        "prototype": "mod/data/service/raw-data-type-mapping",
         "values": {
             "type": {"@": "EmploymentPositionStaffingDescriptor"},
             "expression": "employmentPositionStaffingId.defined()"
@@ -111,7 +111,7 @@
     },
 
     "b2cCustomerSupplierRelationshipDescriptorForeignKeyMapping": {
-        "prototype": "montage/data/service/raw-data-type-mapping",
+        "prototype": "mod/data/service/raw-data-type-mapping",
         "values": {
             "type": {"@": "B2CCustomerSupplierRelationshipDescriptor"},
             "expression": "b2cCustomerSupplierRelationshipId.defined()"
@@ -122,7 +122,7 @@
     },
 
     "partyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $",
             "foreignDescriptorMappings": [
@@ -136,28 +136,28 @@
     },
 
     "organizationPartyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
 
     "personPartyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
 
     "messagingChannelConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
 
     "roleRankingsConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "$.has(id)"
         }

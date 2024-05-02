@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Product",
             "propertyDescriptors": [
@@ -39,11 +39,11 @@
     },
 
     "objectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
 
     "template": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "template",
             "valueType": "object",
@@ -53,28 +53,28 @@
         }
     },
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "valueType": "string"
         }
     },
     "description": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "description",
             "valueType": "string"
         }
     },
     "descriptionHtml": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "descriptionHtml",
             "valueType": "string"
         }
     },
     "collections": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "collections",
             "cardinality": -1,
@@ -82,7 +82,7 @@
         }
     },
     "images": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "images",
             "cardinality": -1,
@@ -93,7 +93,7 @@
         "object": "./image.mjson"
     },
     "variants": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "variants",
             "cardinality": -1,
@@ -102,42 +102,42 @@
         }
     },
    "link": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "link",
             "valueType": "string"
         }
     },
     "productType": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "productType",
             "valueType": "string"
         }
     },
     "unitCost": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "unitCost",
             "valueType": "number"
         }
     },
     "tags": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "tags",
             "valueType": "array"
         }
     },
      "notes": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "notes",
             "valueType": "string"
         }
     },
     "vendor": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "vendor",
             "valueType": "object",
@@ -147,7 +147,7 @@
         }
     },
     "storefront": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "storefront",
             "cardinality": 1,
@@ -155,21 +155,21 @@
         }
     },
     "totalInventory": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "totalInventory",
             "valueType": "number"
         }
     },
     "totalVariants": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "totalVariants",
             "valueType": "number"
         }
     },
     "locations": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "locations",
             "cardinality": -1,
@@ -177,7 +177,7 @@
         }
     },
     "options": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "options",
             "cardinality": -1,
@@ -185,7 +185,7 @@
         }
     },
     "orders": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "orders",
             "cardinality": -1,
@@ -193,7 +193,7 @@
         }
     },
     "tags": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "tags",
             "cardinality": -1,

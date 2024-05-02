@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "ConferenceEntryPoint",
             "propertyDescriptors": [
@@ -27,56 +27,56 @@
         "object": "./conference-entry-point"
     },
     "entryPointType": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "entryPointType",
             "valueType": "string"
         }
     },
     "uri": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "uri",
             "valueType": "string"
         }
     },
     "label": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "label",
             "valueType": "string"
         }
     },
     "pin": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "pin",
             "valueType": "string"
         }
     },
     "accessCode": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "accessCode",
             "valueType": "string"
         }
     },
     "meetingCode": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "meetingCode",
             "valueType": "string"
         }
     },
     "passcode": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "passcode",
             "valueType": "string"
         }
     },
     "password": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "password",
             "valueType": "string"

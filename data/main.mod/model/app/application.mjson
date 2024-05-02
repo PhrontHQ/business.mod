@@ -1,6 +1,6 @@
 {
     "root": {
-        "object": "montage/data/model/app/application.mjson",
+        "object": "mod/data/model/app/application.mjson",
         "values": {
             "name": "Application",
             "propertyDescriptors": [
@@ -10,7 +10,7 @@
         }
     },
     "appClients": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "appClients",
             "cardinality": -1,
@@ -23,7 +23,7 @@
         "object": "./app-client.mjson"
     },
     "controllingOrganization": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "controllingOrganization",
             "cardinality": 1,

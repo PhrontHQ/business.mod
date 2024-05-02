@@ -1,4 +1,4 @@
-var WebSocketDataOperationService = require("montage/data/service/web-socket-data-operation-service").WebSocketDataOperationService;
+var WebSocketDataOperationService = require("mod/data/service/web-socket-data-operation-service").WebSocketDataOperationService;
 
 /**
 * TODO: Document

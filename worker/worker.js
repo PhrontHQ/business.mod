@@ -1,6 +1,6 @@
-var Target = require("montage/core/target").Target,
-defaultEventManager = require("montage/core/event/event-manager").defaultEventManager,
-Montage = require("montage/core/core").Montage;
+var Target = require("mod/core/target").Target,
+defaultEventManager = require("mod/core/event/event-manager").defaultEventManager,
+Montage = require("mod/core/core").Montage;
 
 
 /**

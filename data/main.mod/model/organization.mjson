@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Organization",
             "propertyDescriptors": [
@@ -41,7 +41,7 @@
     },
 
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "valueType": "string",
@@ -49,14 +49,14 @@
         }
     },
     "type": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "type",
             "valueType": "string"
         }
     },
     "email": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "email",
             "valueType": "string"
@@ -64,7 +64,7 @@
     },
 
     "parent": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "parent",
             "valueType": "object",
@@ -74,7 +74,7 @@
     },
 
     "suborganizations": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "suborganizations",
             "valueType": "array",
@@ -84,7 +84,7 @@
     },
 
     "tags": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "tags",
             "valueType": "string",
@@ -93,7 +93,7 @@
     },
 
     "mainContact": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "mainContact",
             "valueType": "object",
@@ -106,7 +106,7 @@
     },
 
     "employmentPositions": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "employmentPositions",
             "valueType": "object",
@@ -119,7 +119,7 @@
         "object": "./employment-position.mjson"
     },
     "employees": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "employees",
             "valueType": "object",
@@ -128,7 +128,7 @@
        }
     },
     "b2cCustomerRelationships": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "b2cCustomerRelationships",
             "valueType": "array",
@@ -141,7 +141,7 @@
     },
 
     "b2bCustomerRelationships": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "b2bCustomerRelationships",
             "valueType": "array",
@@ -154,7 +154,7 @@
     },
 
     "supplierRelationships": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "supplierRelationships",
             "valueType": "array",
@@ -164,7 +164,7 @@
     },
 
     "services": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "services",
             "valueType": "array",
@@ -179,7 +179,7 @@
     },
 
     "customerEngagementQuestionnaires": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "customerEngagementQuestionnaires",
             "valueType": "array",
@@ -194,7 +194,7 @@
     },
 
     "userPools": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "userPools",
             "cardinality": -1,
@@ -208,7 +208,7 @@
     },
 
     "applications": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "applications",
             "cardinality": -1,

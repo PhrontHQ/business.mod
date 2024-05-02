@@ -1,7 +1,7 @@
-var Component = require("montage/ui/component").Component,
-    currentEnvironment = require("montage/core/environment").currentEnvironment,
-    KeyComposer = require("montage/composer/key-composer").KeyComposer,
-    DataOperation = require("montage/data/service/data-operation").DataOperation;
+var Component = require("mod/ui/component").Component,
+    currentEnvironment = require("mod/core/environment").currentEnvironment,
+    KeyComposer = require("mod/composer/key-composer").KeyComposer,
+    DataOperation = require("mod/data/service/data-operation").DataOperation;
 
 var EnterVerificationCode = exports.EnterVerificationCode = Component.specialize({
 

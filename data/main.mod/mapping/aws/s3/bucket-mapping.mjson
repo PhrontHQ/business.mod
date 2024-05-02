@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "BucketDescriptor"},
             "primaryKeyPropertyDescriptors": [
@@ -26,7 +26,7 @@
     },
 
     "Bucket": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "Bucket",
             "valueType": "string"

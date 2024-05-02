@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Answer",
             "propertyDescriptors": [
@@ -36,20 +36,20 @@
         "object": "./answer"
     },
     "objectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "type": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "type",
             "valueDescriptor": {"@": "typeDescriptor"}
         }
     },
     "typeDescriptor": {
-        "object": "montage/core/meta/module-object-descriptor.mjson"
+        "object": "mod/core/meta/module-object-descriptor.mjson"
     },
     "textValue": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "textValue",
             "isLocalizable": true,
@@ -58,7 +58,7 @@
         }
     },
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "isLocalizable": true,
@@ -67,14 +67,14 @@
         }
     },
     "booleanValue": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "booleanValue",
             "valueType": "boolean"
         }
     },
     "integerValue": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "integerValue",
             "valueType": "number",
@@ -82,7 +82,7 @@
         }
     },
     "integerRangeValue": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "integerRangeValue",
             "valueType": "number",
@@ -90,7 +90,7 @@
         }
     },
     "bigIntegerValue": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "bigIntegerValue",
             "valueType": "number",
@@ -98,7 +98,7 @@
         }
     },
     "bigIntegerRangeValue": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "bigIntegerRangeValue",
             "valueType": "number",
@@ -106,7 +106,7 @@
         }
     },
     "decimalValue": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "decimalValue",
             "valueType": "number",
@@ -114,7 +114,7 @@
         }
     },
     "decimalRangeValue": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "decimalRangeValue",
             "valueType": "number",
@@ -122,17 +122,17 @@
         }
     },
     "timeValue": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "timeValue",
             "valueDescriptor": {"@": "DateDescriptor"}
         }
     },
     "DateDescriptor": {
-        "object": "montage/core/date.mjson"
+        "object": "mod/core/date.mjson"
     },
     "timeRangeValue": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "timeRangeValue",
             "valueType": "date",
@@ -141,7 +141,7 @@
         }
     },
     "objectValue": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "objectValue",
             "valueType": "object"
@@ -149,7 +149,7 @@
     },
 
     "respondentQuestionnaireAnswers": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "respondentQuestionnaireAnswers",
             "valueType": "object",
@@ -163,7 +163,7 @@
     },
 
     "respondentQuestionnaireVariableValues": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "respondentQuestionnaireVariableValues",
             "valueType": "object",

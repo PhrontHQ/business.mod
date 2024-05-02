@@ -1,5 +1,5 @@
-var DataObject = require("montage/data/model/data-object").DataObject,
-    Enum = require("montage/core/enum").Enum;
+var DataObject = require("mod/data/model/data-object").DataObject,
+    Enum = require("mod/core/enum").Enum;
 
 
 /**

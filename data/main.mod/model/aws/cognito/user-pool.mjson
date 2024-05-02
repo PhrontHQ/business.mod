@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "UserPool",
             "propertyDescriptors": [
@@ -20,21 +20,21 @@
         }
     },
     "id": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "id",
             "valueType": "string"
         }
     },
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "valueType": "string"
         }
     },
     "creationDate": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "creationDate",
             "valueDescriptor": {"@": "DateDescriptor"},
@@ -42,7 +42,7 @@
         }
     },
     "modificationDate": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "modificationDate",
             "valueDescriptor": {"@": "DateDescriptor"},
@@ -51,7 +51,7 @@
     },
 
     "appClients": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "appClients",
             "cardinality": -1,
@@ -65,7 +65,7 @@
     },
 
     "DateDescriptor": {
-        "object": "montage/core/date.mjson"
+        "object": "mod/core/date.mjson"
     }
 
 }

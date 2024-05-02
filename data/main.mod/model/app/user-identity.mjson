@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "UserIdentity",
             "propertyDescriptors": [
@@ -35,32 +35,32 @@
         }
     },
     "IdentityDescriptor": {
-        "object": "montage/data/model/identity.mjson"
+        "object": "mod/data/model/identity.mjson"
     },
 
     "username": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "username",
             "valueType": "string"
         }
     },
     "password": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "password",
             "valueType": "string"
         }
     },
     "session": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "session",
             "valueType": "object"
         }
     },
     "accountConfirmationCode": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "accountConfirmationCode",
             "isSerializable": false,
@@ -68,7 +68,7 @@
         }
     },
     "isAccountConfirmed": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "isAccountConfirmed",
             "isSerializable": false,
@@ -77,7 +77,7 @@
         }
     },
     "needsNewConfirmationCode": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "needsNewConfirmationCode",
             "isSerializable": false,
@@ -86,7 +86,7 @@
         }
     },
     "isAuthenticated": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "isAuthenticated",
             "serializable": false,
@@ -95,7 +95,7 @@
         }
     },
     "isMfaEnabled": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "isMfaEnabled",
             "valueType": "boolean",
@@ -103,35 +103,35 @@
         }
     },
     "firstName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "firstName",
             "valueType": "string"
         }
     },
     "lastName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "lastName",
             "valueType": "string"
         }
     },
     "email": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "email",
             "valueType": "string"
         }
     },
     "phone": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "phone",
             "valueType": "string"
         }
     },
     "images": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "images",
             "cardinality": -1,
@@ -142,7 +142,7 @@
         "object": "../image.mjson"
     },
     "addresses": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "addresses",
             "valueType": "object",
@@ -154,7 +154,7 @@
         "object": "../messaging-channel/postal-address.mjson"
     },
     "tags": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "tags",
             "valueType": "string",
@@ -162,14 +162,14 @@
        }
     },
     "mfaCode": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "mfaCode",
             "valueType": "string"
        }
     },
     "person": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "person",
             "valueType": "object",
@@ -182,7 +182,7 @@
         "object": "../person.mjson"
     },
     "locale": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "locale",
             "valueType": "object",
@@ -191,10 +191,10 @@
        }
     },
     "localeDescriptor": {
-        "object": "montage/core/locale.mjson"
+        "object": "mod/core/locale.mjson"
     },
     "timeZone": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "timeZone",
             "valueType": "object",
@@ -203,6 +203,6 @@
        }
     },
     "timeZoneDescriptor": {
-        "object": "montage/core/date/time-zone.mjson"
+        "object": "mod/core/date/time-zone.mjson"
     }
 }

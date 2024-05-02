@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "WebSocketSessionConnection",
             "propertyDescriptors": [
@@ -17,7 +17,7 @@
         }
     },
     "connectionId": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "connectionId",
             "valueType": "string",
@@ -25,7 +25,7 @@
         }
     },
     "timeRange": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "timeRange",
             "valueType": "date",
@@ -34,7 +34,7 @@
         }
     },
     "range_descriptor": {
-        "object": "montage/core/range.mjson"
+        "object": "mod/core/range.mjson"
     }
 
 }

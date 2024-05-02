@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "TimeZoneDescriptor"},
             "primaryKeyPropertyDescriptors": [
@@ -10,11 +10,11 @@
     },
 
     "TimeZoneDescriptor": {
-        "object": "montage/core/date/time-zone.mjson"
+        "object": "mod/core/date/time-zone.mjson"
     },
 
     "identifier": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "identifier",
             "valueType": "string"

@@ -1,4 +1,4 @@
-var Component = require("montage/ui/component").Component,
+var Component = require("mod/ui/component").Component,
     _ = require("lodash");
 
 exports.InspectorConfirmation = Component.specialize(/** @lends InspectorConfirmation# */ {

@@ -162,7 +162,7 @@
     },
 
     "TimeZone": {
-        "object": "montage/core/date/time-zone.mjson"
+        "object": "mod/core/date/time-zone.mjson"
     },
 
     "TimeZoneMapping": {
@@ -170,7 +170,7 @@
     },
 
     "DataObject": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
 
     "DataObjectMapping": {
@@ -474,7 +474,7 @@
     },
 
     "AuthenticationPolicy": {
-        "object": "montage/data/service/user-authentication-policy"
+        "object": "mod/data/service/user-authentication-policy"
     },
 
     "event": {

@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "UserIdentityDescriptor"},
             "rawDataPrimaryKeys":["id"],
@@ -40,7 +40,7 @@
     },
 
     "timeZoneConverter": {
-        "prototype": "montage/data/converter/time-zone-identifier-to-time-zone-converter"
+        "prototype": "mod/data/converter/time-zone-identifier-to-time-zone-converter"
     },
 
     "UserIdentityDescriptor": {
@@ -48,7 +48,7 @@
     },
 
     "person-converter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "userIdentityIds.has($)"
         }

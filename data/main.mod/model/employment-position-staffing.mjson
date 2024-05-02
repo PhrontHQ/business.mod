@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "EmploymentPositionStaffing",
             "propertyDescriptors": [
@@ -29,7 +29,7 @@
         "object": "./party-party-relationship.mjson"
     },
     "title": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "title",
             "valueType": "string",
@@ -38,7 +38,7 @@
         }
     },
     "employmentType": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "employmentType",
             "valueType": "object",
@@ -50,7 +50,7 @@
         "object": "./employment-type.mjson"
     },
     "employmentPosition": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "employmentPosition",
             "valueType": "object",
@@ -63,7 +63,7 @@
         "object": "./employment-position.mjson"
     },
     "employee": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "employee",
             "valueType": "object",
@@ -76,7 +76,7 @@
         "object": "./person.mjson"
     },
     "role": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "role",
             "valueType": "object",
@@ -88,7 +88,7 @@
         "object": "./role.mjson"
     },
     "b2cCustomerRelationships": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "b2cCustomerRelationships",
             "valueType": "object",

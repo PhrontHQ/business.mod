@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Collection",
             "propertyDescriptors": [
@@ -23,7 +23,7 @@
         }
     },
     "title": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "title",
             "isLocalizable": true,
@@ -31,7 +31,7 @@
         }
     },
     "description": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "description",
             "isLocalizable": true,
@@ -39,7 +39,7 @@
         }
     },
     "descriptionHtml": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "descriptionHtml",
              "isLocalizable": true,
@@ -47,7 +47,7 @@
         }
     },
     "image": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "image",
             "valueType": "object",
@@ -60,7 +60,7 @@
         "object": "./image.mjson"
     },
     "ruleSet": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "ruleSet",
             "valueType": "object",
@@ -73,14 +73,14 @@
     },
 
     "type": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "type",
             "valueType": "string"
         }
     },
     "products": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "products",
             "valueType": "object",
@@ -94,7 +94,7 @@
     },
 
     "objectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     }
 
 

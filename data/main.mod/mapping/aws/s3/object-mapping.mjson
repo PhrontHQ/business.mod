@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "Object"},
             "primaryKeyPropertyDescriptors": [
@@ -42,7 +42,7 @@
         "object": "../../../model/aws/s3/object.mjson"
     },
     "bucket-converter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "Bucket == $"
         }
@@ -52,14 +52,14 @@
     },
 
     "Key": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "Key",
             "valueType": "string"
         }
     },
     "Bucket": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "Bucket",
             "valueType": "string"

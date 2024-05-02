@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Message",
             "propertyDescriptors": [
@@ -30,10 +30,10 @@
         "object": "./message"
     },
     "objectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "sender": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "sender",
             "valueType": "object",
@@ -43,7 +43,7 @@
         }
     },
     "recipients": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "recipients",
             "valueType": "array",
@@ -56,7 +56,7 @@
         "object": "../party.mjson"
     },
     "inputComponent": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "inputComponent",
             "valueType": "object",
@@ -67,7 +67,7 @@
     },
 
     "outputComponent": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "outputComponent",
             "valueType": "object",
@@ -78,11 +78,11 @@
     },
 
     "ComponentDescriptor": {
-        "object": "montage/ui/component.mjson"
+        "object": "mod/ui/component.mjson"
     },
 
     "text": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "text",
             "isLocalizable": true,
@@ -91,7 +91,7 @@
         }
     },
     "context": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "context",
             "isLocalizable": true,
@@ -101,7 +101,7 @@
     },
 
     "description": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "description",
             "isLocalizable": true,
@@ -109,7 +109,7 @@
         }
     },
     "tags": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "tags",
             "isLocalizable": true,
@@ -118,7 +118,7 @@
         }
     },
     "serviceProvider": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "serviceProvider",
             "valueType": "object",

@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "CustomerEngagementQuestionnaire",
             "propertyDescriptors": [
@@ -25,10 +25,10 @@
                 "*": {
                     "%": "./service-ui-descriptor.mjson"
                 },
-                "montage/ui/list-item.reel": {
+                "mod/ui/list-item.reel": {
                     "%": "./service-list-item-ui-descriptor.mjson"
                 },
-                "montage/ui/cascading-list.reel": {
+                "mod/ui/cascading-list.reel": {
                     "%": "./service-cascading-list-ui-descriptor.mjson"
                 }
             }
@@ -36,7 +36,7 @@
     },
 
     "ObjectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
 
     "CustomerEngagementQuestionnaire": {
@@ -44,7 +44,7 @@
     },
 
     "organization": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "organization",
             "valueType": "object",
@@ -59,7 +59,7 @@
 
 
     "services": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "services",
             "valueType": "object",
@@ -73,7 +73,7 @@
     },
 
     "questionnaire": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "questionnaire",
             "valueType": "object",
@@ -87,7 +87,7 @@
     },
 
     "rolesRequiredToComplete": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "rolesRequiredToComplete",
             "cardinality": -1,
@@ -95,7 +95,7 @@
         }
     },
     "rolesOptionalToComplete": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "rolesOptionalToComplete",
             "cardinality": -1,
@@ -109,7 +109,7 @@
         "object": "./event"
     },
     "participationStatusRequiredByEvent": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "participationStatusRequiredByEvent",
             "valueType": "string",
@@ -118,7 +118,7 @@
         }
     },
     "participationStatusOptionalForEvent": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "participationStatusOptionalForEvent",
             "valueType": "string",

@@ -1,4 +1,4 @@
-var Target = require("montage/core/target").Target;
+var Target = require("mod/core/target").Target;
 
 /**
  * @class EventTime

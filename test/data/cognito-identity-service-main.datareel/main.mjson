@@ -1,7 +1,7 @@
 {
 
     "root": {
-        "prototype": "montage/data/service/data-service",
+        "prototype": "mod/data/service/data-service",
         "values": {
             "name": "CognitoIdentityServiceMain",
             "isUniquing": true,

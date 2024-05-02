@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "QuestionnaireQuestionDescriptor"},
             "rawDataPrimaryKeys":["id"],
@@ -43,28 +43,28 @@
     },
 
     "questionnaireForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
 
     "questionForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "id == $"
         }
     },
 
     "possibleAnswersForeignKeyConverter": {
-                "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+                "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
                 "convertExpression": "$.has(id)"
         }
     },
 
     "respondentQuestionnaireAnswersForeignKeyConverter": {
-        "prototype": "montage/data/converter/raw-foreign-value-to-object-converter",
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
             "convertExpression": "questionnaireQuestionId == $"
         }

@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "B2CCustomerSupplierResponsibleParty",
             "propertyDescriptors": [
@@ -32,7 +32,7 @@
     },
 
     "b2cCustomerSupplierRelationship": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "b2cCustomerSupplierRelationship",
             "valueType": "object",
@@ -46,7 +46,7 @@
     },
 
     "responsibleParty": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "responsibleParty",
             "valueType": "object",
@@ -60,7 +60,7 @@
     },
 
     "roleRankings": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "roleRankings",
             "valueType": "array",
@@ -73,28 +73,28 @@
     },
 
     "notes": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "notes",
             "valueType": "string"
         }
     },
     "customerWantsPhoneReminders": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "customerWantsPhoneReminders",
             "valueType": "boolean"
         }
     },
     "customerWantsEmailReminders": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "customerWantsEmailReminders",
             "valueType": "boolean"
         }
     },
     "customerWantsSMSReminders": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "customerWantsSMSReminders",
             "valueType": "boolean"

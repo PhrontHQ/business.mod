@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "PostalAddress",
             "propertyDescriptors": [
@@ -44,35 +44,35 @@
         "object": "./messaging-channel.mjson"
     },
     "addressee": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "addressee",
             "valueType": "string"
         }
     },
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "valueType": "string"
         }
     },
     "firstName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "firstName",
             "valueType": "string"
         }
     },
     "lastName": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "lastName",
             "valueType": "string"
         }
     },
      "phoneNumber": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "phoneNumber",
             "valueType": "object",
@@ -83,14 +83,14 @@
         "object": "./phone-number.mjson"
     },
     "streetAddress": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "streetAddress",
             "valueType": "string"
         }
     },
     "formattedAddressLines": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "formattedAddressLines",
             "cardinality": -1,
@@ -98,35 +98,35 @@
        }
     },
     "premise": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "premise",
             "valueType": "string"
        }
     },
     "premiseDetails": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "premiseDetails",
             "valueType": "string"
        }
     },
     "thoroughfare": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "thoroughfare",
             "valueType": "string"
        }
     },
     "locality": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "locality",
             "valueType": "string"
        }
     },
     "subLocality": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "subLocality",
             "valueType": "string",
@@ -135,7 +135,7 @@
     },
 
     "administrativeArea": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "administrativeArea",
             "valueType": "string",
@@ -144,7 +144,7 @@
     },
 
     "superAdministrativeArea": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "superAdministrativeArea",
             "valueType": "string",
@@ -153,7 +153,7 @@
     },
 
     "subAdministrativeArea": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "subAdministrativeArea",
             "valueType": "string",
@@ -162,21 +162,21 @@
     },
 
     "primaryPostalCode": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "primaryPostalCode",
             "valueType": "string"
        }
     },
     "secondaryPostalCode": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "secondaryPostalCode",
             "valueType": "string"
        }
     },
     "country": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "country",
             "valueType": "object",
@@ -188,7 +188,7 @@
         "object": "../country.mjson"
     },
     "location": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "location",
             "valueType": "object",
@@ -200,7 +200,7 @@
         "object": "geo.mod/logic/model/descriptors/point.mjson"
     },
     "timeZone": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "timeZone",
             "valueType": "object",
@@ -208,10 +208,10 @@
         }
     },
     "timeZone-descriptor": {
-        "object": "montage/core/date/time-zone.mjson"
+        "object": "mod/core/date/time-zone.mjson"
     },
     "partyPostalAddresses": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "partyPostalAddresses",
             "valueType": "object",

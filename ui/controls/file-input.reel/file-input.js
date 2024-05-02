@@ -1,6 +1,6 @@
-var Component = require("montage/ui/component").Component,
-UUID = require("montage/core/uuid"),
-BytesConverter = require("montage/core/converter/bytes-converter").BytesConverter,
+var Component = require("mod/ui/component").Component,
+UUID = require("mod/core/uuid"),
+BytesConverter = require("mod/core/converter/bytes-converter").BytesConverter,
 bytesConverter = new BytesConverter;
 //numeral = require('numeral');
 

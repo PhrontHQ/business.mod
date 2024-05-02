@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Resource",
             "propertyDescriptors": [
@@ -19,10 +19,10 @@
                 "*": {
                     "%": "./resource-ui-descriptor.mjson"
                 },
-                "montage/ui/list-item.reel": {
+                "mod/ui/list-item.reel": {
                     "%": "./resource-list-item-ui-descriptor.mjson"
                 },
-                "montage/ui/cascading-list.reel": {
+                "mod/ui/cascading-list.reel": {
                     "%": "./resource-cascading-list-ui-descriptor.mjson"
                 }
             }
@@ -38,7 +38,7 @@
     },
 
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "valueType": "string",

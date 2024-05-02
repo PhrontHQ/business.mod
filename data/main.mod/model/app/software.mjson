@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "montage/core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Software",
             "propertyDescriptors": [
@@ -28,10 +28,10 @@
         }
     },
     "objectDescriptor": {
-        "object": "montage/data/model/data-object.mjson"
+        "object": "mod/data/model/data-object.mjson"
     },
     "name": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "name",
             "valueType": "string",
@@ -39,7 +39,7 @@
         }
     },
     "version": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "version",
             "valueType": "string",
@@ -47,7 +47,7 @@
         }
     },
     "maker": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "maker",
             "valueType": "object",
@@ -61,7 +61,7 @@
         "object": "../organization.mjson"
     },
     "phoneNumbers": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "phoneNumbers",
             "valueType": "object",
@@ -76,7 +76,7 @@
     },
 
     "smsNumbers": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "smsNumbers",
             "valueType": "object",
@@ -90,7 +90,7 @@
     },
 
     "instantMessageAddresses": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "instantMessageAddresses",
             "valueType": "object",
@@ -104,7 +104,7 @@
         "object": "./messaging-channel/party-instant-message-address.mjson"
     },
     "contactForms": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "contactForms",
             "valueType": "object",
@@ -115,7 +115,7 @@
         }
     },
     "urlAddresses": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "urlAddresses",
             "valueType": "URL",
@@ -127,7 +127,7 @@
         "object": "./messaging-channel/party-contact-form.mjson"
     },
     "socialProfiles": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "socialProfiles",
             "valueType": "object",
@@ -140,7 +140,7 @@
         "object": "./social-profile.mjson"
     },
     "calendars": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "calendars",
             "valueType": "object",
@@ -154,7 +154,7 @@
     },
 
     "eventsParticipatingIn": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "eventsParticipatingIn",
             "valueType": "object",
@@ -168,7 +168,7 @@
     },
 
     "images": {
-        "prototype": "montage/core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "images",
             "cardinality": -1,
