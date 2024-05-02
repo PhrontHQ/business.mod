@@ -1,4 +1,4 @@
-var Button = require("montage/ui/button.reel").Button;
+var Button = require("montage/ui/button.mod").Button;
 
 /**
  * @class Button
