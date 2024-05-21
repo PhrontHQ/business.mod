@@ -1,67 +1,11 @@
-var DataObject = require("mod/data/model/data-object").DataObject;
+const UserSession = require("app-infrastructure-data.mod/data/main.mod/model/user-session").UserSession,
+    Montage = require("mod/core/core").Montage;
 
 /**
- * @class UserIdentity
- * @extends DataObject
+ * @class UserSession
+ * @extends UserSession
  */
-exports.UserSession = DataObject.specialize(/** @lends UserSession.prototype */ {
 
-    username: {
-        value: undefined
-    },
-    password: {
-        value: undefined
-    },
-    accountConfirmationCode: {
-        value: undefined
-    },
-    isAccountConfirmed: {
-        value: false
-    },
-    isAuthenticated: {
-        get: function () {
-            return !!this.session;
-        },
-        set: function (value) {
-            if (this.session && !value) {
-                this.session = null;
-            }
-        }
-    },
-    isMfaEnabled: {
-        value: false
-    },
-    firstName: {
-        value: undefined
-    },
-    lastName: {
-        value: undefined
-    },
-    email: {
-        value: undefined
-    },
-    phone: {
-        value: undefined
-    },
-    image: {
-        value: undefined
-    },
-    tags: {
-        value: undefined
-    },
-    idToken: {
-        value: undefined
-    },
-    accessToken: {
-        value: undefined
-    },
-    mfaCode: {
-        value: undefined
-    },
-    locale: {
-        value: undefined
-    },
-    timeZone: {
-        value: undefined
-    }
+Montage.defineProperties(UserSession.prototype, {
+    person: {value: undefined}
 });

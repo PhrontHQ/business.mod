@@ -1,133 +1,13 @@
 {
     "root": {
-        "prototype": "mod/core/meta/module-object-descriptor",
+        "object": "app-infrastructure-data.mod/data/main.mod/model/user-identity.mjson",
         "values": {
             "name": "UserIdentity",
             "propertyDescriptors": [
-                {"@": "username"},
-                {"@": "password"},
-                {"@": "session"},
-                {"@": "accountConfirmationCode"},
-                {"@": "isAccountConfirmed"},
-                {"@": "needsNewConfirmationCode"},
-                {"@": "isAuthenticated"},
-                {"@": "isMfaEnabled"},
-                {"@": "firstName"},
-                {"@": "lastName"},
-                {"@": "email"},
-                {"@": "phone"},
-                {"@": "images"},
-                {"@": "addresses"},
-                {"@": "tags"},
-                {"@": "mfaCode"},
                 {"@": "person"},
-                {"@": "locale"},
-                {"@": "timeZone"}
-            ],
-            "objectDescriptorModule": {
-                "%": "./user-identity.mjson"
-            },
-            "exportName": "UserIdentity",
-            "module": {
-                "%": "./user-identity"
-            },
-            "parent":{"@": "IdentityDescriptor"}
-        }
-    },
-    "IdentityDescriptor": {
-        "object": "mod/data/model/identity.mjson"
-    },
-
-    "username": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "username",
-            "valueType": "string"
-        }
-    },
-    "password": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "password",
-            "valueType": "string"
-        }
-    },
-    "session": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "session",
-            "valueType": "object"
-        }
-    },
-    "accountConfirmationCode": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "accountConfirmationCode",
-            "isSerializable": false,
-            "valueType": "string"
-        }
-    },
-    "isAccountConfirmed": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "isAccountConfirmed",
-            "isSerializable": false,
-            "defaultValue": false,
-            "valueType": "boolean"
-        }
-    },
-    "needsNewConfirmationCode": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "needsNewConfirmationCode",
-            "isSerializable": false,
-            "defaultValue": false,
-            "valueType": "boolean"
-        }
-    },
-    "isAuthenticated": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "isAuthenticated",
-            "serializable": false,
-            "defaultValue": false,
-            "valueType": "boolean"
-        }
-    },
-    "isMfaEnabled": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "isMfaEnabled",
-            "valueType": "boolean",
-            "defaultValue": false
-        }
-    },
-    "firstName": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "firstName",
-            "valueType": "string"
-        }
-    },
-    "lastName": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "lastName",
-            "valueType": "string"
-        }
-    },
-    "email": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "email",
-            "valueType": "string"
-        }
-    },
-    "phone": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "phone",
-            "valueType": "string"
+                {"@": "images"},
+                {"@": "addresses"}
+            ]   
         }
     },
     "images": {
@@ -153,21 +33,6 @@
     "addresses_descriptor": {
         "object": "../messaging-channel/postal-address.mjson"
     },
-    "tags": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "tags",
-            "valueType": "string",
-            "cardinality": -1
-       }
-    },
-    "mfaCode": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "mfaCode",
-            "valueType": "string"
-       }
-    },
     "person": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
@@ -180,29 +45,5 @@
     },
     "personDescriptor": {
         "object": "../person.mjson"
-    },
-    "locale": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "locale",
-            "valueType": "object",
-            "cardinality": 1,
-            "valueDescriptor": {"@": "localeDescriptor"}
-       }
-    },
-    "localeDescriptor": {
-        "object": "mod/core/locale.mjson"
-    },
-    "timeZone": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "timeZone",
-            "valueType": "object",
-            "cardinality": 1,
-            "valueDescriptor": {"@": "timeZoneDescriptor"}
-       }
-    },
-    "timeZoneDescriptor": {
-        "object": "mod/core/date/time-zone.mjson"
     }
 }

@@ -1,67 +1,14 @@
-var Target = require("mod/core/target").Target;
+const UserIdentity = require("app-infrastructure-data.mod/data/main.mod/model/user-identity").UserIdentity,
+    Montage = require("mod/core/core").Montage;
 
 /**
  * @class UserIdentity
  * @extends DataObject
  */
-exports.UserIdentity = Target.specialize(/** @lends UserIdentity.prototype */ {
 
-    username: {
-        value: undefined
-    },
-    password: {
-        value: undefined
-    },
-    accountConfirmationCode: {
-        value: undefined
-    },
-    isAccountConfirmed: {
-        value: false
-    },
-    isAuthenticated: {
-        get: function () {
-            return !!this.session;
-        },
-        set: function (value) {
-            if (this.session && !value) {
-                this.session = null;
-            }
-        }
-    },
-    isMfaEnabled: {
-        value: false
-    },
-    firstName: {
-        value: undefined
-    },
-    lastName: {
-        value: undefined
-    },
-    email: {
-        value: undefined
-    },
-    phone: {
-        value: undefined
-    },
-    image: {
-        value: undefined
-    },
-    tags: {
-        value: undefined
-    },
-    idToken: {
-        value: undefined
-    },
-    accessToken: {
-        value: undefined
-    },
-    mfaCode: {
-        value: undefined
-    },
-    locale: {
-        value: undefined
-    },
-    timeZone: {
-        value: undefined
-    }
+Montage.defineProperties(UserIdentity.prototype, {
+    person: {value: undefined},
+    images: {value: undefined},
+    addresses: {value: undefined},
+    
 });
