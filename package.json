@@ -31,6 +31,7 @@
     "id128": "^1.5.0",
     "lodash": "^4.17.2",
     "mod": "github:PhrontHQ/mod#main",
+    "app-infrastructure-data.mod": "github:PhrontHQ/app-infrastructure-data.mod#main",
     "geo.mod": "github:PhrontHQ/geo.mod#main",
     "object-sizeof": "^1.5.2",
     "pg": "^8.7.3",
