@@ -1,0 +1,25 @@
+{
+    "root": {
+        "object": "app-infrastructure-data.mod/data/main.mod/model/user-pool.mjson",
+        "values": {
+            "propertyDescriptors": [
+                {"@": "servedOrganizations"}
+            ]
+        }
+    },
+
+    "servedOrganizations": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "servedOrganizations",
+            "cardinality": -1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "OrganizationDescriptor"},
+            "inversePropertyName": "userPools",
+            "description": "The parties using a UserPool"
+       }
+    },
+    "OrganizationDescriptor": {
+        "object": "../organization.mjson"
+    }
+}
