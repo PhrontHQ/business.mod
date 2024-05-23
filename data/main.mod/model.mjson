@@ -73,9 +73,6 @@
                 {"@": "RespondentQuestionnaireVariableValue"},
                 {"@": "CustomerEngagementQuestionnaire"},
                 {"@": "RoleRanking"},
-                {"@": "Application"},
-                {"@": "UserPool"},
-                {"@": "AppClient"},
                 {"@": "WebSocketSession"},
                 {"@": "WebSocketSessionConnection"}
 
@@ -357,18 +354,6 @@
 
     "RoleRanking": {
         "object": "./model/role-ranking.mjson"
-    },
-
-    "Application": {
-        "object": "./model/app/application.mjson"
-    },
-
-    "UserPool": {
-        "object": "./model/app/user-pool.mjson"
-    },
-
-    "AppClient": {
-        "object": "./model/app/app-client.mjson"
     },
 
     "WebSocketSession": {
