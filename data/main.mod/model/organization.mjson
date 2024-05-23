@@ -217,7 +217,7 @@
         }
     },
     "ApplicationDescriptor": {
-        "object": "./app/application.mjson"
+        "object": "app-infrastructure-data.mod/data/main.mod/model/application.mjson"
     }
 
 }
