@@ -204,7 +204,7 @@
         }
     },
     "UserPoolDescriptor": {
-        "object": "app-infrastructure-data.mod/data/main.mod/model/user-pool.mjson"
+        "object": "./app/user-pool.mjson"
     },
 
     "applications": {
@@ -217,7 +217,7 @@
         }
     },
     "ApplicationDescriptor": {
-        "object": "app-infrastructure-data.mod/data/main.mod/model/application.mjson"
+        "object": "./app/application.mjson"
     }
 
 }
