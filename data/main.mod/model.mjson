@@ -357,10 +357,10 @@
     },
 
     "WebSocketSession": {
-        "object": "mod/data/model/app/web-socket-session.mjson"
+        "object": "app-infrastructure-data.mod/data/main.mod/model/web-socket-session.mjson"
     },
 
     "WebSocketSessionConnection": {
-        "object": "mod/data/model/app/web-socket-session-connection.mjson"
+        "object": "app-infrastructure-data.mod/data/main.mod/model/web-socket-session-connection.mjson"
     }
 }
