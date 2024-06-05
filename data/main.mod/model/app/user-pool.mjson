@@ -1,6 +1,6 @@
 {
     "root": {
-        "object": "app-infrastructure-data.mod/data/main.mod/model/user-pool.mjson",
+        "object": "mod/data/model/app/user-pool.mjson",
         "values": {
             "propertyDescriptors": [
                 {"@": "servedOrganizations"}

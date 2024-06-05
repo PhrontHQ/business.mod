@@ -1,4 +1,4 @@
-const UserSession = require("app-infrastructure-data.mod/data/main.mod/model/user-pool").UserPool,
+const UserSession = require("mod/data/model/app/user-pool").UserPool,
     Montage = require("mod/core/core").Montage;
 
 /**

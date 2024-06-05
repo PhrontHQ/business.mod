@@ -1,4 +1,4 @@
-const UserIdentity = require("app-infrastructure-data.mod/data/main.mod/model/user-identity").UserIdentity,
+const UserIdentity = require("mod/data/model/app/user-identity").UserIdentity,
     Montage = require("mod/core/core").Montage;
 
 /**

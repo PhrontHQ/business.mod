@@ -1,6 +1,6 @@
 {
     "root": {
-        "object": "app-infrastructure-data.mod/data/main.mod/model/application.mjson",
+        "object": "mod/data/model/app/application.mjson",
         "values": {
             "propertyDescriptors": [
                 {"@": "controllingOrganization"}
