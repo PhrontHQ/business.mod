@@ -1,4 +1,4 @@
-var PostgreSQLClientPool = require("../postgre-s-q-l-client-pool").PostgreSQLClientPool;
+var PostgreSQLClientPool = require("../../service/postgre-s-q-l-client-pool").PostgreSQLClientPool;
 
 /*
 
