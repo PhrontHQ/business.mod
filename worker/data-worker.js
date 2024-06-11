@@ -9,7 +9,7 @@ const   Worker = require("./worker").Worker,
         Range = require("mod/core/range").Range,
         // Montage = (require)("mod/core/core").Montage,
         currentEnvironment = require("mod/core/environment").currentEnvironment,
-        WebSocketSession = require("../data/main.mod/model/app/web-socket-session").WebSocketSession,
+        WebSocketSession = require("mod/data/model/app/web-socket-session").WebSocketSession,
     util = require('util');
 
 const successfullResponse = {
