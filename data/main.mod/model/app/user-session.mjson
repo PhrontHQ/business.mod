@@ -18,6 +18,6 @@
        }
     },
     "person_descriptor": {
-        "object": "./person.mjson"
+        "object": "../person.mjson"
     }
 }
