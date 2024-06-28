@@ -6,6 +6,8 @@ const Application = require("mod/data/model/app/application").Application,
  * @extends Object
  */
 
+exports.Application = Application;
+
 Montage.defineProperties(Application.prototype, {
     controllingOrganization: {value: undefined}
 });
