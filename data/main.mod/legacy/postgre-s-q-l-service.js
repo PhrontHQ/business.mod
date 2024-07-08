@@ -1,5 +1,4 @@
 
-//var AWSRawDataService = require("./aws/a-w-s-raw-data-service").AWSRawDataService,
 var RawDataService = require("mod/data/service/raw-data-service").RawDataService,
 
     Criteria = require("mod/core/criteria").Criteria,
