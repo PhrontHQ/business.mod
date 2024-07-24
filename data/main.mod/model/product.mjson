@@ -3,6 +3,7 @@
         "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Product",
+            "description": "Anything that can be offered to a market for attention, acquisition, use, or consumption that might satisfy a need. It includes physical objects and services.Any item, sub-assembly or cost unit manufactured or sold by an organization.",
             "propertyDescriptors": [
                 {"@": "template"},
                 {"@": "name"},

@@ -3,6 +3,7 @@
         "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Person",
+            "description": "This should be a subclass of Being, itself a subclass of Party, when the time comes it's needed to deal with animals for example",
             "propertyDescriptors": [
                 {"@": "name"},
                 {"@": "gender"},
