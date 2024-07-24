@@ -1,0 +1,33 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Intangible",
+            "description": "A digital thing.",
+            "propertyDescriptors": [
+                {"@": "name"}
+           ],
+            "objectDescriptorModule": {
+                "%": "./intangible.mjson"
+            },
+            "exportName": "Intangible",
+            "module": {
+                "%": "./intangible"
+            },
+            "parent":{"@": "DataObjectDescriptor"}
+        }
+    },
+
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    }
+
+}

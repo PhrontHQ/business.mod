@@ -1,0 +1,33 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Tangible",
+            "description": "A physical, non-living thing.",
+            "propertyDescriptors": [
+                {"@": "name"}
+           ],
+            "objectDescriptorModule": {
+                "%": "./tangible.mjson"
+            },
+            "exportName": "Tangible",
+            "module": {
+                "%": "./tangible"
+            },
+            "parent":{"@": "DataObjectDescriptor"}
+        }
+    },
+
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    }
+
+}
