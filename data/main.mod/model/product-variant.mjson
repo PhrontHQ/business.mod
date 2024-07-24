@@ -61,11 +61,15 @@
             "valueType": "number"
         }
     },
+    "productOptionDescriptor": {
+        "object": "./product-option.mjson"
+    },
     "selectedOptions": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "selectedOptions",
             "valueType": "object",
+            "valueDescriptor": {"@": "productOptionDescriptor"},
             "cardinality": -1
         }
     },
