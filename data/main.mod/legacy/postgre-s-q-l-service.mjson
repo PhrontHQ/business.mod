@@ -474,7 +474,7 @@
     },
 
     "AuthenticationPolicy": {
-        "object": "mod/data/service/user-authentication-policy"
+        "object": "mod/data/service/authentication-policy"
     },
 
     "event": {
@@ -735,11 +735,11 @@
     },
 
     "WebSocketSessionConnection": {
-        object "app-infrastructure-data.mod/data/main.mod/model/web-socket-session-connection.mjson"
+        "object": "app-infrastructure-data.mod/data/main.mod/model/web-socket-session-connection.mjson"
     },
 
     "WebSocketSessionConnectionMapping": {
-        object "app-infrastructure-datapostre-s-q-l.mod/mapping/web-socket-session-connection-mapping.mjson"
+        "object": "app-infrastructure-datapostre-s-q-l.mod/mapping/web-socket-session-connection-mapping.mjson"
     },
 
     "cognitoIdentityService": {

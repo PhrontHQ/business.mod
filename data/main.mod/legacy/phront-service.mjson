@@ -474,7 +474,7 @@
     },
 
     "AuthenticationPolicy": {
-        "%": "./service/user-authentication-policy"
+        "%": "./service/authentication-policy"
     },
 
     "event": {
