@@ -5,7 +5,6 @@
             "name": "Tangible",
             "description": "A physical, non-living thing.",
             "propertyDescriptors": [
-                {"@": "name"}
            ],
             "objectDescriptorModule": {
                 "%": "./tangible.mjson"
@@ -14,20 +13,12 @@
             "module": {
                 "%": "./tangible"
             },
-            "parent":{"@": "DataObjectDescriptor"}
+            "parent":{"@": "ThingObjectDescriptor"}
         }
     },
 
-    "DataObjectDescriptor": {
-        "object": "mod/data/model/data-object.mjson"
-    },
-
-    "name": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "name",
-            "valueType": "string"
-        }
+    "ThingObjectDescriptor": {
+        "object": "./thing.mjson"
     }
 
 }

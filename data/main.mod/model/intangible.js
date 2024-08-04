@@ -1,7 +1,7 @@
-var DataObject = require("mod/data/model/data-object").DataObject;
+var Thing = require("./thing").Thing;
 /**
  * @class Intangible
- * @extends DataObject
+ * @extends Thing
  */
 
 
@@ -9,21 +9,12 @@ var DataObject = require("mod/data/model/data-object").DataObject;
  */
 
 
-exports.Intangible = DataObject.specialize(/** @lends Intangible.prototype */ {
+exports.Intangible = Thing.specialize(/** @lends Intangible.prototype */ {
     constructor: {
         value: function Intangible() {
             this.super();
             return this;
         }
-    },
-
-    /**
-     * name
-     * 
-     * @property {String}
-     */
-    name: {
-        value: undefined
     }
 
 });
