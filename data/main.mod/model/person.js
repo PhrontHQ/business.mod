@@ -28,7 +28,9 @@ exports.Person = Party.specialize(/** @lends Person.prototype */ {
 
     /**
      * name
-     *
+     * 
+     * Overrides Party's name that is just a String
+     * 
      * An instance of PersonName, an object that encapsulates the components
      * of a person's name in an extendable, object-oriented manner.
      * It is used to specify a person's name by providing the components
