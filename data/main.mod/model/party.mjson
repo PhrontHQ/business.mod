@@ -4,6 +4,7 @@
         "values": {
             "name": "Party",
             "propertyDescriptors": [
+                {"@": "name"},
                 {"@": "existenceTimeRange"},
                 {"@": "postalAddresses"},
                 {"@": "emailAddresses"},
@@ -29,6 +30,14 @@
     },
     "objectDescriptor": {
         "object": "mod/data/model/data-object.mjson"
+    },
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "isSearchable": true
+        }
     },
     "existenceTimeRange": {
         "prototype": "mod/core/meta/property-descriptor",

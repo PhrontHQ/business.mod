@@ -7,6 +7,9 @@ var DataObject = require("mod/data/model/data-object").DataObject;
 
 exports.Party = DataObject.specialize(/** @lends Party.prototype */ {
 
+    name: {
+        value: undefined
+    },
     existenceTimeRange: {
         value: undefined
     },
