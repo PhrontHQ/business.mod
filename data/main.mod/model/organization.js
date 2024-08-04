@@ -2,7 +2,7 @@ var Party = require("./party").Party;
 
 /**
  * @class Organization
- * @extends DataObject
+ * @extends Party
  */
 
 
@@ -24,9 +24,6 @@ exports.Organization = Party.specialize(/** @lends Organization.prototype */ {
             this.super();
             return this;
         }
-    },
-    name: {
-        value: undefined
     },
     type: {
         value: undefined
