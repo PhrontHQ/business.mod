@@ -4,7 +4,6 @@
         "values": {
             "name": "Organization",
             "propertyDescriptors": [
-                {"@": "name"},
                 {"@": "type"},
                 {"@": "parent"},
                 {"@": "suborganizations"},
@@ -40,14 +39,6 @@
         "object": "./party.mjson"
     },
 
-    "name": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "name",
-            "valueType": "string",
-            "isSearchable": true
-        }
-    },
     "type": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
@@ -69,6 +60,7 @@
             "name": "parent",
             "valueType": "object",
             "cardinality": 1,
+            "inversePropertyName": "suborganizations",
             "valueDescriptor": {"@": "root"}
        }
     },
@@ -79,6 +71,7 @@
             "name": "suborganizations",
             "valueType": "array",
             "cardinality": -1,
+            "inversePropertyName": "parent",
             "valueDescriptor": {"@": "root"}
        }
     },
