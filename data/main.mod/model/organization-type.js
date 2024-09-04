@@ -1,4 +1,4 @@
-var DataObjectType = require("/data-object-type").DataObjectType;
+var DataObjectType = require("./data-object-type").DataObjectType;
 /**
  * @class OrganizationType
  * @extends DataObjectType

@@ -6,6 +6,7 @@
             "exportName": "BusinessDataModel",
             "objectDescriptors": [
                 {"@": "DataObject"},
+                {"@": "DataObjectType"},
                 {"@": "TimeZone"},
                 {"@": "asset"},
                 {"@": "LocalizedString"},
@@ -36,6 +37,7 @@
                 {"@": "party"},
                 {"@": "partyPartyRelationship"},
                 {"@": "organization"},
+                {"@": "organizationType"},
                 {"@": "postalAddress"},
                 {"@": "partyPostalAddress"},
                 {"@": "image"},
@@ -88,6 +90,10 @@
 
     "DataObject": {
         "object": "mod/data/model/data-object.mjson"
+    },
+
+    "DataObjectType": {
+        "object": "./model/data-object-type.mjson"
     },
 
     "TimeZone": {
@@ -200,6 +206,10 @@
 
     "organization": {
         "object": "./model/organization.mjson"
+    },
+
+    "organizationType": {
+        "object": "./model/organization-type.mjson"
     },
 
     "postalAddress": {
