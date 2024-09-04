@@ -39,11 +39,18 @@
         "object": "./party.mjson"
     },
 
+    "OrganizationTypeDescriptor": {
+        "object": "./organization-type.mjson"
+    },
+
     "type": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "type",
-            "valueType": "string"
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "organizations",
+            "valueDescriptor": {"@": "root"}
         }
     },
     "email": {

@@ -2,27 +2,36 @@
     "root": {
         "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
-            "name": "EmploymentType",
+            "name": "DataObjectType",
             "propertyDescriptors": [
+                {"@": "name"},
                 {"@": "parent"},
                 {"@": "subtypes"}
             ],
             "objectDescriptorModule": {
-                "%": "./employment-type.mjson"
+                "%": "./data-object-type.mjson"
             },
-            "exportName": "EmploymentType",
+            "exportName": "DataObjectType",
             "module": {
-                "%": "./employment-type"
+                "%": "./data-object-type"
             },
-            "object":{"@": "employment-type"},
-            "parent":{"@": "DataObjectTypeDescriptor"}
+            "object":{"@": "DataObjectType"},
+            "parent":{"@": "DataObjectDescriptor"}
         }
     },
-    "employment-type": {
-        "object": "./employment-type"
+    "DataObjectType": {
+        "object": "./data-object-type"
     },
-    "DataObjectTypeDescriptor": {
-        "object": "./data-object-type.mjson"
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "isLocalizable": true
+        }
     },
     "parent": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -44,4 +53,6 @@
             "valueDescriptor": {"@": "root"}
        }
     }
+
+
 }
