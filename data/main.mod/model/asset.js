@@ -86,7 +86,10 @@ exports.Asset = DataObject.specialize(/** @lends Asset.prototype */ {
             return this;
         }
     },
-    s3Location: {
+    storageObjectLocation: {
+        value: undefined
+    },
+    signedStorageObjectLocation: {
         value: undefined
     },
     originLocation: {
@@ -95,16 +98,16 @@ exports.Asset = DataObject.specialize(/** @lends Asset.prototype */ {
     description: {
         value: undefined
     },
-    s3BucketName: {
+    storageBucketName: {
         value: undefined
     },
-    s3Bucket: {
+    storageBucket: {
         value: undefined
     },
-    s3ObjectKey: {
+    storageObjectKey: {
         value: undefined
     },
-    s3Object: {
+    storageObject: {
         value: undefined
     }
 });

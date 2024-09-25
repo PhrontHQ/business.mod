@@ -4,13 +4,13 @@
         "values": {
             "name": "Asset",
             "propertyDescriptors": [
-                {"@": "s3BucketName"},
-                {"@": "s3Bucket"},
-                {"@": "s3ObjectKey"},
-                {"@": "s3Object"},
+                {"@": "storageBucketName"},
+                {"@": "storageBucket"},
+                {"@": "storageObjectKey"},
+                {"@": "storageObject"},
                 {"@": "description"},
-                {"@": "s3Location"},
-                {"@": "signedS3Location"},
+                {"@": "storageObjectLocation"},
+                {"@": "signedStorageObjectLocation"},
                 {"@": "originLocation"}
             ],
             "objectDescriptorModule": {
@@ -30,43 +30,43 @@
     "objectDescriptor": {
         "object": "mod/data/model/data-object.mjson"
     },
-    "s3BucketName": {
+    "storageBucketName": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "s3BucketName",
+            "name": "storageBucketName",
             "valueType": "string"
         }
     },
-    "s3Bucket": {
+    "storageBucket": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "s3Bucket",
+            "name": "storageBucket",
             "cardinality": 1,
             "valueType": "object",
-            "valueDescriptor": {"@": "BucketDescriptor"}
+            "valueDescriptor": {"@": "StorageBucketDescriptor"}
        }
     },
-    "BucketDescriptor": {
-        "object": "aws.mod/data/main.mod/model/s3/bucket.mjson"
+    "StorageBucketDescriptor": {
+        "object": "cloud-computing.mod/data/model/object-storage/bucket.mjson"
     },
 
-     "s3ObjectKey": {
+     "storageObjectKey": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "s3ObjectKey",
+            "name": "storageObjectKey",
             "valueType": "string"
         }
     },
-    "s3Object": {
+    "storageObject": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "s3Object",
+            "name": "storageObject",
             "valueType": "object",
-            "valueDescriptor": {"@": "S3ObjectDescriptor"}
+            "valueDescriptor": {"@": "StorageObjectDescriptor"}
         }
     },
-    "S3ObjectDescriptor": {
-        "object": "aws.mod/data/main.mod/model/s3/object.mjson"
+    "StorageObjectDescriptor": {
+        "object": "cloud-computing.mod/data/model/object-storage/object.mjson"
     },
 
     "description": {
@@ -77,17 +77,17 @@
             "valueType": "string"
         }
     },
-    "s3Location": {
+    "storageObjectLocation": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "s3Location",
+            "name": "storageObjectLocation",
             "valueType": "URL"
         }
     },
-    "signedS3Location": {
+    "signedStorageObjectLocation": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "signedS3Location",
+            "name": "signedStorageObjectLocation",
             "definition": "s3Object.signedUrl",
             "valueType": "URL"
         }
