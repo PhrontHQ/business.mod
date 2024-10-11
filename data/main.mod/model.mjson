@@ -7,6 +7,7 @@
             "objectDescriptors": [
                 {"@": "DataObject"},
                 {"@": "DataObjectType"},
+                {"@": "ObjectStore"},
                 {"@": "TimeZone"},
                 {"@": "asset"},
                 {"@": "LocalizedString"},
@@ -94,6 +95,10 @@
 
     "DataObjectType": {
         "object": "./model/data-object-type.mjson"
+    },
+
+    "ObjectStore": {
+        "object": "mod/data/model/object-store.mjson"
     },
 
     "TimeZone": {
