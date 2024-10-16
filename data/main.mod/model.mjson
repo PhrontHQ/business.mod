@@ -394,7 +394,7 @@
     },
 
     "Identity": {
-        "object": "mod/data/model/app/user-identity.mjson"
+        "object": "mod/data/model/identity.mjson"
     },
 
     "UserIdentity": {
