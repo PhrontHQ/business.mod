@@ -55,10 +55,10 @@
         "values": {
             "name": "name",
             "cardinality": 1,
-            "valueDescriptor": {"@": "PersomNameDescriptor"}
+            "valueDescriptor": {"@": "PersonNameDescriptor"}
         }
     },
-    "PersomNameDescriptor": {
+    "PersonNameDescriptor": {
         "object": "./person-name.mjson"
     },
     "gender": {
@@ -78,7 +78,7 @@
         "values": {
             "name": "aliases",
             "cardinality": -1,
-            "valueDescriptor": {"@": "PersomNameDescriptor"}
+            "valueDescriptor": {"@": "PersonNameDescriptor"}
         }
     },
 
