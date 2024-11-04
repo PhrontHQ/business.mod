@@ -10,6 +10,9 @@ exports.Party = DataObject.specialize(/** @lends Party.prototype */ {
     name: {
         value: undefined
     },
+    aliases: {
+        value: undefined
+    },
     existenceTimeRange: {
         value: undefined
     },

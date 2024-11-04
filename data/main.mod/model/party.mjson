@@ -5,6 +5,7 @@
             "name": "Party",
             "propertyDescriptors": [
                 {"@": "name"},
+                {"@": "aliases"},
                 {"@": "existenceTimeRange"},
                 {"@": "postalAddresses"},
                 {"@": "emailAddresses"},
@@ -36,6 +37,15 @@
         "values": {
             "name": "name",
             "valueType": "string",
+            "isSearchable": true
+        }
+    },
+    "aliases": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "aliases",
+            "valueType": "string",
+            "cardinality": -1,
             "isSearchable": true
         }
     },
