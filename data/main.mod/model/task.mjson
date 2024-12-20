@@ -1,0 +1,172 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Task",
+            "propertyDescriptors": [         
+                {"@": "title"},       
+                {"@": "executionSequencePosition"},
+                {"@": "isTracked"},
+                {"@": "isCritical"},
+                {"@": "type"},
+                {"@": "upstreamTasks"},
+                {"@": "downstreamTasks"},
+                {"@": "prerequisiteTasks"},
+                {"@": "isStarted"},
+                {"@": "isCompleted"},
+                {"@": "resetCount"},
+                {"@": "isReset"},
+                {"@": "plannedExecutionDuration"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./task.mjson"
+            },
+            "exportName": "Task",
+            "module": {
+                "%": "./task"
+            },
+            "object":{"@": "task"},
+            "parent":{"@": "Object"}
+        }
+    },
+    "task": {
+        "object": "./task"
+    },
+    "Object": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "title": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "title",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true
+        }
+    },
+
+    "isTracked": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "isTracked",
+            "valueType": "boolean"
+        }
+    },
+
+    "isCritical": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "isCritical",
+            "valueType": "boolean"
+        }
+    },
+    "executionSequencePosition": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "executionSequencePosition",
+            "valueType": "number"
+        }
+    },
+    "TaskTypeDescriptor": {
+        "object": "./task-type.mjson"
+    },
+
+    "type": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "type",
+            "cardinality": 1,
+            "inversePropertyName": "tasks",
+            "valueDescriptor": {"@": "TaskTypeDescriptor"},
+            "description": "Overrides DataObject's one until we finalized overriding with automatic pluralization"
+        }
+    },
+
+    "upstreamTasks": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "upstreamTasks",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "root"}
+        }
+    },
+
+    "downstreamTasks": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "downstreamTasks",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "root"}
+        }
+    },
+
+    "prerequisiteTasks": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "prerequisiteTasks",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "root"}
+        }
+    },
+
+    "isStarted": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "isStarted",
+            "valueType": "boolean"
+        }
+    },
+
+    "isCompleted": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "isCompleted",
+            "valueType": "boolean"
+        }
+    },
+
+    "resetCount": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "resetCount",
+            "valueType": "number",
+            "defaultValue": 0
+        }
+    },
+
+    "isReset": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "isReset",
+            "valueType": "boolean",
+            "definition": "resetCount > 0"
+        }
+    },
+
+    "plannedExecutionDuration": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "plannedDuration",
+            "valueType": "number",
+            "cardinality":1,
+            "defaultValue": {"=": "undefined"},
+            "description": "The time estimated in the manufacturing plan this task should take to execute"
+        }
+    },
+
+    "IssueDescriptor": {
+        "object": "./issue.mjson"
+    },
+
+    "issues": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "upstreamTasks",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "IssueDescriptor"},
+            "inversePropertyName": "associatedTasks"
+        }
+    }
+
+}

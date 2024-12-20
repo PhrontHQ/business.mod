@@ -1,0 +1,139 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Issue",
+            "propertyDescriptors": [
+                {"@": "title"},
+                {"@": "subjects"},
+                {"@": "possibleSeverities"},
+                {"@": "severity"},
+                {"@": "possiblePriorities"},
+                {"@": "priority"},
+                {"@": "possibleResolutionStatuses"},
+                {"@": "resolutionStatus"},
+                {"@": "assignee"},
+                {"@": "attachments"},
+                {"@": "comments"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./issue.mjson"
+            },
+            "exportName": "Issue",
+            "module": {
+                "%": "./issue"
+            },
+            "object":{"@": "Issue"},
+            "parent":{"@": "DataObjectDescriptor"}
+        }
+    },
+
+    "Issue": {
+        "object": "./issue"
+    },
+
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "title": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "title",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true
+        }
+    },
+    "subjects": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "subjects",
+            "cardinality": -1,
+            "inversePropertyName": "subjects",
+            "valueDescriptor": {"@": "DataObjectDescriptor"},
+            "description": "One more things involved in the quality issue."
+        }
+    },
+    "possibleSeverityValues": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "possibleSeverityValues",
+            "cardinality": -1,
+            "valueType": "string",
+            "isLocalizable": true,
+            "description": "The list of values the severity property can take"
+        }
+    },
+    "severity": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "severity",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true
+        }
+    },
+    "possiblePriorityValues": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "possiblePriorityValues",
+            "cardinality": -1,
+            "valueType": "string",
+            "isLocalizable": true,
+            "description": "The list of values the priority property can take"
+        }
+    },
+    "priority": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "priority",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true
+        }
+    },
+    "possibleResolutionStatusValues": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "possibleResolutionStatusValues",
+            "cardinality": -1,
+            "valueType": "string",
+            "isLocalizable": true
+        }
+    },
+    "resolutionStatus": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "resolutionStatus",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true
+        }
+    },
+    "PersonDescriptor": {
+        "object": "business-data.mod/data/main.mod/model/person.mjson"
+    },
+    "assignee": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "assignee",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "PersonDescriptor"},
+            "inversePropertyName": "assignedQualityIssues"
+        }
+    },
+    "TaskDescriptor": {
+        "object": "./task.mjson"
+    },
+    "associatedTasks": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "associatedTasks",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "TaskDescriptor"},
+            "inversePropertyName": "issues"
+        }
+    }
+
+}
