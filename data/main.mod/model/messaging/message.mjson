@@ -5,7 +5,6 @@
             "name": "Message",
             "propertyDescriptors": [
                 {"@": "deliveryTimeRange"},
-                {"@": "description"},
                 {"@": "tags"},
                 {"@": "serviceProvider"},
                 {"@": "sender"},
@@ -13,7 +12,10 @@
                 {"@": "inputComponent"},
                 {"@": "outputComponent"},
                 {"@": "text"},
-                {"@": "context"}
+                {"@": "context"},
+                {"@": "attachments"},
+                {"@": "reactions"},
+                {"@": "mentions"}
             ],
             "objectDescriptorModule": {
                 "%":"./message.mjson"
@@ -39,7 +41,8 @@
             "valueType": "object",
             "cardinality": 1,
             "valueDescriptor": {"@": "PartyDescriptor"},
-            "isSearchable": true
+            "isSearchable": true,
+            "description": "Might be better named 'originator', 'author' to be more widely appplicable ?"
         }
     },
     "recipients": {
@@ -100,14 +103,6 @@
         }
     },
 
-    "description": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "description",
-            "isLocalizable": true,
-            "valueType": "string"
-        }
-    },
     "tags": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
@@ -128,5 +123,43 @@
     },
     "OrganizationDescriptor": {
         "object": "../organization.mjson"
+    },
+
+    "AssetDescriptor": {
+        "object": "./asset.mjson"
+    },
+    "attachments": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "attachments",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "AssetDescriptor"}
+        }
+    },
+
+    "MessageReactionDescriptor": {
+        "object": "./message-reaction.mjson"
+    },
+    "reactions": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "reactions",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "MessageReactionDescriptor"}
+        }
+    },
+
+    "PartyMessagingChannelDescriptor": {
+        "object": "../messaging-channel/party-messaging-channel.mjson"
+    },
+    "mentions": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "mentions",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "PartyMessagingChannelDescriptor"},
+            "description": "people mentioned in a message via a specific PartyMessagingChannel. Likely to be the user account of the system creating the message"
+        }
     }
+    
 }
