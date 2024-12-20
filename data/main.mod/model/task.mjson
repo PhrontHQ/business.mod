@@ -71,9 +71,6 @@
             "description": "The order a task would be executed relative to others in a sequence"
         }
     },
-    "TaskTypeDescriptor": {
-        "object": "./task-type.mjson"
-    },
 
     "upstreamTasks": {
         "prototype": "mod/core/meta/property-descriptor",
