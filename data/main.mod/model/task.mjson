@@ -16,6 +16,7 @@
                 {"@": "resetCount"},
                 {"@": "isReset"},
                 {"@": "plannedExecutionDuration"},
+                {"@": "issueTypes"},
                 {"@": "issues"}
                 
             ],
@@ -150,13 +151,25 @@
         "object": "./issue.mjson"
     },
 
+    "issueTypes": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "issueTypes",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "IssueDescriptor"},
+            "inversePropertyName": "associatedTasks",
+            "description": "The list of Issues configured as types for others a task can have (type as in JS' prototype sense - an object from which others inherits their shape and value)"
+        }
+    },
+
     "issues": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "issues",
             "cardinality": -1,
             "valueDescriptor": {"@": "IssueDescriptor"},
-            "inversePropertyName": "associatedTasks"
+            "inversePropertyName": "associatedTasks",
+            "description": "eventual issues related to the execution of a task"
         }
     }
 

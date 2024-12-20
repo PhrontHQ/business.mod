@@ -128,6 +128,16 @@ exports.Task = DataObject.specialize(/** @lends Task.prototype */ {
     },
     
     /**
+     * The list of Issues configured as types for others a task can have (type as in JS' prototype sense 
+     * - an object from which others inherits their shape and value)
+     * @property {Issue[]} value
+     * @default undefined
+     */
+    issueTypes: {
+        value: undefined
+    },
+
+    /**
      * eventual issues related to the execution of a task
      * @property {Issue[]} value
      * @default undefined
