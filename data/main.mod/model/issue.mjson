@@ -6,11 +6,11 @@
             "propertyDescriptors": [
                 {"@": "title"},
                 {"@": "subjects"},
-                {"@": "possibleSeverities"},
+                {"@": "possibleSeverityValues"},
                 {"@": "severity"},
-                {"@": "possiblePriorities"},
+                {"@": "possiblePriorityValues"},
                 {"@": "priority"},
-                {"@": "possibleResolutionStatuses"},
+                {"@": "possibleResolutionStatusValues"},
                 {"@": "resolutionStatus"},
                 {"@": "assignee"},
                 {"@": "associatedTasks"},
@@ -113,7 +113,7 @@
         }
     },
     "PersonDescriptor": {
-        "object": "business-data.mod/data/main.mod/model/person.mjson"
+        "object": "./person.mjson"
     },
     "assignee": {
         "prototype": "mod/core/meta/property-descriptor",
