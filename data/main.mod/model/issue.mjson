@@ -13,6 +13,7 @@
                 {"@": "possibleResolutionStatuses"},
                 {"@": "resolutionStatus"},
                 {"@": "assignee"},
+                {"@": "associatedTasks"},
                 {"@": "attachments"},
                 {"@": "comments"}
             ],
@@ -133,6 +134,28 @@
             "cardinality": -1,
             "valueDescriptor": {"@": "TaskDescriptor"},
             "inversePropertyName": "issues"
+        }
+    },
+    "AssetDescriptor": {
+        "object": "./asset.mjson"
+    },
+    "attachments": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "attachments",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "AssetDescriptor"}
+        }
+    },
+    "MessageDescriptor": {
+        "object": "./messaging/message.mjson"
+    },
+    "comments": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "comments",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "MessageDescriptor"}
         }
     }
 
