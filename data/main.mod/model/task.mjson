@@ -8,7 +8,6 @@
                 {"@": "executionSequencePosition"},
                 {"@": "isTracked"},
                 {"@": "isCritical"},
-                {"@": "type"},
                 {"@": "upstreamTasks"},
                 {"@": "downstreamTasks"},
                 {"@": "prerequisiteTasks"},
@@ -16,7 +15,9 @@
                 {"@": "isCompleted"},
                 {"@": "resetCount"},
                 {"@": "isReset"},
-                {"@": "plannedExecutionDuration"}
+                {"@": "plannedExecutionDuration"},
+                {"@": "issues"}
+                
             ],
             "objectDescriptorModule": {
                 "%": "./task.mjson"
@@ -65,22 +66,12 @@
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "executionSequencePosition",
-            "valueType": "number"
+            "valueType": "number",
+            "description": "The order a task would be executed relative to others in a sequence"
         }
     },
     "TaskTypeDescriptor": {
         "object": "./task-type.mjson"
-    },
-
-    "type": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "type",
-            "cardinality": 1,
-            "inversePropertyName": "tasks",
-            "valueDescriptor": {"@": "TaskTypeDescriptor"},
-            "description": "Overrides DataObject's one until we finalized overriding with automatic pluralization"
-        }
     },
 
     "upstreamTasks": {
@@ -162,7 +153,7 @@
     "issues": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "upstreamTasks",
+            "name": "issues",
             "cardinality": -1,
             "valueDescriptor": {"@": "IssueDescriptor"},
             "inversePropertyName": "associatedTasks"

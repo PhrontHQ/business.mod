@@ -19,54 +19,121 @@ exports.Task = DataObject.specialize(/** @lends Task.prototype */ {
     },
 
     /**
-     * Description of the task (human readable 'action' as described by ProcessElement)
-     *
-     * @property {String} value
-     * @default null
-     */
-    description: {
-        value: undefined
-    },
-
-    /**
-     * Process Sheet / Element ID (for us to reference the immutable process element?)
-     *
-     * @property {String} value
-     * @default null
-     */
-    processSheetId: {
-        value: undefined
-    },
-
-    /**
      * The order a task would be executed relative to others in a sequence
      * E.g., this is task 4 in a 8 step task list ... 
      * 
      * @property {Number} value
-     * @default null
+     * @default undefined
      */
     executionSequencePosition: {
         value: undefined
     },
+    
+    /**
+     * Wether the execution of a Task is tracked or not
+     *
+     * @property {boolean} value
+     * @default false
+     */
+    isTracked: {
+        value: false
+    },
 
     /**
-     * Tool(s) utilized by this task
-     * Allows us to use common tool 'structure' between both GSPAS process sheets and/or our tasks/vehicles ... 
+     * Wether a Task is considered critical or not
      *
-     * @property {Tools[]} value
-     * @default null
+     * @property {boolean} value
+     * @default false
      */
-    associatedTools: {
+    isCritical: {
+        value: false
+    },
+
+
+    /**
+     *
+     * @property {Task[]} value
+     * @default undefined
+     */
+    upstreamTasks: {
         value: undefined
     },
 
     /**
      * Part(s) utilized by this task
      *
-     * @property {Parts[]} value
+     * @property {Task[]} value
      * @default null
      */
-    partsUsed: {
+    downstreamTasks: {
         value: undefined
-    }
+    },
+
+    /**
+     * Part(s) utilized by this task
+     *
+     * @property {Task[]} value
+     * @default null
+     */
+    prerequisiteTasks: {
+        value: undefined
+    },
+
+    /**
+     * Wether a Task is started or not
+     *
+     * @property {boolean} value
+     * @default false
+     */
+    isStarted: {
+        value: false
+    },
+    
+    /**
+     * Wether a Task has been completed
+     *
+     * @property {boolean} value
+     * @default false
+     */
+    isCompleted: {
+        value: false
+    },
+
+    /**
+     * 
+     * @property {Number} value
+     * @default undefined
+     */
+    resetCount: {
+        value: undefined
+    },
+
+    /**
+     * Wether a Task has been reset, once or more
+     *
+     * @property {boolean} value
+     * @default false
+     */
+    isReset: {
+        value: false
+    },
+    
+    /**
+     * 
+     * @property {Number} value
+     * @default undefined
+     */
+    plannedExecutionDuration: {
+        value: undefined
+    },
+    
+    /**
+     * eventual issues related to the execution of a task
+     * @property {Issue[]} value
+     * @default undefined
+     */
+    issues: {
+        value: undefined
+    }    
+    
 });
