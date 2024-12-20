@@ -103,6 +103,16 @@
         }
     },
 
+    "deliveryTimeRange": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "deliveryTimeRange",
+            "valueType": "date",
+            "collectionValueType": "range",
+            "isSearchable": true
+        }
+    },
+
     "tags": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
@@ -126,7 +136,7 @@
     },
 
     "AssetDescriptor": {
-        "object": "./asset.mjson"
+        "object": "../asset.mjson"
     },
     "attachments": {
         "prototype": "mod/core/meta/property-descriptor",
