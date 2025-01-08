@@ -66,7 +66,7 @@
         "values": {
             "name": "supportsVoice",
             "valueType": "boolean",
-            "defaultValue": "true",
+            "defaultValue": true,
             "description": "Indicates a voice telephone number"
         }
     },
@@ -75,7 +75,7 @@
         "values": {
             "name": "supportsVoiceMessage",
             "valueType": "boolean",
-            "defaultValue": "false",
+            "defaultValue": false,
             "description": "Indicates that the telephone number supports leaving a voice messages (aka voicemail)"
         }
     },
@@ -84,7 +84,7 @@
         "values": {
             "name": "supportsTextMessage",
             "valueType": "boolean",
-            "defaultValue": "false",
+            "defaultValue": false,
             "description": "Indicates that the telephone number supports text messages (SMS)"
         }
     },
@@ -93,7 +93,7 @@
         "values": {
             "name": "supportsMultimediaMessage",
             "valueType": "boolean",
-            "defaultValue": "false",
+            "defaultValue": false,
             "description": "Indicates that the telephone number supports multimedia messages (MMS)"
         }
     },
@@ -102,7 +102,7 @@
         "values": {
             "name": "supportsiMessage",
             "valueType": "boolean",
-            "defaultValue": "false",
+            "defaultValue": false,
             "description": "Indicates that the telephone number supports Apple's  iMessage (SMS)"
         }
     },
@@ -111,7 +111,7 @@
         "values": {
             "name": "supportsiMessage",
             "valueType": "boolean",
-            "defaultValue": "false",
+            "defaultValue": false,
             "description": "Indicates that the telephone number supports Rich Communication Services (RCS)"
         }
     },
@@ -120,7 +120,7 @@
         "values": {
             "name": "supportsFax",
             "valueType": "boolean",
-            "defaultValue": "false",
+            "defaultValue": false,
             "description": "Indicates a facsimile capable telephone number"
         }
     },
@@ -129,7 +129,7 @@
         "values": {
             "name": "isMobile",
             "valueType": "boolean",
-            "defaultValue": "false",
+            "defaultValue": false,
             "description": "Indicates a cellular or mobile telephone number"
         }
     },
@@ -138,7 +138,7 @@
         "values": {
             "name": "supportsVideoConferencing",
             "valueType": "boolean",
-            "defaultValue": "false",
+            "defaultValue": false,
             "description": "Indicates a video conferencing capable telephone number"
         }
     },
@@ -147,7 +147,7 @@
         "values": {
             "name": "supportsVideoMessage",
             "valueType": "boolean",
-            "defaultValue": "false",
+            "defaultValue": false,
             "description": "Indicates that the telephone number supports leaving a video message"
         }
     },
@@ -155,7 +155,7 @@
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "supportsPaging",
-            "defaultValue": "false",
+            "defaultValue": false,
             "valueType": "boolean",
             "description": "Indicates a paging capable telephone number."
         }
@@ -165,7 +165,7 @@
         "values": {
             "name": "supportsTextphone",
             "valueType": "boolean",
-            "defaultValue": "false",
+            "defaultValue": false,
             "description": "Indicates a telephone number with the capabilities to handle telecommunication for people with hearing or speech difficulties. (TTY)"
         }
     },
@@ -174,7 +174,7 @@
         "values": {
             "name": "supportsRealTimeText",
             "valueType": "boolean",
-            "defaultValue": "false",
+            "defaultValue": false,
             "description": "Indicates a telephone number with the capabilities to handle Real Time Text (RTT)."
         }
     },
