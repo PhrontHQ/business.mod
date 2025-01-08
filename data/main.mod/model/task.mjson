@@ -52,7 +52,8 @@
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "isTracked",
-            "valueType": "boolean"
+            "valueType": "boolean",
+            "defaultValue": false
         }
     },
 
