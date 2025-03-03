@@ -8,6 +8,7 @@
                 {"@": "DataObject"},
                 {"@": "DataObjectType"},
                 {"@": "ObjectStore"},
+                {"@": "Transaction"},
                 {"@": "TimeZone"},
                 {"@": "asset"},
                 {"@": "LocalizedString"},
@@ -99,6 +100,10 @@
 
     "ObjectStore": {
         "object": "mod/data/model/object-store.mjson"
+    },
+
+    "Transaction": {
+        "object": "mod/data/model/transaction.mjson"
     },
 
     "TimeZone": {
