@@ -1,15 +1,15 @@
-var ParentVariable = require("../variable").Variable;
+var Intangible = require("./intangible").Intangible;
 
 /**
  * @class Variable
- * @extends ParentVariable
+ * @extends DataObject
  */
 
 /*
     TODO: Add variables
 */
 
-exports.Variable = ParentVariable.specialize(/** @lends Variable.prototype */ {
+exports.Variable = Intangible.specialize(/** @lends Variable.prototype */ {
     constructor: {
         value: function Variable() {
             this.super();
@@ -17,13 +17,13 @@ exports.Variable = ParentVariable.specialize(/** @lends Variable.prototype */ {
         }
     },
 
-    questionnaires: {
+    name: {
         value: undefined
     },
-    questions: {
+    displayName: {
         value: undefined
     },
-    respondentQuestionnaireVariableValuess: {
+    type: {
         value: undefined
     }
 });

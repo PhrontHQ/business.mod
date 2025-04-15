@@ -4,9 +4,6 @@
         "values": {
             "name": "Variable",
             "propertyDescriptors": [
-                {"@": "name"},
-                {"@": "displayName"},
-                {"@": "type"},
                 {"@": "questionnaires"},
                 {"@": "questions"},
                 {"@": "respondentQuestionnaireVariableValues"}
@@ -19,7 +16,7 @@
                 "%": "./variable"
             },
             "object":{"@": "variable"},
-            "parent":{"@": "objectDescriptor"}
+            "parent":{"@": "parentVariableObjectDescriptor"}
 
         }
     },
@@ -29,36 +26,8 @@
     "variablePrototype": {
         "object": "./variable"
     },
-    "objectDescriptor": {
-        "object": "mod/data/model/data-object.mjson"
-    },
-    "name": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "name",
-            "isLocalizable": true,
-            "valueType": "string",
-            "description": "A short, non user-facing name to refer to the variable"
-        }
-    },
-    "displayName": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "displayName",
-            "isLocalizable": true,
-            "valueType": "string",
-            "description": "User-facing name of the variable"
-        }
-    },
-    "type": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "type",
-            "valueDescriptor": {"@": "typeDescriptor"}
-        }
-    },
-    "typeDescriptor": {
-        "object": "mod/core/meta/module-object-descriptor.mjson"
+    "parentVariableObjectDescriptor": {
+        "object": "../variable.mjson"
     },
     "questionnaires": {
         "prototype": "mod/core/meta/property-descriptor",
