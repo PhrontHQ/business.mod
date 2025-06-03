@@ -7,7 +7,6 @@
                 {"@": "title"},       
                 {"@": "plannedExecutionSequencePosition"},
                 {"@": "executionSequencePosition"},
-                {"@": "isTracked"},
                 {"@": "isCritical"},
                 {"@": "parentTask"},
                 {"@": "subtasks"},
@@ -51,15 +50,6 @@
             "valueType": "string",
             "isLocalizable": true,
             "isSearchable": true
-        }
-    },
-
-    "isTracked": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "isTracked",
-            "valueType": "boolean",
-            "defaultValue": false
         }
     },
 
