@@ -5,6 +5,7 @@
             "name": "Task",
             "propertyDescriptors": [         
                 {"@": "title"},       
+                {"@": "plannedExecutionSequencePosition"},
                 {"@": "executionSequencePosition"},
                 {"@": "isTracked"},
                 {"@": "isCritical"},
@@ -16,6 +17,7 @@
                 {"@": "resetCount"},
                 {"@": "isReset"},
                 {"@": "plannedExecutionDuration"},
+                {"@": "executionDuration"},
                 {"@": "issueTypes"},
                 {"@": "issues"}
                 
@@ -64,12 +66,20 @@
             "valueType": "boolean"
         }
     },
+    "plannedExecutionSequencePosition": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "plannedExecutionSequencePosition",
+            "valueType": "number",
+            "description": "The order a task is intended/planned be executed relative to others in a sequence"
+        }
+    },
     "executionSequencePosition": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "executionSequencePosition",
             "valueType": "number",
-            "description": "The order a task would be executed relative to others in a sequence"
+            "description": "The order a task will actually be executed relative to others in a sequence"
         }
     },
 
@@ -138,6 +148,17 @@
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "plannedDuration",
+            "valueType": "number",
+            "cardinality":1,
+            "defaultValue": {"=": "undefined"},
+            "description": "The time estimated in the manufacturing plan this task should take to execute"
+        }
+    },
+
+    "executionDuration": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "executionDuration",
             "valueType": "number",
             "cardinality":1,
             "defaultValue": {"=": "undefined"},
