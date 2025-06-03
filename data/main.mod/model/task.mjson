@@ -9,6 +9,10 @@
                 {"@": "executionSequencePosition"},
                 {"@": "isTracked"},
                 {"@": "isCritical"},
+                {"@": "parentTask"},
+                {"@": "subtasks"},
+                {"@": "groupTask"},
+                {"@": "groupedTasks"},
                 {"@": "upstreamTasks"},
                 {"@": "downstreamTasks"},
                 {"@": "prerequisiteTasks"},
@@ -107,6 +111,44 @@
             "name": "prerequisiteTasks",
             "cardinality": -1,
             "valueDescriptor": {"@": "root"}
+        }
+    },
+
+    "groupTask": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "groupTask",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "root"},
+            "inversePropertyName": "groupedTasks"
+        }
+    },
+    "groupedTasks": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "groupedTasks",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "root"},
+            "inversePropertyName": "groupTask"
+        }
+    },
+
+    "parentTask": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "parentTask",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "root"},
+            "inversePropertyName": "subtasks"
+        }
+    },
+    "subtasks": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "subtasks",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "root"},
+            "inversePropertyName": "parentTask"
         }
     },
 
