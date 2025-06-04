@@ -179,7 +179,7 @@
     "plannedExecutionDuration": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "plannedDuration",
+            "name": "plannedExecutionDuration",
             "valueType": "number",
             "cardinality":1,
             "defaultValue": {"=": "undefined"},
