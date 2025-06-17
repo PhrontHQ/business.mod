@@ -1,7 +1,7 @@
 {
   "lang": "en",
-  "name": "montage-shopify",
-  "short_name": "montage-shopify",
+  "name": "business-data.mod",
+  "short_name": "business-data.mod",
   "description": "application",
   "start_url": "./?utm_source=homescreen",
   "icons": [
