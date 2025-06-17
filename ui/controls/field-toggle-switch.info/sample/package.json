@@ -3,10 +3,10 @@
     "version": "0.1.0",
     "dependencies": {
         "blue-shark": "*",
-        "montage": "*"
+        "mod": "*"
     },
         "mappings": {
-        "montage": "../../../../node_modules/montage",
+        "mod": "../../../../node_modules/mod",
         "phront": "../../../../",
         "blue-shark": "../../../"
     }

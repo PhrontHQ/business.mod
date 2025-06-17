@@ -4,11 +4,11 @@
   "dependencies": {
     "blue-shark": "*",
     "digit": "*",
-    "montage": "*",
+    "mod": "*",
     "gui": "freenas/gui#montage"
   },
   "mappings": {
-    "montage": "../../../../../../node_modules/montage",
+    "mod": "../../../../../../node_modules/mod",
     "digit": "../../../../../../node_modules/digit",
     "blue-shark": "../../../../../../node_modules/blue-shark",
     "gui": "../../../../../../"

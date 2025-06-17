@@ -3,11 +3,11 @@
     "version": "0.1.0",
     "dependencies": {
         "phront": "*",
-        "montage": "*",
+        "mod": "*",
         "mr": "*"
     },
     "mappings": {
-        "montage": "../../../../node_modules/montage",
+        "mod": "../../../../node_modules/mod",
         "mr": "../../../../node_modules/mr",
         "phront": "../../../../"
     }

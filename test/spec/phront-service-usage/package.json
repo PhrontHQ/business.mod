@@ -17,9 +17,9 @@
   },
  "scripts": {},
   "mappings": {
-    "montage": "../../../node_modules/montage",
+    "mod": "../../../node_modules/mod",
     "geo.mod": "../../../node_modules/geo.mod",
-    "montage-testing": "../../../node_modules/montage-testing",
+    "montage-testing": "../../../node_modules/mod-testing",
     "object-sizeof": "../../../node_modules/object-sizeof",
     "phront": "../../../",
     "tiny-worker": "../../../node_modules/tiny-worker",
