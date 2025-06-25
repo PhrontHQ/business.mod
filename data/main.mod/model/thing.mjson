@@ -4,7 +4,6 @@
         "values": {
             "name": "Thing",
             "propertyDescriptors": [
-                {"@": "type"}
             ],
             "objectDescriptorModule": {
                 "%": "./thing.mjson"
@@ -19,14 +18,6 @@
 
     "PartyDescriptor": {
         "object": "./party.mjson"
-    },
-
-    "type": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "type",
-            "valueType": "string"
-        }
     }
 
 }
