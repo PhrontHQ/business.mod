@@ -6,7 +6,7 @@
     "# project. npm only generates files with 2 space indents",
     "# (see https://github.com/npm/npm/pull/3180#issuecomment-16336516)."
   ],
-  "name": "business-data.mod",
+  "name": "business.mod",
   "version": "1.0.0",
   "private": true,
   "license": "BSD-3-Clause",
@@ -14,7 +14,7 @@
   "author": "Phront. (https://phront.com/)",
   "repository": {
     "type": "git",
-    "url": "PhrontHQ/business-data.mod"
+    "url": "PhrontHQ/business.mod"
   },
   "dependencies": {
     "fullstack-phone": "^1.62.0",
