@@ -1,136 +1,19 @@
 {
     "root": {
-        "prototype": "mod/core/meta/module-object-descriptor",
+        "object": "mod/data/model/persom.mjson",
         "values": {
-            "name": "Person",
-            "description": "This should be a subclass of Being, itself a subclass of Party, when the time comes it's needed to deal with animals for example",
             "propertyDescriptors": [
-                {"@": "name"},
-                {"@": "gender"},
-                {"@": "aliases"},
-                {"@": "preferredLocales"},
-                {"@": "tags"},
-                {"@": "userIdentities"},
                 {"@": "employmentHistory"},
                 {"@": "serviceProductVariantsProvided"},
-                {"@": "firstName"},
-                {"@": "lastName"},
-                {"@": "email"},
-                {"@": "phone"},
-                {"@": "addresses"},
                 {"@": "respondentQuestionnaires"},
                 {"@": "supplierRelationships"},
                 {"@": "customerSupplierResponsibilities"},
                 {"@": "firstPersonalRelationships"},
-                {"@": "secondPersonalRelationships"},
-                {"@": "signatures"}
-           ],
-            "objectDescriptorModule": {
-                "%": "./person.mjson"
-            },
-            "exportName": "Person",
-            "module": {
-                "%": "./person"
-            },
-            "parent":{"@": "PartyDescriptor"},
-            "userInterfaceDescriptorModules": {
-                "*": {
-                    "%": "./person-ui-descriptor.mjson"
-                },
-                "mod/ui/list-item.reel": {
-                    "%": "./person-list-item-ui-descriptor.mjson"
-                },
-                "mod/ui/cascading-list.reel": {
-                    "%": "./person-cascading-list-ui-descriptor.mjson"
-                }
-            }
-
+                {"@": "secondPersonalRelationships"}
+           ]
         }
     },
-    "PartyDescriptor": {
-        "object": "./party.mjson"
-    },
-    "name": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "name",
-            "cardinality": 1,
-            "valueDescriptor": {"@": "PersonNameDescriptor"}
-        }
-    },
-    "PersonNameDescriptor": {
-        "object": "./person-name.mjson"
-    },
-    "gender": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "gender",
-            "cardinality": 1,
-            "valueDescriptor": {"@": "gender_descriptor"}
-        }
-    },
-    "gender_descriptor": {
-        "object": "./gender.mjson"
-    },
-
-    "aliases": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "aliases",
-            "cardinality": -1,
-            "valueDescriptor": {"@": "PersonNameDescriptor"}
-        }
-    },
-
-    "preferredLocales": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "preferredLocales",
-            "cardinality": -1,
-            "valueType": "array"
-        }
-    },
-
-    "firstName": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "firstName",
-            "valueType": "string"
-        }
-    },
-    "lastName": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "lastName",
-            "valueType": "string"
-        }
-    },
-    "email": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "email",
-            "valueType": "string"
-        }
-    },
-    "phone": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "phone",
-            "valueType": "string"
-        }
-    },
-    "addresses": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "addresses",
-            "valueType": "object",
-            "cardinality": -1,
-            "valueDescriptor": {"@": "addresses_descriptor"}
-       }
-    },
-    "addresses_descriptor": {
-        "object": "./messaging-channel/postal-address.mjson"
-    },
+   
 
     "respondentQuestionnaires": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -146,27 +29,6 @@
         "object": "./questionnaire/respondent-questionnaire.mjson"
     },
 
-    "tags": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "tags",
-            "valueType": "string",
-            "cardinality": -1
-       }
-    },
-    "userIdentities": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "userIdentities",
-            "valueType": "object",
-            "cardinality": -1,
-            "valueDescriptor": {"@": "userIdentity_descriptor"},
-            "inversePropertyName": "person"
-       }
-    },
-    "userIdentity_descriptor": {
-        "object": "./app/user-identity.mjson"
-    },
     "employmentHistory": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
@@ -248,21 +110,7 @@
             "inversePropertyName": "secondPerson",
             "valueDescriptor": {"@": "PersonalRelationshipDescriptor"}
        }
-    },
-
-    "PersonSignatureDescriptor": {
-        "object": "./person-signature.mjson"
-    },
-
-    "signatures": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "signatures",
-            "valueType": "object",
-            "cardinality": -1,
-            "inversePropertyName": "person",
-            "valueDescriptor": {"@": "PersonSignatureDescriptor"}
-       }
     }
+
 
 }
