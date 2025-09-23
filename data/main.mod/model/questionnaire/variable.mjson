@@ -16,7 +16,7 @@
                 "%": "./variable"
             },
             "object":{"@": "variable"},
-            "parent":{"@": "parentVariableObjectDescriptor"}
+            "parent":{"@": "modVariableObjectDescriptor"}
 
         }
     },
@@ -26,8 +26,8 @@
     "variablePrototype": {
         "object": "./variable"
     },
-    "parentVariableObjectDescriptor": {
-        "object": "../variable.mjson"
+    "modVariableObjectDescriptor": {
+        "object": "mod/data/model/variable.mjson"
     },
     "questionnaires": {
         "prototype": "mod/core/meta/property-descriptor",

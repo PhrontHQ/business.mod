@@ -19,7 +19,7 @@
     },
 
     "IntangibleObjectDescriptor": {
-        "object": "./intangible.mjson"
+        "object": "mod/data/model/party/intangible.mjson"
     },
 
     "name": {

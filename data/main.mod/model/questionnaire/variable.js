@@ -1,15 +1,15 @@
-var ParentVariable = require("../variable").Variable;
+var ModVariable = require("mod/data/model/variable").Variable;
 
 /**
  * @class Variable
- * @extends ParentVariable
+ * @extends ModVariable
  */
 
 /*
     TODO: Add variables
 */
 
-exports.Variable = ParentVariable.specialize(/** @lends Variable.prototype */ {
+exports.Variable = ModVariable.specialize(/** @lends Variable.prototype */ {
     constructor: {
         value: function Variable() {
             this.super();
