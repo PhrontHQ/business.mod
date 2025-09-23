@@ -1,0 +1,74 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PersonalRelationship",
+            "propertyDescriptors": [
+                {"@": "firstPerson"},
+                {"@": "firstPersonRelationshipRole"},
+                {"@": "secondPerson"},
+                {"@": "secondPersonRelationshipRole"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./personal-relationship.mjson"
+            },
+            "exportName": "PersonalRelationship",
+            "module": {
+                "%": "./personal-relationship"
+            },
+            "object":{"@": "personal-relationship"},
+            "parent":{"@": "party-party-relationship"}
+        }
+    },
+    "personal-relationship": {
+        "object": "./personal-relationship"
+    },
+    "party-party-relationship": {
+        "object": "./party-party-relationship.mjson"
+    },
+    "firstPerson": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "firstPerson",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "firstPersonalRelationships",
+            "valueDescriptor": {"@": "person_descriptor"}
+        }
+    },
+    "person_descriptor": {
+        "object": "./person.mjson"
+    },
+    "firstPersonRelationshipRole": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "firstPersonRelationshipRole",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "role_descriptor"}
+        }
+    },
+    "role_descriptor": {
+        "object": "./role.mjson"
+    },
+    "secondPerson": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "secondPerson",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "secondPersonalRelationships",
+            "valueDescriptor": {"@": "person_descriptor"}
+        }
+    },
+    "secondPersonRelationshipRole": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "secondPersonRelationshipRole",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "role_descriptor"}
+       }
+    }
+
+}

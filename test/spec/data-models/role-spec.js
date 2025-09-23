@@ -5,10 +5,10 @@ Criteria = require("mod/core/criteria").Criteria,
 DataStream = require("mod/data/service/data-stream").DataStream,
 DataQuery = require("mod/data/model/data-query").DataQuery,
 Range = require("mod/core/range").Range,
-Role = require("business-data.mod/data/main.mod/model/role").Role,
-Organization = require("business-data.mod/data/main.mod/model/organization").Organization,
-EventConferenceData = require("business-data.mod/data/main.mod/model/event-conference-data").EventConferenceData,
-Person = require("business-data.mod/data/main.mod/model/person").Person,
+Role = require("business-data.mod/data/model/role").Role,
+Organization = require("business-data.mod/data/model/organization").Organization,
+EventConferenceData = require("business-data.mod/data/model/event-conference-data").EventConferenceData,
+Person = require("business-data.mod/data/model/person").Person,
 phrontServiceConnectionPromise = require("../phront-service-connection").promise;
 
 

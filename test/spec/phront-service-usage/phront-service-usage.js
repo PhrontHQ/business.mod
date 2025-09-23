@@ -14,7 +14,7 @@ var Worker = require("tiny-worker"),
     DataQuery = require("mod/data/model/data-query").DataQuery,
     Montage = require("mod/core/core").Montage,
     //to test client side
-    ClientService = require("business-data.mod/data/main.mod/model/service").Service,
+    ClientService = require("business-data.mod/data/model/service").Service,
     Promise = require("mod/core/promise").Promise,
     phrontClientService = clientMainService.childServices[0],
     sizeof = require("object-sizeof"),
@@ -68,7 +68,7 @@ exports.promise = new Promise(function(resolve,reject) {
             //"can split a an operation in multiple ones if it's too large for a known payload limit"
             /*
                 //Create a ReadOperation
-                var serviceDescriptor = phrontService.objectDescriptorWithModuleId("data/main.mod/model/service"),
+                var serviceDescriptor = phrontService.objectDescriptorWithModuleId("data/model/service"),
 
                 //This ends up calling module-object-descriptor.js:149 - getObjectDescriptorWithModuleId()
                 //which causes node to try to business-data.mod/node_modules/montage/core/meta/module-object-descriptor.mjson
@@ -90,7 +90,7 @@ exports.promise = new Promise(function(resolve,reject) {
         //"can fetch an image from an id without OperationCoordinator"
         /*
             //Create a ReadOperation
-            var objectDescriptor = phrontService.objectDescriptorWithModuleId("data/main.mod/model/image");
+            var objectDescriptor = phrontService.objectDescriptorWithModuleId("data/model/image");
 
             //This ends up calling module-object-descriptor.js:149 - getObjectDescriptorWithModuleId()
             //which causes node to try to business-data.mod/node_modules/montage/core/meta/module-object-descriptor.mjson
@@ -131,7 +131,7 @@ exports.promise = new Promise(function(resolve,reject) {
         //"can feth an image from an id using operationCoordinator"
         /*
             //Create a ReadOperation
-            var objectDescriptor = phrontService.objectDescriptorWithModuleId("data/main.mod/model/image");
+            var objectDescriptor = phrontService.objectDescriptorWithModuleId("data/model/image");
 
             //console.log("Montage.getInfoForObject(objectDescriptor): ", Montage.getInfoForObject(objectDescriptor));
 

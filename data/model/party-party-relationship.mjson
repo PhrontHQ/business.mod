@@ -1,0 +1,25 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PartyPartyRelationship",
+            "propertyDescriptors": [
+            ],
+            "objectDescriptorModule": {
+                "%": "./party-party-relationship.mjson"
+            },
+            "exportName": "PartyPartyRelationship",
+            "module": {
+                "%": "./party-party-relationship"
+            },
+            "object":{"@": "party-party-relationship"},
+            "parent":{"@": "PartyDescriptor"}
+        }
+    },
+    "party-party-relationship": {
+        "object": "./party-party-relationship"
+    },
+    "PartyDescriptor": {
+        "object": "./party.mjson"
+    }
+}

@@ -1,0 +1,41 @@
+{
+    "input_id": "0",
+    "address1": "Imm. Le Bihan",
+    "address2": "98716 Pirae Îles Du Vent",
+    "components": {
+      "administrative_area": "Îles Du Vent",
+      "country_iso_3": "PYF",
+      "locality": "Pirae",
+      "postal_code": "98716",
+      "postal_code_short": "98716",
+      "building": "Imm. Le Bihan",
+      "building_name": "Le Bihan",
+      "building_leading_type": "Imm."
+    },
+    "metadata": {
+      "latitude": -17.535215,
+      "longitude": -149.547812,
+      "geocode_precision": "Locality",
+      "max_geocode_precision": "Locality",
+      "address_format": "building|postal_code locality administrative_area"
+    },
+    "analysis": {
+      "verification_status": "Verified",
+      "address_precision": "Locality",
+      "max_address_precision": "Locality",
+      "changes": {
+        "address1": "Verified-AliasChange",
+        "address2": "Verified-AliasChange",
+        "components": {
+          "administrative_area": "Verified-AliasChange",
+          "country_iso_3": "Added",
+          "locality": "Verified-NoChange",
+          "postal_code": "Verified-NoChange",
+          "postal_code_short": "Verified-NoChange",
+          "building": "Identified-AliasChange",
+          "building_name": "Identified-ContextChange",
+          "building_leading_type": "Identified-AliasChange"
+        }
+      }
+    }
+  }

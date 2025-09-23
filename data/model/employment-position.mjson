@@ -1,0 +1,106 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "EmploymentPosition",
+            "propertyDescriptors": [
+                {"@": "allowedEmploymentTypes"},
+                {"@": "employer"},
+                {"@": "position"},
+                {"@": "staffingHistory"},
+                {"@": "firstEmploymentPositionRelationships"},
+                {"@": "secondEmploymentPositionRelationships"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./employment-position.mjson"
+            },
+            "exportName": "EmploymentPosition",
+            "module": {
+                "%": "./employment-position"
+            },
+            "object":{"@": "employment-position"},
+            "parent":{"@": "party-party-relationship"}
+        }
+    },
+    "employment-position": {
+        "object": "./employment-position"
+    },
+    "party-party-relationship": {
+        "object": "./party-party-relationship.mjson"
+    },
+    "allowedEmploymentTypes": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "allowedEmploymentTypes",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "employment_type_descriptor"},
+            "description": "Will allow the restriction of employmentType in EmploymentPositionStaffing"
+        }
+    },
+    "employment_type_descriptor": {
+        "object": "./employment-type.mjson"
+    },
+    "employer": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "employer",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "employmentPositions",
+            "valueDescriptor": {"@": "organization_descriptor"}
+        }
+    },
+    "organization_descriptor": {
+        "object": "./organization.mjson"
+    },
+    "position": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "position",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "position_descriptor"}
+        }
+    },
+    "position_descriptor": {
+        "object": "./position.mjson"
+    },
+    "staffingHistory": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "staffingHistory",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "employmentPosition",
+            "valueDescriptor": {"@": "employment_position_staffing_descriptor"}
+        }
+    },
+    "employment_position_staffing_descriptor": {
+        "object": "./employment-position-staffing.mjson"
+    },
+    "firstEmploymentPositionRelationships": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "firstEmploymentPositionRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "firstEmploymentPosition",
+            "valueDescriptor": {"@": "employment_position_relationship_descriptor"}
+        }
+    },
+    "secondEmploymentPositionRelationships": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "secondEmploymentPositionRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "secondEmploymentPosition",
+            "valueDescriptor": {"@": "employment_position_relationship_descriptor"}
+        }
+    },
+    "employment_position_relationship_descriptor": {
+        "object": "./employment-position-relationship.mjson"
+    }
+
+}

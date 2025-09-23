@@ -1,0 +1,63 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "OrganizationType",
+            "propertyDescriptors": [
+                {"@": "parent"},
+                {"@": "subtypes"},
+                {"@": "organizations"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./organization-type.mjson"
+            },
+            "exportName": "OrganizationType",
+            "module": {
+                "%": "./organization-type"
+            },
+            "object":{"@": "OrganizationType"},
+            "parent":{"@": "DataObjectTypeDescriptor"}
+        }
+    },
+    "OrganizationType": {
+        "object": "./organization-type"
+    },
+    "DataObjectTypeDescriptor": {
+        "object": "./data-object-type.mjson"
+    },
+    "parent": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "parent",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "subtypes",
+            "valueDescriptor": {"@": "root"}
+       }
+    },
+    "subtypes": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "subtypes",
+            "valueType": "array",
+            "cardinality": -1,
+            "inversePropertyName": "parent",
+            "valueDescriptor": {"@": "root"}
+       }
+    },
+    "OrganizationDescriptor": {
+        "object": "./organization.mjson"
+    },
+    "organizations": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "organizations",
+            "valueType": "array",
+            "cardinality": -1,
+            "inversePropertyName": "type",
+            "valueDescriptor": {"@": "OrganizationDescriptor"}
+       }
+    }
+
+
+}

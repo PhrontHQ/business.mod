@@ -1,0 +1,154 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ServiceProductVariant",
+            "propertyDescriptors": [
+                {"@": "product"},
+                {"@": "professionalName"},
+                {"@": "professionalShortName"},
+                {"@": "isEmergencyService"},
+                {"@": "preparationDuration"},
+                {"@": "duration"},
+                {"@": "gapTimeRange"},
+                {"@": "recoveryDuration"},
+                {"@": "requiredResources"},
+                {"@": "providers"},
+                {"@": "serviceEngagements"}
+
+           ],
+            "objectDescriptorModule": {
+                "%": "./service-product-variant.mjson"
+            },
+            "exportName": "ServiceProductVariant",
+            "module": {
+                "%": "./service-product-variant"
+            },
+            "object":{"@": "ServiceProductVariant"},
+            "parent":{"@": "ProductVariant"}
+        }
+    },
+    "ServiceProductVariant": {
+        "object": "./service-product-variant"
+    },
+    "ProductVariant": {
+        "object": "./product-variant.mjson"
+    },
+    "product": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "product",
+            "cardinality": 1,
+            "inversePropertyName": "variants",
+            "valueDescriptor": {"@": "ServiceDescriptor"}
+        }
+    },
+    "ServiceDescriptor": {
+        "object": "./service.mjson"
+    },
+    "professionalName": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "professionalName",
+            "valueType": "string",
+            "isLocalizable": true
+        }
+    },
+
+    "professionalShortName": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "professionalShortName",
+            "valueType": "string",
+            "isLocalizable": true
+        }
+    },
+
+    "isEmergencyService": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "isEmergencyService",
+            "valueType": "boolean",
+            "defaultValue": false
+        }
+    },
+
+    "preparationDuration": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "preparationDuration",
+            "valueType": "number"
+        }
+    },
+
+    "duration": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "duration",
+            "valueType": "number",
+             "description": "The duration of a service in seconds"
+       }
+    },
+
+    "gapTimeRange": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "gapTimeRange",
+            "valueType": "number",
+            "collectionValueType": "range",
+            "description": "gap time during a service in seconds. Begin is relative to the start of the service, and end of the range starts from there, so when scheduling, this needs to be reflected."
+        }
+    },
+
+    "recoveryDuration": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "recoveryDuration",
+            "valueType": "number"
+        }
+    },
+
+    "requiredResources": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "requiredResources",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "ResourceDescriptor"}
+        }
+    },
+
+    "ResourceDescriptor": {
+        "object": "./resource.mjson"
+    },
+
+    "providers": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "providers",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "personDescriptor"},
+            "inversePropertyName": "services",
+            "description": "Persons prefessionally commpetent to offer this service"
+        }
+    },
+
+    "personDescriptor": {
+        "object": "./person.mjson"
+    },
+
+    "serviceEngagements": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "serviceEngagements",
+            "valueType": "object",
+            "valueDescriptor": {"@": "ServiceEngagement"},
+            "cardinality": -1,
+            "inversePropertyName": "service",
+            "isSearchable": true
+        }
+    },
+    "ServiceEngagement": {
+        "object": "./service-engagement.mjson"
+    }
+}

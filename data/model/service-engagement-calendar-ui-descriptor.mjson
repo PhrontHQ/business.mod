@@ -1,0 +1,12 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/user-interface-descriptor",
+        "values": {
+            "eventExpressions": ["scheduledEvent","actualEvent"],
+            "titleExpression": "service.name",
+            "colorExpression": "service.color",
+            "descriptionExpression": "service.description",
+            "cascadingListItemFooterMiddleCollectionNameExpression": "length + ' item' + (length == 1 ? '' : 's')"
+        }
+    }
+}

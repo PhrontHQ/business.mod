@@ -1,0 +1,74 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "EmploymentPositionRelationship",
+            "propertyDescriptors": [
+                {"@": "firstEmploymentPosition"},
+                {"@": "firstEmploymentPositionRelationshipRole"},
+                {"@": "secondEmploymentPosition"},
+                {"@": "secondEmploymentPositionRelationshipRole"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./employment-position-relationship.mjson"
+            },
+            "exportName": "EmploymentPositionRelationship",
+            "module": {
+                "%": "./employment-position-relationship"
+            },
+            "object":{"@": "employment-position-relationship"},
+            "parent":{"@": "party-party-relationship"}
+        }
+    },
+    "employment-position-relationship": {
+        "object": "./employment-position-relationship"
+    },
+    "party-party-relationship": {
+        "object": "./party-party-relationship.mjson"
+    },
+    "firstEmploymentPosition": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "firstEmploymentPosition",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "firstEmploymentPositionRelationships",
+            "valueDescriptor": {"@": "employment_position_descriptor"}
+        }
+    },
+    "employment_position_descriptor": {
+        "object": "./employment-position.mjson"
+    },
+    "firstEmploymentPositionRelationshipRole": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "firstEmploymentPositionRelationshipRole",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "role_descriptor"}
+        }
+    },
+    "role_descriptor": {
+        "object": "./role.mjson"
+    },
+    "secondEmploymentPosition": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "secondEmploymentPosition",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "secondEmploymentPositionRelationships",
+            "valueDescriptor": {"@": "employment_position_descriptor"}
+        }
+    },
+    "secondEmploymentPositionRelationshipRole": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "secondEmploymentPositionRelationshipRole",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "role_descriptor"}
+       }
+    }
+
+}

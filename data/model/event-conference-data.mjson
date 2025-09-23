@@ -1,0 +1,87 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "EventConferenceData",
+            "propertyDescriptors": [
+                {"@": "createRequest"},
+                {"@": "entryPoints"},
+                {"@": "conferenceSolution"},
+                {"@": "conferenceId"},
+                {"@": "signature"},
+                {"@": "notes"},
+                {"@": "gadget"}
+            ],
+            "objectDescriptorModule": {
+                "%":"./event-conference-data.mjson"
+            },
+            "exportName": "EventConferenceData",
+            "module": {
+                "%": "./event-conference-data"
+            },
+            "object": {"@": "EventConferenceData"}
+        }
+    },
+    "EventConferenceData": {
+        "object": "./event-conference-data"
+    },
+    "createRequest": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "createRequest",
+            "valueType": "object",
+            "description": "TODO-ceeate subtype"
+        }
+    },
+    "entryPoints": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "entryPoints",
+            "valueType": "array",
+            "valueDescriptor": {"@": "conference-entry-point"},
+            "description": "datetime in Creation time of the event (as a RFC3339 timestamp). Read-only."
+        }
+    },
+
+    "conference-entry-point": {
+        "object": "./conference-entry-point.mjson"
+    },
+
+    "conferenceSolution": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "conferenceSolution",
+            "valueType": "object",
+            "description": "TODO-ceeate subtype"
+        }
+    },
+    "conferenceId": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "conferenceId",
+            "valueType": "string"
+        }
+    },
+    "signature": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "signature",
+            "valueType": "string"
+        }
+    },
+    "notes": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "notes",
+            "valueType": "string"
+        }
+    },
+    "gadget": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "gadget",
+            "valueType": "object",
+            "description": "TODO-ceeate subtype"
+        }
+    }
+}

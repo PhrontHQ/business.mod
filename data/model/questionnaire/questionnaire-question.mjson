@@ -1,0 +1,134 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "QuestionnaireQuestion",
+            "propertyDescriptors": [
+                {"@": "questionnaire"},
+                {"@": "question"},
+                {"@": "questionnairePosition"},
+                {"@": "questionnaireLabel"},
+                {"@": "displayLogicExpression"},
+                {"@": "maximumNumberOfAnswer"},
+                {"@": "possibleAnswers"},
+                {"@": "respondentQuestionnaireAnswers"}
+            ],
+            "objectDescriptorModule": {
+                "%":"./questionnaire-question.mjson"
+            },
+            "exportName": "QuestionnaireQuestion",
+            "module": {
+                "%": "./questionnaire-question"
+            },
+            "object":{"@": "questionnaireQuestion"},
+            "parent":{"@": "objectDescriptor"}
+
+        }
+    },
+    "questionnaireQuestion": {
+        "object": "./questionnaire-question"
+    },
+    "objectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "questionnaire": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "questionnaire",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "questions",
+            "valueDescriptor": {"@": "questionnaireDescriptor"}
+        }
+    },
+    "questionnaireDescriptor": {
+        "object": "./questionnaire.mjson"
+    },
+
+    "question": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "question",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "questionDescriptor"}
+        }
+    },
+    "questionDescriptor": {
+        "object": "./question.mjson"
+    },
+
+    "questionnairePosition": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "questionnairePosition",
+            "valueType": "number"
+        }
+    },
+    "questionnaireLabel": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "questionnaireLabel",
+            "isLocalizable": true,
+            "valueType": "string"
+        }
+    },
+    "displayLogicExpression": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "displayLogicExpression",
+            "valueType": "string"
+        }
+    },
+
+    "maximumNumberOfAnswer": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "maximumNumberOfAnswer",
+            "defaultValue": 1,
+            "valueType": "number"
+        }
+    },
+
+    "possibleAnswers": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "possibleAnswers",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "answerDescriptor"}
+        }
+    },
+
+    "answerDescriptor": {
+        "object": "./answer.mjson"
+    },
+
+    "respondentQuestionnaireAnswers": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentQuestionnaireAnswers",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "questionnaireQuestion",
+            "valueDescriptor": {"@": "respondentQuestionnaireAnswerDescriptor"}
+        }
+    },
+
+    "respondentQuestionnaireAnswerDescriptor": {
+        "object": "./respondent-questionnaire-answer.mjson"
+    },
+
+    "notes": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "notes",
+            "isLocalizable": true,
+            "valueType": "string",
+            "description": "Add comments to questions for internal use"
+        }
+    }
+
+
+}

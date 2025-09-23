@@ -1,0 +1,70 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "VendorContact",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "vendors"},
+                {"@": "photos"},
+                {"@": "phoneNumber"},
+                {"@": "email"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./vendor-contact.mjson"
+            },
+            "exportName": "VendorContact",
+            "module": {
+                "%": "./vendor-contact"
+            },
+            "object":{"@": "vendorContact"}
+        }
+    },
+    "vendorContact": {
+        "object": "./vendor-contact"
+    },
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "vendors": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "vendors",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "vendor_descriptor"}
+        }
+    },
+    "photos": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "photos",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "image_descriptor"}
+        }
+    },
+    "phoneNumber": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "phoneNumber",
+            "valueType": "string"
+        }
+    },
+    "email": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "email",
+            "valueType": "string"
+        }
+    },
+    "vendor_descriptor": {
+        "object": "./organization.mjson"
+    },
+    "image_descriptor": {
+        "object": "./image.mjson"
+    }
+
+}

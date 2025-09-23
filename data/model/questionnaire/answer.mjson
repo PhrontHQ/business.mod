@@ -1,0 +1,180 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Answer",
+            "propertyDescriptors": [
+                {"@": "type"},
+                {"@": "name"},
+                {"@": "booleanValue"},
+                {"@": "textValue"},
+                {"@": "integerValue"},
+                {"@": "integerRangeValue"},
+                {"@": "bigIntegerValue"},
+                {"@": "bigIntegerRangeValue"},
+                {"@": "decimalValue"},
+                {"@": "decimalRangeValue"},
+                {"@": "timeValue"},
+                {"@": "timeRangeValue"},
+                {"@": "objectValue"},
+                {"@": "respondentQuestionnaireAnswers"},
+                {"@": "respondentQuestionnaireVariableValues"}
+
+            ],
+            "objectDescriptorModule": {
+                "%":"./answer.mjson"
+            },
+            "exportName": "Answer",
+            "module": {
+                "%": "./answer"
+            },
+            "object":{"@": "answer"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "answer": {
+        "object": "./answer"
+    },
+    "objectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+    "type": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "type",
+            "valueDescriptor": {"@": "typeDescriptor"}
+        }
+    },
+    "typeDescriptor": {
+        "object": "mod/core/meta/module-object-descriptor.mjson"
+    },
+    "textValue": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "textValue",
+            "isLocalizable": true,
+            "valueType": "string",
+            "description": "The textual answer itself"
+        }
+    },
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "isLocalizable": true,
+            "valueType": "string",
+            "description": "A short, non user-facing name to refer to the answer"
+        }
+    },
+    "booleanValue": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "booleanValue",
+            "valueType": "boolean"
+        }
+    },
+    "integerValue": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "integerValue",
+            "valueType": "number",
+            "description": "to be integer in postgresql"
+        }
+    },
+    "integerRangeValue": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "integerRangeValue",
+            "valueType": "number",
+            "description": "to be int4range in postgresql"
+        }
+    },
+    "bigIntegerValue": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "bigIntegerValue",
+            "valueType": "number",
+            "description": "to be integer in postgresql"
+        }
+    },
+    "bigIntegerRangeValue": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "bigIntegerRangeValue",
+            "valueType": "number",
+            "description": "to be int8range in postgresql"
+        }
+    },
+    "decimalValue": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "decimalValue",
+            "valueType": "number",
+            "description": "to be numeric in postgresql"
+        }
+    },
+    "decimalRangeValue": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "decimalRangeValue",
+            "valueType": "number",
+            "description": "to be numrange in postgresql"
+        }
+    },
+    "timeValue": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "timeValue",
+            "valueDescriptor": {"@": "DateDescriptor"}
+        }
+    },
+    "DateDescriptor": {
+        "object": "mod/core/date.mjson"
+    },
+    "timeRangeValue": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "timeRangeValue",
+            "valueType": "date",
+            "collectionValueType": "range",
+            "description": "to be numrange in postgresql"
+        }
+    },
+    "objectValue": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "objectValue",
+            "valueType": "object"
+        }
+    },
+
+    "respondentQuestionnaireAnswers": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentQuestionnaireAnswers",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "respondentQuestionnaireAnswerDescriptor"}
+        }
+    },
+
+    "respondentQuestionnaireAnswerDescriptor": {
+        "object": "./respondent-questionnaire-answer.mjson"
+    },
+
+    "respondentQuestionnaireVariableValues": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentQuestionnaireVariableValues",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "respondentQuestionnaireVariableValueDescriptor"}
+        }
+    },
+
+    "respondentQuestionnaireVariableValueDescriptor": {
+        "object": "./respondent-questionnaire-variable-value.mjson"
+    }
+
+
+}

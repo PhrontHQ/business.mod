@@ -1,0 +1,58 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "DataObjectType",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "parent"},
+                {"@": "subtypes"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./data-object-type.mjson"
+            },
+            "exportName": "DataObjectType",
+            "module": {
+                "%": "./data-object-type"
+            },
+            "object":{"@": "DataObjectType"},
+            "parent":{"@": "DataObjectDescriptor"}
+        }
+    },
+    "DataObjectType": {
+        "object": "./data-object-type"
+    },
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "isLocalizable": true
+        }
+    },
+    "parent": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "parent",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "subtypes",
+            "valueDescriptor": {"@": "root"}
+       }
+    },
+    "subtypes": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "subtypes",
+            "valueType": "array",
+            "cardinality": -1,
+            "inversePropertyName": "parent",
+            "valueDescriptor": {"@": "root"}
+       }
+    }
+
+
+}

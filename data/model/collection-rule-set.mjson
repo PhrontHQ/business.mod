@@ -1,0 +1,40 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "CollectionRuleSet",
+            "propertyDescriptors": [
+                {"@": "appliedDisjunctively"},
+                {"@": "rules"}
+            ],
+            "objectDescriptorModule": {
+                "%":"./collection-rule-set.mjson"
+            },
+            "exportName": "CollectionRuleSet",
+            "module": {
+                "%": "./collection-rule-set"
+            }
+        }
+    },
+
+    "appliedDisjunctively": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "appliedDisjunctively",
+            "valueType": "boolean"
+        }
+    },
+    "rules": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "rules",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "CollectionRule_descriptor"}
+        }
+    },
+    "CollectionRule_descriptor": {
+        "object": "./collection-rule.mjson"
+    }
+
+}

@@ -1,9 +1,0 @@
-{
-    "root": {
-        "prototype": "mod/core/meta/user-interface-descriptor",
-        "values": {
-            "listItemDescriptionPosition": "bottom",
-            "listItemIsExpandable": false
-        }
-    }
-}

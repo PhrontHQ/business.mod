@@ -2,12 +2,12 @@ var mainService = require("business-data.mod/test/data/client-main.mod/main.mjso
 Criteria = require("mod/core/criteria").Criteria,
 DataStream = require("mod/data/service/data-stream").DataStream,
 DataQuery = require("mod/data/model/data-query").DataQuery,
-Collection = require("business-data.mod/data/main.mod/model/collection").Collection,
-Image = require("business-data.mod/data/main.mod/model/image").Image,
-Organization = require("business-data.mod/data/main.mod/model/organization").Organization,
-PostalAddress = require("business-data.mod/data/main.mod/model/messaging-channel/postal-address").PostalAddress,
-Service = require("business-data.mod/data/main.mod/model/service").Service,
-Person = require("business-data.mod/data/main.mod/model/person").Person;
+Collection = require("business-data.mod/data/model/collection").Collection,
+Image = require("business-data.mod/data/model/image").Image,
+Organization = require("business-data.mod/data/model/organization").Organization,
+PostalAddress = require("business-data.mod/data/model/messaging-channel/postal-address").PostalAddress,
+Service = require("business-data.mod/data/model/service").Service,
+Person = require("business-data.mod/data/model/person").Person;
 
 
 

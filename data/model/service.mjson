@@ -1,0 +1,79 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Service",
+            "propertyDescriptors": [
+                {"@": "template"},
+                {"@": "variants"},
+                {"@": "customerEngagementQuestionnaires"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./service.mjson"
+            },
+            "exportName": "Service",
+            "module": {
+                "%": "./service"
+            },
+            "object":{"@": "service"},
+            "parent":{"@": "productObjectDescriptor"},
+            "userInterfaceDescriptorModules": {
+                "*": {
+                    "%": "./service-ui-descriptor.mjson"
+                },
+                "mod/ui/list-item.reel": {
+                    "%": "./service-list-item-ui-descriptor.mjson"
+                },
+                "mod/ui/cascading-list.reel": {
+                    "%": "./service-cascading-list-ui-descriptor.mjson"
+                }
+            }
+
+        }
+    },
+
+    "productObjectDescriptor": {
+        "object": "./product.mjson"
+    },
+
+    "service": {
+        "object": "./service"
+    },
+
+    "template": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "template",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "root"},
+            "isSearchable": true
+        }
+    },
+
+    "variants": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "variants",
+            "cardinality": -1,
+            "inversePropertyName": "product",
+            "valueDescriptor": {"@": "variant_descriptor"}
+        }
+    },
+    "variant_descriptor": {
+        "object": "./service-product-variant.mjson"
+    },
+
+    "customerEngagementQuestionnaires": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "customerEngagementQuestionnaires",
+            "cardinality": -1,
+            "inversePropertyName": "services",
+            "valueDescriptor": {"@": "engagementQuestionnaire_descriptor"}
+        }
+    },
+    "engagementQuestionnaire_descriptor": {
+        "object": "./customer-engagement-questionnaire.mjson"
+    }
+}

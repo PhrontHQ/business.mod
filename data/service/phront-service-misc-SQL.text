@@ -1,0 +1,74 @@
+https://stackoverflow.com/questions/20582500/how-to-check-if-a-table-exists-in-a-given-schema
+
+It depends on what you want to test exactly.
+
+Information schema?
+
+To find "whether the table exists" (no matter who's asking), querying the information schema (information_schema.tables) is incorrect, strictly speaking, because (per documentation):
+
+Only those tables and views are shown that the current user has access to (by way of being the owner or having some privilege).
+The query provided by @kong can return FALSE, but the table can still exist. It answers the question:
+
+How to check whether a table (or view) exists, and the current user has access to it?
+
+SELECT EXISTS (
+   SELECT FROM information_schema.tables
+   WHERE  table_schema = 'schema_name'
+   AND    table_name   = 'table_name'
+   );
+The information schema is mainly useful to stay portable across major versions and across different RDBMS. But the implementation is slow, because Postgres has to use sophisticated views to comply to the standard (information_schema.tables is a rather simple example). And some information (like OIDs) gets lost in translation from the system catalogs - which actually carry all information.
+
+System catalogs
+
+Your question was:
+
+How to check whether a table exists?
+
+SELECT EXISTS (
+   SELECT FROM pg_catalog.pg_class c
+   JOIN   pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+   WHERE  n.nspname = 'schema_name'
+   AND    c.relname = 'table_name'
+   AND    c.relkind = 'r'    -- only tables
+   );
+Use the system catalogs pg_class and pg_namespace directly, which is also considerably faster. However, per documentation on pg_class:
+
+The catalog pg_class catalogs tables and most everything else that has columns or is otherwise similar to a table. This includes indexes (but see also pg_index), sequences, views, materialized views, composite types, and TOAST tables;
+For this particular question you can also use the system view pg_tables. A bit simpler and more portable across major Postgres versions (which is hardly of concern for this basic query):
+
+SELECT EXISTS (
+   SELECT FROM pg_tables
+   WHERE  schemaname = 'schema_name'
+   AND    tablename  = 'table_name'
+   );
+Identifiers have to be unique among all objects mentioned above. If you want to ask:
+
+How to check whether a name for a table or similar object in a given schema is taken?
+
+SELECT EXISTS (
+   SELECT FROM pg_catalog.pg_class c
+   JOIN   pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+   WHERE  n.nspname = 'schema_name'
+   AND    c.relname = 'table_name'
+   );
+Related answer on dba.SE discussing "Information schema vs. system catalogs"
+Alternative: cast to regclass
+
+SELECT 'schema_name.table_name'::regclass
+This raises an exception if the (optionally schema-qualified) table (or other object occupying that name) does not exist.
+
+If you do not schema-qualify the table name, a cast to regclass defaults to the search_path and returns the OID for the first table found - or an exception if the table is in none of the listed schemas. Note that the system schemas pg_catalog and pg_temp (the schema for temporary objects of the current session) are automatically part of the search_path.
+
+You can use that and catch a possible exception in a function. Example:
+
+Check if sequence exists in Postgres (plpgsql)
+A query like above avoids possible exceptions and is therefore slightly faster.
+
+to_regclass(rel_name) in Postgres 9.4+
+
+Much simpler now:
+
+SELECT to_regclass('schema_name.table_name');
+Same as the cast, but it returns ...
+
+... null rather than throwing an error if the name is not found

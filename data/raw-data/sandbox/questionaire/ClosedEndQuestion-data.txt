@@ -1,0 +1,13 @@
+Closed Ended Questions are quantitative
+
+
+
+{    attributeNames = (        answerGroupId,         colorId,         databaseCode,         dateChanged,         dbId,         maxNumberOfAnswer,         ownerGroupId,         ownerId,         questionText,         questionTopicId,         questionType,         questionnaireId,         questionnaireLabel,         questionnaireRank,         rights    );     entityName = ClosedEndQuestion; }
+rows=(
+			(    __NULL__,     __NULL__,     0011,     "Jul 19 1999 08:42",     13067d0136c082ef913970b50011,     __NULL__,     49d88f0336c07761913970b50076,     49db8f0336c07761913970b50043,     "Do you like this fragrance ?",     12fc7d0136c082ee913970b50074,     Quantitative,     13097d0136c082ef913970b50065,     3,     3,     31)
+			(    __NULL__,     __NULL__,     0011,     "Jul 19 1999 08:42",     130a7d0136c082ef913970b50011,     __NULL__,     49d88f0336c07761913970b50076,     49db8f0336c07761913970b50043,     "How suitable is this fragrance for this color ?",     __NULL__,     Quantitative,     13097d0136c082ef913970b50065,     1,     1,     31)
+			(    __NULL__,     __NULL__,     0011,     "Jul 19 1999 08:42",     13077d0136c082ef913970b50011,     __NULL__,     49d88f0336c07761913970b50076,     49db8f0336c07761913970b50043,     "How suitable is this fragrance for this attribute ?",     __NULL__,     Quantitative,     13097d0136c082ef913970b50065,     2,     2,     31)
+			(    __NULL__,     __NULL__,     0011,     "Feb 16 1999 14:05",     c6610b0136c81584913970b50011,     __NULL__,     49d88f0336c07761913970b50076,     49db8f0336c07761913970b50043,     "How suitable is this fragrance for this product group ?",     __NULL__,     Quantitative,     c65d0b0136c81584913970b50065,     1,     1,     31)
+			(    __NULL__,     __NULL__,     0011,     "Feb 16 1999 14:05",     c6620b0136c81584913970b50011,     __NULL__,     49d88f0336c07761913970b50076,     49db8f0336c07761913970b50043,     "How suitable is this fragrance for this attribute ?",     __NULL__,     Quantitative,     c65d0b0136c81584913970b50065,     2,     2,     31)
+			(    __NULL__,     __NULL__,     0011,     "Feb 16 1999 14:05",     c65f0b0136c81584913970b50011,     __NULL__,     49d88f0336c07761913970b50076,     49db8f0336c07761913970b50043,     "Do you like this fragrance ?",     12fc7d0136c082ee913970b50074,     Quantitative,     c65d0b0136c81584913970b50065,     3,     3,     31)
+);

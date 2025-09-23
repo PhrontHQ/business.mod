@@ -1,6 +1,6 @@
 {
     "phrontClientDataService": {
-        "object": "../../../data/main.mod/phront-client-service.mjson"
+        "object": "../../../data/phront-client-service.mjson"
     },
 
     "root": {

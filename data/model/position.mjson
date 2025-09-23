@@ -1,0 +1,71 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Position",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "role"},
+                {"@": "employmentPositions"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./position.mjson"
+            },
+            "exportName": "Position",
+            "module": {
+                "%": "./position"
+            },
+            "object":{"@": "position"},
+            "parent":{"@": "PartyDescriptor"},
+            "userInterfaceDescriptorModules": {
+                "*": {
+                    "%": "./position-ui-descriptor.mjson"
+                }
+            }
+
+        }
+    },
+    "position": {
+        "object": "./position"
+    },
+
+    "PartyDescriptor": {
+        "object": "./party.mjson"
+    },
+
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true
+        }
+    },
+    "role": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "role",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "role_descriptor"}
+        }
+    },
+    "role_descriptor": {
+        "object": "./role.mjson"
+    },
+    "employmentPositions": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "employmentPositions",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "employmentPositionDescriptor"}
+        }
+    },
+    "employmentPositionDescriptor": {
+        "object": "./employment-position.mjson"
+    }
+
+
+}

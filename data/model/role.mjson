@@ -1,0 +1,67 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Role",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "description"},
+                {"@": "tags"},
+                {"@": "eventsWithParticipationRole"}
+            ],
+            "objectDescriptorModule": {
+                "%":"./role.mjson"
+            },
+            "exportName": "Role",
+            "module": {
+                "%": "./role"
+            },
+            "object":{"@": "Role"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "Role": {
+        "object": "./role"
+    },
+    "objectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "isLocalizable": true,
+            "valueType": "string"
+        }
+    },
+    "description": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "description",
+            "isLocalizable": true,
+            "valueType": "string"
+        }
+    },
+    "tags": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "tags",
+            "isLocalizable": true,
+            "valueType": "string",
+            "cardinality": -1
+        }
+    },
+    "eventsWithParticipationRole": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "eventsWithParticipationRole",
+            "cardinality": -1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "EventDescriptor"},
+            "inversePropertyName": "participationRoles"
+        }
+    },
+    "EventDescriptor": {
+        "object": "./event.mjson"
+    }
+}

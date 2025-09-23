@@ -1,0 +1,10 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/user-interface-descriptor",
+        "values": {
+            "collectionNameExpression": "'Resources'",
+            "nameExpression": "name",
+            "descriptionExpression": "name"
+        }
+    }
+}

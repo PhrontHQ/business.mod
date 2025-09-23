@@ -1,0 +1,116 @@
+{
+    "root": {
+        "object": "mod/data/model/persom.mjson",
+        "values": {
+            "propertyDescriptors": [
+                {"@": "employmentHistory"},
+                {"@": "serviceProductVariantsProvided"},
+                {"@": "respondentQuestionnaires"},
+                {"@": "supplierRelationships"},
+                {"@": "customerSupplierResponsibilities"},
+                {"@": "firstPersonalRelationships"},
+                {"@": "secondPersonalRelationships"}
+           ]
+        }
+    },
+   
+
+    "respondentQuestionnaires": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentQuestionnaires",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "respondent",
+            "valueDescriptor": {"@": "respondentQuestionnairesDescriptor"}
+       }
+    },
+    "respondentQuestionnairesDescriptor": {
+        "object": "./questionnaire/respondent-questionnaire.mjson"
+    },
+
+    "employmentHistory": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "employmentHistory",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "employmentPositionStaffingDescriptor"},
+            "inversePropertyName": "employee"
+       }
+    },
+    "employmentPositionStaffingDescriptor": {
+        "object": "./employment-position-staffing.mjson"
+    },
+
+    "serviceProductVariantsProvided": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "serviceProductVariantsProvided",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "serviceProductVariantsDescriptor"},
+            "inversePropertyName": "providers"
+        }
+    },
+
+    "serviceProductVariantsDescriptor": {
+        "object": "./service-product-variant.mjson"
+    },
+
+    "supplierRelationships": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "supplierRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "customer",
+            "valueDescriptor": {"@": "B2CCustomerSupplierRelationshipDescriptor"}
+       }
+    },
+    "B2CCustomerSupplierRelationshipDescriptor": {
+        "object": "./b-2-c-customer-supplier-relationship.mjson"
+    },
+
+
+    "customerSupplierResponsibilities": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "customerSupplierResponsibilities",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "responsibleParty",
+            "valueDescriptor": {"@": "B2CCustomerSupplierResponsiblePartyDescriptor"}
+       }
+    },
+    "B2CCustomerSupplierResponsiblePartyDescriptor": {
+        "object": "./b-2-c-customer-supplier-responsible-party.mjson"
+    },
+
+    "firstPersonalRelationships": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "firstPersonalRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "firstPerson",
+            "valueDescriptor": {"@": "PersonalRelationshipDescriptor"}
+       }
+    },
+    "PersonalRelationshipDescriptor": {
+        "object": "./personal-relationship.mjson"
+    },
+
+    "secondPersonalRelationships": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "secondPersonalRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "secondPerson",
+            "valueDescriptor": {"@": "PersonalRelationshipDescriptor"}
+       }
+    }
+
+
+}

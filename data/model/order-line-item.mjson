@@ -1,0 +1,87 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "OrderLineItem",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "quantity"},
+                {"@": "purchasedItem"},
+                {"@": "purchasedVariant"},
+                {"@": "price"},
+                {"@": "totalCost"},
+                {"@": "belongsToOrder"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./order-line-item.mjson"
+            },
+            "exportName": "OrderLineItem",
+            "module": {
+                "%": "./order-line-item"
+            },
+            "object":{"@": "orderLineItem"}
+        }
+    },
+    "orderLineItem": {
+        "object": "./order-line-item"
+    },
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "quantity": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "quantity",
+            "valueType": "number"
+        }
+    },
+    "purchasedItem": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "purchasedItem",
+            "cardinality": 1,
+            "valueType": "object"
+        }
+    },
+    "purchasedVariant": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "purchasedVariant",
+            "cardinality": 1,
+            "valueType": "object"
+        }
+    },
+    "price": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "price",
+            "valueType": "number",
+            "definition": "productItem.unitCost"
+        }
+    },
+    "totalCost": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "totalCost",
+            "valueType": "number"
+        }
+    },
+    "belongsToOrder": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "belongsToOrder",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "client-order_descriptor"}
+        }
+    },
+    "product_descriptor": {
+        "object": "./product.mjson"
+    },
+    "client-order_descriptor": {
+        "object": "./client-order.mjson"
+    }
+}

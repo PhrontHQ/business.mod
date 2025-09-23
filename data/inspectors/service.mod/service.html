@@ -1,0 +1,89 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="service.css">
+    <script type="text/mod-serialization">
+    {
+        "owner": {
+            "values": {
+                "element": {"#": "service"},
+                "imageElement": {"#": "image"},
+                "backgroundImageElement": {"#": "backgroundImage"},
+                "image": {"<-": "data.images.0.originalSrc"},
+                "descriptionElement": {"#": "description"},
+                "description": {"<-": "data.descriptionHtml"}
+            }
+        },
+        "main": {
+            "prototype": "ui/section.reel",
+            "values": {
+                "element": {"#": "main"}
+            }
+        },
+        "vendor": {
+            "prototype": "mod/ui/text.reel",
+            "values": {
+                "element": {"#": "vendor"},
+                "value": {"<-": "@owner.data.vendor.name"}
+            }
+        },
+        "distance": {
+            "prototype": "mod/ui/text.reel",
+            "values": {
+                "element": {"#": "distance"},
+                "value": "1,4 km"
+            }
+        },
+        "name": {
+            "prototype": "mod/ui/text.reel",
+            "values": {
+                "element": {"#": "name"},
+                "value": {"<-": "@owner.data.name"}
+            }
+        },
+        "variantsSection": {
+            "prototype": "ui/section.reel",
+            "values": {
+                "element": {"#": "variantsSection"},
+                "title": {"<-": "@owner.data.variants.length > 1 ? 'Variantes' : null"}
+            }
+        },
+        "variants": {
+            "prototype": "ui/variants.reel",
+            "values": {
+                "element": {"#": "variants"},
+                "variants": {"<-": "@owner.data.variants"}
+            }
+        },
+        "mapSection": {
+            "prototype": "ui/section.reel",
+            "values": {
+                "element": {"#": "mapSection"},
+                "title": "Emplacements"
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-mod-id="service" class="Service">
+        <div class="wrapper">
+            <div data-mod-id="image" class="Service-image"></div>
+            <div data-mod-id="backgroundImage" class="Service-backgroundImage"></div>
+            <div class="Service-content">
+                <div data-mod-id="main">
+                    <div class="Service-location">
+                        <span data-mod-id="vendor" class="Service-vendor"></span>
+                        <span data-mod-id="distance" class="Service-distance"></span>
+                    </div>
+                    <div data-mod-id="name" class="Service-name"></div>
+                    <div data-mod-id="description" class="Service-description"></div>
+                </div>
+                <div data-mod-id="variantsSection">
+                    <div data-mod-id="variants"></div>
+                </div>
+                <div data-mod-id="mapSection">
+                    <div class="Service-map"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

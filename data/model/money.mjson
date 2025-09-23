@@ -1,0 +1,37 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Money",
+            "propertyDescriptors": [
+                {"@": "amount"},
+                {"@": "currencyCode"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./money.mjson"
+            },
+            "exportName": "Money",
+            "module": {
+                "%": "./money"
+            },
+            "object":{"@": "Money"}
+        }
+    },
+    "Money": {
+        "object": "./money"
+    },
+    "amount": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "amount",
+            "valueType": "number"
+        }
+    },
+    "currencyCode": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "currencyCode",
+            "valueType": "string"
+        }
+    }
+}

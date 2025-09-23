@@ -1,0 +1,107 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ClientOrder",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "client"},
+                {"@": "orderLineItems"},
+                {"@": "fulfillBy"},
+                {"@": "invoice"},
+                {"@": "orderNumber"},
+                {"@": "status"},
+                {"@": "orderTotalCost"},
+                {"@": "billTo"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./client-order.mjson"
+            },
+            "exportName": "ClientOrder",
+            "module": {
+                "%": "./client-order"
+            },
+            "object":{"@": "clientOrder"}
+
+        }
+    },
+    "clientOrder": {
+        "object": "./client-order"
+    },
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "client": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "client",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "client_descriptor"}
+        }
+    },
+    "orderLineItems": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "orderLineItems",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "order-line-item_descriptor"}
+        }
+    },
+    "fulfillBy": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "fulfillBy",
+            "valueType": "string"
+        }
+    },
+    "invoice": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "invoice",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "image_descriptor"}
+        }
+    },
+    "orderNumber": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "orderNumber",
+            "valueType": "string"
+        }
+    },
+    "status": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "status",
+            "valueType": "string"
+        }
+    },
+    "orderTotalCost": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "orderTotalCost",
+            "valueType": "number"
+        }
+    },
+    "billTo": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "billTo",
+            "valueType": "array"
+        }
+    },
+    "client_descriptor": {
+        "object": "./client.mjson"
+    },
+    "order-line-item_descriptor": {
+        "object": "./order-line-item.mjson"
+    },
+    "image_descriptor": {
+        "object": "./image.mjson"
+    }
+
+}

@@ -1,0 +1,103 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Asset",
+            "propertyDescriptors": [
+                {"@": "storageBucketName"},
+                {"@": "storageBucket"},
+                {"@": "storageObjectKey"},
+                {"@": "storageObject"},
+                {"@": "description"},
+                {"@": "storageObjectLocation"},
+                {"@": "signedStorageObjectLocation"},
+                {"@": "originLocation"}
+            ],
+            "objectDescriptorModule": {
+                "%":"./asset.mjson"
+            },
+            "exportName": "Asset",
+            "module": {
+                "%": "./asset"
+            },
+            "object":{"@": "AssetPrototype"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "AssetPrototype": {
+        "object": "./asset"
+    },
+    "objectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+    "storageBucketName": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "storageBucketName",
+            "valueType": "string"
+        }
+    },
+    "storageBucket": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "storageBucket",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "StorageBucketDescriptor"}
+       }
+    },
+    "StorageBucketDescriptor": {
+        "object": "cloud-computing.mod/data/model/object-storage/bucket.mjson"
+    },
+
+     "storageObjectKey": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "storageObjectKey",
+            "valueType": "string"
+        }
+    },
+    "storageObject": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "storageObject",
+            "valueType": "object",
+            "valueDescriptor": {"@": "StorageObjectDescriptor"}
+        }
+    },
+    "StorageObjectDescriptor": {
+        "object": "cloud-computing.mod/data/model/object-storage/object.mjson"
+    },
+
+    "description": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "description",
+            "isLocalizable": true,
+            "valueType": "string"
+        }
+    },
+    "storageObjectLocation": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "storageObjectLocation",
+            "valueType": "URL"
+        }
+    },
+    "signedStorageObjectLocation": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "signedStorageObjectLocation",
+            "definition": "s3Object.signedUrl",
+            "valueType": "URL"
+        }
+    },
+    "originLocation": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "originLocation",
+            "valueType": "URL"
+        }
+    }
+
+}

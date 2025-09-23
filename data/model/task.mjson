@@ -1,0 +1,227 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Task",
+            "propertyDescriptors": [         
+                {"@": "title"},       
+                {"@": "plannedExecutionSequencePosition"},
+                {"@": "executionSequencePosition"},
+                {"@": "isCritical"},
+                {"@": "parentTask"},
+                {"@": "subtasks"},
+                {"@": "groupTask"},
+                {"@": "groupedTasks"},
+                {"@": "upstreamTasks"},
+                {"@": "downstreamTasks"},
+                {"@": "prerequisiteTasks"},
+                {"@": "isStarted"},
+                {"@": "isCompleted"},
+                {"@": "resetCount"},
+                {"@": "isReset"},
+                {"@": "plannedExecutionDuration"},
+                {"@": "executionDuration"},
+                {"@": "issueTypes"},
+                {"@": "issues"}
+                
+            ],
+            "objectDescriptorModule": {
+                "%": "./task.mjson"
+            },
+            "exportName": "Task",
+            "module": {
+                "%": "./task"
+            },
+            "object":{"@": "task"},
+            "parent":{"@": "Object"}
+        }
+    },
+    "task": {
+        "object": "./task"
+    },
+    "Object": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "title": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "title",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true
+        }
+    },
+
+    "isCritical": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "isCritical",
+            "valueType": "boolean"
+        }
+    },
+    "plannedExecutionSequencePosition": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "plannedExecutionSequencePosition",
+            "valueType": "number",
+            "description": "The order a task is intended/planned be executed relative to others in a sequence"
+        }
+    },
+    "executionSequencePosition": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "executionSequencePosition",
+            "valueType": "number",
+            "description": "The order a task will actually be executed relative to others in a sequence"
+        }
+    },
+
+    "upstreamTasks": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "upstreamTasks",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "root"}
+        }
+    },
+
+    "downstreamTasks": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "downstreamTasks",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "root"}
+        }
+    },
+
+    "prerequisiteTasks": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "prerequisiteTasks",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "root"}
+        }
+    },
+
+    "groupTask": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "groupTask",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "root"},
+            "inversePropertyName": "groupedTasks"
+        }
+    },
+    "groupedTasks": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "groupedTasks",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "root"},
+            "inversePropertyName": "groupTask"
+        }
+    },
+
+    "parentTask": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "parentTask",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "root"},
+            "inversePropertyName": "subtasks"
+        }
+    },
+    "subtasks": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "subtasks",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "root"},
+            "inversePropertyName": "parentTask"
+        }
+    },
+
+    "isStarted": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "isStarted",
+            "valueType": "boolean"
+        }
+    },
+
+    "isCompleted": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "isCompleted",
+            "valueType": "boolean"
+        }
+    },
+
+    "resetCount": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "resetCount",
+            "valueType": "number",
+            "defaultValue": 0
+        }
+    },
+
+    "isReset": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "isReset",
+            "valueType": "boolean",
+            "definition": "resetCount > 0"
+        }
+    },
+
+    "plannedExecutionDuration": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "plannedExecutionDuration",
+            "valueType": "number",
+            "cardinality":1,
+            "defaultValue": {"=": "undefined"},
+            "description": "The time estimated in the manufacturing plan this task should take to execute"
+        }
+    },
+
+    "executionDuration": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "executionDuration",
+            "valueType": "number",
+            "cardinality":1,
+            "defaultValue": {"=": "undefined"},
+            "description": "The time estimated in the manufacturing plan this task should take to execute"
+        }
+    },
+
+    "IssueDescriptor": {
+        "object": "./issue.mjson"
+    },
+
+    "issueTypes": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "issueTypes",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "IssueDescriptor"},
+            "inversePropertyName": "associatedTasks",
+            "description": "The list of Issues configured as types for others a task can have (type as in JS' prototype sense - an object from which others inherits their shape and value)"
+        }
+    },
+
+    "issues": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "issues",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "IssueDescriptor"},
+            "inversePropertyName": "associatedTasks",
+            "description": "eventual issues related to the execution of a task"
+        }
+    }
+
+}

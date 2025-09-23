@@ -1,0 +1,78 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Client",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "notes"},
+                {"@": "photoOfClientSpace"},
+                {"@": "clientOrders"},
+                {"@": "billingAddress"},
+                {"@": "mapCache"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./client.mjson"
+            },
+            "exportName": "Client",
+            "module": {
+                "%": "./client"
+            },
+            "object":{"@": "client"}
+        }
+    },
+    "client": {
+        "object": "./client"
+    },
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "notes": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "notes",
+            "valueType": "string"
+        }
+    },
+    "photoOfClientSpace": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "photoOfClientSpace",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "image_descriptor"}
+        }
+    },
+    "clientOrders": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "clientOrders",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "client-order_descriptor"}
+        }
+    },
+    "billingAddress": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "billingAddress",
+            "valueType": "string"
+        }
+    },
+    "mapCache": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "closestShowroomAddress",
+            "valueType": "string"
+        }
+    },
+    "client-order_descriptor": {
+        "object": "./client-order.mjson"
+    },
+    "image_descriptor": {
+        "object": "./image.mjson"
+    }
+
+}

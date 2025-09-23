@@ -1,2 +1,0 @@
-const LIGHTSPEED = 299792458;
-export { LIGHTSPEED };

@@ -1,0 +1,105 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "EmploymentPositionStaffing",
+            "propertyDescriptors": [
+                {"@": "title"},
+                {"@": "employmentType"},
+                {"@": "employmentPosition"},
+                {"@": "employee"},
+                {"@": "b2cCustomerRelationships"}
+
+            ],
+            "objectDescriptorModule": {
+                "%": "./employment-position-staffing.mjson"
+            },
+            "exportName": "EmploymentPositionStaffing",
+            "module": {
+                "%": "./employment-position-staffing"
+            },
+            "object":{"@": "EmploymentPositionStaffing"},
+            "parent":{"@": "party-party-relationship"}
+        }
+    },
+    "EmploymentPositionStaffing": {
+        "object": "./employment-position-staffing"
+    },
+    "party-party-relationship": {
+        "object": "./party-party-relationship.mjson"
+    },
+    "title": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "title",
+            "valueType": "string",
+            "cardinality": 1,
+            "isLocalizable": true
+        }
+    },
+    "employmentType": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "employmentType",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "employment_type_descriptor"}
+        }
+    },
+    "employment_type_descriptor": {
+        "object": "./employment-type.mjson"
+    },
+    "employmentPosition": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "employmentPosition",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "staffingHistory",
+            "valueDescriptor": {"@": "employment-position-descriptor"}
+        }
+    },
+    "employment-position-descriptor": {
+        "object": "./employment-position.mjson"
+    },
+    "employee": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "employee",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "employmentHistory",
+            "valueDescriptor": {"@": "person_descriptor"}
+        }
+    },
+    "person_descriptor": {
+        "object": "./person.mjson"
+    },
+    "role": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "role",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "role_descriptor"}
+        }
+    },
+    "role_descriptor": {
+        "object": "./role.mjson"
+    },
+    "b2cCustomerRelationships": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "b2cCustomerRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "staffRelationships",
+            "valueDescriptor": {"@": "B2CCustomerSupplierRelationshipDescriptor"}
+        }
+    },
+    "B2CCustomerSupplierRelationshipDescriptor": {
+        "object": "./b-2-c-customer-supplier-relationship.mjson"
+    }
+
+
+}

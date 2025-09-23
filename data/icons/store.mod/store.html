@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="store.css">
+    <script type="text/mod-serialization">
+        {
+            "owner": {
+                "values": {
+                    "element": {"#": "owner"}
+                }
+            },
+
+            "icon": {
+                "prototype": "../../../../../ui/image.reel",
+                "values": {
+                    "element": {"#": "icon"},
+                    "src":  {"=": "@owner.iconSrc"}
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <div data-mod-id="owner">
+        <img data-mod-id="icon" />
+    </div>
+</body>
+</html>

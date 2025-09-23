@@ -1,0 +1,39 @@
+{
+    "data": {
+        "collections": {
+            "edges": [{
+                "node": {
+                    "id": "gid:\/\/shopify\/Collection\/139359289447",
+                    "title": "Beauté bien-être",
+                    "description": "Prendre rdv chez le coiffeur, l’estheticienne, réserver un cours de yoga, les agendas de vos professionnels sont en ligne ici !",
+                    "descriptionHtml": "Prendre rdv chez le coiffeur, l’estheticienne, réserver un cours de yoga, les agendas de vos professionnels sont en ligne ici !",
+                    "handle": "pour-mes-animaux",
+                    "image": {
+                        "altText": null,
+                        "originalSrc": "https:\/\/cdn.shopify.com\/s\/files\/1\/0253\/8654\/9351\/collections\/photo8.jpg?v=1565978894",
+                        "transformedSrc": "https:\/\/cdn.shopify.com\/s\/files\/1\/0253\/8654\/9351\/collections\/photo8.jpg?v=1565978894"
+                    },
+                    "products": {
+                        "edges": [{
+                                "node": {
+                                    "id": "gid:\/\/shopify\/Product\/3986227593319",
+                                    "title": "Danielle Livine - RITUEL DE TOA 2H30",
+                                    "description": "Gommage aromatique de CINQ MONDES d'1h30 Soin aux épices rares et précieuses dans le Hammam, suivi d'un Massage Oriental Traditionnel relaxant et d'un soin-massage Jeunesse du Visage \"Ko Bi Do\" lissant et repulpant, puis d'un rituel délassant des jambes. Les bons de soin sont valables 6 mois maximum après leur date d’achat.",
+                                    "descriptionHtml": "<p><span>Gommage aromatique de CINQ MONDES d'1h30<\/span><\/p>\n<p><span>Soin aux épices rares et précieuses dans le Hammam, suivi d'un Massage Oriental Traditionnel relaxant et d'un soin-massage Jeunesse du Visage \"Ko Bi Do\" lissant et repulpant, puis d'un rituel délassant des jambes.<\/span><\/p>\n<b>Les bons de soin sont valables 6 mois maximum après leur date d’achat.<\/b>"
+                                }
+                            },
+                            {
+                                "node": {
+                                    "id": "gid:\/\/shopify\/Product\/3986219171943",
+                                    "title": "Danielle Livine - RITUEL DE BIEN ETRE ET SERENITE 1H30",
+                                    "description": "Gommage aromatique de CINQ MONDES d'1h30 Soin aux épices rares et précieuses dans le Hammam, suivi d'un Massage Oriental Traditionnel relaxant et d'un soin-massage Jeunesse du Visage \"Ko Bi Do\" lissant et repulpant, puis d'un rituel délassant des jambes. Les bons de soin sont valables 6 mois maximum après leur date d’achat.",
+                                    "descriptionHtml": "<p><span>Gommage aromatique de CINQ MONDES d'1h30<\/span><\/p>\n<p><span>Soin aux épices rares et précieuses dans le Hammam, suivi d'un Massage Oriental Traditionnel relaxant et d'un soin-massage Jeunesse du Visage \"Ko Bi Do\" lissant et repulpant, puis d'un rituel délassant des jambes.<\/span><\/p>\n<b>Les bons de soin sont valables 6 mois maximum après leur date d’achat.<\/b>"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }]
+        }
+    }
+}

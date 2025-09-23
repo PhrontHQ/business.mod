@@ -1,0 +1,72 @@
+BEGIN:VCALENDAR
+METHOD:REQUEST
+PRODID:Microsoft Exchange Server 2010
+VERSION:2.0
+BEGIN:VTIMEZONE
+TZID:Pacific Standard Time
+BEGIN:STANDARD
+DTSTART:16010101T020000
+TZOFFSETFROM:-0700
+TZOFFSETTO:-0800
+RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=1SU;BYMONTH=11
+END:STANDARD
+BEGIN:DAYLIGHT
+DTSTART:16010101T020000
+TZOFFSETFROM:-0800
+TZOFFSETTO:-0700
+RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=2SU;BYMONTH=3
+END:DAYLIGHT
+END:VTIMEZONE
+BEGIN:VEVENT
+ORGANIZER;CN=William Matzenger:mailto:wmatzenger@locationsmart.com
+ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN=Benoit Mar
+ chant:mailto:benoit@phront.com
+ATTENDEE;ROLE=OPT-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN=Mario Proi
+ etti:mailto:mproietti@locationsmart.com
+DESCRIPTION;LANGUAGE=en-US:Hi Benoit\,\n\nPlease see below for Zoom meeting
+  details for our call to review LocationSmart’s APIs and discuss your us
+ e case needs in more detail.  During the call\, we’ll review the Locatio
+ nSmart services that could be useful for your service and answer any quest
+ ions you may have.\n\nIf we need to adjust the time\, just let me know.\n\
+ nFeel free to pass this along anyone else from your team as well.\n\nRegar
+ ds\,\n\nWilliam Matzenger\nHead of Customer Success\nLocationSmart\n(619)
+ 315-4846\nwww.locationsmart.com<http://www.locationsmart.com/>\n\n\nJoin Z
+ oom Meeting\nhttps://zoom.us/j/96606289054?pwd=WHEvTEt3Z2JjL2tLY0ZXMStNVEl
+ VZz09\n\nMeeting ID: 966 0628 9054\nPasscode: Location\nOne tap mobile\n+1
+ 6699006833\,\,96606289054# US (San Jose)\n+12532158782\,\,96606289054# US
+ (Tacoma)\n\nDial by your location\n        +1 669 900 6833 US (San Jose)\n
+         +1 346 248 7799 US (Houston)\n        +1 929 205 6099 US (New York
+ )\n        +1 312 626 6799 US (Chicago)\nMeeting ID: 966 0628 9054\nFind y
+ our local number: https://zoom.us/u/abrnsYkBmq\n\n\n
+UID:040000008200E00074C5B7101A82E0080000000000E418EC3365D601000000000000000
+ 0100000000E2A4D85152EE348A8E904B95CCC4579
+SUMMARY;LANGUAGE=en-US:Phront - LocationSmart Introduction and API Q/A
+DTSTART;TZID=Pacific Standard Time:20200729T103000
+DTEND;TZID=Pacific Standard Time:20200729T110000
+CLASS:PUBLIC
+PRIORITY:5
+DTSTAMP:20200729T061335Z
+TRANSP:OPAQUE
+STATUS:CONFIRMED
+SEQUENCE:0
+LOCATION;LANGUAGE=en-US:https://zoom.us/j/96606289054?pwd=WHEvTEt3Z2JjL2tLY
+ 0ZXMStNVElVZz09
+X-MICROSOFT-CDO-APPT-SEQUENCE:0
+X-MICROSOFT-CDO-OWNERAPPTID:305952740
+X-MICROSOFT-CDO-BUSYSTATUS:TENTATIVE
+X-MICROSOFT-CDO-INTENDEDSTATUS:BUSY
+X-MICROSOFT-CDO-ALLDAYEVENT:FALSE
+X-MICROSOFT-CDO-IMPORTANCE:1
+X-MICROSOFT-CDO-INSTTYPE:0
+X-MICROSOFT-DONOTFORWARDMEETING:FALSE
+X-MICROSOFT-DISALLOW-COUNTER:FALSE
+X-MICROSOFT-LOCATIONS:[ { "DisplayName" : "https://zoom.us/j/96606289054?pw
+ d=WHEvTEt3Z2JjL2tLY0ZXMStNVElVZz09"\, "LocationAnnotation" : ""\, "Locatio
+ nSource" : 0\, "Unresolved" : false\, "LocationUri" : "" } ]
+BEGIN:VALARM
+DESCRIPTION:REMINDER
+TRIGGER;RELATED=START:-PT15M
+ACTION:DISPLAY
+END:VALARM
+END:VEVENT
+END:VCALENDAR
