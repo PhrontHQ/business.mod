@@ -134,7 +134,7 @@
     },
 
     "personDescriptor": {
-        "object": "./person.mjson"
+        "object": "../party/person.mjson"
     },
 
     "serviceEngagements": {

@@ -56,7 +56,7 @@
         }
     },
     "person_descriptor": {
-        "object": "./person.mjson"
+        "object": "../party/person.mjson"
     },
 
     "roleRankings": {

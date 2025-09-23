@@ -46,7 +46,7 @@
        }
     },
     "OrganizationDescriptor": {
-        "object": "./organization.mjson"
+        "object": "../party/organization.mjson"
     },
     "organizations": {
         "prototype": "mod/core/meta/property-descriptor",

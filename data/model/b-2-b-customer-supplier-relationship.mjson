@@ -34,7 +34,7 @@
         }
     },
     "organization_descriptor": {
-        "object": "./organization.mjson"
+        "object": "../party/organization.mjson"
     }
 
 }

@@ -332,7 +332,7 @@
         }
     },
     "PersonDescriptor": {
-        "object": "./person.mjson"
+        "object": "../party/person.mjson"
     },
 
     "isAllDay": {

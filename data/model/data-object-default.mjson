@@ -53,7 +53,7 @@
         }
     },
     "OrganizationDescriptor": {
-        "object": "./organization.mjson"
+        "object": "../party/organization.mjson"
     },
 
     "personOwner": {
@@ -68,7 +68,7 @@
         }
     },
     "PersonDescriptor": {
-        "object": "./person.mjson"
+        "object": "../party/person.mjson"
     },
 
     "resourceOwner": {

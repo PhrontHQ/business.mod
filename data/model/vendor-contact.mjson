@@ -61,7 +61,7 @@
         }
     },
     "vendor_descriptor": {
-        "object": "./organization.mjson"
+        "object": "../party/organization.mjson"
     },
     "image_descriptor": {
         "object": "./image.mjson"
