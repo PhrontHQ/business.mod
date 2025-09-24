@@ -1,0 +1,25 @@
+{
+    "root": {
+        "object": "mod/data/model/party/role.mjson",
+        "values": {
+            "propertyDescriptors": [
+                {"@": "eventsWithParticipationRole"}
+            ]
+        }
+    },
+
+    "eventsWithParticipationRole": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "eventsWithParticipationRole",
+            "cardinality": -1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "EventDescriptor"},
+            "inversePropertyName": "participationRoles"
+        }
+    },
+    "EventDescriptor": {
+        "object": "../event.mjson"
+    }
+
+}
