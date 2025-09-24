@@ -1,14 +1,14 @@
-var mainService = require("business-data.mod/test/data/client-main.mod/main.mjson").montageObject,
+var mainService = require("business.mod/test/data/client-main.mod/main.mjson").montageObject,
 Criteria = require("mod/core/criteria").Criteria,
 DataStream = require("mod/data/service/data-stream").DataStream,
 DataQuery = require("mod/data/model/data-query").DataQuery,
 Range = require("mod/core/range").Range,
-Event = require("business-data.mod/data/model/event").Event,
-Calendar = require("business-data.mod/data/model/calendar").Calendar,
-EventPerson = require("business-data.mod/data/model/event-person").EventPerson,
-EventAttendee = require("business-data.mod/data/model/event-attendee").EventAttendee,
-EventConferenceData = require("business-data.mod/data/model/event-conference-data").EventConferenceData,
-Person = require("business-data.mod/data/model/person").Person,
+Event = require("business.mod/data/model/event").Event,
+Calendar = require("business.mod/data/model/calendar").Calendar,
+EventPerson = require("business.mod/data/model/event-person").EventPerson,
+EventAttendee = require("business.mod/data/model/event-attendee").EventAttendee,
+EventConferenceData = require("business.mod/data/model/event-conference-data").EventConferenceData,
+Person = require("business.mod/data/model/person").Person,
 EventSystemDescriptors = [Event,Calendar];
 
 exports.crudEvent = function() {

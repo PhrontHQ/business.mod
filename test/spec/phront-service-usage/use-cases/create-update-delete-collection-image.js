@@ -1,6 +1,6 @@
-var clientMainService = require("business-data.mod/test/data/client-main.mod/main.mjson").montageObject,
-Collection = require("business-data.mod/data/model/collection").Collection,
-Image = require("business-data.mod/data/model/image").Image;
+var clientMainService = require("business.mod/test/data/client-main.mod/main.mjson").montageObject,
+Collection = require("business.mod/data/model/collection").Collection,
+Image = require("business.mod/data/model/image").Image;
 
 
 exports.createUpdateDeleteCollectionImage = function() {

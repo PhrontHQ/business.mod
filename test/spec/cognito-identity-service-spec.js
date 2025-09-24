@@ -1,5 +1,5 @@
 // TODO: Can't require anything from montage/data before CognitoIdentityService or we get a circular reference error
-var cognitoIdentityService = require("business-data.mod/data/cognito-identity-service.mjson").montageObject,
+var cognitoIdentityService = require("business.mod/data/cognito-identity-service.mjson").montageObject,
     UserIdentity = require("../model/app/user-identity").UserIdentity,
     DataService = require("mod/data/service/data-service").DataService,
     DataOperation = require("mod/data/service/data-operation").DataOperation,

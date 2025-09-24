@@ -1,6 +1,6 @@
-var PhrontService = require("business-data.mod/data/service/phront-service").PhrontService,
-    OperationCoordinator = require("business-data.mod/data/service/operation-coordinator").OperationCoordinator,
-    mainService = require("business-data.mod/data/main.mjson").montageObject,
+var PhrontService = require("business.mod/data/service/phront-service").PhrontService,
+    OperationCoordinator = require("business.mod/data/service/operation-coordinator").OperationCoordinator,
+    mainService = require("business.mod/data/main.mjson").montageObject,
     DataOperation = require("mod/data/service/data-operation").DataOperation,
     MontageSerializer = require("mod/core/serialization/serializer/montage-serializer").MontageSerializer,
     Deserializer = require("mod/core/serialization/deserializer/montage-deserializer").MontageDeserializer,
@@ -10,7 +10,7 @@ var PhrontService = require("business-data.mod/data/service/phront-service").Phr
     Montage = require("mod/core/core").Montage,
     //to test client side
     //clientMainService = require("../data/client-main.mod/main.mjson").montageObject,
-    //ClientCollection = require("business-data.mod/data/model/collection").Collection,
+    //ClientCollection = require("business.mod/data/model/collection").Collection,
     //operationCoordinator = new OperationCoordinator,
     phrontService = mainService.childServices[0],
     //sphrontClientService = clientMainService.childServices[0],
