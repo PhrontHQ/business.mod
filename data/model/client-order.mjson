@@ -101,7 +101,7 @@
         "object": "./order-line-item.mjson"
     },
     "image_descriptor": {
-        "object": "./image.mjson"
+        "object": "mod/data/model/image.mjson"
     }
 
 }

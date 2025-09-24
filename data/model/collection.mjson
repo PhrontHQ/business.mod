@@ -57,7 +57,7 @@
         }
     },
     "Image_descriptor": {
-        "object": "./image.mjson"
+        "object": "mod/data/model/image.mjson"
     },
     "ruleSet": {
         "prototype": "mod/core/meta/property-descriptor",

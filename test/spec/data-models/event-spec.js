@@ -12,7 +12,7 @@ EventSystemDescriptors = [Event,Calendar],
 phrontServiceConnectionPromise = require("../phront-service-connection").promise;
 
 //Test for loading .js witrh export / mport with require.
-// var LocalizedString = require("business.mod/data/model/localized-string").LocalizedString;
+// var LocalizedString = require("mod/data/model/localized-string").LocalizedString;
 
 
 

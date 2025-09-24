@@ -114,11 +114,11 @@
             "name": "pdfExport",
             "valueType": "object",
             "cardinality": 1,
-            "valueDescriptor": {"@": "AssetDescriptor"}
+            "valueDescriptor": {"@": "DigitalAssetDescriptor"}
         }
     },
-    "AssetDescriptor": {
-        "object": "../asset.mjson"
+    "DigitalAssetDescriptor": {
+        "object": "../digital-asset.mjson"
     },
 
     "notes": {

@@ -1,7 +1,7 @@
 drop table if exists phront."Application";
 drop table if exists phront."UserPool";
 drop table if exists phront."UserPoolClient";
-drop table if exists phront."Asset";
+drop table if exists phront."DigitalAsset";
 drop table if exists phront."Answer";
 drop table if exists phront."B2CCustomerSupplierRelationship";
 drop table if exists phront."B2CCustomerSupplierResponsibleParty";

@@ -91,7 +91,7 @@
         }
     },
     "image_descriptor": {
-        "object": "./image.mjson"
+        "object": "mod/data/model/image.mjson"
     },
     "variants": {
         "prototype": "mod/core/meta/property-descriptor",
