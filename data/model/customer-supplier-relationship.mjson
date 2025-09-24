@@ -35,10 +35,10 @@
         }
     },
     "party_descriptor": {
-        "object": "./party.mjson"
+        "object": "./party/party.mjson"
     },
     "organization_descriptor": {
-        "object": "../party/organization.mjson"
+        "object": "./party/organization.mjson"
     },
     "supplier": {
         "prototype": "mod/core/meta/property-descriptor",

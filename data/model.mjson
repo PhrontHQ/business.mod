@@ -115,11 +115,11 @@
     },
 
     "organization": {
-        "object": "./model/organization.mjson"
+        "object": "./model/party/organization.mjson"
     },
 
     "party": {
-        "object": "./model/party.mjson"
+        "object": "./model/party/party.mjson"
     },
 
     "partyPartyRelationship": {
@@ -127,7 +127,7 @@
     },
 
     "person": {
-        "object": "./model/person.mjson"
+        "object": "./model/party/person.mjson"
     },
 
     "resource": {

@@ -24,7 +24,7 @@
        }
     },
     "employmentPositionDescriptor": {
-        "object": "./employment-position.mjson"
+        "object": "../employment-position.mjson"
     },
     "employees": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -45,7 +45,7 @@
        }
     },
     "B2CCustomerSupplierRelationship": {
-        "object": "./b-2-c-customer-supplier-relationship.mjson"
+        "object": "../b-2-c-customer-supplier-relationship.mjson"
     },
 
     "b2bCustomerRelationships": {
@@ -58,7 +58,7 @@
        }
     },
     "B2BCustomerSupplierRelationship": {
-        "object": "./b-2-b-customer-supplier-relationship.mjson"
+        "object": "../b-2-b-customer-supplier-relationship.mjson"
     },
 
     "supplierRelationships": {
@@ -98,7 +98,7 @@
     },
 
     "customerEngagementQuestionnaireDescriptor": {
-        "object": "./customer-engagement-questionnaire.mjson"
+        "object": "../customer-engagement-questionnaire.mjson"
     }
 
 }

@@ -1,6 +1,6 @@
 {
     "root": {
-        "object": "mod/data/model/party.mjson",
+        "object": "mod/data/model/party/party.mjson",
         "values": {
             "propertyDescriptors": [
                 {"@": "calendars"},
@@ -19,7 +19,7 @@
         }
     },
     "calendar_descriptor": {
-        "object": "./calendar.mjson"
+        "object": "../calendar.mjson"
     },
 
     "eventsParticipatingIn": {
@@ -33,7 +33,7 @@
         }
     },
     "event_descriptor": {
-        "object": "./event.mjson"
+        "object": "../event.mjson"
     }
 
 }

@@ -54,7 +54,7 @@
         }
     },
     "organizationDescriptor": {
-        "object": "../party/organization.mjson"
+        "object": "./party/organization.mjson"
     },
 
 

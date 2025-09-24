@@ -20,6 +20,6 @@
         "object": "./party-party-relationship"
     },
     "PartyDescriptor": {
-        "object": "./party.mjson"
+        "object": "./party/party.mjson"
     }
 }

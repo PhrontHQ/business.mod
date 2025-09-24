@@ -209,7 +209,7 @@
         "object": "./order-line-item.mjson"
     },
     "organization_descriptor": {
-        "object": "../party/organization.mjson"
+        "object": "./party/organization.mjson"
     },
     "storefront_descriptor": {
         "object": "./storefront.mjson"

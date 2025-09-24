@@ -56,7 +56,7 @@
         }
     },
     "PartyDescriptor": {
-        "object": "../party.mjson"
+        "object": "../party/party.mjson"
     },
     "inputComponent": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -132,11 +132,11 @@
         }
     },
     "OrganizationDescriptor": {
-        "object": "../organization.mjson"
+        "object": "./organization.mjson"
     },
 
     "DigitalAssetDescriptor": {
-        "object": "../digital-asset.mjson"
+        "object": "mod/data/model/digital-asset.mjson"
     },
     "attachments": {
         "prototype": "mod/core/meta/property-descriptor",

@@ -34,7 +34,7 @@
     },
 
     "PartyDescriptor": {
-        "object": "./party.mjson"
+        "object": "./party/party.mjson"
     },
 
     "name": {

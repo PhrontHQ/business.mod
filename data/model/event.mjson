@@ -77,7 +77,7 @@
         }
     },
     "PartyDescriptor": {
-        "object": "./party.mjson"
+        "object": "./party/party.mjson"
     },
 
     "ResourceDescriptor": {

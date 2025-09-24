@@ -130,7 +130,7 @@
         }
     },
     "PartyDescriptor": {
-        "object": "./party.mjson"
+        "object": "./party/party.mjson"
     },
     "organizationOwner": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -144,7 +144,7 @@
         }
     },
     "OrganizationDescriptor": {
-        "object": "../party/organization.mjson"
+        "object": "./party/organization.mjson"
     },
 
     "personOwner": {

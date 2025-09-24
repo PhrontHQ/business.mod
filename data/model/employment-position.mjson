@@ -52,7 +52,7 @@
         }
     },
     "organization_descriptor": {
-        "object": "../party/organization.mjson"
+        "object": "./party/organization.mjson"
     },
     "position": {
         "prototype": "mod/core/meta/property-descriptor",
