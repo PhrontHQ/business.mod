@@ -52,7 +52,7 @@
         }
     },
     "role_descriptor": {
-        "object": "./role.mjson"
+        "object": "mod/data/model/party/role.mjson"
     },
     "employmentPositions": {
         "prototype": "mod/core/meta/property-descriptor",

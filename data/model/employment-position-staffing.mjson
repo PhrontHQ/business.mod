@@ -85,7 +85,7 @@
         }
     },
     "role_descriptor": {
-        "object": "./role.mjson"
+        "object": "mod/data/model/party/role.mjson"
     },
     "b2cCustomerRelationships": {
         "prototype": "mod/core/meta/property-descriptor",

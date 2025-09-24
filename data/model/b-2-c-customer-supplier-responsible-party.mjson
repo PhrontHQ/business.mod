@@ -69,7 +69,7 @@
         }
     },
     "roleRankingDescriptor": {
-        "object": "./role-ranking.mjson"
+        "object": "mod/data/model/party/role-ranking.mjson"
     },
 
     "notes": {

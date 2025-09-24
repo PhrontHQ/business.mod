@@ -177,7 +177,7 @@
         }
     },
     "role-descriptor": {
-        "object": "./role.mjson"
+        "object": "mod/data/model/party/role.mjson"
     },
 
     "participationStatusKeys": {

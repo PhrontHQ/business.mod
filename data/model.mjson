@@ -31,7 +31,6 @@
             {"@": "resource"},
             {"@": "personal-relationship"},
             {"@": "event"},
-            {"@": "role"},
             {"@": "calendar"},
             {"@": "conference-entry-point"},
             {"@": "event-conference-data"},
@@ -56,8 +55,7 @@
             {"@": "Answer"},
             {"@": "RespondentQuestionnaireAnswer"},
             {"@": "RespondentQuestionnaireVariableValue"},
-            {"@": "CustomerEngagementQuestionnaire"},
-            {"@": "RoleRanking"}
+            {"@": "CustomerEngagementQuestionnaire"}
         ]
     },
 
@@ -151,10 +149,6 @@
 
     "event": {
         "object": "./model/event.mjson"
-    },
-
-    "role": {
-        "object": "./model/role.mjson"
     },
 
     "calendar": {
@@ -255,9 +249,5 @@
 
     "CustomerEngagementQuestionnaire": {
         "object": "./model/customer-engagement-questionnaire.mjson"
-    },
-
-    "RoleRanking": {
-        "object": "./model/role-ranking.mjson"
     }
 }
