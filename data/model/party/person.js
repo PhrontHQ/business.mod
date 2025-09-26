@@ -1,4 +1,4 @@
-const Person = require("mod/data/model/person").Person,
+const Person = require("mod/data/model/party/person").Person,
     Montage = require("mod/core/core").Montage;
 
 /**

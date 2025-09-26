@@ -1,7 +1,7 @@
 {
   "lang": "en",
-  "name": "business-data.mod",
-  "short_name": "business-data.mod",
+  "name": "business.mod",
+  "short_name": "business.mod",
   "description": "application",
   "start_url": "./?utm_source=homescreen",
   "icons": [

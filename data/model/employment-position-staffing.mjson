@@ -73,7 +73,7 @@
         }
     },
     "person_descriptor": {
-        "object": "../party/person.mjson"
+        "object": "./party/person.mjson"
     },
     "role": {
         "prototype": "mod/core/meta/property-descriptor",

@@ -132,7 +132,7 @@
         }
     },
     "OrganizationDescriptor": {
-        "object": "./organization.mjson"
+        "object": "../party/organization.mjson"
     },
 
     "DigitalAssetDescriptor": {
@@ -160,7 +160,7 @@
     },
 
     "PartyMessagingChannelDescriptor": {
-        "object": "../messaging-channel/party-messaging-channel.mjson"
+        "object": "mod/data/model/messaging-channel/party-messaging-channel.mjson"
     },
     "mentions": {
         "prototype": "mod/core/meta/property-descriptor",

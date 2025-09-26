@@ -39,7 +39,7 @@
         }
     },
     "PartyDescriptor": {
-        "object": "../party/person.mjson"
+        "object": "./party/person.mjson"
     },
     "organizationOwner": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -68,7 +68,7 @@
         }
     },
     "PersonDescriptor": {
-        "object": "../party/person.mjson"
+        "object": "./party/person.mjson"
     },
 
     "resourceOwner": {

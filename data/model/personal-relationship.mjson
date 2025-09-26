@@ -37,7 +37,7 @@
         }
     },
     "person_descriptor": {
-        "object": "../party/person.mjson"
+        "object": "./party/person.mjson"
     },
     "firstPersonRelationshipRole": {
         "prototype": "mod/core/meta/property-descriptor",

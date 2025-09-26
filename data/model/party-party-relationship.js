@@ -1,4 +1,4 @@
-var Party = require("./party").Party;
+var Party = require("./party/party").Party;
 /**
  * @class PartyPartyRelationship
  * @extends DataObject

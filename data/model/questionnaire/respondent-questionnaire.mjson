@@ -43,7 +43,7 @@
         }
     },
     "personDescriptor": {
-        "object": "../person.mjson"
+        "object": "../party/person.mjson"
     },
 
     "questionnaire": {
@@ -118,7 +118,7 @@
         }
     },
     "DigitalAssetDescriptor": {
-        "object": "../digital-asset.mjson"
+        "object": "mod/data/model/digital-asset.mjson"
     },
 
     "notes": {

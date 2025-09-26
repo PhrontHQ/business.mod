@@ -40,7 +40,7 @@
         }
     },
     "AddressDescriptor": {
-        "object": "./messaging-channel/postal-address.mjson"
+        "object": "mod/data/model/messaging-channel/postal-address.mjson"
     },
     "emailAddresses": {
         "prototype": "mod/core/meta/property-descriptor",

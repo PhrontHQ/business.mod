@@ -111,7 +111,7 @@ if(!useMr) {
         FIXME!!!
         WARNING, when debugging locally with links, we end up with the same module loaded twice, causing errors, with filenames like:
 
-            /Users/benoit/Sites/marchant/plum/plumming-data-worker/node_modules/business-data.mod/node_modules/montage/core/target.js
+            /Users/benoit/Sites/marchant/plum/plumming-data-worker/node_modules/business.mod/node_modules/montage/core/target.js
             and
             /Users/benoit/Sites/marchant/plum/plumming-data-worker/node_modules/montage/core/target.js
 

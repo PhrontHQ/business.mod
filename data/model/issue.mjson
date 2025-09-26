@@ -113,7 +113,7 @@
         }
     },
     "PersonDescriptor": {
-        "object": "../party/person.mjson"
+        "object": "./party/person.mjson"
     },
     "assignee": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -137,7 +137,7 @@
         }
     },
     "DigitalAssetDescriptor": {
-        "object": "./digital-asset.mjson"
+        "object": "mod/data/model/digital-asset.mjson"
     },
     "attachments": {
         "prototype": "mod/core/meta/property-descriptor",

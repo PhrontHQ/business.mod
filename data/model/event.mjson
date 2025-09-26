@@ -332,7 +332,7 @@
         }
     },
     "PersonDescriptor": {
-        "object": "../party/person.mjson"
+        "object": "./party/person.mjson"
     },
 
     "isAllDay": {
@@ -477,7 +477,7 @@
         }
     },
     "DigitalAssetDescriptor": {
-        "object": "./digital-asset.mjson"
+        "object": "mod/data/model/digital-asset.mjson"
     },
     "serviceEngagement": {
         "prototype": "mod/core/meta/property-descriptor",

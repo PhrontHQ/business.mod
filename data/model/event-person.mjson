@@ -53,6 +53,6 @@
         }
     },
     "person-descriptor": {
-        "object": "../party/person.mjson"
+        "object": "./party/person.mjson"
     }
 }

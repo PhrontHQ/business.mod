@@ -26,7 +26,7 @@
         "object": "mod/data/model/data-object.mjson"
     },
     "PartyMessagingChannelDescriptor": {
-        "object": "../messaging-channel/party-messaging-channel.mjson"
+        "object": "mod/data/model/messaging-channel/party-messaging-channel.mjson"
     },
     "author": {
         "prototype": "mod/core/meta/property-descriptor",

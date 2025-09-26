@@ -26,7 +26,7 @@
        }
     },
     "respondentQuestionnairesDescriptor": {
-        "object": "./questionnaire/respondent-questionnaire.mjson"
+        "object": "../questionnaire/respondent-questionnaire.mjson"
     },
 
     "employmentHistory": {
@@ -40,7 +40,7 @@
        }
     },
     "employmentPositionStaffingDescriptor": {
-        "object": "./employment-position-staffing.mjson"
+        "object": "../employment-position-staffing.mjson"
     },
 
     "serviceProductVariantsProvided": {
@@ -55,7 +55,7 @@
     },
 
     "serviceProductVariantsDescriptor": {
-        "object": "./service-product-variant.mjson"
+        "object": "../service-product-variant.mjson"
     },
 
     "supplierRelationships": {
@@ -69,7 +69,7 @@
        }
     },
     "B2CCustomerSupplierRelationshipDescriptor": {
-        "object": "./b-2-c-customer-supplier-relationship.mjson"
+        "object": "../b-2-c-customer-supplier-relationship.mjson"
     },
 
 
@@ -84,7 +84,7 @@
        }
     },
     "B2CCustomerSupplierResponsiblePartyDescriptor": {
-        "object": "./b-2-c-customer-supplier-responsible-party.mjson"
+        "object": "../b-2-c-customer-supplier-responsible-party.mjson"
     },
 
     "firstPersonalRelationships": {
@@ -98,7 +98,7 @@
        }
     },
     "PersonalRelationshipDescriptor": {
-        "object": "./personal-relationship.mjson"
+        "object": "../personal-relationship.mjson"
     },
 
     "secondPersonalRelationships": {

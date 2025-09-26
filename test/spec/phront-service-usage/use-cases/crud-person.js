@@ -5,7 +5,7 @@ DataQuery = require("mod/data/model/data-query").DataQuery,
 Collection = require("business.mod/data/model/collection").Collection,
 Image = require("business.mod/data/model/image").Image,
 Organization = require("business.mod/data/model/party/organization").Organization,
-PostalAddress = require("business.mod/data/model/messaging-channel/postal-address").PostalAddress,
+PostalAddress = require("mod/data/model/messaging-channel/postal-address").PostalAddress,
 Service = require("business.mod/data/model/service").Service,
 Person = require("business.mod/data/model/person").Person;
 

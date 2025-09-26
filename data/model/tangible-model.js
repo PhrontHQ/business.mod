@@ -1,4 +1,4 @@
-var Intangible = require("./intangible").Intangible;
+var Intangible = require("mod/data/model/party/intangible").Intangible;
 /**
  * @class TangibleModel
  * @extends Thing

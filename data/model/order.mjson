@@ -86,7 +86,7 @@
         }
     },
     "address_descriptor": {
-        "object": "./messaging-channel/postal-address.mjson"
+        "object": "mod/data/model/messaging-channel/postal-address.mjson"
     },
     "doesBillingAddressMatchShippingAddress": {
         "prototype": "mod/core/meta/property-descriptor",

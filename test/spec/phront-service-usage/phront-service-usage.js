@@ -71,7 +71,7 @@ exports.promise = new Promise(function(resolve,reject) {
                 var serviceDescriptor = phrontService.objectDescriptorWithModuleId("data/model/service"),
 
                 //This ends up calling module-object-descriptor.js:149 - getObjectDescriptorWithModuleId()
-                //which causes node to try to business-data.mod/node_modules/montage/core/meta/module-object-descriptor.mjson
+                //which causes node to try to business.mod/node_modules/montage/core/meta/module-object-descriptor.mjson
                 //whih is bogus....
                 //console.log("Montage.getInfoForObject(objectDescriptor): ", Montage.getInfoForObject(objectDescriptor));
 
@@ -93,7 +93,7 @@ exports.promise = new Promise(function(resolve,reject) {
             var objectDescriptor = phrontService.objectDescriptorWithModuleId("data/model/image");
 
             //This ends up calling module-object-descriptor.js:149 - getObjectDescriptorWithModuleId()
-            //which causes node to try to business-data.mod/node_modules/montage/core/meta/module-object-descriptor.mjson
+            //which causes node to try to business.mod/node_modules/montage/core/meta/module-object-descriptor.mjson
             //whih is bogus....
             //console.log("Montage.getInfoForObject(objectDescriptor): ", Montage.getInfoForObject(objectDescriptor));
 

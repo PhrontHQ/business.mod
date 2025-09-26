@@ -159,7 +159,7 @@
         }
     },
     "PersonDescriptor": {
-        "object": "../party/person.mjson"
+        "object": "./party/person.mjson"
     },
 
     "resourceOwner": {
