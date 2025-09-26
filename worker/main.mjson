@@ -13,6 +13,6 @@
     },
 
     "mainDataService": {
-        "object": "../data/main.mod/main.mjson"
+        "object": "../data/main.mjson"
     }
 }

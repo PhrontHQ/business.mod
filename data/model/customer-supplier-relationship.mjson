@@ -1,0 +1,65 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "CustomerSupplierRelationship",
+            "propertyDescriptors": [
+                {"@": "customer"},
+                {"@": "supplier"},
+                {"@": "orders"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./customer-supplier-relationship.mjson"
+            },
+            "exportName": "CustomerSupplierRelationship",
+            "module": {
+                "%": "./customer-supplier-relationship"
+            },
+            "object":{"@": "customer-supplier-relationship"},
+            "parent":{"@": "party-party-relationship"}
+        }
+    },
+    "customer-supplier-relationship": {
+        "object": "./customer-supplier-relationship"
+    },
+    "party-party-relationship": {
+        "object": "./party-party-relationship.mjson"
+    },
+    "customer": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "customer",
+            "valueType": "object",
+            "valueDescriptor": {"@": "party_descriptor"},
+            "cardinality": 1
+        }
+    },
+    "party_descriptor": {
+        "object": "./party/party.mjson"
+    },
+    "organization_descriptor": {
+        "object": "./party/organization.mjson"
+    },
+    "supplier": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "supplier",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "organization_descriptor"}
+        }
+    },
+    "orders": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "orders",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "orderDescriptor"}
+        }
+    },
+    "orderDescriptor": {
+        "object": "./order.mjson"
+    }
+
+}

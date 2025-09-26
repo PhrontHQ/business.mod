@@ -20,21 +20,21 @@ var aTestStr =
                 {"@": "longitude"}
             ],
             "objectDescriptorModule": {
-                "%": "data/main.mod/model/messaging-channel/postal-address.mjson"
+                "%": "data/model/messaging-channel/postal-address.mjson"
             },
             "exportName": "Address",
             "module": {
-                "%": "data/main.mod/model/messaging-channel/postal-address"
+                "%": "data/model/messaging-channel/postal-address"
             },
             "object":{"@": "address"},
             "parent":{"@": "objectDescriptor"}
         }
     },
     "address": {
-        "object": "data/main.mod/model/messaging-channel/postal-address"
+        "object": "data/model/messaging-channel/postal-address"
     },
     "objectDescriptor": {
-        "object": "data/main.mod/model/data-object.mjson"
+        "object": "data/model/data-object.mjson"
     },
     "name": {
         "prototype": "mod/core/meta/property-descriptor",

@@ -1,7 +1,0 @@
-https://console.neon.tech/app/projects/odd-truth-944759
-
-https://neon.tech/docs/guides/aws-lambda
-
-https://neon.tech/docs/connect/connect-from-any-app
-
-

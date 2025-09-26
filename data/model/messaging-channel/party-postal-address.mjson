@@ -1,0 +1,26 @@
+{
+    "root": {
+        "object": "mod/data/model/messaging-channel/party-postal-address.mjson",
+        "values": {
+            "propertyDescriptors": [
+                {"@": "hostedEvents"}
+            ]
+        }
+    },
+
+    "hostedEvents": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "hostedEvents",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "location",
+            "valueDescriptor": {"@": "EventDescriptor"}
+        }
+    },
+
+    "EventDescriptor": {
+        "object": "../event.mjson"
+    }
+
+}
