@@ -1,0 +1,104 @@
+{
+    "root": {
+        "object": "mod/data/model/party/organization.mjson",
+        "values": {
+            "propertyDescriptors": [
+                {"@": "employmentPositions"},
+                {"@": "b2cCustomerRelationships"},
+                {"@": "b2bCustomerRelationships"},
+                {"@": "supplierRelationships"},
+                {"@": "services"},
+                {"@": "customerEngagementQuestionnaires"}
+            ]
+        }
+    },
+
+    "employmentPositions": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "employmentPositions",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "employer",
+            "valueDescriptor": {"@": "employmentPositionDescriptor"}
+       }
+    },
+    "employmentPositionDescriptor": {
+        "object": "../employment-position.mjson"
+    },
+    "employees": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "employees",
+            "valueType": "object",
+            "cardinality": -1,
+            "definition": "employmentPositions.map{staffingHistory.employee}"
+       }
+    },
+    "b2cCustomerRelationships": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "b2cCustomerRelationships",
+            "valueType": "array",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "B2CCustomerSupplierRelationship"}
+       }
+    },
+    "B2CCustomerSupplierRelationship": {
+        "object": "../b-2-c-customer-supplier-relationship.mjson"
+    },
+
+    "b2bCustomerRelationships": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "b2bCustomerRelationships",
+            "valueType": "array",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "B2BCustomerSupplierRelationship"}
+       }
+    },
+    "B2BCustomerSupplierRelationship": {
+        "object": "../b-2-b-customer-supplier-relationship.mjson"
+    },
+
+    "supplierRelationships": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "supplierRelationships",
+            "valueType": "array",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "B2BCustomerSupplierRelationship"}
+       }
+    },
+
+    "services": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "services",
+            "valueType": "array",
+            "cardinality": -1,
+            "inversePropertyName": "vendor",
+            "valueDescriptor": {"@": "servicesDescriptor"}
+       }
+    },
+
+    "servicesDescriptor": {
+        "object": "../service.mjson"
+    },
+
+    "customerEngagementQuestionnaires": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "customerEngagementQuestionnaires",
+            "valueType": "array",
+            "cardinality": -1,
+            "inversePropertyName": "organization",
+            "valueDescriptor": {"@": "customerEngagementQuestionnaireDescriptor"}
+       }
+    },
+
+    "customerEngagementQuestionnaireDescriptor": {
+        "object": "../customer-engagement-questionnaire.mjson"
+    }
+
+}

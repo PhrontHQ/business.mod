@@ -147,9 +147,9 @@
                 "9999",
                 "-S",
                 "-C",
-                "${workspaceFolder}/apps/phront-desk/node_modules/business-data.mod/dev/local-ssl-certificate-authority/localhost.crt",
+                "${workspaceFolder}/apps/phront-desk/node_modules/business.mod/dev/local-ssl-certificate-authority/localhost.crt",
                 "-K",
-                "${workspaceFolder}/apps/phront-desk/node_modules/business-data.mod/dev/local-ssl-certificate-authority/localhost.key"
+                "${workspaceFolder}/apps/phront-desk/node_modules/business.mod/dev/local-ssl-certificate-authority/localhost.key"
             ],
             "trace": false,
             "enableContentValidation": false,

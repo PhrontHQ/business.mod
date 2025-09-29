@@ -17,8 +17,8 @@ var TimeRangeView = require("../time-range-view").TimeRangeView,
         ],
         Criteria = require("mod/core/criteria").Criteria,
         DataQuery = require("mod/data/model/data-query").DataQuery,
-        Calendar = require("data/main.mod/model/calendar").Calendar,
-        Event = require("data/main.mod/model/event").Event,
+        Calendar = require("data/model/calendar").Calendar,
+        Event = require("data/model/event").Event,
         Range = require("mod/core/range").Range;
 
 /**

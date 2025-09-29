@@ -1,0 +1,148 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "RespondentQuestionnaire",
+            "propertyDescriptors": [
+                {"@": "respondent"},
+                {"@": "questionnaire"},
+                {"@": "respondentVariableValues"},
+                {"@": "respondentAnswers"},
+                {"@": "completionDate"},
+                {"@": "isMandatory"},
+                {"@": "pdfExport"},
+                {"@": "notes"},
+                {"@": "events"}
+            ],
+            "objectDescriptorModule": {
+                "%":"./respondent-questionnaire.mjson"
+            },
+            "exportName": "RespondentQuestionnaire",
+            "module": {
+                "%": "./respondent-questionnaire"
+            },
+            "object": {"@": "questionnairePrototype"},
+            "parent":{"@": "objectDescriptor"}
+        }
+    },
+    "questionnairePrototype": {
+        "object": "./respondent-questionnaire"
+    },
+    "objectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "respondent": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "respondent",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "respondentQuestionnaires",
+            "valueDescriptor": {"@": "personDescriptor"}
+        }
+    },
+    "personDescriptor": {
+        "object": "../party/person.mjson"
+    },
+
+    "questionnaire": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "questionnaire",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "respondentQuestionnaires",
+            "valueDescriptor": {"@": "questionnaireDescriptor"}
+        }
+    },
+    "questionnaireDescriptor": {
+        "object": "./questionnaire.mjson"
+    },
+
+    "respondentVariableValues": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentVariableValues",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "respondentQuestionnaire",
+            "valueDescriptor": {"@": "respondentQuestionnaireVariableValueDescriptor"}
+        }
+    },
+    "respondentQuestionnaireVariableValueDescriptor": {
+        "object": "./respondent-questionnaire-variable-value.mjson"
+    },
+
+    "respondentAnswers": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentAnswers",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "respondentQuestionnaire",
+            "valueDescriptor": {"@": "respondentQuestionnaireAnswerDescriptor"}
+        }
+    },
+    "respondentQuestionnaireAnswerDescriptor": {
+        "object": "./respondent-questionnaire-answer.mjson"
+    },
+
+    "completionDate": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "completionDate",
+            "valueDescriptor": {"@": "DateDescriptor"}
+        }
+    },
+    "DateDescriptor": {
+        "object": "mod/core/date.mjson"
+    },
+
+    "isMandatory": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "isMandatory",
+            "valueType": "boolean",
+            "cardinality": 1
+        }
+    },
+
+    "pdfExport": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "pdfExport",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "DigitalAssetDescriptor"}
+        }
+    },
+    "DigitalAssetDescriptor": {
+        "object": "mod/data/model/digital-asset.mjson"
+    },
+
+    "notes": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "notes",
+            "isLocalizable": true,
+            "valueType": "string",
+            "description": "Add comments to questions for internal use"
+        }
+    },
+
+    "events": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "events",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "respondentQuestionnaires",
+            "valueDescriptor": {"@": "eventDescriptor"}
+        }
+    },
+    "eventDescriptor": {
+        "object": "../event.mjson"
+    }
+
+}

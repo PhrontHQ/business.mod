@@ -1,0 +1,248 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/model",
+        "values": {
+            "name": "BusinessDataModel",
+            "exportName": "BusinessDataModel",
+            "objectDescriptors": {"=": "@modelObjectDescriptors.concat(@ModDataModel.objectDescriptors)"}
+        }
+    },
+
+    "modelObjectDescriptors": {
+        "value": [
+            {"@": "DataObjectType"},
+            {"@": "collection"},
+            {"@": "product"},
+            {"@": "tangibleProduct"},
+            {"@": "intangibleProduct"},
+            {"@": "service"},
+            {"@": "serviceEngagement"},
+            {"@": "productVariant"},
+            {"@": "tangibleProductVariant"},
+            {"@": "intangibleProductVariant"},
+            {"@": "serviceProductVariant"},
+            {"@": "productVariantPricePair"},
+            {"@": "money"},
+            {"@": "party"},
+            {"@": "partyPartyRelationship"},
+            {"@": "organization"},
+            {"@": "person"},
+            {"@": "resource"},
+            {"@": "personal-relationship"},
+            {"@": "event"},
+            {"@": "calendar"},
+            {"@": "conference-entry-point"},
+            {"@": "event-conference-data"},
+            {"@": "event-person"},
+            {"@": "order"},
+            {"@": "orderLineItem"},
+            {"@": "orderTransaction"},
+            {"@": "position"},
+            {"@": "EmploymentPosition"},
+            {"@": "EmploymentType"},
+            {"@": "EmploymentPositionRelationship"},
+            {"@": "EmploymentPositionStaffing"},
+            {"@": "CustomerSupplierRelationship"},
+            {"@": "B2CCustomerSupplierRelationship"},
+            {"@": "B2CCustomerSupplierResponsibleParty"},
+            {"@": "B2BCustomerSupplierRelationship"},
+            {"@": "Questionnaire"},
+            {"@": "Question"},
+            {"@": "Variable"},
+            {"@": "QuestionnaireQuestion"},
+            {"@": "RespondentQuestionnaire"},
+            {"@": "Answer"},
+            {"@": "RespondentQuestionnaireAnswer"},
+            {"@": "RespondentQuestionnaireVariableValue"},
+            {"@": "CustomerEngagementQuestionnaire"}
+        ]
+    },
+
+    "ModDataModel": {
+        "object": "mod/data/model/model.mjson"
+    },
+
+    "DataObjectType": {
+        "object": "./model/data-object-type.mjson"
+    },
+
+    "collection": {
+        "object": "./model/collection.mjson"
+    },
+
+    "product": {
+        "object": "./model/product.mjson"
+    },
+
+    "tangibleProduct": {
+        "object": "./model/tangible-product.mjson"
+    },
+
+    "intangibleProduct": {
+        "object": "./model/intangible-product.mjson"
+    },
+
+    "service": {
+        "object": "./model/service.mjson"
+    },
+
+    "serviceEngagement": {
+        "object": "./model/service-engagement.mjson"
+    },
+
+    "productVariant": {
+        "object": "./model/product-variant.mjson"
+    },
+
+    "tangibleProductVariant": {
+        "object": "./model/tangible-product-variant.mjson"
+    },
+
+    "intangibleProductVariant": {
+        "object": "./model/intangible-product-variant.mjson"
+    },
+
+    "serviceProductVariant": {
+        "object": "./model/service-product-variant.mjson"
+    },
+
+    "productVariantPricePair": {
+        "object": "./model/product-variant-price-pair.mjson"
+    },
+
+    "money": {
+        "object": "./model/money.mjson"
+    },
+
+    "organization": {
+        "object": "./model/party/organization.mjson"
+    },
+
+    "party": {
+        "object": "./model/party/party.mjson"
+    },
+
+    "partyPartyRelationship": {
+        "object": "./model/party-party-relationship.mjson"
+    },
+
+    "person": {
+        "object": "./model/party/person.mjson"
+    },
+
+    "resource": {
+        "object": "./model/resource.mjson"
+    },
+
+    "personal-relationship": {
+        "object": "./model/personal-relationship.mjson"
+    },
+
+    "AuthenticationPolicy": {
+        "object": "mod/data/service/authentication-policy"
+    },
+
+    "event": {
+        "object": "./model/event.mjson"
+    },
+
+    "calendar": {
+        "object": "./model/calendar.mjson"
+    },
+
+    "conference-entry-point": {
+        "object": "./model/conference-entry-point.mjson"
+    },
+
+    "event-conference-data": {
+        "object": "./model/event-conference-data.mjson"
+    },
+
+    "event-person": {
+        "object": "./model/event-person.mjson"
+    },
+
+    "order": {
+        "object": "./model/order.mjson"
+    },
+
+    "orderLineItem": {
+        "object": "./model/order-line-item.mjson"
+    },
+
+    "orderTransaction": {
+        "object": "./model/order-transaction.mjson"
+    },
+
+    "position": {
+        "object": "./model/position.mjson"
+    },
+
+    "EmploymentPosition": {
+        "object": "./model/employment-position.mjson"
+    },
+
+    "EmploymentType": {
+        "object": "./model/employment-type.mjson"
+    },
+
+    "EmploymentPositionRelationship": {
+        "object": "./model/employment-position-relationship.mjson"
+    },
+
+    "EmploymentPositionStaffing": {
+        "object": "./model/employment-position-staffing.mjson"
+    },
+
+    "CustomerSupplierRelationship": {
+        "object": "./model/customer-supplier-relationship.mjson"
+    },
+
+    "B2CCustomerSupplierRelationship": {
+        "object": "./model/b-2-c-customer-supplier-relationship.mjson"
+    },
+
+    "B2CCustomerSupplierResponsibleParty": {
+        "object": "./model/b-2-c-customer-supplier-responsible-party.mjson"
+    },
+
+    "B2BCustomerSupplierRelationship": {
+        "object": "./model/b-2-b-customer-supplier-relationship.mjson"
+    },
+
+    "Questionnaire": {
+        "object": "./model/questionnaire/questionnaire.mjson"
+    },
+
+    "Question": {
+        "object": "./model/questionnaire/question.mjson"
+    },
+
+    "Variable": {
+        "object": "./model/questionnaire/variable.mjson"
+    },
+
+    "QuestionnaireQuestion": {
+        "object": "./model/questionnaire/questionnaire-question.mjson"
+    },
+
+    "RespondentQuestionnaire": {
+        "object": "./model/questionnaire/respondent-questionnaire.mjson"
+    },
+
+    "Answer": {
+        "object": "./model/questionnaire/answer.mjson"
+    },
+
+    "RespondentQuestionnaireAnswer": {
+        "object": "./model/questionnaire/respondent-questionnaire-answer.mjson"
+    },
+
+    "RespondentQuestionnaireVariableValue": {
+        "object": "./model/questionnaire/respondent-questionnaire-variable-value.mjson"
+    },
+
+    "CustomerEngagementQuestionnaire": {
+        "object": "./model/customer-engagement-questionnaire.mjson"
+    }
+}

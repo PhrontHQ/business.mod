@@ -1,0 +1,49 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Resource",
+            "propertyDescriptors": [
+                {"@": "name"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./resource.mjson"
+            },
+            "exportName": "Resource",
+            "module": {
+                "%": "./resource"
+            },
+            "object":{"@": "resource"},
+            "parent":{"@": "PartyDescriptor"},
+            "userInterfaceDescriptorModules": {
+                "*": {
+                    "%": "./resource-ui-descriptor.mjson"
+                },
+                "mod/ui/list-item.reel": {
+                    "%": "./resource-list-item-ui-descriptor.mjson"
+                },
+                "mod/ui/cascading-list.reel": {
+                    "%": "./resource-cascading-list-ui-descriptor.mjson"
+                }
+            }
+
+        }
+    },
+    "resource": {
+        "object": "./resource"
+    },
+
+    "PartyDescriptor": {
+        "object": "./party/party.mjson"
+    },
+
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "isSearchable": true
+        }
+    }
+
+}

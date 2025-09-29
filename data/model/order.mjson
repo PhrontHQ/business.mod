@@ -1,0 +1,120 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Order",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "customer"},
+                {"@": "orderLineItems"},
+                {"@": "transactions"},
+                {"@": "billingAddress"},
+                {"@": "shippingAddress"},
+                {"@": "doesBillingAddressMatchShippingAddress"},
+                {"@": "cancellationDate"},
+                {"@": "cancellationReason"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./order.mjson"
+            },
+            "exportName": "Order",
+            "module": {
+                "%": "./order"
+            },
+            "object":{"@": "order"},
+            "parent":{"@": "Object"}
+        }
+    },
+    "order": {
+        "object": "./order"
+    },
+    "Object": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "customer": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "customer",
+            "valueType": "object"
+        }
+    },
+     "orderLineItems": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "orderLineItems",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "order-line-item_descriptor"}
+        }
+    },
+     "order-line-item_descriptor": {
+        "object": "./order-line-item.mjson"
+    },
+    "transactions": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "transactions",
+            "cardinality": -1,
+            "inversePropertyName": "order",
+            "valueDescriptor": {"@": "order-transaction"}
+        }
+    },
+     "order-transaction": {
+        "object": "./order-transaction.mjson"
+    },
+
+    "billingAddress": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "billingAddress",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "address_descriptor"}
+        }
+    },
+    "shippingAddress": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "shippingAddress",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "address_descriptor"}
+        }
+    },
+    "address_descriptor": {
+        "object": "mod/data/model/messaging-channel/postal-address.mjson"
+    },
+    "doesBillingAddressMatchShippingAddress": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "doesBillingAddressMatchShippingAddress",
+            "valueType": "boolean"
+        }
+    },
+    "cancellationDate": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "cancellationDate",
+            "valueType": "date"
+        }
+    },
+    "cancellationReason": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "cancellationReason",
+            "cardinality": 1,
+            "valueType": "enum",
+            "enumValues": [
+                "Customer",
+                "Declined",
+                "Fraud",
+                "Inventory",
+                "Other"
+            ]
+        }
+    }
+}

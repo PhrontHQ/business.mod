@@ -1,0 +1,122 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "EventAttendee",
+            "propertyDescriptors": [
+                {"@": "scheduledTimeRange"},
+                {"@": "actualTimeRange"},
+                {"@": "role"},
+                {"@": "calendar"},
+                {"@": "isOrganizer"},
+                {"@": "isResource"},
+                {"@": "isOptional"},
+                {"@": "participationStatus"},
+                {"@": "comment"},
+                {"@": "additionalGuestCount"}
+            ],
+            "objectDescriptorModule": {
+                "%":"./event-attendee.mjson"
+            },
+            "exportName": "EventAttendee",
+            "module": {
+                "%": "./event-attendee"
+            },
+            "object":{"@": "EventAttendee"},
+            "parent":{"@": "EventPerson"}
+        }
+    },
+    "EventAttendee": {
+        "object": "./event-attendee"
+    },
+    "EventPerson": {
+        "object": "./event-person.mjson"
+    },
+    "scheduledTimeRange": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "scheduledTimeRange",
+            "valueType": "date",
+            "collectionValueType": "range",
+            "isSearchable": true
+        }
+    },
+     "actualTimeRange": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "actualTimeRange",
+            "valueType": "date",
+            "collectionValueType": "range",
+            "isSearchable": true
+        }
+    },
+
+    "role": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "role",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "role-descriptor"}
+        }
+    },
+    "role-descriptor": {
+        "object": "mod/data/model/party/role.mjson"
+    },
+    "calendar": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "calendar",
+            "valueType": "object",
+            "cardinality": 1,
+            "isSearchable": true,
+            "valueDescriptor": {"@": "calendar-descriptor"}
+        }
+    },
+    "calendar-descriptor": {
+        "object": "./calendar.mjson"
+    },
+
+    "isOrganizer": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "isOrganizer",
+            "valueType": "boolean"
+        }
+    },
+    "isResource": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "isResource",
+            "valueType": "boolean"
+        }
+    },
+    "isOptional": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "isOptional",
+            "valueType": "boolean"
+        }
+    },
+    "participationStatus": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "participationStatus",
+            "valueType": "string"
+        }
+    },
+    "comment": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "comment",
+            "valueType": "string"
+        }
+    },
+    "additionalGuestCount": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "additionalGuestCount",
+            "valueType": "number"
+        }
+    }
+}

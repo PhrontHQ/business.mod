@@ -1,0 +1,127 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "DataObject",
+            "propertyDescriptors": [
+                {"@": "owner"},
+                {"@": "organizationOwner"},
+                {"@": "personOwner"},
+                {"@": "resourceOwner"},
+                {"@": "employmentPositionStaffingOwner"},
+                {"@": "dataObjectPackageName"},
+                {"@": "dataObjectModuleId"},
+                {"@": "dataObjectPrototype"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./data-object-default.mjson"
+            },
+            "exportName": "DataObjectDefault",
+            "module": {
+                "%": "./data-object-default"
+            },
+            "parent":{"@": "DataObjectDescriptor"}
+        }
+    },
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+    "owner": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "owner",
+            "valueType": "object",
+            "description": "The object owning this calendar",
+            "isSearchable": true,
+            "cardinality": 1,
+            "inversePropertyName": "calendars",
+            "valueDescriptor": {"@": "PartyDescriptor"}
+        }
+    },
+    "PartyDescriptor": {
+        "object": "./party/person.mjson"
+    },
+    "organizationOwner": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "organizationOwner",
+            "valueType": "object",
+            "description": "The object owning this calendar",
+            "cardinality": 1,
+            "inversePropertyName": "calendars",
+            "valueDescriptor": {"@": "OrganizationDescriptor"}
+        }
+    },
+    "OrganizationDescriptor": {
+        "object": "./party/organization.mjson"
+    },
+
+    "personOwner": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "personOwner",
+            "valueType": "object",
+            "description": "The object owning this calendar",
+            "cardinality": 1,
+            "inversePropertyName": "calendars",
+            "valueDescriptor": {"@": "PersonDescriptor"}
+        }
+    },
+    "PersonDescriptor": {
+        "object": "./party/person.mjson"
+    },
+
+    "resourceOwner": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "resourceOwner",
+            "valueType": "object",
+            "description": "The object owning this calendar",
+            "cardinality": 1,
+            "inversePropertyName": "calendars",
+            "valueDescriptor": {"@": "ResourceDescriptor"}
+        }
+    },
+    "ResourceDescriptor": {
+        "object": "./resource.mjson"
+    },
+
+    "employmentPositionStaffingOwner": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "employmentPositionStaffingOwner",
+            "valueType": "object",
+            "description": "The object owning this calendar",
+            "cardinality": 1,
+            "inversePropertyName": "calendars",
+            "valueDescriptor": {"@": "EmploymentPositionStaffingOwnerDescriptor"}
+        }
+    },
+    "EmploymentPositionStaffingOwnerDescriptor": {
+        "object": "./employment-position-staffing.mjson"
+    },
+
+    "dataObjectPackageName": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "dataObjectPackageName",
+            "valueType": "string"
+        }
+    },
+    "dataObjectModuleId": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "dataObjectModuleId",
+            "valueType": "string"
+        }
+    },
+    "dataObjectPrototype": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "dataObjectPrototype",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "DataObjectDescriptor"}
+        }
+    }
+}

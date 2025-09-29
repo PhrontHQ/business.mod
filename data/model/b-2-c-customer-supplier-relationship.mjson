@@ -1,0 +1,103 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "B2CCustomerSupplierRelationship",
+            "propertyDescriptors": [
+                {"@": "customer"},
+                {"@": "notes"},
+                {"@": "staffRelationships"},
+                {"@": "responsiblePartyRelationships"},
+                {"@": "customerWantsPhoneReminders"},
+                {"@": "customerWantsEmailReminders"},
+                {"@": "customerWantsSMSReminders"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./b-2-c-customer-supplier-relationship.mjson"
+            },
+            "exportName": "B2CCustomerSupplierRelationship",
+            "module": {
+                "%": "./b-2-c-customer-supplier-relationship"
+            },
+            "object":{"@": "b-2-c-customer-supplier-relationship"},
+            "parent":{"@": "customer-supplier-relationship"}
+        }
+    },
+    "b-2-c-customer-supplier-relationship": {
+        "object": "./b-2-c-customer-supplier-relationship"
+    },
+    "customer-supplier-relationship": {
+        "object": "./customer-supplier-relationship.mjson"
+    },
+    "customer": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "customer",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "supplierRelationships",
+            "valueDescriptor": {"@": "person_descriptor"}
+        }
+    },
+    "person_descriptor": {
+        "object": "./party/person.mjson"
+    },
+
+    "notes": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "notes",
+            "valueType": "string"
+        }
+    },
+
+    "staffRelationships": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "staffRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "b2cCustomerRelationships",
+            "valueDescriptor": {"@": "EmploymentPositionStaffingDescriptor"}
+        }
+    },
+    "EmploymentPositionStaffingDescriptor": {
+        "object": "./employment-position-staffing.mjson"
+    },
+
+    "responsiblePartyRelationships": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "responsiblePartyRelationships",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "b2cCustomerSupplierRelationship",
+            "valueDescriptor": {"@": "B2CCustomerSupplierResponsiblePartyDescriptor"}
+        }
+    },
+    "B2CCustomerSupplierResponsiblePartyDescriptor": {
+        "object": "./b-2-c-customer-supplier-responsible-party.mjson"
+    },
+
+    "customerWantsPhoneReminders": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "customerWantsPhoneReminders",
+            "valueType": "boolean"
+        }
+    },
+    "customerWantsEmailReminders": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "customerWantsEmailReminders",
+            "valueType": "boolean"
+        }
+    },
+    "customerWantsSMSReminders": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "customerWantsSMSReminders",
+            "valueType": "boolean"
+        }
+    }
+}

@@ -1,0 +1,129 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "CustomerEngagementQuestionnaire",
+            "propertyDescriptors": [
+                {"@": "organization"},
+                {"@": "services"},
+                {"@": "questionnaire"},
+                {"@": "rolesRequiredToComplete"},
+                {"@": "rolesOptionalToComplete"},
+                {"@": "participationStatusRequiredByEvent"},
+                {"@": "participationStatusOptionalForEvent"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./customer-engagement-questionnaire.mjson"
+            },
+            "exportName": "CustomerEngagementQuestionnaire",
+            "module": {
+                "%": "./customer-engagement-questionnaire"
+            },
+            "object":{"@": "CustomerEngagementQuestionnaire"},
+            "parent":{"@": "ObjectDescriptor"},
+            "userInterfaceDescriptorModules": {
+                "*": {
+                    "%": "./service-ui-descriptor.mjson"
+                },
+                "mod/ui/list-item.reel": {
+                    "%": "./service-list-item-ui-descriptor.mjson"
+                },
+                "mod/ui/cascading-list.reel": {
+                    "%": "./service-cascading-list-ui-descriptor.mjson"
+                }
+            }
+        }
+    },
+
+    "ObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "CustomerEngagementQuestionnaire": {
+        "object": "./customer-engagement-questionnaire"
+    },
+
+    "organization": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "organization",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "customerEngagementQuestionnaires",
+            "valueDescriptor": {"@": "organizationDescriptor"}
+        }
+    },
+    "organizationDescriptor": {
+        "object": "./party/organization.mjson"
+    },
+
+
+    "services": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "services",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "customerEngagementQuestionnaires",
+            "valueDescriptor": {"@": "serviceDescriptor"}
+        }
+    },
+    "serviceDescriptor": {
+        "object": "./service.mjson"
+    },
+
+    "questionnaire": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "questionnaire",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "customerEngagementQuestionnaires",
+            "valueDescriptor": {"@": "questionnaireDescriptor"}
+        }
+    },
+    "questionnaireDescriptor": {
+        "object": "./questionnaire/questionnaire.mjson"
+    },
+
+    "rolesRequiredToComplete": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "rolesRequiredToComplete",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "roleDescriptor"}
+        }
+    },
+    "rolesOptionalToComplete": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "rolesOptionalToComplete",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "roleDescriptor"}
+        }
+    },
+    "roleDescriptor": {
+        "object": "mod/data/model/party/role.mjson"
+    },
+    "EventType": {
+        "object": "./event"
+    },
+    "participationStatusRequiredByEvent": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "participationStatusRequiredByEvent",
+            "valueType": "string",
+            "cardinality": 1,
+            "valueDescriptor": {"=": "@EventType.participationStatusEmum"}
+        }
+    },
+    "participationStatusOptionalForEvent": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "participationStatusOptionalForEvent",
+            "valueType": "string",
+            "cardinality": 1,
+            "valueDescriptor": {"=": "@EventType.participationStatusEmum"}
+        }
+    }
+}

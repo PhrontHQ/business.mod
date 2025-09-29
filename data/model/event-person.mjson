@@ -1,0 +1,58 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "EventPerson",
+            "propertyDescriptors": [
+                {"@": "email"},
+                {"@": "displayName"},
+                {"@": "isSelf"},
+                {"@": "person"}
+            ],
+            "objectDescriptorModule": {
+                "%":"./event-attendee.mjson"
+            },
+            "exportName": "EventAttendee",
+            "module": {
+                "%": "./event-attendee"
+            },
+            "object":{"@": "EventPerson"}
+        }
+    },
+    "EventPerson": {
+        "object": "./event-person"
+    },
+    "email": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "email",
+            "valueType": "string"
+        }
+    },
+    "displayName": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "displayName",
+            "valueType": "string"
+        }
+    },
+    "isSelf": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "isSelf",
+            "valueType": "boolean"
+        }
+    },
+    "person": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "person",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "person-descriptor"}
+        }
+    },
+    "person-descriptor": {
+        "object": "./party/person.mjson"
+    }
+}

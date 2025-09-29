@@ -7,7 +7,7 @@
     "# (see https://github.com/npm/npm/pull/3180#issuecomment-16336516)."
   ],
   "name": "business.mod",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": false,
   "license": "BSD-3-Clause",
   "main": "phront-data-service.js",
@@ -20,11 +20,7 @@
     "fullstack-phone": "^1.62.0",
     "id128": "^1.5.0",
     "lodash": "^4.17.2",
-    "mod": "github:PhrontHQ/mod#bugfix/data-6-25",
-    "cloud-computing.mod": "github:PhrontHQ/cloud-computing.mod#main",
-    "geo.mod": "github:PhrontHQ/geo.mod#main",
-    "object-sizeof": "^1.5.2",
-    "pg": "^8.7.3",
+    "mod": "github:PhrontHQ/mod#main",
     "perfect-freehand": "^1.1.0"
   },
   "devDependencies": {
