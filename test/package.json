@@ -17,10 +17,7 @@
   "scripts": {},
   "mappings": {
     "mod": "../node_modules/mod",
-    "geo.mod": "../node_modules/geo.mod",
     "bluebird": "../node_modules/mod/node_modules/bluebird",
-    "object-sizeof": "../node_modules/object-sizeof",
-    "phront": "../",
     "tiny-worker": "../node_modules/tiny-worker"
   },
   "manifest": true,
