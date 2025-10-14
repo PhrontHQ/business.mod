@@ -1,4 +1,4 @@
-var Device = require("../device").Device;
+var Device = require("./device").Device;
 
 /**
  * @class ImagingDevice

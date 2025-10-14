@@ -99,7 +99,7 @@
     },
 
     "OrganizationDescriptor": {
-        "object": "business.mod/data/model/party/organization.mjson"
+        "object": "../party/organization.mjson"
     },
     "manufacturer": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -117,7 +117,7 @@
     },
 
     "PowerSourceDescriptor": {
-        "object": "./device/power-source/power-source.mjson"
+        "object": "./power-source/power-source.mjson"
     },
 
     "powerSource": {
@@ -213,7 +213,7 @@
     },
 
     "DeviceConnectionDescriptor": {
-        "object": "./device/device-connection.mjson"
+        "object": "./device-connection.mjson"
     },
     "nodeDeviceConnections": {
         "prototype": "mod/core/meta/property-descriptor",

@@ -12,6 +12,15 @@ exports.Party = Party;
 Montage.defineProperties(Party.prototype, {
     calendars: {
         value: undefined
+    },
+    eventsParticipatingIn: {
+        value: undefined
+    },
+    jobRoleCollaborations: {
+        value: undefined
+    },
+    workTeamMemberships: {
+        value: undefined
     }
 });
 

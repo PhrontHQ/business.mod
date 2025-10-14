@@ -1,8 +1,8 @@
-var Device = require("../../device").Device;
+var Device = require("../../device/device").Device;
 
 /**
- * @class ConnectedDevice
- * @extends PoweredDevice
+ * @class PowerSource
+ * @extends Device
  * 
  */
 

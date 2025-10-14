@@ -23,7 +23,7 @@
         "object": "./networking-device"
     },
     "DeviceDescriptor": {
-        "object": "../device.mjson"
+        "object": "./device.mjson"
     },
     "MACAddress": {
         "prototype": "mod/core/meta/property-descriptor",

@@ -1,0 +1,34 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "DeviceProtocol",
+            "propertyDescriptors": [
+                {"@": "name"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./device-protocol.mjson"
+            },
+            "exportName": "DeviceProtocol",
+            "module": {
+                "%": "./device-protocol"
+            },
+            "object":{"@": "DeviceProtocol"},
+            "parent":{"@": "IntangibleDescriptor"}
+        }
+    },
+    "DeviceProtocol": {
+        "object": "./device-protocol"
+    },
+    "IntangibleDescriptor": {
+        "object": "mod/data/model/party/intangible.mjson"
+    },
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    }
+
+}

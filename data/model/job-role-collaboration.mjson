@@ -43,7 +43,7 @@
     },
 
     "PartyDescriptor": {
-        "object": "./model/party/party.mjson"
+        "object": "./party/party.mjson"
     },
     "collaboratingParty": {
         "prototype": "mod/core/meta/property-descriptor",

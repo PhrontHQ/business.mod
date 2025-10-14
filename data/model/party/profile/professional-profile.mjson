@@ -44,11 +44,11 @@
         }
     },
     "PersonDescriptor": {
-        "object": "./party/person.mjson"
+        "object": "../person.mjson"
     },
 
     "careerStatement": {
-        "prototype": "core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "careerStatement",
             "valueType": "string"
@@ -66,7 +66,7 @@
        }
     },
     "employmentPositionStaffingDescriptor": {
-        "object": "../employment-position-staffing.mjson"
+        "object": "../../employment-position-staffing.mjson"
     },
 
     "coreStrengths": {
@@ -126,7 +126,7 @@
         }
     },
     "OrganizationDescriptor": {
-        "object": "./party/organization.mjson"
+        "object": "../organization.mjson"
     }
 
 }

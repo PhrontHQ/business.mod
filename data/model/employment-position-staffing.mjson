@@ -102,7 +102,7 @@
         "object": "./b-2-c-customer-supplier-relationship.mjson"
     },
     "achievementsDetails": {
-        "prototype": "core/meta/property-descriptor",
+        "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "achievementsDetails",
             "valueType": "string"
@@ -120,7 +120,7 @@
        }
     },
     "respondentQuestionnairesDescriptor": {
-        "object": "../questionnaire/respondent-questionnaire.mjson"
+        "object": "./questionnaire/respondent-questionnaire.mjson"
     }
 
 

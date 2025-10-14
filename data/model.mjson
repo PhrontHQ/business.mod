@@ -69,6 +69,7 @@
             {"@": "Part"},
             {"@": "Device"},
             {"@": "DeviceConfiguration"},
+            {"@": "DeviceProtocol"},
             {"@": "DeviceConnection"},
             {"@": "ComputingDevice"},
             {"@": "NetworkingDevice"},
@@ -329,6 +330,11 @@
     "DeviceConfiguration": {
         "object": "./model/device/device-configuration.mjson"
     },
+
+    "DeviceProtocol": {
+        "object": "./model/device/device-protocol.mjson"
+    },
+
 
     "DeviceConnection": {
         "object": "./model/device/device-connection.mjson"

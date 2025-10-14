@@ -23,7 +23,7 @@
         "object": "./imaging-device"
     },
     "DeviceDescriptor": {
-        "object": "../device.mjson"
+        "object": "./device.mjson"
     },
 
     "resolutionValue": {

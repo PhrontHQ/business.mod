@@ -5,7 +5,7 @@
             "propertyDescriptors": [
                 {"@": "calendars"},
                 {"@": "eventsParticipatingIn"},
-                {"@": "roleCollaborations"},
+                {"@": "jobRoleCollaborations"},
                 {"@": "workTeamMemberships"}
             ]
         }

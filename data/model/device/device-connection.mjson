@@ -32,7 +32,7 @@
         "object": "mod/data/model/data-object.mjson"
     },
     "DeviceDescriptor": {
-        "object": "../device.mjson"
+        "object": "./device.mjson"
     },
     "host": {
         "prototype": "mod/core/meta/property-descriptor",

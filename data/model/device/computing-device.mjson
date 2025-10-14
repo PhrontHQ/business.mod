@@ -21,7 +21,7 @@
         "object": "./computing-device"
     },
     "DeviceDescriptor": {
-        "object": "../device.mjson"
+        "object": "./device.mjson"
     }
 
 }
