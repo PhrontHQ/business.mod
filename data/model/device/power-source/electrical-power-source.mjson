@@ -1,0 +1,74 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ElectricalPowerSource",
+            "description": "A power source providing energy, like a wall outlet or battery for an electrical power source",
+            "propertyDescriptors": [
+                {"@": "energyType"},
+                {"@": "amperageRange"},
+                {"@": "voltageRange"},
+                {"@": "currentType"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./electrical-power-source.mjson"
+            },
+            "exportName": "ElectricalPowerSource",
+            "module": {
+                "%": "./electrical-power-source.mjson"
+            },
+            "object":{"@": "ElectricalPowerSource"},
+            "parent":{"@": "PowerSourceDescriptor"}
+        }
+    },
+    "ElectricalPowerSource": {
+        "object": "./electrical-power-source"
+    },
+    "PowerSourceDescriptor": {
+        "object": "./power-source.mjson"
+    },
+
+    "energyType": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "energyType",
+            "valueType": "string",
+            "defaultValue": "Electrical"
+        }
+    },
+
+    "RangeDescriptor": {
+        "object": "mod/core/range.mjson"
+    },
+
+    "amperageRange": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "amperageRange",
+            "valueType": "number",
+            "cardinality": 1,
+            "collectionValueType": "range",
+            "valueDescriptor": {"@": "RangeDescriptor"}
+        }
+    },
+    "voltageRange": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "voltageRange",
+            "valueType": "number",
+            "cardinality": 1,
+            "collectionValueType": "range",
+            "valueDescriptor": {"@": "RangeDescriptor"}
+        }
+    },
+    
+    "currentType": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "currentType",
+            "valueType": "string",
+            "description": "typically alternative (AC) or direct (DC)" 
+        }
+    }
+
+}

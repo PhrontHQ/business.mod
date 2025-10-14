@@ -1,0 +1,56 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "WorkflowPhase",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "tasks"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./workflow-phase.mjson"
+            },
+            "exportName": "WorkflowPhase",
+            "module": {
+                "%": "./workflow-phase"
+            },
+            "object":{"@": "workflow-phase"},
+            "parent":{"@": "DataObjectDescriptor"}
+
+        }
+    },
+    "workflow-phase": {
+        "object": "./workflow-phase"
+    },
+
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "PartyDescriptor": {
+        "object": "./party/party.mjson"
+    },
+
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true,
+            "isMandatory": true
+        }
+    },
+    "TaskDescriptor": {
+        "object": "./task.mjson"
+    },
+    "tasks": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "tasks",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "TaskDescriptor"}
+        }
+    }
+}

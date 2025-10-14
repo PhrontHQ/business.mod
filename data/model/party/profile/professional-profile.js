@@ -1,7 +1,7 @@
 var DataObject = require("mod/data/model/data-object").DataObject;
 
 /**
- * @class SocialProfile
+ * @class ProfessionalProfile
  * @extends DataObject
  *
  * A way to reach someone:
@@ -16,22 +16,22 @@ var DataObject = require("mod/data/model/data-object").DataObject;
  */
 
 
-exports.SocialProfile = DataObject.specialize(/** @lends SocialProfile.prototype */ {
+exports.ProfessionalProfile = DataObject.specialize(/** @lends ProfessionalProfile.prototype */ {
     constructor: {
-        value: function SocialProfile() {
+        value: function ProfessionalProfile() {
             this.super();
             //console.log("Phront MessagingChannel created");
             return this;
         }
     },
 
-    serviceName: {
+    owner: {
         value: undefined
     },
-    userName: {
+    url: {
         value: undefined
     },
-    provider: {
+    hostingOrganization: {
         value: undefined
     }
 

@@ -1,0 +1,94 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "JobGrade",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "code"},
+                {"@": "numericLevel"},
+                {"@": "compensationRange"},
+                {"@": "jobs"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./job-grade.mjson"
+            },
+            "exportName": "JobGrade",
+            "module": {
+                "%": "./job-grade"
+            },
+            "object":{"@": "JobGrade"},
+            "parent":{"@": "DataObjectDescriptor"}
+
+        }
+    },
+    "JobGrade": {
+        "object": "./job-grade"
+    },
+
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true,
+            "isMandatory": true
+        }
+    },
+    "code": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "code",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true,
+            "isMandatory": true
+        }
+    },
+
+    "numericLevel": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "numericLevel",
+            "valueType": "number",
+            "isSearchable": true
+        }
+    },
+
+    "RangeDescriptor": {
+        "object": "mod/core/range.mjson"
+    },
+
+    "compensationRange": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "compensationRange",
+            "valueType": "number",
+            "cardinality": 1,
+            "collectionValueType": "range",
+            "valueDescriptor": {"@": "RangeDescriptor"}
+        }
+    },
+
+    "JobDescriptor": {
+        "object": "./job.mjson"
+    },
+    "jobs": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "jobs",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "JobDescriptor"},
+            "inversePropertyName": "grade",
+            "description": "The jobs associated with this JobGrade"
+        }
+    }
+
+
+}

@@ -1,0 +1,44 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ImagingDevice",
+            "propertyDescriptors": [
+                {"@": "resolutionValue"},
+                {"@": "resolutionUnit"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./imaging-device.mjson"
+            },
+            "exportName": "ImagingDevice",
+            "module": {
+                "%": "./imaging-device.mjson"
+            },
+            "object":{"@": "ImagingDevice"},
+            "parent":{"@": "DeviceDescriptor"},
+            "description": "Other subclasses would include Camera and video Camera"
+        }
+    },
+    "ImagingDevice": {
+        "object": "./imaging-device"
+    },
+    "DeviceDescriptor": {
+        "object": "../device.mjson"
+    },
+
+    "resolutionValue": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "resolutionValue",
+            "valueType": "number"
+        }
+    },
+    "resolutionUnit": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "resolutionUnit",
+            "valueType": "string"
+        }
+    }
+
+}

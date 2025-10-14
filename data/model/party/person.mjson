@@ -3,17 +3,32 @@
         "object": "mod/data/model/party/person.mjson",
         "values": {
             "propertyDescriptors": [
-                {"@": "employmentHistory"},
+                {"@": "professionalProfiles"},
                 {"@": "serviceProductVariantsProvided"},
                 {"@": "respondentQuestionnaires"},
                 {"@": "supplierRelationships"},
                 {"@": "customerSupplierResponsibilities"},
                 {"@": "firstPersonalRelationships"},
                 {"@": "secondPersonalRelationships"}
+                
            ]
         }
     },
    
+    "ProfessionalProfileDescriptor": {
+        "object": "./profile/professional-profile.mjson"
+    },
+
+    "professionalProfiles": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "professionalProfiles",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "owner",
+            "valueDescriptor": {"@": "ProfessionalProfileDescriptor"}
+       }
+    },
 
     "respondentQuestionnaires": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -27,20 +42,6 @@
     },
     "respondentQuestionnairesDescriptor": {
         "object": "../questionnaire/respondent-questionnaire.mjson"
-    },
-
-    "employmentHistory": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "employmentHistory",
-            "valueType": "object",
-            "cardinality": -1,
-            "valueDescriptor": {"@": "employmentPositionStaffingDescriptor"},
-            "inversePropertyName": "employee"
-       }
-    },
-    "employmentPositionStaffingDescriptor": {
-        "object": "../employment-position-staffing.mjson"
     },
 
     "serviceProductVariantsProvided": {

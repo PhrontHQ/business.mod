@@ -1,0 +1,184 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Part",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "partNumber"},
+                {"@": "productionUseDateRange"},
+                {"@": "partNumberLengthConstraintRange"},
+                {"@": "incorrectPartNumbers"},
+                {"@": "incorrectPartNumberSearchRange"},
+                {"@": "prefix"},
+                {"@": "base"},
+                {"@": "suffix"},
+                {"@": "activity"},
+                {"@": "cpsc"},
+                {"@": "noticeActivity"},
+                {"@": "usageConditionCodes"},
+                {"@": "associatedFeatures"},
+                {"@": "associatedTasks"},
+                {"@": "needsTraceability"},
+                {"@": "unitType"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./part.mjson"
+            },
+            "exportName": "Part",
+            "module": {
+                "%": "./part"
+            },
+            "object":{"@": "part"},
+            "parent":{"@": "TangibleDescriptor"}
+        }
+    },
+    "part": {
+        "object": "./part"
+    },
+    "TangibleDescriptor": {
+        "object": "mod/data/model/party/tangible.mjson"
+    },
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string"
+        }
+    },
+    "partNumber": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "partNumber",
+            "valueType": "string"
+        }
+    },
+    "productionUseDateRange": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "productionUseDateRange",
+            "valueType": "date",
+            "collectionValueType": "range"
+        }
+    },
+    "partNumberLengthConstraintRange": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "partNumberLengthConstraintRange",
+            "valueType": "number",
+            "collectionValueType": "range"
+        }
+    },
+    "incorrectPartNumberSearchRange": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "incorrectPartNumberSearchRange",
+            "valueType": "number",
+            "collectionValueType": "range",
+            "description": "the range within an input to look for an incorrectPartNumber"
+        }
+    },
+    "prefix": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "prefix",
+            "valueType": "string"
+        }
+    },
+    "base": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "base",
+            "valueType": "string"
+        }
+    },
+    "suffix": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "suffix",
+            "valueType": "string"
+        }
+    },
+    "unitType": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "unitType",
+            "valueType": "string",
+            "definition":"prefix + '-' + base + '-' + suffix"
+        }
+    },
+    "incorrectPartNumbers": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "incorrectPartNumbers",
+            "cardinality": -1,
+            "valueType": "array",
+            "description": "Alternate part number strings to account for manufacture descrepencies at scan time"
+        }
+    },
+    "activity": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "activity",
+            "valueType": "string"
+        }
+    },
+    "cpsc": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "cpsc",
+            "valueType": "string",
+            "description": "Corporate Product Systems Classification: A corporate-wide numbering system that classifies all vehicle parts into eighteen major classes (systems) and approximately 800 subsystems and sub-subsystems using six numerical positions for engineering release and for organizing a variety of engineering data."
+        }
+    },
+    "noticeActivity": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "noticeActivity",
+            "valueType": "string"
+        }
+    },
+    "TaskDescriptor": {
+        "object": "./task.mjson"
+    },
+    "associatedTasks": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "associatedTasks",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "TaskDescriptor"},
+            "inversePropertyName": "partsUsed"
+        }
+    },
+    "usageConditionCodes": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "usageConditionCodes",
+            "cardinality": -1,
+            "valueType": "object"
+        }
+    },
+    "VehicleFeatureDescriptor": {
+        "object": "./vehicle-feature.mjson"
+    },
+    "associatedFeatures": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "associatedFeatures",
+            "cardinality": -1,
+            "inversePropertyName": "associatedParts",
+            "valueDescriptor": {"@": "VehicleFeatureDescriptor"},
+            "description": "All features associated with that task"
+        }
+    },
+    "needsTraceability": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "needsTraceability",
+            "cardinality": 1,
+            "valueType": "boolean",
+            "description": "This is an indication that there's an interest to know more about the whereabouts of that part. But it's not getting into modeling the reasons behind it: legal? audi? "
+        }
+    }
+
+}

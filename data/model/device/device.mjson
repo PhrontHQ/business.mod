@@ -1,0 +1,517 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Device",
+            "propertyDescriptors": [
+                {"@": "originId"},
+                {"@": "description"},
+                {"@": "model"},
+                {"@": "manufacturer"},
+                {"@": "serialNumber"},
+                {"@": "powerSource"},
+                
+                {"@": "compatibleAccessoryDevices"},
+                {"@": "supplementabledDevices"},
+
+                {"@": "accessoryDevices"},
+                {"@": "supplementedDevices"},
+
+                {"@": "compatibleToolDevices"},
+                {"@": "toolCompatibilityDeviceList"},
+
+                {"@": "toolDevices"},
+                {"@": "toolTargetDevices"},
+                
+                {"@": "nodeDeviceConnections"},
+                {"@": "possibleHostDeviceConnections"},
+                {"@": "hostDeviceConnections"},
+
+                {"@": "ipAddress"},
+                {"@": "port"},
+                {"@": "supportedProtocols"},
+                {"@": "defaultProtocol"},
+                {"@": "activeProtocol"},
+                {"@": "deviceConfigurations"},
+                {"@": "defaultDeviceConfiguration"},
+                {"@": "activeDeviceConfiguration"},
+                {"@": "settingsStoringDeviceConfiguration"},
+                {"@": "isStoringDeviceSettings"},
+                
+                {"@": "tasks"},
+                {"@": "associatedTaskTypes"},
+                {"@": "type"},
+                {"@": "typeInstances"},
+                {"@": "subtypes"},
+                
+                {"@": "logicalNode"},
+                {"@": "organizationAllocations"},
+
+                {"@": "usageModeOptions"},
+                {"@": "possibleUsageModes"},
+                {"@": "activeUsageMode"}
+                
+            ],
+            "objectDescriptorModule": {
+                "%": "./device.mjson"
+            },
+            "exportName": "Device",
+            "module": {
+                "%": "./device"
+            },
+            "object":{"@": "Device"},
+            "parent":{"@": "TangibleDescriptor"},
+            "userInterfaceDescriptorModules": {
+                "*": {
+                    "%": "./device-ui-descriptor.mjson"
+                }
+            }
+        }
+    },
+    "Device": {
+        "object": "./device"
+    },
+    "TangibleDescriptor": {
+        "object": "mod/data/model/party/tangible.mjson"
+    },
+    "originId": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "originId",
+            "valueType": "string"
+        }
+    },
+
+    "description": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "description",
+            "valueType": "string"
+        }
+    },
+
+    "model": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "model",
+            "valueType": "string"
+        }
+    },
+
+    "OrganizationDescriptor": {
+        "object": "business.mod/data/model/party/organization.mjson"
+    },
+    "manufacturer": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "manufacturer",
+            "valueDescriptor": {"@": "OrganizationDescriptor"}
+        }
+    },
+    "serialNumber": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "serialNumber",
+            "valueType": "string"
+        }
+    },
+
+    "PowerSourceDescriptor": {
+        "object": "./device/power-source/power-source.mjson"
+    },
+
+    "powerSource": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "powerSource",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "PowerSourceDescriptor"}
+        }
+    },
+
+    "compatibleAccessoryDevices": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "compatibleAccessoryDevices",
+            "cardinality": -1,
+            "inversePropertyName": "supplementabledDevices",
+            "valueDescriptor": {"@": "root"},
+            "description": "The list of accessories that can be used with this device, that are compatible with it"
+        }
+    },
+    "supplementabledDevices": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "supplementabledDevices",
+            "cardinality": -1,
+            "inversePropertyName": "compatibleAccessoryDevices",
+            "valueDescriptor": {"@": "root"},
+            "description": "The list of devices this device can be an accessory for"
+        }
+    },
+    "accessoryDevices": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "accessoryDevices",
+            "cardinality": -1,
+            "inversePropertyName": "supplementedDevices",
+            "valueDescriptor": {"@": "root"},
+            "description": "The list of accessories actually used for by the device"
+        }
+    },
+    "supplementedDevices": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "supplementedDevices",
+            "cardinality": -1,
+            "inversePropertyName": "accessoryDevices",
+            "valueDescriptor": {"@": "root"},
+            "description": "The list of the device(s) using this as an accessory"
+        }
+    },
+    "compatibleToolDevices": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "compatibleToolDevices",
+            "cardinality": -1,
+            "inversePropertyName": "toolCompatibilityDeviceList",
+            "valueDescriptor": {"@": "root"},
+            "description": "The list of devices that can be used as tools for the device. If more data is needed around that relationship, in term of different roles those tools may play, it will need to become a separate data object to support that"
+        }
+    },
+    "toolCompatibilityDeviceList": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "toolCompatibilityDeviceList",
+            "cardinality": -1,
+            "inversePropertyName": "compatibleToolDevices",
+            "valueDescriptor": {"@": "root"},
+            "description": "The list of devices that can use this device as a tools"
+        }
+    },
+
+    "toolDevices": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "toolDevices",
+            "cardinality": -1,
+            "inversePropertyName": "toolTargetDevices",
+            "valueDescriptor": {"@": "root"},
+            "description": "The list of accessories actually used with the device"
+        }
+    },
+
+    "toolTargetDevices": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "toolTargetDevices",
+            "cardinality": -1,
+            "inversePropertyName": "toolDevices",
+            "valueDescriptor": {"@": "root"},
+            "description": "The list of accessories actually used for by the device"
+        }
+    },
+
+    "DeviceConnectionDescriptor": {
+        "object": "./device/device-connection.mjson"
+    },
+    "nodeDeviceConnections": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "nodeDeviceConnections",
+            "cardinality": -1,
+            "inversePropertyName": "node",
+            "valueDescriptor": {"@": "DeviceConnectionDescriptor"},
+            "description": "This device's connections, as a node, to its host(s, if shared)"
+        }
+    },
+    "possibleHostDeviceConnections": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "possibleHostDeviceConnections",
+            "cardinality": -1,
+            "inversePropertyName": "host",
+            "valueDescriptor": {"@": "DeviceConnectionDescriptor"},
+            "description": "Describe a list of device's connections a device, as the host, can have to node devices. A connection to a concrete device (with model and manufacturer is more constraining, than a connection to a device that is a type, which opens the field of possibilities to its descendants typeInstances"
+        }
+    },
+    "hostDeviceConnections": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "hostDeviceConnections",
+            "cardinality": -1,
+            "inversePropertyName": "host",
+            "valueDescriptor": {"@": "DeviceConnectionDescriptor"},
+            "description": "This device's connections, as the host, to its node device"
+        }
+    },
+    "deviceHostConnections": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "deviceHostConnections",
+            "cardinality": -1,
+            "inversePropertyName": "node",
+            "valueDescriptor": {"@": "root"},
+            "description": "This device connections, as a node, to its host(s), if shared"
+        }
+    },
+
+    "toolCompatibilityDeviceList": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "toolCompatibilityDeviceList",
+            "cardinality": -1,
+            "inversePropertyName": "compatibleTools",
+            "valueDescriptor": {"@": "root"},
+            "description": "The list of devices that can use this device as a tools"
+        }
+    },
+
+    "tools": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "tools",
+            "cardinality": -1,
+            "inversePropertyName": "usedAsToolsByDevices",
+            "valueDescriptor": {"@": "root"},
+            "description": "The list of accessories actually used with the device"
+        }
+    },
+
+    "toolForDevices": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "toolForDevices",
+            "cardinality": -1,
+            "inversePropertyName": "tools",
+            "valueDescriptor": {"@": "root"},
+            "description": "The list of accessories actually used for by the device"
+        }
+    },
+
+    
+    "ipAddress": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "ipAddress",
+            "valueType": "string"
+        }
+    },
+    "port": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "port",
+            "valueType": "string"
+        }
+    },
+    "DeviceProtocolDescriptor": {
+        "object": "./device-protocol.mjson"
+    },
+    "supportedProtocols": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "supportedProtocols",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "DeviceProtocolDescriptor"}
+        }
+    },
+    "activeProtocol": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "activeProtocol",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "DeviceProtocolDescriptor"}
+        }
+    },
+    "defaultProtocol": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "defaultProtocol",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "DeviceProtocolDescriptor"}
+        }
+    },
+    "DeviceConfigurationDescriptor": {
+        "object": "./device/device-configuration.mjson"
+    },
+
+    "deviceConfigurations": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "deviceConfigurations",
+            "cardinality": -1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "DeviceConfigurationDescriptor"},
+            "description": "All the configurations known for the device. DESIGN PROBLEM: cardinality here should actually be data. It's differen per device, and should be enforced. If we create another property to hold that information, then how do we bind it here for enforcing it?"
+        }
+    },
+    "defaultDeviceConfiguration": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "defaultDeviceConfiguration",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "DeviceConfigurationDescriptor"}
+        }
+    },
+    "activeDeviceConfiguration": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "activeDeviceConfiguration",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "DeviceConfigurationDescriptor"},
+            "description": "Would cuttentConfiguration be better?"
+        }
+    },
+    "settingsStoringDeviceConfiguration": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "settingsStoringDeviceConfiguration",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "DeviceConfigurationDescriptor"},
+            "description": "For an instance of a device used to hold a configuration's settings, this relationshiop points to that DeviceConfiguration's settingsStoringDevice property"
+        }
+    },
+    "isStoringDeviceSettings": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "isStoringDeviceSettings",
+            "valueType": "boolean",
+            "defaultValue": false,
+            "definition": "settingsConfiguration.defined()",
+            "isSearchable": true,
+            "description": "If true, indicates that the instance is used to store a set of values/settings, of another actual device, referenced as the settingsConfiguration.device"
+        }
+    },
+
+    "TaskDescriptor": {
+        "object": "./task.mjson"
+    },
+    "tasks": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "tasks",
+            "cardinality": -1,
+            "inversePropertyName": "associatedTools",
+            "valueDescriptor": {"@": "TaskDescriptor"}
+        }
+    },
+
+    "TaskTypeDescriptor": {
+        "object": "./task-type.mjson"
+    },
+
+    "associatedTaskTypes": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "associatedTaskTypes",
+            "cardinality": -1,
+            "inversePropertyName": "associatedToolTypes",
+            "valueDescriptor": {"@": "TaskTypeDescriptor"}
+        }
+    },
+
+    "type": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "type",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "root"},
+            "inversePropertyName": "typeInstances",
+            "description": "The reference to what would be an object's prototype in JavaScript: A unique instance of parent class that defines common characteristics for all objects of that type"
+        }
+    },
+    "typeInstances": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "typeInstances",
+            "valueType": "array",
+            "cardinality": -1,
+            "inversePropertyName": "type",
+            "valueDescriptor": {"@": "root"},
+            "description": "overiden to have valueDescriptor point to Device. We'll need to find permanent solution that doesn't involve doing this "
+        }
+    },
+
+    "subtypes": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "subtypes",
+            "valueType": "array",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "root"},
+            "definition": "typeInstances.filter{isType==true}",
+            "description": "overiden to have valueDescriptor point to Device. We'll need to find permanent solution that doesn't involve doing this "
+        }
+    },
+
+    "logicalNode": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "logicalNode",
+            "cardinality": 1,
+            "valueType": "number"
+        }
+    },
+
+    "OrganizationDeviceAllocationDescriptor": {
+        "object": "./organization-device-allocation.mjson"
+    },
+    "organizationAllocations": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "organizationAllocations",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "OrganizationDeviceAllocationDescriptor"},
+            "description": "Device associated to a work division of a factory"
+        }
+    },
+
+    "DeviceUsageModesEmum": {
+        "prototype": "mod/core/enum",
+        "values": {
+            "members":[
+                "Handheld",
+                "Stationary"
+            ]
+        }
+    },
+
+    "usageModeOptions": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "usageModeOptions",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "DeviceUsageModesEmum"},
+            "value": {"@": "DeviceUsageModesEmum"},
+            "description": "The list of options a device's possibleUsageModes and activeUsageMode can have"
+        }
+    },
+
+    "possibleUsageModes": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "possibleUsageModes",
+            "valueType": "array",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "DeviceUsageModesEmum"},
+            "description": "The list of possible ways a device can be used"
+        }
+    },
+
+    "activeUsageMode": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "activeUsageMode",
+            "valueType": "string",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "DeviceUsageModesEmum"},
+            "defaultValue": {"=": "undefined"},
+            "description": "The actual way a device is used"
+        }
+    }
+
+}

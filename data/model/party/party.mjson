@@ -4,7 +4,9 @@
         "values": {
             "propertyDescriptors": [
                 {"@": "calendars"},
-                {"@": "eventsParticipatingIn"}
+                {"@": "eventsParticipatingIn"},
+                {"@": "roleCollaborations"},
+                {"@": "workTeamMemberships"}
             ]
         }
     },
@@ -34,6 +36,35 @@
     },
     "event_descriptor": {
         "object": "../event.mjson"
+    },
+
+    "JobRoleCollaborationDescriptor": {
+        "object": "../job-role-collaboration.mjson"
+    },
+    "jobRoleCollaborations": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "jobRoleCollaborations",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "JobRoleCollaborationDescriptor"},
+            "inversePropertyName": "collaboratingParty"
+        }
+    },
+
+    "JobRoleCollaborationDescriptor": {
+        "object": "../job-role-collaboration.mjson"
+    },
+    "workTeamMemberships": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "workTeamMemberships",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "JobRoleCollaborationDescriptor"},
+            "inversePropertyName": "party",
+            "description": "The WorTeam's memberships this party participates in"
+        }
     }
 
 }

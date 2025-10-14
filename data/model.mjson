@@ -24,6 +24,8 @@
             {"@": "productVariantPricePair"},
             {"@": "money"},
             {"@": "party"},
+            {"@": "WorkTeam"},
+            {"@": "WorkTeamMembership"},
             {"@": "partyPartyRelationship"},
             {"@": "organization"},
             {"@": "person"},
@@ -54,7 +56,32 @@
             {"@": "Answer"},
             {"@": "RespondentQuestionnaireAnswer"},
             {"@": "RespondentQuestionnaireVariableValue"},
-            {"@": "CustomerEngagementQuestionnaire"}
+            {"@": "CustomerEngagementQuestionnaire"},
+            {"@": "ProfessionalProfile"},
+            {"@": "Deliverable"},
+            {"@": "Job"},
+            {"@": "JobGrade"},
+            {"@": "JobRole"},
+            {"@": "Process"},
+            {"@": "ProcessStep"},
+            {"@": "Workflow"},
+            {"@": "WorkflowPhase"},
+            {"@": "Part"},
+            {"@": "Device"},
+            {"@": "DeviceConfiguration"},
+            {"@": "DeviceConnection"},
+            {"@": "ComputingDevice"},
+            {"@": "NetworkingDevice"},
+            {"@": "ImagingDevice"},
+            {"@": "PrintingDevice"},
+            {"@": "ScanningDevice"},
+            {"@": "PowerSource"},
+            {"@": "ElectricalPowerSource"},
+            {"@": "AlternativeCurrentPowerSource"},
+            {"@": "DirectCurrentPowerSource"},
+            {"@": "FuelPowerSource"},
+            {"@": "HydraulicPowerSource"},
+            {"@": "PneumaticPowerSource"}
         ]
     },
 
@@ -120,6 +147,14 @@
 
     "party": {
         "object": "./model/party/party.mjson"
+    },
+
+    "WorkTeam": {
+        "object": "./model/party/work-team.mjson"
+    },
+
+    "WorkTeamMembership": {
+        "object": "./model/party/work-team-membership.mjson"
     },
 
     "partyPartyRelationship": {
@@ -244,5 +279,107 @@
 
     "CustomerEngagementQuestionnaire": {
         "object": "./model/customer-engagement-questionnaire.mjson"
+    },
+
+    "ProfessionalProfile": {
+        "object": "./model/party/profile/professional-profile.mjson"
+    },
+
+    "Deliverable": {
+        "object": "./model/deliverable.mjson"
+    },
+
+    "Job": {
+        "object": "./model/job.mjson"
+    },
+
+    "JobGrade": {
+        "object": "./model/job-grade.mjson"
+    },
+
+    "JobRole": {
+        "object": "./model/job-role.mjson"
+    },
+
+    "Process": {
+        "object": "./model/process.mjson"
+    },
+
+    "ProcessStep": {
+        "object": "./model/process-step.mjson"
+    },
+
+    "Workflow": {
+        "object": "./model/workflow.mjson"
+    },
+
+    "WorkflowPhase": {
+        "object": "./model/workflow-phase.mjson"
+    },
+
+
+    "Part": {
+        "object": "./model/part.mjson"
+    },
+
+    "Device": {
+        "object": "./model/device/device.mjson"
+    },
+
+    "DeviceConfiguration": {
+        "object": "./model/device/device-configuration.mjson"
+    },
+
+    "DeviceConnection": {
+        "object": "./model/device/device-connection.mjson"
+    },
+
+    "ComputingDevice": {
+        "object": "./model/device/computing-device.mjson"
+    },
+
+    "NetworkingDevice": {
+        "object": "./model/device/computing-device.mjson"
+    },
+
+    "ImagingDevice": {
+        "object": "./model/device/imaging-device.mjson"
+    },
+
+    "PrintingDevice": {
+        "object": "./model/device/printing-device.mjson"
+    },
+
+    "ScanningDevice": {
+        "object": "./model/device/scanning-device.mjson"
+    },
+
+    "PowerSource": {
+        "object": "./model/device/power-source/power-source.mjson"
+    },
+
+    "ElectricalPowerSource": {
+        "object": "./model/device/power-source/electrical-power-source.mjson"
+    },
+
+    "AlternativeCurrentPowerSource": {
+        "object": "./model/device/power-source/alternative-current-power-source.mjson"
+    },
+
+    "DirectCurrentPowerSource": {
+        "object": "./model/device/power-source/direct-current-power-source.mjson"
+    },
+
+    "FuelPowerSource": {
+        "object": "./model/device/power-source/fuel-power-source.mjson"
+    },
+
+    "HydraulicPowerSource": {
+        "object": "./model/device/power-source/hydraulic-power-source.mjson"
+    },
+
+    "PneumaticPowerSource": {
+        "object": "./model/device/power-source/pneumatic-power-source.mjson"
     }
+
 }

@@ -1,0 +1,66 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "AlternativePowerSource",
+            "description": "A power source providing energy, like a wall outlet or battery for an electrical power source",
+            "propertyDescriptors": [
+                {"@": "currentType"},
+                {"@": "frequencyRange"},
+                {"@": "phaseCount"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./alternative-current-power-source.mjson"
+            },
+            "exportName": "AlternativePowerSource",
+            "module": {
+                "%": "./alternative-current-power-source.mjson"
+            },
+            "object":{"@": "AlternativePowerSource"},
+            "parent":{"@": "ElectricalPowerSourceDescriptor"}
+        }
+    },
+    "AlternativePowerSource": {
+        "object": "./alternative-current-power-source"
+    },
+    "ElectricalPowerSourceDescriptor": {
+        "object": "./electrical-power-source.mjson"
+    },
+
+    "currentType": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "currentType",
+            "valueType": "string",
+            "defaultValue": "Alternative",
+            "description": "typically alternative (AC) or direct (DC)" 
+        }
+    },
+
+    "RangeDescriptor": {
+        "object": "mod/core/range.mjson"
+    },
+
+    "frequencyRange": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "frequencyRange",
+            "valueType": "number",
+            "cardinality": 1,
+            "collectionValueType": "range",
+            "valueDescriptor": {"@": "RangeDescriptor"},
+            "description": "The frequency of the current in Hertz"
+        }
+    },
+
+    "phaseCount": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "phaseCount",
+            "valueType": "number",
+            "defaultValue": 1
+        }
+    }
+    
+
+}

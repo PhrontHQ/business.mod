@@ -1,0 +1,122 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "DeviceConnection",
+            "propertyDescriptors": [
+                {"@": "nodeIdentifier"},
+                {"@": "host"},
+                {"@": "node"},
+                {"@": "role"},
+                {"@": "logicalNodeNumber"},
+                {"@": "logicalNodeNumberRange"},
+                {"@": "physicalInterface"},
+                {"@": "logicalInterface"}
+
+            ],
+            "objectDescriptorModule": {
+                "%": "./device-connection.mjson"
+            },
+            "exportName": "DeviceConnection",
+            "module": {
+                "%": "./device-connection.mjson"
+            },
+            "object":{"@": "DeviceConnection"},
+            "parent":{"@": "Object"}
+        }
+    },
+    "DeviceConnection": {
+        "object": "./device-connection"
+    },
+    "Object": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+    "DeviceDescriptor": {
+        "object": "../device.mjson"
+    },
+    "host": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "host",
+            "cardinality": 1,
+            "inversePropertyName": "hostDeviceConnections",
+            "valueDescriptor": {"@": "DeviceDescriptor"},
+            "description": "The host device"
+        }
+    },
+    "node": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "node",
+            "cardinality": 1,
+            "inversePropertyName": "nodeDeviceConnections",
+            "valueDescriptor": {"@": "DeviceDescriptor"},
+            "description": "A device connected to the host"
+        }
+    },
+    "RoleDescriptor": {
+        "object": "mod/data/model/party/role.mjson"
+    },
+    "role": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "role",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "RoleDescriptor"},
+            "description": "The role this connection represents between the host and node devices"
+        }
+    },
+    "logicalNodeNumber": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "logicalNodeNumber",
+            "valueType": "number",
+            "cardinality": 1,
+            "description": "A unique integer identifier assigned to a node within devices connected to a host, essentially representing its position within othe connected nodes, distinct from its physical hardware details"
+        }
+    },
+    "RangeDescriptor": {
+        "object": "mod/core/range.mjson"
+    },
+    "logicalNodeNumberRange": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "logicalNodeNumberRange",
+            "valueType": "number",
+            "cardinality": 1,
+            "collectionValueType": "range",
+            "valueDescriptor": {"@": "RangeDescriptor"},
+            "description": "The range within the logicalNodeNumber is expected to be. This will typically be used with node being a certain device that is a type"
+        }
+    },
+    "nodeIdentifier": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "nodeIdentifier",
+            "valueType": "string",
+            "cardinality": 1,
+            "description": "A name assigned to a node within devices connected to a host"
+        }
+    },
+    "physicalInterface": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "physicalInterface",
+            "valueType": "string",
+            "cardinality": 1,
+            "description": "Is it a slot (like PCIe), a port (like RJ-45), a cable? internal, external? May be worth a full object"
+        }
+    },
+    "logicalInterface": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "logicalInterface",
+            "valueType": "string",
+            "cardinality": 1,
+            "description": "What logical/digital construct is used on top of the physical. IVv4? IPv6? Thunderbolt 2,3, 4?"
+        }
+    }
+
+
+
+}

@@ -1,0 +1,27 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ComputingDevice",
+            "propertyDescriptors": [
+            ],
+            "objectDescriptorModule": {
+                "%": "./computing-device.mjson"
+            },
+            "exportName": "ComputingDevice",
+            "module": {
+                "%": "./computing-device.mjson"
+            },
+            "object":{"@": "ComputingDevice"},
+            "parent":{"@": "DeviceDescriptor"},
+            "description": "Hardware Properties: CPU, RAM (Temporary storage for data and programs currently in use), Storage Devices (Hard Drive, SSD): Permanent storage for files and applications, GPU, Motherboard. Other Hardware: Includes peripherals like keyboards, mice, monitors, and network adapters. Software Properties: OS, Software Versions, System Settings, Drivers..."
+        }
+    },
+    "ComputingDevice": {
+        "object": "./computing-device"
+    },
+    "DeviceDescriptor": {
+        "object": "../device.mjson"
+    }
+
+}

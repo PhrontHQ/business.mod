@@ -1,0 +1,91 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Job",
+            "propertyDescriptors": [
+                {"@": "title"},
+                {"@": "roles"},
+                {"@": "employmentPositions"},
+                {"@": "grade"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./job.mjson"
+            },
+            "exportName": "Job",
+            "module": {
+                "%": "./job"
+            },
+            "object":{"@": "job"},
+            "parent":{"@": "DataObjectDescriptor"},
+            "userInterfaceDescriptorModules": {
+                "*": {
+                    "%": "./job-ui-descriptor.mjson"
+                }
+            }
+
+        }
+    },
+    "job": {
+        "object": "./job"
+    },
+
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "title": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "title",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true,
+            "isMandatory": true
+        }
+    },
+
+    "role_descriptor": {
+        "object": "./job-role.mjson"
+    },
+
+    "roles": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "roles",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "role_descriptor"},
+            "inversePropertyName": "jobs"
+        }
+    },
+    "employmentPositions": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "employmentPositions",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "job",
+            "valueDescriptor": {"@": "employmentPositionDescriptor"}
+        }
+    },
+    "employmentPositionDescriptor": {
+        "object": "./employment-job.mjson"
+    },
+
+    "JobGradeDescriptor": {
+        "object": "./job-grade.mjson"
+    },
+
+    "grade": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "grade",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "JobGradeDescriptor"},
+            "inversePropertyName": "jobs"
+        }
+    }
+
+}

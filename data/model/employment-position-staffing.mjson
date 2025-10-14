@@ -8,8 +8,9 @@
                 {"@": "employmentType"},
                 {"@": "employmentPosition"},
                 {"@": "employee"},
-                {"@": "b2cCustomerRelationships"}
-
+                {"@": "b2cCustomerRelationships"},
+                {"@": "achievementsDetails"},
+                {"@": "respondentQuestionnaires"}
             ],
             "objectDescriptorModule": {
                 "%": "./employment-position-staffing.mjson"
@@ -99,6 +100,27 @@
     },
     "B2CCustomerSupplierRelationshipDescriptor": {
         "object": "./b-2-c-customer-supplier-relationship.mjson"
+    },
+    "achievementsDetails": {
+        "prototype": "core/meta/property-descriptor",
+        "values": {
+            "name": "achievementsDetails",
+            "valueType": "string"
+        }
+    },
+    "respondentQuestionnaires": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "respondentQuestionnaires",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "respondent",
+            "valueDescriptor": {"@": "respondentQuestionnairesDescriptor"},
+            "description": "Allows to capture information from workers in a structured yet flexible way"
+       }
+    },
+    "respondentQuestionnairesDescriptor": {
+        "object": "../questionnaire/respondent-questionnaire.mjson"
     }
 
 

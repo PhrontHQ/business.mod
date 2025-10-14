@@ -1,0 +1,95 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "JobRole",
+            "propertyDescriptors": [
+                {"@": "responsibilities"},
+                {"@": "workflows"},
+                {"@": "processes"},
+                {"@": "collaborations"},
+                {"@": "deliverables"},
+                {"@": "jobs"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./job-role.mjson"
+            },
+            "exportName": "JobRole",
+            "module": {
+                "%": "./job-role"
+            },
+            "object":{"@": "JobRole"},
+            "parent":{"@": "RoleDescriptor"}
+
+        }
+    },
+    "JobRole": {
+        "object": "./job-role"
+    },
+
+    "RoleDescriptor": {
+        "object": "mod/data/model/party/role.mjson"
+    },
+
+    "responsibilities": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "responsibilities",
+            "cardinality": -1,
+            "valueType": "string"
+        }
+    },
+
+    "JobDescriptor": {
+        "object": "./job.mjson"
+    },
+    "jobs": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "roles",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "JobDescriptor"},
+            "inversePropertyName": "roles",
+            "description": "The jobs that encompass this role"
+        }
+    },
+    "workflow_descriptor": {
+        "object": "./workflow.mjson"
+    },
+    "workflows": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "workflows",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "workflow_descriptor"}
+        }
+    },
+    "processes_descriptor": {
+        "object": "./process.mjson"
+    },
+    "processes": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "processes",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "processes_descriptor"}
+        }
+    },
+    "DeliverableDescriptor": {
+        "object": "./deliverable.mjson"
+    },
+    "deliverables": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "deliverables",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "DeliverableDescriptor"}
+        }
+    }
+
+
+}

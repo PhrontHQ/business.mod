@@ -1,0 +1,41 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PrintingDevice",
+            "propertyDescriptors": [
+                {"@": "activePrintDocument"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./printing-device.mjson"
+            },
+            "exportName": "PrintingDevice",
+            "module": {
+                "%": "./printing-device.mjson"
+            },
+            "object":{"@": "PrintingDevice"},
+            "parent":{"@": "ImagingDeviceDescriptor"}
+        }
+    },
+    "PrintingDevice": {
+        "object": "./printing-device"
+    },
+    "ImagingDeviceDescriptor": {
+        "object": "./imaging-device.mjson"
+    },
+    "ProntDocumentDescriptor": {
+        "object": "./print-document.mjson"
+    },
+
+    "activePrintDocument": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "activePrintDocument",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "ProntDocumentDescriptor"},
+            "description": "The current document to be printed"
+        }
+    }
+
+}

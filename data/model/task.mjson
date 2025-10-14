@@ -19,11 +19,21 @@
                 {"@": "isCompleted"},
                 {"@": "resetCount"},
                 {"@": "isReset"},
+
                 {"@": "plannedExecutionDuration"},
-                {"@": "executionDuration"},
-                {"@": "issueTypes"},
-                {"@": "issues"}
+                {"@": "plannedExecutionTimeRange"},
                 
+                {"@": "executionDuration"},
+                {"@": "executionTimeRange"},
+                {"@": "issueTypes"},
+                {"@": "issues"},
+                {"@": "backupTasks"},
+                {"@": "backedUpTask"},
+                {"@": "associatedTools"},
+                {"@": "associatedToolConfigurations"},
+                {"@": "activeTools"},
+                {"@": "backupTools"},
+                {"@": "associatedParts"}
             ],
             "objectDescriptorModule": {
                 "%": "./task.mjson"
@@ -186,6 +196,18 @@
             "description": "The time estimated in the manufacturing plan this task should take to execute"
         }
     },
+    "plannedExecutionTimeRange": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "plannedExecutionTimeRange",
+            "valueType": "date",
+            "collectionValueType": "range",
+            "isSearchable": true,
+            "defaultValue": {"=": "undefined"},
+            "description": "The planned time range estimated for the execution of this task"
+        }
+    },
+
 
     "executionDuration": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -195,6 +217,17 @@
             "cardinality":1,
             "defaultValue": {"=": "undefined"},
             "description": "The time estimated in the manufacturing plan this task should take to execute"
+        }
+    },
+    "executionTimeRange": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "executionTimeRange",
+            "valueType": "date",
+            "collectionValueType": "range",
+            "isSearchable": true,
+            "defaultValue": {"=": "undefined"},
+            "description": "The actual time range ofthe execution of this task"
         }
     },
 
@@ -222,6 +255,84 @@
             "inversePropertyName": "associatedTasks",
             "description": "eventual issues related to the execution of a task"
         }
-    }
+    },
 
+    "backupTasks": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "backupTasks",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "root"},
+            "inversePropertyName": "backedUpTask",
+            "description": "A list of tasks, initially cloned from this task, to be executed at different workstations in the eventuality that this task fails or can't be completed as planned"
+        }
+    },
+
+    "backedUpTask": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "backedUpTask",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "root"},
+            "inversePropertyName": "backupTasks",
+            "description": "The task this task is a backup for"
+        }
+    },
+    "DeviceDescriptor": {
+        "object": "./device/device.mjson"
+    },
+    "associatedTools": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "associatedTools",
+            "cardinality": -1,
+            "inversePropertyName": "tasks",
+            "valueDescriptor": {"@": "DeviceDescriptor"},
+            "description": "These are really 'specified tools' by a process. For each associatedTool, we need a 'deviceHoldingTaskConfiguration', or associatedConfigurationTools? . Or is a task's associatedTool the ones whose type proprty points to one of the workstation tools, and store the properties needed for that task, overriding the defaults"
+        }
+    },
+    "DeviceConfigurationDescriptor": {
+        "object": "./device/device-configuration.mjson"
+    },
+    "associatedToolConfigurations": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "associatedToolConfigurations",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "DeviceConfigurationDescriptor"},
+            "description": "The concrete tools selected for that task and their configuration"
+        }
+    },
+    "activeTools": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "activeTools",
+            "cardinality": -1,
+            "inversePropertyName": "tasks",
+            "valueDescriptor": {"@": "DeviceDescriptor"},
+            "description": "the devices expected to be used as tools to accomplish a task"
+        }
+    },
+    "backupTools": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "backupTools",
+            "cardinality": -1,
+            "inversePropertyName": "tasks",
+            "valueDescriptor": {"@": "DeviceDescriptor"},
+            "description": "the backup devices expected to be used as tools to accomplish a task in case active tools can't be used"
+        }
+    },
+    "PartDescriptor": {
+        "object": "./part.mjson"
+    },
+    "associatedParts": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "associatedParts",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "PartDescriptor"},
+            "description": "The parts needed to commplete the task. We might want to re-visit the name."
+        }
+    }
 }

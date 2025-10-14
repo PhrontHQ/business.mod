@@ -1,0 +1,132 @@
+
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ProfessionalProfile",
+            "propertyDescriptors": [
+                {"@": "owner"},
+                {"@": "careerStatement"},
+                {"@": "employmentHistory"},
+                {"@": "coreStrengths"},
+                {"@": "competencies"},
+                {"@": "skills"},
+                {"@": "preferredNextRoles"},
+                {"@": "url"},
+                {"@": "hostingOrganization"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./professional-profile.mjson"
+            },
+            "exportName": "ProfessionalProfile",
+            "module": {
+                "%": "./professional-profile"
+            },
+            "object": {"@": "ProfessionalProfile"},
+            "parent": {"@": "ObjectDescriptor"}
+        }
+    },
+    "ProfessionalProfile": {
+        "object": "./professional-profile"
+    },
+    "ObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+    "owner": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "owner",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "PersonDescriptor"},
+            "inversePropertyName": "professionalProfiles",
+            "isMandatory": true
+        }
+    },
+    "PersonDescriptor": {
+        "object": "./party/person.mjson"
+    },
+
+    "careerStatement": {
+        "prototype": "core/meta/property-descriptor",
+        "values": {
+            "name": "careerStatement",
+            "valueType": "string"
+        }
+    },
+
+    "employmentHistory": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "employmentHistory",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "employmentPositionStaffingDescriptor"},
+            "inversePropertyName": "owner"
+       }
+    },
+    "employmentPositionStaffingDescriptor": {
+        "object": "../employment-position-staffing.mjson"
+    },
+
+    "coreStrengths": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "coreStrengths",
+            "cardinality": -1,
+            "valueType": "string"
+        }
+    },
+    "competencies": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "competencies",
+            "cardinality": -1,
+            "valueType": "string"
+        }
+    },
+    "skills": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "skills",
+            "cardinality": -1,
+            "valueType": "string"
+        }
+    },
+
+    "JobRoleDescriptor": {
+        "object": "../../job-role.mjson"
+    },
+
+    "preferredNextRoles": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "preferredNextRoles",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "JobRoleDescriptor"},
+            "description": "aka career of interest"
+        }
+    },
+
+    "url": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "url",
+            "valueType": "URL"
+        }
+    },
+    "hostingOrganization": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "hostingOrganization",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "OrganizationDescriptor"}
+        }
+    },
+    "OrganizationDescriptor": {
+        "object": "./party/organization.mjson"
+    }
+
+}

@@ -1,0 +1,54 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Deliverable",
+            "description": "Deliverable emphasizes a standardized, repeatable set of activities designed to achieve a specific outcome. It’s more about the rules, steps, and procedures than the flow of work.",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "jobRoles"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./deliverable.mjson"
+            },
+            "exportName": "Deliverable",
+            "module": {
+                "%": "./deliverable"
+            },
+            "object":{"@": "deliverable"},
+            "parent":{"@": "DataObjectDescriptor"}
+
+        }
+    },
+    "deliverable": {
+        "object": "./deliverable"
+    },
+
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true,
+            "isMandatory": true
+        }
+    },
+    "JobRolesDescriptor": {
+        "object": "./job-role.mjson"
+    },
+    "jobRoles": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "jobRoles",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "JobRolesDescriptor"},
+            "inversePropertyName": "deliverables"
+        }
+    }
+}

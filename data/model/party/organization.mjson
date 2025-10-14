@@ -8,7 +8,8 @@
                 {"@": "b2bCustomerRelationships"},
                 {"@": "supplierRelationships"},
                 {"@": "services"},
-                {"@": "customerEngagementQuestionnaires"}
+                {"@": "customerEngagementQuestionnaires"},
+                {"@": "employeeWorkPreferencesQuestionnaires"}
             ]
         }
     },
@@ -99,6 +100,21 @@
 
     "customerEngagementQuestionnaireDescriptor": {
         "object": "../customer-engagement-questionnaire.mjson"
+    },
+
+
+    "QuestionnaireDescriptor": {
+        "object": "./questionnaire/questionnaire.mjson"
+    },
+
+    "employeeWorkPreferencesQuestionnaires": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "employeeWorkPreferencesQuestionnaires",
+            "valueType": "array",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "QuestionnaireDescriptor"}
+       }
     }
 
 }

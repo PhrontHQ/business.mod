@@ -1,0 +1,57 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Workflow",
+            "description": "Workflow emphasizes the sequence of tasks or activities that move a project or program forward. It highlights the flow of work from one phase to another: How does the work move from start to finish?",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "phases"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./workflow.mjson"
+            },
+            "exportName": "Workflow",
+            "module": {
+                "%": "./workflow"
+            },
+            "object":{"@": "workflow"},
+            "parent":{"@": "DataObjectDescriptor"}
+
+        }
+    },
+    "workflow": {
+        "object": "./workflow"
+    },
+
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "PartyDescriptor": {
+        "object": "./party/party.mjson"
+    },
+
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true,
+            "isMandatory": true
+        }
+    },
+    "WorkflowPhaseDescriptor": {
+        "object": "./workflow-phase.mjson"
+    },
+    "phases": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "phases",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "WorkflowPhaseDescriptor"}
+        }
+    }
+}

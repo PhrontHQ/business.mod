@@ -1,0 +1,81 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "DeviceConfiguration",
+            "description": "Models an overall setup or arrangement of a device possible settings, which are of all properties a device can have",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "numericIdentifier"},
+                {"@": "description"},
+                {"@": "device"},                
+                {"@": "settingsStoringDevice"}                
+            ],
+            "objectDescriptorModule": {
+                "%": "./device-configuration.mjson"
+            },
+            "exportName": "DeviceConfiguration",
+            "module": {
+                "%": "./device-configuration.mjson"
+            },
+            "object":{"@": "DeviceConfiguration"},
+            "parent":{"@": "DataObject"}
+        }
+    },
+    "DeviceConfiguration": {
+        "object": "./device-configuration"
+    },
+    "DataObject": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "isSearchable": true,
+            "isLocalizable": true,
+            "valueType": "string"
+        }
+    },
+    "numericIdentifier": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "numericIdentifier",
+            "valueType": "number"
+        }
+    },
+    "description": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "description",
+            "isLocalizable": true,
+            "valueType": "string"
+        }
+    },
+
+    "DeviceDescriptor": {
+        "object": "../device.mjson"
+    },
+
+    "device": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "device",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "DeviceDescriptor"},
+            "inversePropertyName": "deviceConfigurations",
+            "description": "The device to which the configuration applies"
+        }
+    },
+    "settingsStoringDevice": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "settingsStoringDevice",
+            "cardinality": 1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "DeviceDescriptor"},
+            "description": "An instance of the same class as device that holds settings' values"
+        }
+    }
+}

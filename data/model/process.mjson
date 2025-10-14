@@ -1,0 +1,57 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "Process",
+            "description": "Process emphasizes a standardized, repeatable set of activities designed to achieve a specific outcome. It’s more about the rules, steps, and procedures than the flow of work.",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "steps"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./process.mjson"
+            },
+            "exportName": "Process",
+            "module": {
+                "%": "./process"
+            },
+            "object":{"@": "process"},
+            "parent":{"@": "DataObjectDescriptor"}
+
+        }
+    },
+    "process": {
+        "object": "./process"
+    },
+
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "PartyDescriptor": {
+        "object": "./party/party.mjson"
+    },
+
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true,
+            "isMandatory": true
+        }
+    },
+    "ProcessStepsDescriptor": {
+        "object": "./process-step.mjson"
+    },
+    "steps": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "steps",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "ProcessStepsDescriptor"}
+        }
+    }
+}

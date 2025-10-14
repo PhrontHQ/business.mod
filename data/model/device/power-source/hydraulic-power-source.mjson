@@ -1,0 +1,37 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "HydraulicPowerSource",
+            "description": "A power source providing energy, like a wall outlet or battery for an electrical power source",
+            "propertyDescriptors": [
+                {"@": "energyType"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./hydraulic-power-source.mjson"
+            },
+            "exportName": "HydraulicPowerSource",
+            "module": {
+                "%": "./hydraulic-power-source.mjson"
+            },
+            "object":{"@": "HydraulicPowerSource"},
+            "parent":{"@": "PowerSourceDescriptor"}
+        }
+    },
+    "HydraulicPowerSource": {
+        "object": "./hydraulic-power-source"
+    },
+    "PowerSourceDescriptor": {
+        "object": "./power-source.mjson"
+    },
+
+    "energyType": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "energyType",
+            "valueType": "string",
+            "defaultValue": "Hydraulic"
+        }
+    }
+
+}

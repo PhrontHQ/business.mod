@@ -1,0 +1,38 @@
+{
+    "root": {
+        "prototype": "core/meta/module-object-descriptor",
+        "values": {
+            "name": "WorkTeam",
+            "propertyDescriptors": [
+                {"@": "memberships"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./work-team.mjson"
+            },
+            "exportName": "WorkTeam",
+            "module": {
+                "%": "./work-team"
+            },
+            "parent":{"@": "PartyDescriptor"}
+        }
+    },
+
+    "PartyDescriptor": {
+        "object": "./party.mjson"
+    },
+
+    "WorkTeamMemberDescriptor": {
+        "object": "../work-team-member.mjson"
+    },
+    "memberships": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "memberships",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "WorkTeamMemberDescriptor"},
+            "inversePropertyName": "workTeam"
+        }
+    }
+
+}

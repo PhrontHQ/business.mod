@@ -1,0 +1,26 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ScanningDevice",
+            "propertyDescriptors": [
+            ],
+            "objectDescriptorModule": {
+                "%": "./scanning-device.mjson"
+            },
+            "exportName": "ScanningDevice",
+            "module": {
+                "%": "./scanning-device.mjson"
+            },
+            "object":{"@": "ScanningDevice"},
+            "parent":{"@": "ImagingDeviceDescriptor"}
+        }
+    },
+    "ScanningDevice": {
+        "object": "./scanning-device"
+    },
+    "ImagingDeviceDescriptor": {
+        "object": "./imaging-device.mjson"
+    }
+
+}

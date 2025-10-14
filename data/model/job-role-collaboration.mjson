@@ -1,0 +1,61 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "JobRoleCollaboration",
+            "propertyDescriptors": [
+                {"@": "jobRole"},
+                {"@": "collaboratingParty"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./job-role-collaboration.mjson"
+            },
+            "exportName": "JobRoleCollaboration",
+            "module": {
+                "%": "./job-role-collaboration"
+            },
+            "object":{"@": "JobRoleCollaboration"},
+            "parent":{"@": "DataObjectDescriptor"}
+
+        }
+    },
+    "JobRoleCollaboration": {
+        "object": "./job-role-collaboration"
+    },
+
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "JobRoleDescriptor": {
+        "object": "./job-role.mjson"
+    },
+    "jobRole": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "jobRole",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "JobRoleDescriptor"},
+            "inversePropertyName": "collaborations",
+            "description": "The jobRole that is collaborating with collaboratingParty"
+        }
+    },
+
+    "PartyDescriptor": {
+        "object": "./model/party/party.mjson"
+    },
+    "collaboratingParty": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "collaboratingParty",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "PartyDescriptor"},
+            "inversePropertyName": "jobRoleCollaborations",
+            "description": "a party this JobRole collaborates with. This could be an organization, "
+        }
+    }
+
+
+}

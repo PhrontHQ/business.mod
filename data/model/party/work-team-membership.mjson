@@ -1,0 +1,72 @@
+{
+    "root": {
+        "prototype": "core/meta/module-object-descriptor",
+        "values": {
+            "name": "WorkTeamMembership",
+            "propertyDescriptors": [
+                {"@": "workTeam"},
+                {"@": "party"},
+                {"@": "role"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./work-team-membership.mjson"
+            },
+            "exportName": "WorkTeamMembership",
+            "module": {
+                "%": "./work-team-membership"
+            },
+            "parent":{"@": "DataObjectDescriptor"}
+        }
+    },
+    
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "WorkTeamDescriptor": {
+        "object": "../work-team.mjson"
+    },
+    "workTeam": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "workTeam",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "WorkTeamDescriptor"},
+            "inversePropertyName": "memberships"
+        }
+    },
+
+    "PartyDescriptor": {
+        "object": "./party.mjson"
+    },
+
+    "party": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "party",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "PartyDescriptor"},
+            "inversePropertyName": "workTeamMemberships",
+            "description": "The party pariticipating in a workTeam. As a polymorphic relationship on Party, it opens the door to be an Organization, Persons, another WorkTeam, etc..."
+        }
+    },
+
+    "JobRoleDescriptor": {
+        "object": "../job-role.mjson"
+    },
+
+    "role": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "role",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "JobRoleDescriptor"},
+            "description": "The role the member/party is playing in workTeam"
+        }
+    }
+
+
+}

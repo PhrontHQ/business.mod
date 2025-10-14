@@ -1,0 +1,40 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "DirectCurrentPowerSource",
+            "description": "A power source providing energy, like a wall outlet or battery for an electrical power source",
+            "propertyDescriptors": [
+                {"@": "currentType"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./direct-current-power-source.mjson"
+            },
+            "exportName": "DirectCurrentPowerSource",
+            "module": {
+                "%": "./direct-current-power-source.mjson"
+            },
+            "object":{"@": "DirectCurrentPowerSource"},
+            "parent":{"@": "ElectricalPowerSourceDescriptor"}
+        }
+    },
+    "DirectCurrentPowerSource": {
+        "object": "./direct-current-power-source"
+    },
+    "ElectricalPowerSourceDescriptor": {
+        "object": "./electrical-power-source.mjson"
+    },
+
+    "currentType": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "currentType",
+            "valueType": "string",
+            "defaultValue": "Alternative",
+            "description": "typically alternative (AC) or direct (DC)" 
+        }
+    }
+
+    
+
+}

@@ -1,0 +1,53 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "NetworkingDevice",
+            "propertyDescriptors": [
+                {"@": "MACAddress"},
+                {"@": "subnetAddress"},
+                {"@": "gatewayAddress"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./networking-device.mjson"
+            },
+            "exportName": "NetworkingDevice",
+            "module": {
+                "%": "./networking-device.mjson"
+            },
+            "object":{"@": "NetworkingDevice"},
+            "parent":{"@": "DeviceDescriptor"}
+        }
+    },
+    "NetworkingDevice": {
+        "object": "./networking-device"
+    },
+    "DeviceDescriptor": {
+        "object": "../device.mjson"
+    },
+    "MACAddress": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "MACAddress",
+            "valueType": "string",
+            "description": "This should be its own type. Systems like PostgreSQL have their own, like macaddr/macaddr8"
+        }
+    },
+    "subnetAddress": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "subnetAddress",
+            "valueType": "string",
+            "description": "This should be its own type. Systems like PostgreSQL have their own, like inet and cidr"
+        }
+    },
+    "gatewayAddress": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "gatewayAddress",
+            "valueType": "string",
+            "description": "This should be its own type. Systems like PostgreSQL have their own, like inet and cidr"
+        }
+    }
+
+}

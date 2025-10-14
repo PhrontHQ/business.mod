@@ -1,0 +1,35 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PowerSource",
+            "description": "A power source is the origin of energy, like a wall outlet or battery for an electrical power source",
+            "propertyDescriptors": [
+                {"@": "energyType"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./power-source.mjson"
+            },
+            "exportName": "PowerSource",
+            "module": {
+                "%": "./power-source.mjson"
+            },
+            "object":{"@": "PowerSource"},
+            "parent":{"@": "DeviceDescriptor"}
+        }
+    },
+    "PowerSource": {
+        "object": "./power-source"
+    },
+    "DeviceDescriptor": {
+        "object": "../../device.mjson"
+    },
+
+    "energyType": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "energyType",
+            "valueType": "string"
+        }
+    }
+}

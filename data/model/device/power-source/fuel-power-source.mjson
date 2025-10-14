@@ -1,0 +1,37 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "FuelPowerSource",
+            "description": "A power source providing energy, like a wall outlet or battery for an electrical power source",
+            "propertyDescriptors": [
+                {"@": "energyType"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./fuel-power-source.mjson"
+            },
+            "exportName": "FuelPowerSource",
+            "module": {
+                "%": "./fuel-power-source.mjson"
+            },
+            "object":{"@": "FuelPowerSource"},
+            "parent":{"@": "PowerSourceDescriptor"}
+        }
+    },
+    "FuelPowerSource": {
+        "object": "./fuel-power-source"
+    },
+    "PowerSourceDescriptor": {
+        "object": "./power-source.mjson"
+    },
+
+    "energyType": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "energyType",
+            "valueType": "string",
+            "defaultValue": "Fuel"
+        }
+    }
+
+}
