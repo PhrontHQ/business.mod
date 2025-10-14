@@ -1,0 +1,83 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "JobGradeStructure",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "jobGrades"},
+                {"@": "bottomUpHierarchyLevelOrder"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./job-grade-structure.mjson"
+            },
+            "exportName": "JobGradeStructure",
+            "module": {
+                "%": "./job-grade-structure"
+            },
+            "object":{"@": "JobGradeStructure"},
+            "parent":{"@": "DataObjectDescriptor"}
+
+        }
+    },
+    "JobGradeStructure": {
+        "object": "./job-grade-structure"
+    },
+
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true,
+            "isMandatory": true
+        }
+    },
+
+    "OrderType": {
+        "object": "mod/data/model/data-ordering[OrderType]"
+    },
+
+    "bottomUpHierarchyLevelOrder": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "bottomUpHierarchyLevelOrder",
+            "valueType": "enum",
+            "isLocalizable": true,
+            "isSearchable": true,
+            "isMandatory": true,
+            "desceiption": "Leaving OrderType above for now, this enum business smells clunky..."
+        }
+    },
+
+    "numericLevel": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "numericLevel",
+            "valueType": "number",
+            "isSearchable": true
+        }
+    },
+
+    "JobGradeDescriptor": {
+        "object": "./job-grade.mjson"
+    },
+    "jobGrades": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "jobGrades",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "JobGradeDescriptor"},
+            "inversePropertyName": "jobGradeStructure",
+            "description": "The JobGrades associated with this JobGradeStructure"
+        }
+    }
+
+
+}

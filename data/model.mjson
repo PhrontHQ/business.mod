@@ -61,6 +61,7 @@
             {"@": "Deliverable"},
             {"@": "Job"},
             {"@": "JobGrade"},
+            {"@": "JobGradeStructure"},
             {"@": "JobRole"},
             {"@": "Process"},
             {"@": "ProcessStep"},
@@ -296,6 +297,10 @@
 
     "JobGrade": {
         "object": "./model/job-grade.mjson"
+    },
+
+    "JobGradeStructure": {
+        "object": "./model/job-grade-structure.mjson"
     },
 
     "JobRole": {
