@@ -1,14 +1,14 @@
 var DataObject = require("mod/data/model/data-object").DataObject;
 
 /**
- * @class WorkflowPhase
+ * @class ProcessStep
  * @extends DataObject
  */
 
 
-exports.WorkflowPhase = DataObject.specialize(/** @lends WorkflowPhase.prototype */ {
+exports.ProcessStep = DataObject.specialize(/** @lends ProcessStep.prototype */ {
     constructor: {
-        value: function WorkflowPhase() {
+        value: function ProcessStep() {
             this.super();
             return this;
         }
