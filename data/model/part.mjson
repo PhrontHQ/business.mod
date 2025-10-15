@@ -13,14 +13,9 @@
                 {"@": "prefix"},
                 {"@": "base"},
                 {"@": "suffix"},
-                {"@": "activity"},
-                {"@": "cpsc"},
-                {"@": "noticeActivity"},
-                {"@": "usageConditionCodes"},
-                {"@": "associatedFeatures"},
+                {"@": "unitType"},
                 {"@": "associatedTasks"},
-                {"@": "needsTraceability"},
-                {"@": "unitType"}
+                {"@": "needsTraceability"}
             ],
             "objectDescriptorModule": {
                 "%": "./part.mjson"
@@ -116,28 +111,6 @@
             "description": "Alternate part number strings to account for manufacture descrepencies at scan time"
         }
     },
-    "activity": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "activity",
-            "valueType": "string"
-        }
-    },
-    "cpsc": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "cpsc",
-            "valueType": "string",
-            "description": "Corporate Product Systems Classification: A corporate-wide numbering system that classifies all vehicle parts into eighteen major classes (systems) and approximately 800 subsystems and sub-subsystems using six numerical positions for engineering release and for organizing a variety of engineering data."
-        }
-    },
-    "noticeActivity": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "noticeActivity",
-            "valueType": "string"
-        }
-    },
     "TaskDescriptor": {
         "object": "./task.mjson"
     },
@@ -150,34 +123,13 @@
             "inversePropertyName": "partsUsed"
         }
     },
-    "usageConditionCodes": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "usageConditionCodes",
-            "cardinality": -1,
-            "valueType": "object"
-        }
-    },
-    "VehicleFeatureDescriptor": {
-        "object": "./vehicle-feature.mjson"
-    },
-    "associatedFeatures": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "associatedFeatures",
-            "cardinality": -1,
-            "inversePropertyName": "associatedParts",
-            "valueDescriptor": {"@": "VehicleFeatureDescriptor"},
-            "description": "All features associated with that task"
-        }
-    },
     "needsTraceability": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "needsTraceability",
             "cardinality": 1,
             "valueType": "boolean",
-            "description": "This is an indication that there's an interest to know more about the whereabouts of that part. But it's not getting into modeling the reasons behind it: legal? audi? "
+            "description": "This is an indication that there's an interest to know more about the whereabouts of that part. But it's not getting into modeling the reasons behind it like for legal or audit reason"
         }
     }
 

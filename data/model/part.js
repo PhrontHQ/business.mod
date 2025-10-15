@@ -27,29 +27,18 @@ exports.Part = Tangible.specialize(/** @lends Part.prototype */ {
      * @property {String} value
      * @default null
      */
-    number: {
+    partNumber: {
         value: undefined
     },
 
     /**
-     * Date in which part was 'effective,' meaning the part was swapped into usage at the plant
+     * Date Range in which part is 'effective,' meaning the part was swapped into usage 
      * Can potentially be in the future.
      *
-     * @property {Date} value
+     * @property {Range<Date>} value
      * @default null
      */
-    usageStartDate: {
-        value: undefined
-    },
-
-    /**
-     * Date in which a part was no longer 'effective,' meaning the part was retired in favor of a new version.
-     * Can potentially be in the future.
-     *
-     * @property {Date} value
-     * @default null
-     */
-    usageEndDate: {
+    productionUseDateRange: {
         value: undefined
     },
 
@@ -84,45 +73,12 @@ exports.Part = Tangible.specialize(/** @lends Part.prototype */ {
     },
 
     /**
-     * 'Activity' code, not really sure what this means.
-     * TODO: ask for meaning
+     * Part 'suffix' -- part of the greater 'number' identifier for a part
      *
      * @property {String} value
      * @default null
      */
-    activity: {
-        value: undefined
-    },
-
-    /**
-     * CPSC - code provided by GSPAS, need to ask for context.
-     * TODO: ask for meaning
-     *
-     * @property {String} value
-     * @default null
-     */
-    cpsc: {
-        value: undefined
-    },
-
-    /**
-     * NoticeActivity - code provided by GSPAS, need to ask for context.
-     * TODO: ask for meaning
-     *
-     * @property {String} value
-     * @default null
-     */
-    noticeActivity: {
-        value: undefined
-    },
-
-    /**
-     * TaskInfo
-     *
-     * @property {String} value
-     * @default null
-     */
-    noticeActivity: {
+    unitType: {
         value: undefined
     },
 
@@ -132,18 +88,15 @@ exports.Part = Tangible.specialize(/** @lends Part.prototype */ {
      * @property {Task[]} value
      * @default null
      */
-    tasksUsingPart: {
+    associatedTasks: {
         value: undefined
     },
 
-    /**
-     * List of usage condition codes associated with this part
-     * According to GSPAS team, one part can be assocaited with more than one usage cond. code
-     *
+    /**     *
      * @property {UsageConditionCode[]} value
      * @default null
      */
-    tasksUsingPart: {
+    needsTraceability: {
         value: undefined
     }
 });

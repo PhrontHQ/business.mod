@@ -54,7 +54,7 @@
     },
 
     "DeviceDescriptor": {
-        "object": "../device.mjson"
+        "object": "./device.mjson"
     },
 
     "device": {

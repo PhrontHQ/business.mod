@@ -332,7 +332,7 @@
         }
     },
     "DeviceConfigurationDescriptor": {
-        "object": "./device/device-configuration.mjson"
+        "object": "./device-configuration.mjson"
     },
 
     "deviceConfigurations": {
@@ -387,7 +387,7 @@
     },
 
     "TaskDescriptor": {
-        "object": "./task.mjson"
+        "object": "../task.mjson"
     },
     "tasks": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -399,17 +399,13 @@
         }
     },
 
-    "TaskTypeDescriptor": {
-        "object": "./task-type.mjson"
-    },
-
     "associatedTaskTypes": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "associatedTaskTypes",
             "cardinality": -1,
             "inversePropertyName": "associatedToolTypes",
-            "valueDescriptor": {"@": "TaskTypeDescriptor"}
+            "valueDescriptor": {"@": "TaskDescriptor"}
         }
     },
 
