@@ -53,7 +53,7 @@
     },
 
     "WorkTeamMembershipDescriptor": {
-        "object": "../work-team-membership.mjson"
+        "object": "./work-team-membership.mjson"
     },
     "workTeamMemberships": {
         "prototype": "mod/core/meta/property-descriptor",

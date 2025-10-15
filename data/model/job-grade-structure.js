@@ -6,17 +6,20 @@ var DataObject = require("mod/data/model/data-object").DataObject;
  */
 
 
-exports.JobGrade = DataObject.specialize(/** @lends JobGrade.prototype */ {
+exports.JobGradeStructure = DataObject.specialize(/** @lends JobGradeStructure.prototype */ {
     constructor: {
-        value: function JobGrade() {
+        value: function JobGradeStructure() {
             this.super();
             return this;
         }
     },
-    jobRole: {
+    name: {
         value: undefined
     },
-    collaboratingParty: {
+    jobGrades: {
+        value: undefined
+    },
+    bottomUpHierarchyLevelOrder: {
         value: undefined
     }
 

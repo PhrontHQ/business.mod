@@ -1,0 +1,59 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PrintDocument",
+            "propertyDescriptors": [
+                {"@": "documentDescriptionLanguage"},
+                {"@": "documentSourceCode"},
+                {"@": "documentSourceCodeVariables"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./print-document.mjson"
+            },
+            "exportName": "PrintDocument",
+            "module": {
+                "%": "./print-document.mjson"
+            },
+            "object":{"@": "PrintDocument"},
+            "parent":{"@": "IntangibleDescriptor"}
+        }
+    },
+    "PrintDocument": {
+        "object": "./print-document"
+    },
+    "IntangibleDescriptor": {
+        "object": "mod/data/model/party/intangible.mjson"
+    },
+    "documentDescriptionLanguage": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "documentDescriptionLanguage",
+            "valueType": "string",
+            "description": "A language like PostScript, PCL or IPL (Intermec Printer Language)"
+        }
+    },
+    "documentSourceCode": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "documentSourceCode",
+            "valueType": "string",
+            "description": "The source of the page to print expressed in documentDescriptionLanguage"
+        }
+    },
+    "PrintDocumentSourceCodeVariableDescriptor": {
+        "object": "./print-document-source-code-variable.mjson"
+    },
+    "documentSourceCodeVariables": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "documentSourceCodeVariables",
+            "valueType": "object",
+            "cardinality": -1,
+            "isSearchable": true,
+            "valueDescriptor": {"@": "PrintDocumentSourceCodeVariableDescriptor"},
+            "description": "The list of variables found in documentSource making it effectively a template"
+        }
+    }
+
+}

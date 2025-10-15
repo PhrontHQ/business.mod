@@ -80,7 +80,7 @@
     },
 
     "JobRoleCollaborationDescriptor": {
-        "object": "../job-role-collaboration.mjson"
+        "object": "./job-role-collaboration.mjson"
     },
     "collaborations": {
         "prototype": "mod/core/meta/property-descriptor",

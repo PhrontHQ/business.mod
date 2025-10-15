@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "WorkTeamMembership",
             "propertyDescriptors": [
@@ -24,7 +24,7 @@
     },
 
     "WorkTeamDescriptor": {
-        "object": "../work-team.mjson"
+        "object": "./work-team.mjson"
     },
     "workTeam": {
         "prototype": "mod/core/meta/property-descriptor",

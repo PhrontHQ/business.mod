@@ -1,0 +1,84 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PrintDocumentSourceCodeVariable",
+            "propertyDescriptors": [
+                {"@": "userInputString"},
+                {"@": "taskVariable"},
+                {"@": "taskVariableValue"},
+                {"@": "taskVariableValueSubstringRange"},
+                {"@": "stringValue"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./print-document-source-code-variable.mjson"
+            },
+            "exportName": "PrintDocumentSourceCodeVariable",
+            "module": {
+                "%": "./print-document-source-code-variable.mjson"
+            },
+            "object":{"@": "PrintDocumentSourceCodeVariable"},
+            "parent":{"@": "IntangibleDescriptor"}
+        }
+    },
+    "PrintDocumentSourceCodeVariable": {
+        "object": "./print-document-source-code-variable"
+    },
+    "IntangibleDescriptor": {
+        "object": "mod/data/model/party/intangible.mjson"
+    },
+    "userInputString": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "userInputString",
+            "valueType": "string",
+            "description": "A value input by the user"
+        }
+    },
+    "RangeDescriptor": {
+        "object": "mod/core/range.mjson"
+    },
+    "taskVariableValueSubstringRange": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "taskVariableValueSubstringRange",
+            "valueType": "number",
+            "cardinality": 1,
+            "collectionValueType": "range",
+            "valueDescriptor": {"@": "RangeDescriptor"},
+            "description": "if present, the range defining the substring to use out of taskVariableValue to compose the final stringValue"
+        }
+    },
+
+    "TaskVariableDescriptor": {
+        "object": "../task-variable.mjson"
+    },
+    "taskVariable": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "taskVariable",
+            "cardinality": 1,
+            "valueType": "object",
+            "inversePropertyName": "printDocumentSourceCodeVariables",
+            "valueDescriptor": {"@": "TaskVariableDescriptor"},
+            "description": "taskVariable brings a dynmic aspect of data off the pring task involved"
+        }
+    },
+    "taskVariableValue": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "taskVariableValue",
+            "valueType": "string",
+            "description": "The value for the variable after evaluation. This is for printing, all we need is a string"
+        }
+    },
+    "stringValue": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "stringValue",
+            "valueType": "string",
+            "description": "The stored value for the variable. This is expected to be concatenation of taskVariableValue's subrange, if any, and the userInputString"
+        }
+    }
+
+}

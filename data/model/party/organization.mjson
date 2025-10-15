@@ -104,7 +104,7 @@
 
 
     "QuestionnaireDescriptor": {
-        "object": "./questionnaire/questionnaire.mjson"
+        "object": "../questionnaire/questionnaire.mjson"
     },
 
     "employeeWorkPreferencesQuestionnaires": {

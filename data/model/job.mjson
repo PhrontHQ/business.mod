@@ -70,7 +70,7 @@
         }
     },
     "employmentPositionDescriptor": {
-        "object": "./employment-job.mjson"
+        "object": "./employment-position.mjson"
     },
 
     "JobGradeDescriptor": {

@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "core/meta/module-object-descriptor",
+        "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "WorkTeam",
             "propertyDescriptors": [
@@ -21,8 +21,8 @@
         "object": "./party.mjson"
     },
 
-    "WorkTeamMemberDescriptor": {
-        "object": "../work-team-member.mjson"
+    "WorkTeamMembershipDescriptor": {
+        "object": "./work-team-membership.mjson"
     },
     "memberships": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -30,7 +30,7 @@
             "name": "memberships",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "WorkTeamMemberDescriptor"},
+            "valueDescriptor": {"@": "WorkTeamMembershipDescriptor"},
             "inversePropertyName": "workTeam"
         }
     }

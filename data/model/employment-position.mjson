@@ -14,18 +14,18 @@
                 {"@": "secondEmploymentPositionRelationships"}
             ],
             "objectDescriptorModule": {
-                "%": "./employment-job.mjson"
+                "%": "./employment-position.mjson"
             },
             "exportName": "EmploymentPosition",
             "module": {
-                "%": "./employment-job"
+                "%": "./employment-position"
             },
-            "object":{"@": "employment-job"},
+            "object":{"@": "employment-position"},
             "parent":{"@": "party-party-relationship"}
         }
     },
-    "employment-job": {
-        "object": "./employment-job"
+    "employment-position": {
+        "object": "./employment-position"
     },
     "party-party-relationship": {
         "object": "./party-party-relationship.mjson"
@@ -107,7 +107,7 @@
         }
     },
     "employment_job_staffing_descriptor": {
-        "object": "./employment-job-staffing.mjson"
+        "object": "./employment-position-staffing.mjson"
     },
     "firstEmploymentPositionRelationships": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -130,7 +130,7 @@
         }
     },
     "employment_job_relationship_descriptor": {
-        "object": "./employment-job-relationship.mjson"
+        "object": "./employment-position-relationship.mjson"
     }
 
 }

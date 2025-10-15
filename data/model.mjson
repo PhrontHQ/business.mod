@@ -39,7 +39,6 @@
             {"@": "order"},
             {"@": "orderLineItem"},
             {"@": "orderTransaction"},
-            {"@": "position"},
             {"@": "EmploymentPosition"},
             {"@": "EmploymentType"},
             {"@": "EmploymentPositionRelationship"},
@@ -76,6 +75,8 @@
             {"@": "NetworkingDevice"},
             {"@": "ImagingDevice"},
             {"@": "PrintingDevice"},
+            {"@": "PrintDocumentObjectDescriptor"},
+            {"@": "PrintDocumentSourceCodeVariableObjectDescriptor"},
             {"@": "ScanningDevice"},
             {"@": "PowerSource"},
             {"@": "ElectricalPowerSource"},
@@ -209,10 +210,6 @@
 
     "orderTransaction": {
         "object": "./model/order-transaction.mjson"
-    },
-
-    "position": {
-        "object": "./model/position.mjson"
     },
 
     "EmploymentPosition": {
@@ -359,6 +356,12 @@
 
     "PrintingDevice": {
         "object": "./model/device/printing-device.mjson"
+    },
+    "PrintDocumentObjectDescriptor": {
+        "object": "data/model/device/print-document.mjson"
+    },
+    "PrintDocumentSourceCodeVariableObjectDescriptor": {
+        "object": "data/model/device/print-document-source-code-variable.mjson"
     },
 
     "ScanningDevice": {

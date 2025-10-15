@@ -45,7 +45,6 @@
                 {"@": "subtypes"},
                 
                 {"@": "logicalNode"},
-                {"@": "organizationAllocations"},
 
                 {"@": "usageModeOptions"},
                 {"@": "possibleUsageModes"},
@@ -449,19 +448,6 @@
             "name": "logicalNode",
             "cardinality": 1,
             "valueType": "number"
-        }
-    },
-
-    "OrganizationDeviceAllocationDescriptor": {
-        "object": "./organization-device-allocation.mjson"
-    },
-    "organizationAllocations": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "organizationAllocations",
-            "cardinality": -1,
-            "valueDescriptor": {"@": "OrganizationDeviceAllocationDescriptor"},
-            "description": "Device associated to a work division of a factory"
         }
     },
 

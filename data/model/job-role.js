@@ -1,4 +1,4 @@
-var Role = require("mod/data/model/data-object").Role;
+var Role = require("mod/data/model/party/role").Role;
 
 /**
  * @class Job
