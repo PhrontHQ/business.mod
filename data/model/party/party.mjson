@@ -52,8 +52,8 @@
         }
     },
 
-    "JobRoleCollaborationDescriptor": {
-        "object": "../job-role-collaboration.mjson"
+    "WorkTeamMembershipDescriptor": {
+        "object": "../work-team-membership.mjson"
     },
     "workTeamMemberships": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -61,7 +61,7 @@
             "name": "workTeamMemberships",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "JobRoleCollaborationDescriptor"},
+            "valueDescriptor": {"@": "WorkTeamMembershipDescriptor"},
             "inversePropertyName": "party",
             "description": "The WorTeam's memberships this party participates in"
         }

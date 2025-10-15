@@ -78,6 +78,21 @@
             "valueDescriptor": {"@": "processes_descriptor"}
         }
     },
+
+    "JobRoleCollaborationDescriptor": {
+        "object": "../job-role-collaboration.mjson"
+    },
+    "collaborations": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "collaborations",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "JobRoleCollaborationDescriptor"},
+            "inversePropertyName": "jobRole"
+        }
+    },
+
     "DeliverableDescriptor": {
         "object": "./deliverable.mjson"
     },
