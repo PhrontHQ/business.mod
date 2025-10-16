@@ -5,9 +5,9 @@
             "name": "PrintDocumentSourceCodeVariable",
             "propertyDescriptors": [
                 {"@": "userInputString"},
-                {"@": "taskVariable"},
-                {"@": "taskVariableValue"},
-                {"@": "taskVariableValueSubstringRange"},
+                {"@": "variable"},
+                {"@": "variableValue"},
+                {"@": "variableValueSubstringRange"},
                 {"@": "stringValue"}
             ],
             "objectDescriptorModule": {
@@ -38,10 +38,10 @@
     "RangeDescriptor": {
         "object": "mod/core/range.mjson"
     },
-    "taskVariableValueSubstringRange": {
+    "variableValueSubstringRange": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "taskVariableValueSubstringRange",
+            "name": "variableValueSubstringRange",
             "valueType": "number",
             "cardinality": 1,
             "collectionValueType": "range",
@@ -50,24 +50,24 @@
         }
     },
 
-    "TaskVariableDescriptor": {
-        "object": "../task-variable.mjson"
+    "VariableDescriptor": {
+        "object": "mod/data/model/variable.mjson"
     },
-    "taskVariable": {
+    "variable": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "taskVariable",
+            "name": "variable",
             "cardinality": 1,
             "valueType": "object",
             "inversePropertyName": "printDocumentSourceCodeVariables",
-            "valueDescriptor": {"@": "TaskVariableDescriptor"},
-            "description": "taskVariable brings a dynmic aspect of data off the pring task involved"
+            "valueDescriptor": {"@": "VariableDescriptor"},
+            "description": "Brings a dynmic aspect of data off the print involved"
         }
     },
-    "taskVariableValue": {
+    "variableValue": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "taskVariableValue",
+            "name": "variableValue",
             "valueType": "string",
             "description": "The value for the variable after evaluation. This is for printing, all we need is a string"
         }
@@ -77,7 +77,7 @@
         "values": {
             "name": "stringValue",
             "valueType": "string",
-            "description": "The stored value for the variable. This is expected to be concatenation of taskVariableValue's subrange, if any, and the userInputString"
+            "description": "The stored value for the variable. This is expected to be concatenation of variableValue's subrange, if any, and the userInputString"
         }
     }
 
