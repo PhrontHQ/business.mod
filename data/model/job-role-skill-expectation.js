@@ -1,14 +1,14 @@
 var DataObject = require("mod/data/model/data-object").DataObject;
 
 /**
- * @class PersonalStrengthAssessment
+ * @class JobRoleSkillExpectation
  * @extends DataObject
  */
 
 
-exports.PersonalStrengthAssessment = DataObject.specialize(/** @lends PersonalStrengthAssessment.prototype */ {
+exports.JobRoleSkillExpectation = DataObject.specialize(/** @lends JobRoleSkillExpectation.prototype */ {
     constructor: {
-        value: function PersonalStrengthAssessment() {
+        value: function JobRoleSkillExpectation() {
             this.super();
             return this;
         }
