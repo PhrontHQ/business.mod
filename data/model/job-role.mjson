@@ -9,6 +9,7 @@
                 {"@": "processes"},
                 {"@": "collaborations"},
                 {"@": "deliverables"},
+                {"@": "skillExpectations"},
                 {"@": "jobs"}
             ],
             "objectDescriptorModule": {
@@ -103,6 +104,19 @@
             "valueType": "object",
             "cardinality": -1,
             "valueDescriptor": {"@": "DeliverableDescriptor"}
+        }
+    },
+
+    "JobRoleSkillExpectationDescriptor": {
+        "object": "./job-role-skill-expectation.mjson"
+    },
+    "skillExpectations": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "skillExpectations",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "JobRoleSkillExpectationDescriptor"}
         }
     }
 

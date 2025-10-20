@@ -1,0 +1,54 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "ProficencyScale",
+            "description": "ProficencyScale group a list of ",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "levels"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./proficency-scale.mjson"
+            },
+            "exportName": "ProficencyScale",
+            "module": {
+                "%": "./proficency-scale"
+            },
+            "object":{"@": "proficency-scale"},
+            "parent":{"@": "DataObjectDescriptor"}
+
+        }
+    },
+    "proficency-scale": {
+        "object": "./proficency-scale"
+    },
+
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true,
+            "isMandatory": true
+        }
+    },
+    "proficencyLevelDescriptor": {
+        "object": "./proficency-level.mjson"
+    },
+    "levels": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "levels",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "proficencyLevelDescriptor"},
+            "inversePropertyName": "scale"
+        }
+    }
+}

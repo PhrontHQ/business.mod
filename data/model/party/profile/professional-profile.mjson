@@ -69,12 +69,16 @@
         "object": "../../employment-position-staffing.mjson"
     },
 
+    "PersonalStrengthDescriptor": {
+        "object": "./personal-strength.mjson"
+    },
     "coreStrengths": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "coreStrengths",
             "cardinality": -1,
-            "valueType": "string"
+            "valueType": "object",
+            "valueDescriptor": {"@": "PersonalStrengthDescriptor"}
         }
     },
     "competencies": {
@@ -85,12 +89,17 @@
             "valueType": "string"
         }
     },
+
+    "SkillDescriptor": {
+        "object": "./skill.mjson"
+    },
     "skills": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "skills",
             "cardinality": -1,
-            "valueType": "string"
+            "valueType": "object",
+            "valueDescriptor": {"@": "SkillDescriptor"}
         }
     },
 

@@ -5,8 +5,7 @@
             "name": "JobGradeStructure",
             "propertyDescriptors": [
                 {"@": "name"},
-                {"@": "jobGrades"},
-                {"@": "bottomUpHierarchyLevelOrder"}
+                {"@": "jobGrades"}
             ],
             "objectDescriptorModule": {
                 "%": "./job-grade-structure.mjson"
@@ -43,7 +42,7 @@
         "object": "mod/data/model/data-ordering[OrderType]"
     },
 
-    "bottomUpHierarchyLevelOrder": {
+    "bottomUpHierarchyLevelOrderingDirection": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "bottomUpHierarchyLevelOrder",
@@ -67,6 +66,14 @@
     "JobGradeDescriptor": {
         "object": "./job-grade.mjson"
     },
+    "jobGradeOrderingRule": {
+        "prototype": "mod/data/model/ordering-rule",
+        "values": {
+            "expression": "bottomUpHierarchyLevel",
+            "orderingDirection": "Descending"
+        }
+    },
+
     "jobGrades": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
@@ -75,9 +82,11 @@
             "cardinality": -1,
             "valueDescriptor": {"@": "JobGradeDescriptor"},
             "inversePropertyName": "jobGradeStructure",
-            "description": "The JobGrades associated with this JobGradeStructure"
+            "description": "The JobGrades associated with this JobGradeStructure",
+            "orderingRules": [
+                {"@": "jobGradeOrderingRule"}
+            ]
         }
     }
-
 
 }

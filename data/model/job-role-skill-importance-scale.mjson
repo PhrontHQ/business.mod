@@ -1,0 +1,54 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "JobRoleSkillImportanceScale",
+            "description": "Designed to assert how is skill important to a job's role, through the use oif multiple levels / points",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "levels"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./job-role-skill-importance-scale.mjson"
+            },
+            "exportName": "JobRoleSkillImportanceScale",
+            "module": {
+                "%": "./job-role-skill-importance-scale"
+            },
+            "object":{"@": "job-role-skill-importance-scale"},
+            "parent":{"@": "DataObjectDescriptor"}
+
+        }
+    },
+    "job-role-skill-importance-scale": {
+        "object": "./job-role-skill-importance-scale"
+    },
+
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true,
+            "isMandatory": true
+        }
+    },
+    "proficencyLevelDescriptor": {
+        "object": "./proficency-level.mjson"
+    },
+    "levels": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "levels",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "proficencyLevelDescriptor"},
+            "inversePropertyName": "proficencyScale"
+        }
+    }
+}

@@ -1,0 +1,94 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PersonalSkillAssessment",
+            "description": "A universal way to model human strengths, whether they’re technical, behavioral, or cognitive",
+            "propertyDescriptors": [
+                {"@": "person"},
+                {"@": "skill"},
+                {"@": "selfAssessedProficencyLevel"},
+                {"@": "assessmentQuestionnaires"},
+                {"@": "asessmentRespondentQuestionnaires"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./personal-strength-assessment.mjson"
+            },
+            "exportName": "PersonalSkillAssessment",
+            "module": {
+                "%": "./personal-strength-assessment"
+            },
+            "object":{"@": "personal-strength-assessment"},
+            "parent":{"@": "DataObjectDescriptor"}
+
+        }
+    },
+    "personal-strength-assessment": {
+        "object": "./personal-strength-assessment"
+    },
+
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "PersonDescriptor": {
+        "object": "./person.mjson"
+    },
+    "person": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "person",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "PersonDescriptor"},
+            "inversePropertyName": "strengthAssessments"
+        }
+    },
+    "PersonalStrengthDescriptor": {
+        "object": "./personal-strength.mjson"
+    },
+    "strength": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "strength",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "PersonalStrengthDescriptor"},
+            "inversePropertyName": "personalStrengthAssessments"
+        }
+    },
+    "selfAssessedRanking": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "selfAssessedRanking",
+            "valueType": "number",
+            "isSearchable": true
+        }
+    },
+    "QuestionnaireDescriptor": {
+        "object": "data/model/questionnaire/questionnaire.mjson"
+    },
+    "assessmentQuestionnaires": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "asessmentQuestionaires",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "QuestionnaireDescriptor"},
+            "description": "Questionnaires that assess one's personal strengths."
+        }
+    },
+    "RespondentQuestionnaireDescriptor": {
+        "object": "data/model/questionnaire/respondent-questionnaire.mjson"
+    },
+    "asessmentRespondentQuestionnaires": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "asessmentRespondentQuestionnaires",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "RespondentQuestionnaireDescriptor"},
+            "description": "Questionnaires that assess one's personal strengths."
+        }
+    }
+}

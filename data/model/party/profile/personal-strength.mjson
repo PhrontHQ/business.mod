@@ -1,0 +1,57 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "PersonalStrength",
+            "description": "A universal way to model human strengths, whether they’re technical, behavioral, or cognitive",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "personalStrengthAssessments"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./personal-strength.mjson"
+            },
+            "exportName": "PersonalStrength",
+            "module": {
+                "%": "./personal-strength"
+            },
+            "object":{"@": "personal-strength"},
+            "parent":{"@": "DataObjectDescriptor"}
+
+        }
+    },
+    "personal-strength": {
+        "object": "./personal-strength"
+    },
+
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true,
+            "isMandatory": true
+        }
+    },
+
+    "PersonalStrengthAssessmentDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "personalStrengthAssessments": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "strength",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "PersonalStrengthAssessmentDescriptor"},
+            "inversePropertyName": "strength"
+        }
+    }
+
+}

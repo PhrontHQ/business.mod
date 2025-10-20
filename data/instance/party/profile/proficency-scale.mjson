@@ -1,0 +1,31 @@
+{
+    "root": {
+        "value": [
+           {"@": "0199f8df-c7b4-7cdc-b68e-78042e80fa30"},
+           {"@": "0199f8e0-177e-789d-abbc-e607e1fdc220"}           
+        ]
+    },
+    "0199f8df-c7b4-7cdc-b68e-78042e80fa30": {
+        "prototype": "data/model/party/profiule/proficency-scale",
+        "values": {
+            "name": {
+                "en": {
+                    "US": "Four Level Proficency Scale"
+                },
+                "fr": {
+                    "FR": ""
+                }
+            },
+            "identifier": "0199f8df-c7b4-7cdc-b68e-78042e80fa30",
+            "levels": [
+                {"@": "CollaborativeRobotDeviceType"}
+            ]
+        }
+    },
+
+    
+    "0199f8e0-177e-789d-abbc-e607e1fdc220": {
+
+    }
+
+}

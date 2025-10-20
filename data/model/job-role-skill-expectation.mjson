@@ -1,0 +1,86 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "JobRoleSkillExpectation",
+            "description": "Captures expecations around a skill in regard to a job's role",
+            "propertyDescriptors": [
+                {"@": "jobRole"},
+                {"@": "skill"},
+                {"@": "importance"},
+                {"@": "assessmentQuestionnaires"},
+                {"@": "roleHoldeProficiency"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./job-role-skill-expectation.mjson"
+            },
+            "exportName": "JobRoleSkillExpectation",
+            "module": {
+                "%": "./job-role-skill-expectation"
+            },
+            "object":{"@": "job-role-skill-expectation"},
+            "parent":{"@": "DataObjectDescriptor"}
+
+        }
+    },
+    "job-role-skill-expectation": {
+        "object": "./job-role-skill-expectation"
+    },
+
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "JobRoleDescriptor": {
+        "object": "./job-role.mjson"
+    },
+    "jobRole": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "jobRole",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "JobRoleDescriptor"},
+            "inversePropertyName": "skillExpectations",
+            "description": "The jobRole for which expectations are captured for skill"
+
+        }
+    },
+    "SkillDescriptor": {
+        "object": "./party/profile/skill.mjson"
+    },
+    "skill": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "skill",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "SkillDescriptor"},
+            "inversePropertyName": "personalStrengthAssessments",
+            "description": "The skill for which expectations are captured for jobRole"
+        }
+    },
+    "importance": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "importance",
+            "valueType": "number",
+            "isSearchable": true,
+            "description": "Models how the skill is important to the JobRole"
+
+        }
+    },
+    "ProficencyLevelDescriptor": {
+        "object": "data/model/party/profile/proficency-level.mjson"
+    },
+    "roleHoldeProficiency": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "roleHoldeProficiency",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "ProficencyLevelDescriptor"},
+            "description": "Expections regarding role holder's proficency at that role. That might need to be a range?"
+        }
+    }
+}

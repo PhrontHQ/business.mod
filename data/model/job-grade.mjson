@@ -5,10 +5,8 @@
             "name": "JobGrade",
             "propertyDescriptors": [
                 {"@": "name"},
-                {"@": "jobGradeStructure"},
-                {"@": "code"},
-                {"@": "numericLevel"},
-                {"@": "bottomUpHierarchyLevel"},
+                {"@": "structure"},
+                {"@": "structureLevel"},
                 {"@": "compensationRange"},
                 {"@": "jobs"}
             ],
@@ -47,10 +45,10 @@
         "object": "./job.mjson"
     },
 
-    "jobGradeStructure": {
+    "structure": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "jobGradeStructure",
+            "name": "structure",
             "valueType": "object",
             "cardinality": 1,
             "valueDescriptor": {"@": "JobGradeStructureDescriptor"},
@@ -59,32 +57,10 @@
         }
     },
 
-    "code": {
+    "structureLevel": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "code",
-            "valueType": "string",
-            "isLocalizable": true,
-            "isSearchable": true,
-            "isMandatory": true,
-            "description": "with bottomUpHierarchyLevel now, not sure we need this."
-        }
-    },
-
-    "numericLevel": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "numericLevel",
-            "valueType": "number",
-            "isSearchable": true,
-            "description": "with bottomUpHierarchyLevel now, not sure we need this."
-        }
-    },
-
-    "bottomUpHierarchyLevel": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "bottomUpHierarchyLevel",
+            "name": "structureLevel",
             "valueType": "number",
             "isSearchable": true
         }

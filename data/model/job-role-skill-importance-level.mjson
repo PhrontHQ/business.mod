@@ -1,0 +1,66 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "JobRoleSkillImportanceLevel",
+            "description": "Models proficency levels such as Beginner, Intermediate, Advanced, Expert. Together they belong to a scale",
+            "propertyDescriptors": [
+                {"@": "name"},
+                {"@": "scale"},
+                {"@": "rank"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./job-role-skill-importance-level.mjson"
+            },
+            "exportName": "JobRoleSkillImportanceLevel",
+            "module": {
+                "%": "./job-role-skill-importance-level"
+            },
+            "object":{"@": "job-role-skill-importance-level"},
+            "parent":{"@": "DataObjectDescriptor"}
+
+        }
+    },
+    "job-role-skill-importance-level": {
+        "object": "./job-role-skill-importance-level"
+    },
+
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+
+    "name": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "name",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true,
+            "isMandatory": true
+        }
+    },
+    "proficencyScaleDescriptor": {
+        "object": "./job-role-skill-importance-level.mjson"
+    },
+    "scale": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "scale",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "proficencyScaleDescriptor"},
+            "inversePropertyName": "levels"
+        }
+    },
+
+    "rank": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "rank",
+            "valueType": "number",
+            "isSearchable": true,
+            "description": "The rank of this Level within the scale."
+        }
+    }
+
+}

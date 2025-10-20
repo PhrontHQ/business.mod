@@ -3,6 +3,7 @@
         "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "Answer",
+            "description": "Do we need a property for an answer that is a scale?",
             "propertyDescriptors": [
                 {"@": "type"},
                 {"@": "name"},
