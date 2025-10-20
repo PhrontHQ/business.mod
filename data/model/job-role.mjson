@@ -47,7 +47,7 @@
     "jobs": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "roles",
+            "name": "jobs",
             "valueType": "object",
             "cardinality": -1,
             "valueDescriptor": {"@": "JobDescriptor"},
