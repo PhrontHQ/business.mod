@@ -8,9 +8,9 @@
                 {"@": "owner"},
                 {"@": "careerStatement"},
                 {"@": "employmentHistory"},
-                {"@": "coreStrengths"},
+                {"@": "coreStrengthAssessments"},
                 {"@": "competencies"},
-                {"@": "skills"},
+                {"@": "skillAssessments"},
                 {"@": "preferredNextRoles"},
                 {"@": "url"},
                 {"@": "hostingOrganization"}
@@ -68,16 +68,16 @@
         "object": "../../employment-position-staffing.mjson"
     },
 
-    "PersonalStrengthDescriptor": {
-        "object": "./personal-strength.mjson"
+    "PersonalStrengthAssessmentDescriptor": {
+        "object": "./personal-strength-assessment.mjson"
     },
-    "coreStrengths": {
+    "coreStrengthAssessments": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "coreStrengths",
+            "name": "coreStrengthAssessments",
             "cardinality": -1,
             "valueType": "object",
-            "valueDescriptor": {"@": "PersonalStrengthDescriptor"}
+            "valueDescriptor": {"@": "PersonalStrengthAssessmentDescriptor"}
         }
     },
     "competencies": {
@@ -89,16 +89,16 @@
         }
     },
 
-    "SkillDescriptor": {
-        "object": "./skill.mjson"
+    "PersonalSkillAssesssmentDescriptor": {
+        "object": "./personal-skill-assessment.mjson"
     },
-    "skills": {
+    "skillAssessments": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "skills",
+            "name": "skillAssessments",
             "cardinality": -1,
             "valueType": "object",
-            "valueDescriptor": {"@": "SkillDescriptor"}
+            "valueDescriptor": {"@": "PersonalSkillAssesssmentDescriptor"}
         }
     },
 

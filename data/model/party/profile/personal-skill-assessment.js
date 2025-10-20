@@ -1,22 +1,31 @@
 var DataObject = require("mod/data/model/data-object").DataObject;
 
 /**
- * @class PersonalStrengthAssessment
+ * @class PersonalSkillAssessment
  * @extends DataObject
  */
 
 
-exports.PersonalStrengthAssessment = DataObject.specialize(/** @lends PersonalStrengthAssessment.prototype */ {
+exports.PersonalSkillAssessment = DataObject.specialize(/** @lends PersonalSkillAssessment.prototype */ {
     constructor: {
-        value: function PersonalStrengthAssessment() {
+        value: function PersonalSkillAssessment() {
             this.super();
             return this;
         }
     },
-    name: {
+    person: {
         value: undefined
     },
-    proficencyScale: {
+    skill: {
+        value: undefined
+    },
+    selfAssessedProficencyLevel: {
+        value: undefined
+    },
+    assessmentQuestionnaires: {
+        value: undefined
+    },
+    assessmentQuestionnaires: {
         value: undefined
     }
 

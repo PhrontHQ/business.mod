@@ -9,22 +9,22 @@
                 {"@": "skill"},
                 {"@": "selfAssessedProficencyLevel"},
                 {"@": "assessmentQuestionnaires"},
-                {"@": "asessmentRespondentQuestionnaires"}
+                {"@": "assessmentRespondentQuestionnaires"}
             ],
             "objectDescriptorModule": {
-                "%": "./personal-strength-assessment.mjson"
+                "%": "./personal-skill-assessment.mjson"
             },
             "exportName": "PersonalSkillAssessment",
             "module": {
-                "%": "./personal-strength-assessment"
+                "%": "./personal-skill-assessment"
             },
-            "object":{"@": "personal-strength-assessment"},
+            "object":{"@": "personal-skill-assessment"},
             "parent":{"@": "DataObjectDescriptor"}
 
         }
     },
-    "personal-strength-assessment": {
-        "object": "./personal-strength-assessment"
+    "personal-skill-assessment": {
+        "object": "./personal-skill-assessment"
     },
 
     "DataObjectDescriptor": {
@@ -32,7 +32,7 @@
     },
 
     "PersonDescriptor": {
-        "object": "./person.mjson"
+        "object": "../person.mjson"
     },
     "person": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -44,24 +44,29 @@
             "inversePropertyName": "strengthAssessments"
         }
     },
-    "PersonalStrengthDescriptor": {
-        "object": "./personal-strength.mjson"
+    "SkillDescriptor": {
+        "object": "./skill.mjson"
     },
-    "strength": {
+    "skill": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "strength",
+            "name": "skill",
             "valueType": "object",
             "cardinality": 1,
-            "valueDescriptor": {"@": "PersonalStrengthDescriptor"},
+            "valueDescriptor": {"@": "SkillDescriptor"},
             "inversePropertyName": "personalStrengthAssessments"
         }
     },
-    "selfAssessedRanking": {
+    "ProficencyLevelDescriptor": {
+        "object": "./proficency-level.mjson"
+    },
+    "selfAssessedProficencyLevel": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "selfAssessedRanking",
-            "valueType": "number",
+            "name": "selfAssessedProficencyLevel",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "ProficencyLevelDescriptor"},
             "isSearchable": true
         }
     },
@@ -81,10 +86,10 @@
     "RespondentQuestionnaireDescriptor": {
         "object": "data/model/questionnaire/respondent-questionnaire.mjson"
     },
-    "asessmentRespondentQuestionnaires": {
+    "assessmentRespondentQuestionnaires": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "asessmentRespondentQuestionnaires",
+            "name": "assessmentRespondentQuestionnaires",
             "valueType": "object",
             "cardinality": -1,
             "valueDescriptor": {"@": "RespondentQuestionnaireDescriptor"},

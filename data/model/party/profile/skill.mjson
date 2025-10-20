@@ -6,7 +6,7 @@
             "description": "A universal way to model human strengths, whether they’re technical, behavioral, or cognitive",
             "propertyDescriptors": [
                 {"@": "name"},
-                {"@": "personalStrengthAssessments"}
+                {"@": "personalSkillAssessments"}
             ],
             "objectDescriptorModule": {
                 "%": "./skill.mjson"
@@ -39,18 +39,18 @@
         }
     },
 
-    "PersonalStrengthAssessmentDescriptor": {
-        "object": "mod/data/model/data-object.mjson"
+    "PersonalSkillAssessmentDescriptor": {
+        "object": "./personal-skill-assessment.mjson"
     },
 
-    "personalStrengthAssessments": {
+    "personalSkillAssessments": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "strength",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "PersonalStrengthAssessmentDescriptor"},
-            "inversePropertyName": "strength"
+            "valueDescriptor": {"@": "PersonalSkillAssessmentDescriptor"},
+            "inversePropertyName": "skill"
         }
     }
 

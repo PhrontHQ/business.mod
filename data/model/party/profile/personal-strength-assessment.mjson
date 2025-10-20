@@ -32,7 +32,7 @@
     },
 
     "PersonDescriptor": {
-        "object": "./person.mjson"
+        "object": "../person.mjson"
     },
     "person": {
         "prototype": "mod/core/meta/property-descriptor",
