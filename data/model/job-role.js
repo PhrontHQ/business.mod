@@ -1,23 +1,15 @@
-var Role = require("mod/data/model/party/role").Role;
+const Role = require("mod/data/model/party/role").Role;
+const Montage = require("mod/core/core").Montage;
 
 /**
- * @class Job
+ * @class JobRole
  * @extends DataObject
  */
-
-
-exports.JobRole = Role.specialize(/** @lends Job.prototype */ {
-    constructor: {
-        value: function Job() {
-            this.super();
-            return this;
-        }
-    },
-    responsibilities: {
-        value: undefined
-    },
-    jobs: {
-        value: undefined
+exports.JobRole = class JobRole extends Role {
+    static {
+        Montage.defineProperties(this.prototype, {
+            responsibilities: { value: undefined },
+            jobs: { value: undefined },
+        });
     }
-
-});
+};

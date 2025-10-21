@@ -1,26 +1,17 @@
-var DataObject = require("mod/data/model/data-object").DataObject;
+const DataObject = require("mod/data/model/data-object").DataObject;
+const Montage = require("mod/core/core").Montage;
 
 /**
  * @class Job
  * @extends DataObject
  */
 
-
-exports.Job = DataObject.specialize(/** @lends Job.prototype */ {
-    constructor: {
-        value: function Job() {
-            this.super();
-            return this;
-        }
-    },
-    title: {
-        value: undefined
-    },
-    roles: {
-        value: undefined
-    },
-    employmentPositions: {
-        value: undefined
+exports.Job = class Job extends DataObject {
+    static {
+        Montage.defineProperties(this.prototype, {
+            title: { value: undefined },
+            roles: { value: undefined },
+            employmentPositions: { value: undefined },
+        });
     }
-
-});
+};

@@ -1,4 +1,5 @@
-var DataObject = require("mod/data/model/data-object").DataObject;
+const DataObject = require("mod/data/model/data-object").DataObject;
+const Montage = require("mod/core/core").Montage;
 
 /**
  * @class ProfessionalProfile
@@ -14,25 +15,12 @@ var DataObject = require("mod/data/model/data-object").DataObject;
  * - an in-app messaging, either when user is in-App or async via service-worker.
  *
  */
-
-
-exports.ProfessionalProfile = DataObject.specialize(/** @lends ProfessionalProfile.prototype */ {
-    constructor: {
-        value: function ProfessionalProfile() {
-            this.super();
-            //console.log("Phront MessagingChannel created");
-            return this;
-        }
-    },
-
-    owner: {
-        value: undefined
-    },
-    url: {
-        value: undefined
-    },
-    hostingOrganization: {
-        value: undefined
+exports.ProfessionalProfile = class ProfessionalProfile extends DataObject {
+    static {
+        Montage.defineProperties(this.prototype, {
+            hostingOrganization: { value: undefined },
+            owner: { value: undefined },
+            url: { value: undefined },
+        });
     }
-
-});
+};
