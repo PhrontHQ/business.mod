@@ -39,7 +39,7 @@
         }
     },
     "proficencyLevelDescriptor": {
-        "object": "./proficency-level.mjson"
+        "object": "./party/profile/proficency-level.mjson"
     },
     "levels": {
         "prototype": "mod/core/meta/property-descriptor",

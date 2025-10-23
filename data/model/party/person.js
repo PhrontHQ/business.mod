@@ -9,10 +9,25 @@ const Person = require("mod/data/model/party/person").Person,
 exports.Person = Person;
 
 Montage.defineProperties(Person.prototype, {
-    employmentHistory: {
+    professionalProfiles: {
+        value: undefined
+    },
+    serviceProductVariantsProvided: {
         value: undefined
     },
     respondentQuestionnaires: {
+        value: undefined
+    },
+    supplierRelationships: {
+        value: undefined
+    },
+    customerSupplierResponsibilities: {
+        value: undefined
+    },
+    firstPersonalRelationships: {
+        value: undefined
+    },
+    secondPersonalRelationships: {
         value: undefined
     }
 });

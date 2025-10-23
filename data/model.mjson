@@ -57,10 +57,22 @@
             {"@": "RespondentQuestionnaireVariableValue"},
             {"@": "CustomerEngagementQuestionnaire"},
             {"@": "ProfessionalProfile"},
+            {"@": "PersonalSkillAssessment"},
+            {"@": "PersonalStrength"},
+            {"@": "PersonalStrengthAssessment"},
+            {"@": "ProficencyScale"},
+            {"@": "ProficencyLevel"},
+            {"@": "Skill"},
             {"@": "Deliverable"},
+            {"@": "Issue"},
             {"@": "Job"},
             {"@": "JobGrade"},
             {"@": "JobGradeStructure"},
+            {"@": "JobRoleCollaboration"},
+            {"@": "JobRoleSkillExpectation"},
+            {"@": "JobRoleSkillImportanceLevel"},
+            {"@": "JobRoleSkillImportanceScale"},
+            {"@": "Role"},
             {"@": "JobRole"},
             {"@": "Process"},
             {"@": "ProcessStep"},
@@ -283,11 +295,33 @@
     "ProfessionalProfile": {
         "object": "./model/party/profile/professional-profile.mjson"
     },
+    "PersonalSkillAssessment": {
+        "object": "./model/party/profile/personal-skill-assessment.mjson"
+    },
+    "PersonalStrength": {
+        "object": "./model/party/profile/personal-strength.mjson"
+    },
+    "PersonalStrengthAssessment": {
+        "object": "./model/party/profile/personal-strength-assessment.mjson"
+    },
+    "ProficencyScale": {
+        "object": "./model/party/profile/proficency-scale.mjson"
+    },
+    "ProficencyLevel": {
+        "object": "./model/party/profile/proficency-level.mjson"
+    },
+    "Skill": {
+        "object": "./model/party/profile/skill.mjson"
+    },
 
     "Deliverable": {
         "object": "./model/deliverable.mjson"
     },
 
+    "Issue": {
+        "object": "./model/issue.mjson"
+    },
+    
     "Job": {
         "object": "./model/job.mjson"
     },
@@ -300,6 +334,22 @@
         "object": "./model/job-grade-structure.mjson"
     },
 
+    "JobRoleCollaboration": {
+        "object": "./model/job-role-collaboration.mjson"
+    },
+    "JobRoleSkillExpectation": {
+        "object": "./model/job-role-skill-expectation.mjson"
+    },
+    "JobRoleSkillImportanceLevel": {
+        "object": "./model/job-role-skill-importance-level.mjson"
+    },
+    "JobRoleSkillImportanceScale": {
+        "object": "./model/job-role-skill-importance-scale.mjson"
+    },
+
+    "Role": {
+        "object": "./model/party/role.mjson"
+    },
     "JobRole": {
         "object": "./model/job-role.mjson"
     },

@@ -1,14 +1,13 @@
 var DataObject = require("mod/data/model/data-object").DataObject;
-
 /**
- * @class ProficencyScale
+ * @class JobRoleSkillImportanceLevel
  * @extends DataObject
  */
 
 
-exports.ProficencyScale = DataObject.specialize(/** @lends ProficencyScale.prototype */ {
+exports.JobRoleSkillImportanceLevel = DataObject.specialize(/** @lends JobRoleSkillImportanceLevel.prototype */ {
     constructor: {
-        value: function ProficencyScale() {
+        value: function JobRoleSkillImportanceLevel() {
             this.super();
             return this;
         }
@@ -16,7 +15,7 @@ exports.ProficencyScale = DataObject.specialize(/** @lends ProficencyScale.proto
     name: {
         value: undefined
     },
-    proficencyScale: {
+    JobRoleSkillImportanceLevel: {
         value: undefined
     }
 
