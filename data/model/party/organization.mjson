@@ -9,7 +9,8 @@
                 {"@": "supplierRelationships"},
                 {"@": "services"},
                 {"@": "customerEngagementQuestionnaires"},
-                {"@": "employeeWorkPreferencesQuestionnaires"}
+                {"@": "employeeWorkPreferencesQuestionnaires"},
+                {"@": "jobRoles"}
             ]
         }
     },
@@ -114,6 +115,21 @@
             "valueType": "array",
             "cardinality": -1,
             "valueDescriptor": {"@": "QuestionnaireDescriptor"}
+       }
+    },
+
+    "JobRoleDescriptor": {
+        "object": "../job-role.mjson"
+    },
+
+
+    "jobRoles": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "jobRoles",
+            "valueType": "array",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "JobRoleDescriptor"}
        }
     }
 

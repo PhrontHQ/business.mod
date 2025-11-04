@@ -27,5 +27,8 @@ Montage.defineProperties(Organization.prototype, {
     },
     customerEngagementQuestionnaires: {
         value: undefined
+    },
+    jobRoles: {
+        value: undefined
     }
 });
