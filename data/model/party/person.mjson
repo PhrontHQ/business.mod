@@ -40,11 +40,11 @@
        }
     },
     "employmentPositionStaffingDescriptor": {
-        "object": "../../employment-position-staffing.mjson"
+        "object": "../employment-position-staffing.mjson"
     },
 
     "PersonalStrengthAssessmentDescriptor": {
-        "object": "./personal-strength-assessment.mjson"
+        "object": "./profile/personal-strength-assessment.mjson"
     },
     "coreStrengthAssessments": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -65,7 +65,7 @@
     },
 
     "PersonalSkillAssesssmentDescriptor": {
-        "object": "./personal-skill-assessment.mjson"
+        "object": "./profile/personal-skill-assessment.mjson"
     },
     "skillAssessments": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -78,7 +78,7 @@
     },
 
     "JobRoleDescriptor": {
-        "object": "../../job-role.mjson"
+        "object": "../job-role.mjson"
     },
 
     "preferredNextRoles": {
