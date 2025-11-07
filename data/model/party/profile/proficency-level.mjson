@@ -40,7 +40,7 @@
         }
     },
     "proficencyScaleDescriptor": {
-        "object": "./proficency-level.mjson"
+        "object": "./proficency-scale.mjson"
     },
     "scale": {
         "prototype": "mod/core/meta/property-descriptor",
