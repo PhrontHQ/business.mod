@@ -76,7 +76,7 @@
     "assessmentQuestionnaires": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "asessmentQuestionaires",
+            "name": "assessmentQuestionnaires",
             "valueType": "object",
             "cardinality": -1,
             "valueDescriptor": {"@": "QuestionnaireDescriptor"},
