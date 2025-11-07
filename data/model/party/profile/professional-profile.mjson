@@ -4,6 +4,7 @@
         "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
             "name": "ProfessionalProfile",
+            "description": "Intended as a curated, hostingOrganization-focused version of a Person's similar properties",
             "propertyDescriptors": [
                 {"@": "owner"},
                 {"@": "careerStatement"},

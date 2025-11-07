@@ -3,6 +3,13 @@
         "object": "mod/data/model/party/person.mjson",
         "values": {
             "propertyDescriptors": [
+                {"@": "careerStatement"},
+                {"@": "employmentHistory"},
+                {"@": "coreStrengthAssessments"},
+                {"@": "competencies"},
+                {"@": "skillAssessments"},
+                {"@": "preferredNextRoles"},
+
                 {"@": "professionalProfiles"},
                 {"@": "serviceProductVariantsProvided"},
                 {"@": "respondentQuestionnaires"},
@@ -15,6 +22,76 @@
         }
     },
    
+    "careerStatement": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "careerStatement",
+            "valueType": "string"
+        }
+    },
+
+    "employmentHistory": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "employmentHistory",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "employmentPositionStaffingDescriptor"}
+       }
+    },
+    "employmentPositionStaffingDescriptor": {
+        "object": "../../employment-position-staffing.mjson"
+    },
+
+    "PersonalStrengthAssessmentDescriptor": {
+        "object": "./personal-strength-assessment.mjson"
+    },
+    "coreStrengthAssessments": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "coreStrengthAssessments",
+            "cardinality": -1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "PersonalStrengthAssessmentDescriptor"}
+        }
+    },
+    "competencies": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "competencies",
+            "cardinality": -1,
+            "valueType": "string"
+        }
+    },
+
+    "PersonalSkillAssesssmentDescriptor": {
+        "object": "./personal-skill-assessment.mjson"
+    },
+    "skillAssessments": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "skillAssessments",
+            "cardinality": -1,
+            "valueType": "object",
+            "valueDescriptor": {"@": "PersonalSkillAssesssmentDescriptor"}
+        }
+    },
+
+    "JobRoleDescriptor": {
+        "object": "../../job-role.mjson"
+    },
+
+    "preferredNextRoles": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "preferredNextRoles",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "JobRoleDescriptor"},
+            "description": "aka career of interest"
+        }
+    },
+
     "ProfessionalProfileDescriptor": {
         "object": "./profile/professional-profile.mjson"
     },
