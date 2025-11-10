@@ -5,11 +5,21 @@
             "name": "PersonalSkillAssessment",
             "description": "A universal way to model human strengths, whether they’re technical, behavioral, or cognitive",
             "propertyDescriptors": [
-                {"@": "person"},
-                {"@": "skill"},
-                {"@": "selfAssessedProficencyLevel"},
-                {"@": "assessmentQuestionnaires"},
-                {"@": "assessmentRespondentQuestionnaires"}
+                {
+                    "@": "person"
+                },
+                {
+                    "@": "skill"
+                },
+                {
+                    "@": "selfAssessedProficencyLevel"
+                },
+                {
+                    "@": "assessmentQuestionnaires"
+                },
+                {
+                    "@": "assessmentRespondentQuestionnaires"
+                }
             ],
             "objectDescriptorModule": {
                 "%": "./personal-skill-assessment.mjson"
@@ -18,19 +28,20 @@
             "module": {
                 "%": "./personal-skill-assessment"
             },
-            "object":{"@": "personal-skill-assessment"},
-            "parent":{"@": "DataObjectDescriptor"}
-
+            "object": {
+                "@": "personal-skill-assessment"
+            },
+            "parent": {
+                "@": "DataObjectDescriptor"
+            }
         }
     },
     "personal-skill-assessment": {
         "object": "./personal-skill-assessment"
     },
-
     "DataObjectDescriptor": {
         "object": "mod/data/model/data-object.mjson"
     },
-
     "PersonDescriptor": {
         "object": "../person.mjson"
     },
@@ -40,7 +51,9 @@
             "name": "person",
             "valueType": "object",
             "cardinality": 1,
-            "valueDescriptor": {"@": "PersonDescriptor"},
+            "valueDescriptor": {
+                "@": "PersonDescriptor"
+            },
             "inversePropertyName": "strengthAssessments"
         }
     },
@@ -53,8 +66,10 @@
             "name": "skill",
             "valueType": "object",
             "cardinality": 1,
-            "valueDescriptor": {"@": "SkillDescriptor"},
-            "inversePropertyName": "personalStrengthAssessments"
+            "valueDescriptor": {
+                "@": "SkillDescriptor"
+            },
+            "inversePropertyName": "personalSkillAssessments"
         }
     },
     "ProficencyLevelDescriptor": {
@@ -66,7 +81,9 @@
             "name": "selfAssessedProficencyLevel",
             "valueType": "object",
             "cardinality": 1,
-            "valueDescriptor": {"@": "ProficencyLevelDescriptor"},
+            "valueDescriptor": {
+                "@": "ProficencyLevelDescriptor"
+            },
             "isSearchable": true
         }
     },
@@ -79,7 +96,9 @@
             "name": "assessmentQuestionnaires",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "QuestionnaireDescriptor"},
+            "valueDescriptor": {
+                "@": "QuestionnaireDescriptor"
+            },
             "description": "Questionnaires that assess one's personal strengths."
         }
     },
@@ -92,7 +111,9 @@
             "name": "assessmentRespondentQuestionnaires",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "RespondentQuestionnaireDescriptor"},
+            "valueDescriptor": {
+                "@": "RespondentQuestionnaireDescriptor"
+            },
             "description": "Questionnaires that assess one's personal strengths."
         }
     }

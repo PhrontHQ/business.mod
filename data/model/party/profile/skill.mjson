@@ -5,8 +5,12 @@
             "name": "Skill",
             "description": "A universal way to model human strengths, whether they’re technical, behavioral, or cognitive",
             "propertyDescriptors": [
-                {"@": "name"},
-                {"@": "personalSkillAssessments"}
+                {
+                    "@": "name"
+                },
+                {
+                    "@": "personalSkillAssessments"
+                }
             ],
             "objectDescriptorModule": {
                 "%": "./skill.mjson"
@@ -15,18 +19,20 @@
             "module": {
                 "%": "./skill"
             },
-            "object":{"@": "skill"},
-            "parent":{"@": "DataObjectDescriptor"}
+            "object": {
+                "@": "skill"
+            },
+            "parent": {
+                "@": "DataObjectDescriptor"
+            }
         }
     },
     "skill": {
         "object": "./skill"
     },
-
     "DataObjectDescriptor": {
         "object": "mod/data/model/data-object.mjson"
     },
-
     "name": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
@@ -37,20 +43,19 @@
             "isMandatory": true
         }
     },
-
     "PersonalSkillAssessmentDescriptor": {
         "object": "./personal-skill-assessment.mjson"
     },
-
     "personalSkillAssessments": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "strength",
+            "name": "personalSkillAssessments",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "PersonalSkillAssessmentDescriptor"},
+            "valueDescriptor": {
+                "@": "PersonalSkillAssessmentDescriptor"
+            },
             "inversePropertyName": "skill"
         }
     }
-
 }
