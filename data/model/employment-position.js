@@ -10,7 +10,7 @@ exports.EmploymentPosition = PartyPartyRelationship.specialize(/** @lends Employ
     allowedEmploymentTypes: {
         value: undefined
     },
-    employer: {
+    organization: {
         value: undefined
     },
     position: {

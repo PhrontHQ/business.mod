@@ -8,7 +8,7 @@
                     "@": "allowedEmploymentTypes"
                 },
                 {
-                    "@": "employer"
+                    "@": "organization"
                 },
                 {
                     "@": "parentPosition"
@@ -65,18 +65,18 @@
     "employment_type_descriptor": {
         "object": "./employment-type.mjson"
     },
-    "employer_descriptor": {
+    "organizationDescriptor": {
         "object": "./party/organization.mjson"
     },
-    "employer": {
+    "organization": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "employer",
+            "name": "organization",
             "valueType": "object",
             "cardinality": 1,
             "inversePropertyName": "employmentPositions",
             "valueDescriptor": {
-                "@": "employer_descriptor"
+                "@": "organizationDescriptor"
             },
             "description": "the organization owning. Finding the root organization (company / corporation) means walking the organization's parents"
         }
