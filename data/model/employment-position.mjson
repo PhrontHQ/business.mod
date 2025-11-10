@@ -4,14 +4,30 @@
         "values": {
             "name": "EmploymentPosition",
             "propertyDescriptors": [
-                {"@": "allowedEmploymentTypes"},
-                {"@": "organization"},
-                {"@": "parentPosition"},
-                {"@": "childPositions"},
-                {"@": "job"},
-                {"@": "staffingHistory"},
-                {"@": "firstEmploymentPositionRelationships"},
-                {"@": "secondEmploymentPositionRelationships"}
+                {
+                    "@": "allowedEmploymentTypes"
+                },
+                {
+                    "@": "employer"
+                },
+                {
+                    "@": "parentPosition"
+                },
+                {
+                    "@": "childPositions"
+                },
+                {
+                    "@": "job"
+                },
+                {
+                    "@": "staffingHistory"
+                },
+                {
+                    "@": "firstEmploymentPositionRelationships"
+                },
+                {
+                    "@": "secondEmploymentPositionRelationships"
+                }
             ],
             "objectDescriptorModule": {
                 "%": "./employment-position.mjson"
@@ -20,8 +36,12 @@
             "module": {
                 "%": "./employment-position"
             },
-            "object":{"@": "employment-position"},
-            "parent":{"@": "party-party-relationship"}
+            "object": {
+                "@": "employment-position"
+            },
+            "parent": {
+                "@": "party-party-relationship"
+            }
         }
     },
     "employment-position": {
@@ -36,29 +56,31 @@
             "name": "allowedEmploymentTypes",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "employment_type_descriptor"},
+            "valueDescriptor": {
+                "@": "employment_type_descriptor"
+            },
             "description": "Will allow the restriction of employmentType in EmploymentPositionStaffing"
         }
     },
     "employment_type_descriptor": {
         "object": "./employment-type.mjson"
     },
-
-    "organization_descriptor": {
+    "employer_descriptor": {
         "object": "./party/organization.mjson"
     },
-    "organization": {
+    "employer": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "organization",
+            "name": "employer",
             "valueType": "object",
             "cardinality": 1,
             "inversePropertyName": "employmentPositions",
-            "valueDescriptor": {"@": "organization_descriptor"},
-            "description": "the organization owning. Finding the root organization  (company / corporation) means walking the organization's parents"
+            "valueDescriptor": {
+                "@": "employer_descriptor"
+            },
+            "description": "the organization owning. Finding the root organization (company / corporation) means walking the organization's parents"
         }
     },
-
     "parentPosition": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
@@ -66,11 +88,12 @@
             "valueType": "object",
             "cardinality": 1,
             "inversePropertyName": "childPositions",
-            "valueDescriptor": {"@": "root"},
+            "valueDescriptor": {
+                "@": "root"
+            },
             "description": "the EmploymentPosition above this one in the EmploymentPosition hierarchy."
         }
     },
-
     "childPositions": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
@@ -78,19 +101,21 @@
             "valueType": "object",
             "cardinality": 1,
             "inversePropertyName": "parentPosition",
-            "valueDescriptor": {"@": "root"},
+            "valueDescriptor": {
+                "@": "root"
+            },
             "description": "the EmploymentPositions directly reporting to this one."
         }
     },
-
-
     "job": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
             "name": "job",
             "valueType": "object",
             "cardinality": 1,
-            "valueDescriptor": {"@": "job_descriptor"}
+            "valueDescriptor": {
+                "@": "job_descriptor"
+            }
         }
     },
     "job_descriptor": {
@@ -103,7 +128,9 @@
             "valueType": "object",
             "cardinality": -1,
             "inversePropertyName": "employmentPosition",
-            "valueDescriptor": {"@": "employment_job_staffing_descriptor"}
+            "valueDescriptor": {
+                "@": "employment_job_staffing_descriptor"
+            }
         }
     },
     "employment_job_staffing_descriptor": {
@@ -116,7 +143,9 @@
             "valueType": "object",
             "cardinality": -1,
             "inversePropertyName": "firstEmploymentPosition",
-            "valueDescriptor": {"@": "employment_job_relationship_descriptor"}
+            "valueDescriptor": {
+                "@": "employment_job_relationship_descriptor"
+            }
         }
     },
     "secondEmploymentPositionRelationships": {
@@ -126,11 +155,12 @@
             "valueType": "object",
             "cardinality": -1,
             "inversePropertyName": "secondEmploymentPosition",
-            "valueDescriptor": {"@": "employment_job_relationship_descriptor"}
+            "valueDescriptor": {
+                "@": "employment_job_relationship_descriptor"
+            }
         }
     },
     "employment_job_relationship_descriptor": {
         "object": "./employment-position-relationship.mjson"
     }
-
 }
