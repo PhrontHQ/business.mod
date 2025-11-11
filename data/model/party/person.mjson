@@ -36,6 +36,7 @@
             "name": "employmentHistory",
             "valueType": "object",
             "cardinality": -1,
+            "inversePropertyName": "employee",
             "valueDescriptor": {"@": "employmentPositionStaffingDescriptor"}
        }
     },
