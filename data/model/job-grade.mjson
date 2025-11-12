@@ -42,7 +42,7 @@
     },
 
     "JobGradeStructureDescriptor": {
-        "object": "./job.mjson"
+        "object": "./job-grade-structure.mjson"
     },
 
     "structure": {

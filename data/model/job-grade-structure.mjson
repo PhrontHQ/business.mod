@@ -81,7 +81,7 @@
             "valueType": "object",
             "cardinality": -1,
             "valueDescriptor": {"@": "JobGradeDescriptor"},
-            "inversePropertyName": "jobGradeStructure",
+            "inversePropertyName": "structure",
             "description": "The JobGrades associated with this JobGradeStructure",
             "orderingRules": [
                 {"@": "jobGradeOrderingRule"}
