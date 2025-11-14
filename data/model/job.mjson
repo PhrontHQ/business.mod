@@ -82,7 +82,7 @@
         "values": {
             "name": "grade",
             "valueType": "object",
-            "cardinality": -1,
+            "cardinality": 1,
             "valueDescriptor": {"@": "JobGradeDescriptor"},
             "inversePropertyName": "jobs"
         }
