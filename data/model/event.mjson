@@ -19,7 +19,7 @@
                 {"@": "reminders"},
                 {"@": "eventURL"},
                 {"@": "summary"},
-                {"@": "description"},
+                {"@": "participatingPartyNotes"},
                 {"@": "location"},
                 {"@": "color"},
                 {"@": "organizer"},
@@ -71,7 +71,7 @@
             "valueType": "object",
             "isSearchable": true,
             "cardinality": 1,
-            "description": "The object for which the time is booked. Typically a Person, or a resource like afacility or equipment",
+            "description": "The object for which the time is booked. Typically a Person, or a resource like a facility or equipment",
             "valueDescriptor": {"@": "PartyDescriptor"},
             "inversePropertyName": "eventsParticipatingIn"
         }
@@ -290,11 +290,14 @@
             "valueType": "string"
         }
     },
-    "description": {
+    "participatingPartyNotes": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "description",
-            "valueType": "string"
+            "name": "participatingPartyNotes",
+            "valueType": "string",
+            "isLocalizable": true,
+            "isSearchable": true,
+            "description": "Notes taken by the participating party"
         }
     },
     "location": {
