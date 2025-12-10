@@ -90,7 +90,8 @@
             "name": "events",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "event-descriptor"}
+            "valueDescriptor": {"@": "event-descriptor"},
+            "inversePropertyName": "calendar"
         }
     },
     "templateEvents": {

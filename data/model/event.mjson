@@ -91,7 +91,8 @@
             "valueType": "object",
             "cardinality": 1,
             "isSearchable": true,
-            "valueDescriptor": {"@": "calendar-descriptor"}
+            "valueDescriptor": {"@": "calendar-descriptor"},
+            "inversePropertyName": "events"
         }
     },
     "calendar-descriptor": {
