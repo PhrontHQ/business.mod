@@ -46,7 +46,7 @@
     "personalStrengthAssessments": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "strength",
+            "name": "personalStrengthAssessments",
             "valueType": "object",
             "cardinality": -1,
             "valueDescriptor": {"@": "PersonalStrengthAssessmentDescriptor"},
