@@ -54,7 +54,7 @@
             "valueDescriptor": {
                 "@": "PersonDescriptor"
             },
-            "inversePropertyName": "strengthAssessments"
+            "inversePropertyName": "coreStrengthAssessments"
         }
     },
     "PersonalStrengthDescriptor": {
