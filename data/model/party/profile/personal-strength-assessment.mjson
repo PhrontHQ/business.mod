@@ -5,11 +5,21 @@
             "name": "PersonalStrengthAssessment",
             "description": "A universal way to model human strengths, whether they’re technical, behavioral, or cognitive",
             "propertyDescriptors": [
-                {"@": "person"},
-                {"@": "strength"},
-                {"@": "selfAssessedRanking"},
-                {"@": "assessmentQuestionnaires"},
-                {"@": "asessmentRespondentQuestionnaires"}
+                {
+                    "@": "person"
+                },
+                {
+                    "@": "strength"
+                },
+                {
+                    "@": "selfAssessedRanking"
+                },
+                {
+                    "@": "assessmentQuestionnaires"
+                },
+                {
+                    "@": "asessmentRespondentQuestionnaires"
+                }
             ],
             "objectDescriptorModule": {
                 "%": "./personal-strength-assessment.mjson"
@@ -18,19 +28,20 @@
             "module": {
                 "%": "./personal-strength-assessment"
             },
-            "object":{"@": "personal-strength-assessment"},
-            "parent":{"@": "DataObjectDescriptor"}
-
+            "object": {
+                "@": "personal-strength-assessment"
+            },
+            "parent": {
+                "@": "DataObjectDescriptor"
+            }
         }
     },
     "personal-strength-assessment": {
         "object": "./personal-strength-assessment"
     },
-
     "DataObjectDescriptor": {
         "object": "mod/data/model/data-object.mjson"
     },
-
     "PersonDescriptor": {
         "object": "../person.mjson"
     },
@@ -40,7 +51,9 @@
             "name": "person",
             "valueType": "object",
             "cardinality": 1,
-            "valueDescriptor": {"@": "PersonDescriptor"},
+            "valueDescriptor": {
+                "@": "PersonDescriptor"
+            },
             "inversePropertyName": "strengthAssessments"
         }
     },
@@ -53,7 +66,9 @@
             "name": "strength",
             "valueType": "object",
             "cardinality": 1,
-            "valueDescriptor": {"@": "PersonalStrengthDescriptor"},
+            "valueDescriptor": {
+                "@": "PersonalStrengthDescriptor"
+            },
             "inversePropertyName": "personalStrengthAssessments"
         }
     },
@@ -74,7 +89,9 @@
             "name": "asessmentQuestionaires",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "QuestionnaireDescriptor"},
+            "valueDescriptor": {
+                "@": "QuestionnaireDescriptor"
+            },
             "description": "Questionnaires that assess one's personal strengths."
         }
     },
@@ -87,7 +104,9 @@
             "name": "asessmentRespondentQuestionnaires",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "RespondentQuestionnaireDescriptor"},
+            "valueDescriptor": {
+                "@": "RespondentQuestionnaireDescriptor"
+            },
             "description": "Questionnaires that assess one's personal strengths."
         }
     }
