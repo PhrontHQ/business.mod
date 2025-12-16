@@ -53,7 +53,8 @@
             "name": "coreStrengthAssessments",
             "cardinality": -1,
             "valueType": "object",
-            "valueDescriptor": {"@": "PersonalStrengthAssessmentDescriptor"}
+            "valueDescriptor": {"@": "PersonalStrengthAssessmentDescriptor"},
+            "inversePropertyName": "person"
         }
     },
     "competencies": {
