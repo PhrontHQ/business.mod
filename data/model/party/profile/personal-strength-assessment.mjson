@@ -98,16 +98,16 @@
     "RespondentQuestionnaireDescriptor": {
         "object": "data/model/questionnaire/respondent-questionnaire.mjson"
     },
-    "asessmentRespondentQuestionnaires": {
+    "assessmentRespondentQuestionnaires": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "asessmentRespondentQuestionnaires",
+            "name": "assessmentRespondentQuestionnaires",
             "valueType": "object",
             "cardinality": -1,
             "valueDescriptor": {
                 "@": "RespondentQuestionnaireDescriptor"
             },
-            "description": "Questionnaires that assess one's personal strengths."
+            "description": "Questionnaires that assess one's personal strengths, as answered by person"
         }
     }
 }
