@@ -44,7 +44,7 @@
         }
     },
     "PersonalStrengthAssessmentDescriptor": {
-        "object": "mod/data/model/data-object.mjson"
+        "object": "./personal-strength-assessment.mjson"
     },
     "personalStrengthAssessments": {
         "prototype": "mod/core/meta/property-descriptor",
