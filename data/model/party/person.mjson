@@ -9,7 +9,7 @@
                 {"@": "competencies"},
                 {"@": "skillAssessments"},
                 {"@": "preferredNextRoles"},
-
+                {"@": "preferredFutureJobs"},
                 {"@": "professionalProfiles"},
                 {"@": "serviceProductVariantsProvided"},
                 {"@": "respondentQuestionnaires"},
@@ -90,6 +90,21 @@
             "valueType": "object",
             "cardinality": -1,
             "valueDescriptor": {"@": "JobRoleDescriptor"},
+            "description": "aka career of interest"
+        }
+    },
+
+    "JobDescriptor": {
+        "object": "../job.mjson"
+    },
+
+    "preferredFutureJobs": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "preferredFutureJobs",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "JobDescriptor"},
             "description": "aka career of interest"
         }
     },
