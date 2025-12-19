@@ -5,6 +5,7 @@
             "name": "ProcessStep",
             "propertyDescriptors": [
                 {"@": "name"},
+                {"@": "process"},
                 {"@": "tasks"}
             ],
             "objectDescriptorModule": {
@@ -39,6 +40,19 @@
             "isLocalizable": true,
             "isSearchable": true,
             "isMandatory": true
+        }
+    },
+    "ProcessDescriptor": {
+        "object": "./process.mjson"
+    },
+    "process": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "process",
+            "valueType": "object",
+            "cardinality": -1,
+            "valueDescriptor": {"@": "ProcessDescriptor"},
+            "inversePropertyName": "steps"
         }
     },
     "TaskDescriptor": {

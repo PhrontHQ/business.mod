@@ -16,6 +16,9 @@ exports.ProcessStep = DataObject.specialize(/** @lends ProcessStep.prototype */ 
     name: {
         value: undefined
     },
+    process: {
+        value: undefined
+    },
     tasks: {
         value: undefined
     }

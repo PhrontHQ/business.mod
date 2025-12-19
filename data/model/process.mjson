@@ -51,7 +51,8 @@
             "name": "steps",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "ProcessStepsDescriptor"}
+            "valueDescriptor": {"@": "ProcessStepsDescriptor"},
+            "inversePropertyName": "process"
         }
     }
 }
