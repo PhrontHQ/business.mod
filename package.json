@@ -38,6 +38,9 @@
     "serverless": "~1.75.0",
     "tiny-worker": "github:marchant/tiny-worker#master"
   },
+  "exclude": [
+    "dev"
+  ],
   "scripts": {
     "jsdoc": "jsdoc -c jsdoc.json",
     "test": "node test/run-node.js",
