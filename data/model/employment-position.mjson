@@ -99,7 +99,7 @@
         "values": {
             "name": "childPositions",
             "valueType": "object",
-            "cardinality": 1,
+            "cardinality": -1,
             "inversePropertyName": "parentPosition",
             "valueDescriptor": {
                 "@": "root"
