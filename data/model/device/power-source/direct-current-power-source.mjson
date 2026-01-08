@@ -30,8 +30,8 @@
         "values": {
             "name": "currentType",
             "valueType": "string",
-            "defaultValue": "Alternative",
-            "description": "typically alternative (AC) or direct (DC)" 
+            "defaultValue": "Direct",
+            "description": "typically alternating (AC) or direct (DC)"
         }
     }
 

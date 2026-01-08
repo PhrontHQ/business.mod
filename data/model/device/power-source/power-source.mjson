@@ -22,7 +22,7 @@
         "object": "./power-source"
     },
     "DeviceDescriptor": {
-        "object": "data/model/device/computing-device.mjson"
+        "object": "data/model/device/device.mjson"
     },
 
     "energyType": {
