@@ -21,7 +21,7 @@
     "column": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "productProperty",
+            "name": "column",
             "valueType": "string"
         }
     },
