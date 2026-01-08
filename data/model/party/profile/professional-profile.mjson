@@ -91,7 +91,7 @@
         }
     },
 
-    "PersonalSkillAssesssmentDescriptor": {
+    "PersonalSkillAssessmentDescriptor": {
         "object": "./personal-skill-assessment.mjson"
     },
     "skillAssessments": {
@@ -100,7 +100,7 @@
             "name": "skillAssessments",
             "cardinality": -1,
             "valueType": "object",
-            "valueDescriptor": {"@": "PersonalSkillAssesssmentDescriptor"}
+            "valueDescriptor": {"@": "PersonalSkillAssessmentDescriptor"}
         }
     },
 
