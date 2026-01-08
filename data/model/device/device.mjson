@@ -244,51 +244,7 @@
             "description": "This device's connections, as the host, to its node device"
         }
     },
-    "deviceHostConnections": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "deviceHostConnections",
-            "cardinality": -1,
-            "inversePropertyName": "node",
-            "valueDescriptor": {"@": "root"},
-            "description": "This device connections, as a node, to its host(s), if shared"
-        }
-    },
 
-    "toolCompatibilityDeviceList": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "toolCompatibilityDeviceList",
-            "cardinality": -1,
-            "inversePropertyName": "compatibleTools",
-            "valueDescriptor": {"@": "root"},
-            "description": "The list of devices that can use this device as a tools"
-        }
-    },
-
-    "tools": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "tools",
-            "cardinality": -1,
-            "inversePropertyName": "usedAsToolsByDevices",
-            "valueDescriptor": {"@": "root"},
-            "description": "The list of accessories actually used with the device"
-        }
-    },
-
-    "toolForDevices": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "toolForDevices",
-            "cardinality": -1,
-            "inversePropertyName": "tools",
-            "valueDescriptor": {"@": "root"},
-            "description": "The list of accessories actually used for by the device"
-        }
-    },
-
-    
     "ipAddress": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
