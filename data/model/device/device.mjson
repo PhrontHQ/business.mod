@@ -26,6 +26,10 @@
                 {"@": "nodeDeviceConnections"},
                 {"@": "possibleHostDeviceConnections"},
                 {"@": "hostDeviceConnections"},
+                {"@": "deviceHostConnections"},
+
+                {"@": "tools"},
+                {"@": "toolForDevices"},
 
                 {"@": "ipAddress"},
                 {"@": "port"},
@@ -255,17 +259,6 @@
         }
     },
 
-    "toolCompatibilityDeviceList": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "toolCompatibilityDeviceList",
-            "cardinality": -1,
-            "inversePropertyName": "compatibleTools",
-            "valueDescriptor": {"@": "root"},
-            "description": "The list of devices that can use this device as a tools"
-        }
-    },
-
     "tools": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
@@ -288,7 +281,6 @@
         }
     },
 
-    
     "ipAddress": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
