@@ -6,16 +6,13 @@
             "name": "ProfessionalProfile",
             "description": "Intended as a curated, hostingOrganization-focused version of a Person's similar properties",
             "propertyDescriptors": [
-                {"@": "owner"},
                 {"@": "careerStatement"},
                 {"@": "employmentHistory"},
                 {"@": "coreStrengthAssessments"},
                 {"@": "competencies"},
                 {"@": "skillAssessments"},
                 {"@": "preferredNextRoles"},
-                {"@": "preferredFutureJobs"},
-                {"@": "url"},
-                {"@": "hostingOrganization"}
+                {"@": "preferredFutureJobs"}
             ],
             "objectDescriptorModule": {
                 "%": "./professional-profile.mjson"
@@ -25,28 +22,14 @@
                 "%": "./professional-profile"
             },
             "object": {"@": "ProfessionalProfile"},
-            "parent": {"@": "ObjectDescriptor"}
+            "parent": {"@": "ProfileDescriptor"}
         }
     },
     "ProfessionalProfile": {
         "object": "./professional-profile"
     },
-    "ObjectDescriptor": {
-        "object": "mod/data/model/data-object.mjson"
-    },
-    "owner": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "owner",
-            "valueType": "object",
-            "cardinality": 1,
-            "valueDescriptor": {"@": "PersonDescriptor"},
-            "inversePropertyName": "professionalProfiles",
-            "isMandatory": true
-        }
-    },
-    "PersonDescriptor": {
-        "object": "../person.mjson"
+    "ProfileDescriptor": {
+        "object": "data/model/party/profile/profile.mjson"
     },
 
     "careerStatement": {
@@ -132,26 +115,6 @@
             "valueDescriptor": {"@": "JobDescriptor"},
             "description": "aka career of interest"
         }
-    },
-
-    "url": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "url",
-            "valueType": "URL"
-        }
-    },
-    "hostingOrganization": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "hostingOrganization",
-            "valueType": "object",
-            "cardinality": 1,
-            "valueDescriptor": {"@": "OrganizationDescriptor"}
-        }
-    },
-    "OrganizationDescriptor": {
-        "object": "../organization.mjson"
     }
 
 }

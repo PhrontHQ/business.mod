@@ -1,0 +1,26 @@
+{
+    "root": {
+        "object": "mod/data/model/party/profile.mjson",
+        "values": {
+            "propertyDescriptors": [
+                {"@": "representedPartyDevices"}
+            ]
+        }
+    },
+
+    "DeviceDescriptor": {
+        "object": "data/model/device/device.mjson"
+    },
+
+    "representedPartyDevices": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "representedPartyDevices",
+            "cardinality": -1,
+            "inversePropertyName": "type",
+            "valueDescriptor": {"@": "DeviceDescriptor"},
+            "description": "the devices used by a member, intended to detect abnormal patterns and enforce security"
+        }
+    }
+
+}
