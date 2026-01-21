@@ -2,27 +2,27 @@
     "root": {
         "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
-            "name": "ProficencyLevel",
-            "description": "Models proficency levels such as Beginner, Intermediate, Advanced, Expert. Together they belong to a proficencyScale",
+            "name": "ProficiencyLevel",
+            "description": "Models proficiency levels such as Beginner, Intermediate, Advanced, Expert. Together they belong to a proficiencyScale",
             "propertyDescriptors": [
                 {"@": "name"},
                 {"@": "scale"},
                 {"@": "rank"}
             ],
             "objectDescriptorModule": {
-                "%": "./proficency-level.mjson"
+                "%": "./proficiency-level.mjson"
             },
-            "exportName": "ProficencyLevel",
+            "exportName": "ProficiencyLevel",
             "module": {
-                "%": "./proficency-level"
+                "%": "./proficiency-level"
             },
-            "object":{"@": "proficency-level"},
+            "object":{"@": "proficiency-level"},
             "parent":{"@": "DataObjectDescriptor"}
 
         }
     },
-    "proficency-level": {
-        "object": "./proficency-level"
+    "proficiency-level": {
+        "object": "./proficiency-level"
     },
 
     "DataObjectDescriptor": {
@@ -39,8 +39,8 @@
             "isMandatory": true
         }
     },
-    "proficencyScaleDescriptor": {
-        "object": "./proficency-scale.mjson"
+    "proficiencyScaleDescriptor": {
+        "object": "./proficiency-scale.mjson"
     },
     "scale": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -48,7 +48,7 @@
             "name": "scale",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "proficencyScaleDescriptor"},
+            "valueDescriptor": {"@": "proficiencyScaleDescriptor"},
             "inversePropertyName": "levels"
         }
     },
@@ -59,7 +59,7 @@
             "name": "rank",
             "valueType": "number",
             "isSearchable": true,
-            "description": "The rank of this proficencyLevel within the scale. Other option for naming: order, level"
+            "description": "The rank of this proficiencyLevel within the scale. Other option for naming: order, level"
         }
     }
 

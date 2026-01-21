@@ -308,11 +308,11 @@
     "PersonalStrengthAssessment": {
         "object": "./model/party/profile/personal-strength-assessment.mjson"
     },
-    "ProficencyScale": {
-        "object": "./model/party/profile/proficency-scale.mjson"
+    "ProficiencyScale": {
+        "object": "./model/party/profile/proficiency-scale.mjson"
     },
-    "ProficencyLevel": {
-        "object": "./model/party/profile/proficency-level.mjson"
+    "ProficiencyLevel": {
+        "object": "./model/party/profile/proficiency-level.mjson"
     },
     "Skill": {
         "object": "./model/party/profile/skill.mjson"

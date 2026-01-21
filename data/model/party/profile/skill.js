@@ -16,7 +16,7 @@ exports.Skill = DataObject.specialize(/** @lends Skill.prototype */ {
     name: {
         value: undefined
     },
-    proficencyScale: {
+    proficiencyScale: {
         value: undefined
     }
 
