@@ -5,7 +5,7 @@
             "name": "Answer",
             "description": "Do we need a property for an answer that is a scale?",
             "propertyDescriptors": [
-                {"@": "type"},
+                {"@": "typeDescriptor"},
                 {"@": "name"},
                 {"@": "booleanValue"},
                 {"@": "textValue"},
@@ -39,14 +39,14 @@
     "objectDescriptor": {
         "object": "mod/data/model/data-object.mjson"
     },
-    "type": {
+    "typeDescriptor": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "type",
-            "valueDescriptor": {"@": "typeDescriptor"}
+            "name": "typeDescriptor",
+            "valueDescriptor": {"@": "typeObjectDescriptor"}
         }
     },
-    "typeDescriptor": {
+    "typeObjectDescriptor": {
         "object": "mod/core/meta/module-object-descriptor.mjson"
     },
     "textValue": {
