@@ -11,6 +11,7 @@
     "modelObjectDescriptors": {
         "value": [
             {"@": "DataObjectType"},
+            {"@": "MutableEvent"},
             {"@": "collection"},
             {"@": "product"},
             {"@": "tangibleProduct"},
@@ -107,6 +108,10 @@
 
     "DataObjectType": {
         "object": "./model/data-object-type.mjson"
+    },
+
+    "MutableEvent": {
+        "object": "mod/core/event/mutable-event.mjson"
     },
 
     "collection": {
