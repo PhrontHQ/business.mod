@@ -23,9 +23,6 @@
     "variable": {
         "object": "./variable"
     },
-    "variablePrototype": {
-        "object": "./variable"
-    },
     "modVariableObjectDescriptor": {
         "object": "mod/data/model/variable.mjson"
     },
