@@ -16,7 +16,7 @@ exports.PersonalStrength = DataObject.specialize(/** @lends PersonalStrength.pro
     name: {
         value: undefined
     },
-    proficencyScale: {
+    proficiencyScale: {
         value: undefined
     }
 

@@ -69,17 +69,17 @@
 
         }
     },
-    "ProficencyLevelDescriptor": {
-        "object": "data/model/party/profile/proficency-level.mjson"
+    "ProficiencyLevelDescriptor": {
+        "object": "data/model/party/profile/proficiency-level.mjson"
     },
-    "roleHoldeProficiency": {
+    "roleHolderProficiency": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "roleHoldeProficiency",
+            "name": "roleHolderProficiency",
             "valueType": "object",
             "cardinality": 1,
-            "valueDescriptor": {"@": "ProficencyLevelDescriptor"},
-            "description": "Expections regarding role holder's proficency at that role. That might need to be a range?"
+            "valueDescriptor": {"@": "ProficiencyLevelDescriptor"},
+            "description": "Expectations regarding role holder's proficiency at that role. That might need to be a range?"
         }
     }
 }
