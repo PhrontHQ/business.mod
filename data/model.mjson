@@ -40,6 +40,7 @@
             {"@": "order"},
             {"@": "orderLineItem"},
             {"@": "orderTransaction"},
+            {"@": "EmploymentOffer"},
             {"@": "EmploymentPosition"},
             {"@": "EmploymentType"},
             {"@": "EmploymentPositionRelationship"},
@@ -228,6 +229,10 @@
 
     "orderTransaction": {
         "object": "./model/order-transaction.mjson"
+    },
+
+    "EmploymentOffer": {
+        "object": "./model/employment-offer.mjson"
     },
 
     "EmploymentPosition": {

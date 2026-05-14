@@ -27,6 +27,9 @@
                 },
                 {
                     "@": "secondEmploymentPositionRelationships"
+                },
+                {
+                    "@": "employmentOffers"
                 }
             ],
             "objectDescriptorModule": {
@@ -163,5 +166,20 @@
     },
     "employment_job_relationship_descriptor": {
         "object": "./employment-position-relationship.mjson"
+    },
+    "employmentOffers": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "employmentOffers",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "employmentPosition",
+            "valueDescriptor": {
+                "@": "employment_offer_descriptor"
+            }
+        }
+    },
+    "employment_offer_descriptor": {
+        "object": "./employment-offer.mjson"
     }
 }

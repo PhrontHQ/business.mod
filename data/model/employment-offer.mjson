@@ -1,0 +1,83 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/module-object-descriptor",
+        "values": {
+            "name": "EmploymentOffer",
+            "propertyDescriptors": [
+                {"@": "recipient"},
+                {"@": "sender"},
+                {"@": "employmentPosition"},
+                {"@": "receiptDate"},
+                {"@": "startDate"}
+            ],
+            "objectDescriptorModule": {
+                "%": "./employment-offer.mjson"
+            },
+            "exportName": "EmploymentOffer",
+            "module": {
+                "%": "./employment-offer"
+            },
+            "object":{"@": "EmploymentOffer"},
+            "parent":{"@": "DataObjectDescriptor"}
+
+        }
+    },
+    "DataObjectDescriptor": {
+        "object": "mod/data/model/data-object.mjson"
+    },
+    "EmploymentOffer": {
+        "object": "./employment-offer"
+    },
+    "recipient": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "recipient",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "employmentOffers",
+            "valueDescriptor": {"@": "person_descriptor"}
+        }
+    },
+    "sender": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "sender",
+            "valueType": "object",
+            "cardinality": 1,
+            "valueDescriptor": {"@": "person_descriptor"}
+        }
+    },
+    "person_descriptor": {
+        "object": "./party/person.mjson"
+    },
+    "employmentPosition": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "employmentPosition",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "EmploymentOffers",
+            "valueDescriptor": {"@": "employment-position-descriptor"}
+        }
+    },
+    "employment-position-descriptor": {
+        "object": "./employment-position.mjson"
+    },
+    "receiptDate": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "receiptDate",
+            "valueDescriptor": {"@": "DateDescriptor"}
+        }
+    },
+    "DateDescriptor": {
+        "object": "mod/core/date.mjson"
+    },
+    "startDate": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "creationDate",
+            "valueDescriptor": {"@": "DateDescriptor"}
+        }
+    }
+}

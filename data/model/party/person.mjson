@@ -16,7 +16,8 @@
                 {"@": "supplierRelationships"},
                 {"@": "customerSupplierResponsibilities"},
                 {"@": "firstPersonalRelationships"},
-                {"@": "secondPersonalRelationships"}
+                {"@": "secondPersonalRelationships"},
+                {"@": "employmentOffers"}
                 
            ]
         }
@@ -205,6 +206,22 @@
             "inversePropertyName": "secondPerson",
             "valueDescriptor": {"@": "PersonalRelationshipDescriptor"}
        }
+    },
+
+    "employmentOffers": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "employmentOffers",
+            "valueType": "object",
+            "cardinality": -1,
+            "inversePropertyName": "employee",
+            "valueDescriptor": {
+                "@": "employment_offer_descriptor"
+            }
+        }
+    },
+    "employment_offer_descriptor": {
+        "object": "../employment-offer.mjson"
     }
 
 
