@@ -37,7 +37,7 @@ exports.EmploymentOffer = class EmploymentOffer extends DataObject {
 
             /**
              * Placeholder to indicate that EmploymentOffer should capture 
-             * financial information. We do not have a model
+             * compensation information. We do not have a model
              * salary/benefits so this is noop for now
              * 
              */

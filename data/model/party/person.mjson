@@ -214,7 +214,7 @@
             "name": "employmentOffers",
             "valueType": "object",
             "cardinality": -1,
-            "inversePropertyName": "employee",
+            "inversePropertyName": "recipient",
             "valueDescriptor": {
                 "@": "employment_offer_descriptor"
             }

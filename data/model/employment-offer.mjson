@@ -4,10 +4,14 @@
         "values": {
             "name": "EmploymentOffer",
             "propertyDescriptors": [
-                {"@": "recipient"},
-                {"@": "sender"},
+                {"@": "acceptanceDate"},
                 {"@": "employmentPosition"},
+                {"@": "hiringManager"},
+                {"@": "offerDate"},
+                {"@": "recipient"},
+                {"@": "recruiter"},
                 {"@": "receiptDate"},
+                {"@": "salary"},
                 {"@": "startDate"}
             ],
             "objectDescriptorModule": {
@@ -28,6 +32,43 @@
     "EmploymentOffer": {
         "object": "./employment-offer"
     },
+    "acceptanceDate": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "acceptanceDate",
+            "valueDescriptor": {"@": "DateDescriptor"}
+        }
+    },
+    "employmentPosition": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "employmentPosition",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "employmentOffers",
+            "valueDescriptor": {"@": "employment-position-descriptor"}
+        }
+    },
+    "employment-position-descriptor": {
+        "object": "./employment-position.mjson"
+    },
+    "hiringManager": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "hiringManager",
+            "valueType": "object",
+            "cardinality": 1,
+            "inversePropertyName": "employmentOffers",
+            "valueDescriptor": {"@": "person_descriptor"}
+        }
+    },
+    "offerDate": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "offerDate",
+            "valueDescriptor": {"@": "DateDescriptor"}
+        }
+    },
     "recipient": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
@@ -38,10 +79,10 @@
             "valueDescriptor": {"@": "person_descriptor"}
         }
     },
-    "sender": {
+    "recruiter": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "sender",
+            "name": "recruiter",
             "valueType": "object",
             "cardinality": 1,
             "valueDescriptor": {"@": "person_descriptor"}
@@ -49,19 +90,6 @@
     },
     "person_descriptor": {
         "object": "./party/person.mjson"
-    },
-    "employmentPosition": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "employmentPosition",
-            "valueType": "object",
-            "cardinality": 1,
-            "inversePropertyName": "EmploymentOffers",
-            "valueDescriptor": {"@": "employment-position-descriptor"}
-        }
-    },
-    "employment-position-descriptor": {
-        "object": "./employment-position.mjson"
     },
     "receiptDate": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -73,10 +101,18 @@
     "DateDescriptor": {
         "object": "mod/core/date.mjson"
     },
+    "salary": {
+        "prototype": "mod/core/meta/property-descriptor",
+        "values": {
+            "name": "salary",
+            "description": "Placeholder to indicate that EmploymentOffer should capture compensation information. We do not have a model salary/benefits so this is noop for now",
+            "valueType": "number"
+        }
+    },
     "startDate": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "creationDate",
+            "name": "startDate",
             "valueDescriptor": {"@": "DateDescriptor"}
         }
     }
