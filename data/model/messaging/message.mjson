@@ -20,7 +20,7 @@
             "objectDescriptorModule": {
                 "%":"./message.mjson"
             },
-            "exportName": "MessagingChannel",
+            "exportName": "Message",
             "module": {
                 "%": "./message"
             },
