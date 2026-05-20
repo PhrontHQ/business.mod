@@ -24,6 +24,9 @@ exports.EmploymentPosition = PartyPartyRelationship.specialize(/** @lends Employ
     },
     secondEmploymentPositionRelationships: {
         value: undefined
+    },
+    employmentOffers: {
+        value: undefined
     }
 
 });
