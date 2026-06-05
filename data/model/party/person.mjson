@@ -89,9 +89,19 @@
         "values": {
             "name": "preferredNextRoles",
             "valueType": "object",
-            "cardinality": -1,
+            "cardinalityRange": {"@": "preferredNextRolesCardinalityRange"},
+            "ownsValue": true,
+            "isOrdered": true,
             "valueDescriptor": {"@": "JobRoleDescriptor"},
             "description": "aka career of interest"
+        }
+    },
+
+    "preferredNextRolesCardinalityRange": {
+        "prototype": "mod/core/range",
+        "values": {
+            "begin": 3,
+            "end": 3
         }
     },
 
