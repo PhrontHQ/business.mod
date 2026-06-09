@@ -16,7 +16,7 @@ exports.JobRoleSkillExpectation = DataObject.specialize(/** @lends JobRoleSkillE
     name: {
         value: undefined
     },
-    proficencyScale: {
+    proficiencyScale: {
         value: undefined
     }
 

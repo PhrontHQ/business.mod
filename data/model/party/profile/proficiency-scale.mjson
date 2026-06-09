@@ -2,26 +2,26 @@
     "root": {
         "prototype": "mod/core/meta/module-object-descriptor",
         "values": {
-            "name": "ProficencyScale",
-            "description": "ProficencyScale group a list of ",
+            "name": "ProficiencyScale",
+            "description": "ProficiencyScale groups a list of proficiency levels",
             "propertyDescriptors": [
                 {"@": "name"},
                 {"@": "levels"}
             ],
             "objectDescriptorModule": {
-                "%": "./proficency-scale.mjson"
+                "%": "./proficiency-scale.mjson"
             },
-            "exportName": "ProficencyScale",
+            "exportName": "ProficiencyScale",
             "module": {
-                "%": "./proficency-scale"
+                "%": "./proficiency-scale"
             },
-            "object":{"@": "proficency-scale"},
+            "object":{"@": "proficiency-scale"},
             "parent":{"@": "DataObjectDescriptor"}
 
         }
     },
-    "proficency-scale": {
-        "object": "./proficency-scale"
+    "proficiency-scale": {
+        "object": "./proficiency-scale"
     },
 
     "DataObjectDescriptor": {
@@ -38,8 +38,8 @@
             "isMandatory": true
         }
     },
-    "proficencyLevelDescriptor": {
-        "object": "./proficency-level.mjson"
+    "proficiencyLevelDescriptor": {
+        "object": "./proficiency-level.mjson"
     },
     "levels": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -47,7 +47,7 @@
             "name": "levels",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "proficencyLevelDescriptor"},
+            "valueDescriptor": {"@": "proficiencyLevelDescriptor"},
             "inversePropertyName": "scale"
         }
     }

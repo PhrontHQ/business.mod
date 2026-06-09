@@ -12,7 +12,7 @@
                     "@": "skill"
                 },
                 {
-                    "@": "selfAssessedProficencyLevel"
+                    "@": "selfAssessedProficiencyLevel"
                 },
                 {
                     "@": "assessmentQuestionnaires"
@@ -54,7 +54,7 @@
             "valueDescriptor": {
                 "@": "PersonDescriptor"
             },
-            "inversePropertyName": "strengthAssessments"
+            "inversePropertyName": "skillAssessments"
         }
     },
     "SkillDescriptor": {
@@ -72,17 +72,17 @@
             "inversePropertyName": "personalSkillAssessments"
         }
     },
-    "ProficencyLevelDescriptor": {
-        "object": "./proficency-level.mjson"
+    "ProficiencyLevelDescriptor": {
+        "object": "./proficiency-level.mjson"
     },
-    "selfAssessedProficencyLevel": {
+    "selfAssessedProficiencyLevel": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
-            "name": "selfAssessedProficencyLevel",
+            "name": "selfAssessedProficiencyLevel",
             "valueType": "object",
             "cardinality": 1,
             "valueDescriptor": {
-                "@": "ProficencyLevelDescriptor"
+                "@": "ProficiencyLevelDescriptor"
             },
             "isSearchable": true
         }
