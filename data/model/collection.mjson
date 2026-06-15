@@ -9,6 +9,7 @@
                 {"@": "descriptionHtml"},
                 {"@": "image"},
                 {"@": "ruleSet"},
+                {"@": "type"},
                 {"@": "products"}
             ],
             "objectDescriptorModule": {

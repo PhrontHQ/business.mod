@@ -123,13 +123,6 @@
             "valueType": "number"
         }
     },
-    "tags": {
-        "prototype": "mod/core/meta/property-descriptor",
-        "values": {
-            "name": "tags",
-            "valueType": "array"
-        }
-    },
      "notes": {
         "prototype": "mod/core/meta/property-descriptor",
         "values": {
