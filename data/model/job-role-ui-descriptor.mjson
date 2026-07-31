@@ -1,0 +1,15 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/user-interface-descriptor",
+        "values": {
+            "inspectorComponentModule": {
+                "%": "../inspectors/job-role.mod"
+            },
+            "collectionNameExpression": "'Role'",
+            "collectionInspectorComponentModule": {
+                "%": "mod/ui/list.mod"
+            },
+            "nameExpression": "name"
+        }
+    }
+}

@@ -1,0 +1,18 @@
+
+.JobRoleInspector {
+    height: 100%;
+
+
+
+    .field {
+        height: 100%;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        align-items: start;
+        background: white;
+    }
+
+}
+
+

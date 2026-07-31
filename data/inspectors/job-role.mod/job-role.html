@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="job-role.css">
+    <script type="text/mod-serialization">
+        {
+            "owner": {
+                "values": {
+                    "element": {"#": "owner"},
+                    "roleSelection": {"<-": "@roleList.selection[0]"}
+                }
+            },
+            "name": {
+                "prototype": "mod/ui/text.mod",
+                "values": {
+                    "element": {"#": "name"},
+                    value: {"<-": "@owner.name"}
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <div data-mod-id="owner" class="JobRoleInspector">
+        <div class="field">
+            <div data-mod-id="name" class="field-value"></div>
+        </div>
+    </div>
+</body>
+</html>
