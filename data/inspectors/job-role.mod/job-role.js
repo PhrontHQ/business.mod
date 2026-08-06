@@ -35,4 +35,11 @@ exports.JobRole = class JobRole extends Component {
         }
         this.data.deliverables.push(this.application.mainService.createDataObject(Deliverable));
     }
+
+    handleAddResponsibilityAction() {
+        if (!this.data.responsibilities) {
+            this.data.responsibilities = [];
+        }
+        this.data.responsibilities.push("");
+    }
 };

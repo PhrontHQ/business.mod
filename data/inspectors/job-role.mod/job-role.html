@@ -16,6 +16,33 @@
                     "value": {"<->": "@owner.data.name"}
                 }
             },
+            "responsibilities": {
+                "prototype": "mod/ui/repetition.mod",
+                "values": {
+                    "element": {"#": "responsibilities"},
+                    "content": {"<-": "@owner.data.responsibilities"}
+                }
+            },
+            "responsibility": {
+                "prototype": "mod/ui/text-area.mod",
+                "values": {
+                    "element": {"#": "responsibility"},
+                    "value": {"<->": "@responsibilities:iteration.object"}
+                }
+            },
+            "addResponsibility": {
+                "prototype": "mod/ui/button.mod",
+                "values": {
+                    "element": {"#": "addResponsibility"},
+                    "label": "+"
+                },
+                    "listeners": [
+                        {
+                            "type": "action",
+                            "listener": { "@": "owner" }
+                        }
+                    ]
+            },
             "deliverables": {
                 "prototype": "mod/ui/repetition.mod",
                 "values": {
@@ -105,6 +132,13 @@
         <div class="field">
             <span class="field-label">Title</span>
             <div data-mod-id="title" class="line-item"></div>
+            <div class=field-label-row>
+                <span class="field-label">Responsibilities</span>
+                <div data-mod-id="addResponsibility" class="addResponsibility"></div>
+            </div>
+            <div data-mod-id="responsibilities" class="field-value">
+                <div data-mod-id="responsibility" class="line-item"></div>
+            </div>
             <div class=field-label-row>
                 <span class="field-label">Deliverables</span>
                 <div data-mod-id="addDeliverable" class="addDeliverable"></div>
