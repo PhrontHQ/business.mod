@@ -5,6 +5,9 @@
             "inspectorComponentModule": {
                 "%": "../inspectors/job-role.mod"
             },
+            "creatorInspectorComponentModule": {
+                "%": "../creators/job-role.mod"
+            },
             "collectionNameExpression": "'Role'",
             "collectionInspectorComponentModule": {
                 "%": "mod/ui/list.mod"

@@ -9,13 +9,6 @@
                     "element": {"#": "owner"}
                 }
             },
-            "title": {
-                "prototype": "mod/ui/text-field.mod",
-                "values": {
-                    "element": {"#": "title"},
-                    "value": {"<->": "@owner.data.name"}
-                }
-            },
             "deliverables": {
                 "prototype": "mod/ui/repetition.mod",
                 "values": {
@@ -29,19 +22,6 @@
                     "element": {"#": "deliverable"},
                     "value": {"<->": "@deliverables:iteration.object.description"}
                 }
-            },
-            "addDeliverable": {
-                "prototype": "mod/ui/button.mod",
-                "values": {
-                    "element": {"#": "addDeliverable"},
-                    "label": "+"
-                },
-                    "listeners": [
-                        {
-                            "type": "action",
-                            "listener": { "@": "owner" }
-                        }
-                    ]
             },
             "collaborations": {
                 "prototype": "mod/ui/repetition.mod",
@@ -57,19 +37,6 @@
                     "value": {"<->": "@collaborations:iteration.object.description"}
                 }
             },
-            "addCollaboration": {
-                "prototype": "mod/ui/button.mod",
-                "values": {
-                    "element": {"#": "addCollaboration"},
-                    "label": "+"
-                },
-                    "listeners": [
-                        {
-                            "type": "action",
-                            "listener": { "@": "owner" }
-                        }
-                    ]
-            },
             "processes": {
                 "prototype": "mod/ui/repetition.mod",
                 "values": {
@@ -83,19 +50,6 @@
                     "element": {"#": "process"},
                     "value": {"<->": "@processes:iteration.object.description"}
                 }
-            },
-            "addProcess": {
-                "prototype": "mod/ui/button.mod",
-                "values": {
-                    "element": {"#": "addProcess"},
-                    "label": "+"
-                },
-                    "listeners": [
-                        {
-                            "type": "action",
-                            "listener": { "@": "owner" }
-                        }
-                    ]
             }
         }
     </script>
@@ -103,26 +57,15 @@
 <body>
     <div data-mod-id="owner" class="JobRoleInspector">
         <div class="field">
-            <span class="field-label">Title</span>
-            <div data-mod-id="title" class="line-item"></div>
-            <div class=field-label-row>
-                <span class="field-label">Deliverables</span>
-                <div data-mod-id="addDeliverable" class="addDeliverable"></div>
-            </div>
+            <span class="field-label">Editing</span>
             <div data-mod-id="deliverables" class="field-value">
                 <div data-mod-id="deliverable" class="line-item"></div>
             </div>
-            <div class=field-label-row>
-                <span class="field-label">Collaborations</span>
-                <div data-mod-id="addCollaboration" class="addCollaboration"></div>
-            </div>
+            <span class="field-label">Context</span>
             <div data-mod-id="collaborations" class="field-value">
                 <div data-mod-id="collaboration" class="line-item"></div>
             </div>
-            <div class=field-label-row>
-                <span class="field-label">Processes</span>
-                <div data-mod-id="addProcess" class="addProcess"></div>
-            </div>
+            <span class="field-label">Processes</span>
             <div data-mod-id="processes" class="field-value">
                 <div data-mod-id="process" class="line-item"></div>
             </div>
