@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="job-role.css">
+    <script type="text/mod-serialization">
+        {
+            "owner": {
+                "values": {
+                    "element": {"#": "owner"}
+                }
+            },
+            "deliverables": {
+                "prototype": "mod/ui/repetition.mod",
+                "values": {
+                    "element": {"#": "deliverables"},
+                    "content": {"<-": "@owner.data.deliverables"}
+                }
+            },
+            "deliverable": {
+                "prototype": "mod/ui/property-field/multiline-text.mod",
+                "values": {
+                    "element": {"#": "deliverable"},
+                    "value": {"<->": "@deliverables:iteration.object.description"}
+                }
+            },
+            "collaborations": {
+                "prototype": "mod/ui/repetition.mod",
+                "values": {
+                    "element": {"#": "collaborations"},
+                    "content": {"<-": "@owner.data.collaborations"}
+                }
+            },
+            "collaboration": {
+                "prototype": "mod/ui/property-field/multiline-text.mod",
+                "values": {
+                    "element": {"#": "collaboration"},
+                    "value": {"<->": "@collaborations:iteration.object.description"}
+                }
+            },
+            "processes": {
+                "prototype": "mod/ui/repetition.mod",
+                "values": {
+                    "element": {"#": "processes"},
+                    "content": {"<-": "@owner.data.processes"}
+                }
+            },
+            "process": {
+                "prototype": "mod/ui/property-field/multiline-text.mod",
+                "values": {
+                    "element": {"#": "process"},
+                    "value": {"<->": "@processes:iteration.object.description"}
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <div data-mod-id="owner" class="JobRoleInspector">
+        <div class="field">
+            <span class="field-label">Editing</span>
+            <div data-mod-id="deliverables" class="field-value">
+                <div data-mod-id="deliverable" class="line-item"></div>
+            </div>
+            <span class="field-label">Context</span>
+            <div data-mod-id="collaborations" class="field-value">
+                <div data-mod-id="collaboration" class="line-item"></div>
+            </div>
+            <span class="field-label">Processes</span>
+            <div data-mod-id="processes" class="field-value">
+                <div data-mod-id="process" class="line-item"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

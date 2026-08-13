@@ -1,0 +1,9 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/user-interface-descriptor",
+        "values": {
+            "cascadingListItemHeaderRightCollectionNameExpression": "'Add'",
+            "cascadingListItemFooterMiddleCollectionNameExpression": "length + ' item' + (length == 1 ? '' : 's')"
+        }
+    }
+}

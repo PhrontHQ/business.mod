@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="job-role.css">
+    <script type="text/mod-serialization">
+        {
+            "owner": {
+                "values": {
+                    "element": {"#": "owner"}
+                }
+            },
+            "title": {
+                "prototype": "mod/ui/property-field/text.mod",
+                "values": {
+                    "element": {"#": "title"},
+                    "value": {"<->": "@owner.data.name"}
+                }
+            },
+            "responsibilities": {
+                "prototype": "mod/ui/repetition.mod",
+                "values": {
+                    "element": {"#": "responsibilities"},
+                    "content": {"<-": "@owner.data.responsibilities"}
+                }
+            },
+            "responsibility": {
+                "prototype": "mod/ui/property-field/multiline-text.mod",
+                "values": {
+                    "element": {"#": "responsibility"},
+                    "value": {"<->": "@responsibilities:iteration.object"}
+                }
+            },
+            "addResponsibility": {
+                "prototype": "mod/ui/button.mod",
+                "values": {
+                    "element": {"#": "addResponsibility"},
+                    "label": "+"
+                },
+                    "listeners": [
+                        {
+                            "type": "action",
+                            "listener": { "@": "owner" }
+                        }
+                    ]
+            },
+            "deliverables": {
+                "prototype": "mod/ui/repetition.mod",
+                "values": {
+                    "element": {"#": "deliverables"},
+                    "content": {"<-": "@owner.data.deliverables"}
+                }
+            },
+            "deliverable": {
+                "prototype": "mod/ui/property-field/multiline-text.mod",
+                "values": {
+                    "element": {"#": "deliverable"},
+                    "value": {"<->": "@deliverables:iteration.object.description"}
+                }
+            },
+            "addDeliverable": {
+                "prototype": "mod/ui/button.mod",
+                "values": {
+                    "element": {"#": "addDeliverable"},
+                    "label": "+"
+                },
+                    "listeners": [
+                        {
+                            "type": "action",
+                            "listener": { "@": "owner" }
+                        }
+                    ]
+            },
+            "collaborations": {
+                "prototype": "mod/ui/repetition.mod",
+                "values": {
+                    "element": {"#": "collaborations"},
+                    "content": {"<-": "@owner.data.collaborations"}
+                }
+            },
+            "collaboration": {
+                "prototype": "mod/ui/property-field/multiline-text.mod",
+                "values": {
+                    "element": {"#": "collaboration"},
+                    "value": {"<->": "@collaborations:iteration.object.description"}
+                }
+            },
+            "addCollaboration": {
+                "prototype": "mod/ui/button.mod",
+                "values": {
+                    "element": {"#": "addCollaboration"},
+                    "label": "+"
+                },
+                    "listeners": [
+                        {
+                            "type": "action",
+                            "listener": { "@": "owner" }
+                        }
+                    ]
+            },
+            "processes": {
+                "prototype": "mod/ui/repetition.mod",
+                "values": {
+                    "element": {"#": "processes"},
+                    "content": {"<-": "@owner.data.processes"}
+                }
+            },
+            "process": {
+                "prototype": "mod/ui/property-field/multiline-text.mod",
+                "values": {
+                    "element": {"#": "process"},
+                    "value": {"<->": "@processes:iteration.object.description"}
+                }
+            },
+            "addProcess": {
+                "prototype": "mod/ui/button.mod",
+                "values": {
+                    "element": {"#": "addProcess"},
+                    "label": "+"
+                },
+                    "listeners": [
+                        {
+                            "type": "action",
+                            "listener": { "@": "owner" }
+                        }
+                    ]
+            }
+        }
+    </script>
+</head>
+<body>
+    <div data-mod-id="owner" class="JobRoleInspector">
+        <div class="field">
+            <span class="field-label">Title</span>
+            <div data-mod-id="title" class="line-item"></div>
+            <div class=field-label-row>
+                <span class="field-label">Responsibilities</span>
+                <div data-mod-id="addResponsibility" class="addResponsibility"></div>
+            </div>
+            <div data-mod-id="responsibilities" class="field-value">
+                <div data-mod-id="responsibility" class="line-item"></div>
+            </div>
+            <div class=field-label-row>
+                <span class="field-label">Deliverables</span>
+                <div data-mod-id="addDeliverable" class="addDeliverable"></div>
+            </div>
+            <div data-mod-id="deliverables" class="field-value">
+                <div data-mod-id="deliverable" class="line-item"></div>
+            </div>
+            <div class=field-label-row>
+                <span class="field-label">Collaborations</span>
+                <div data-mod-id="addCollaboration" class="addCollaboration"></div>
+            </div>
+            <div data-mod-id="collaborations" class="field-value">
+                <div data-mod-id="collaboration" class="line-item"></div>
+            </div>
+            <div class=field-label-row>
+                <span class="field-label">Processes</span>
+                <div data-mod-id="addProcess" class="addProcess"></div>
+            </div>
+            <div data-mod-id="processes" class="field-value">
+                <div data-mod-id="process" class="line-item"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

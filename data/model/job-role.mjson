@@ -20,8 +20,15 @@
                 "%": "./job-role"
             },
             "object":{"@": "JobRole"},
-            "parent":{"@": "RoleDescriptor"}
-
+            "parent":{"@": "RoleDescriptor"},
+            "userInterfaceDescriptorModules": {
+                "*": {
+                    "%": "./job-role-ui-descriptor.mjson"
+                },
+                "mod/ui/cascading-list.mod": {
+                    "%": "./job-role-cascading-list-ui-descriptor.mjson"
+                }
+            }
         }
     },
     "JobRole": {
