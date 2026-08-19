@@ -27,7 +27,7 @@
                 "prototype": "mod/ui/property-field/multiline-text.mod",
                 "values": {
                     "element": {"#": "responsibility"},
-                    "value": {"<->": "@responsibilities:iteration.object"}
+                    "value": {"<->": "@owner.data.responsibilities.get(@responsibilities:iteration.index)"}
                 }
             },
             "addResponsibility": {
