@@ -1,0 +1,53 @@
+{
+    "root": {
+        "value": [
+            {
+                "@": "YesAnswer"
+            },
+            {
+                "@": "NoAnswer"
+            },
+            {
+                "@": "UnsureAnswer"
+            }
+        ]
+    },
+    "YesAnswer": {
+        "prototype": "data/model/questionnaire/answer",
+        "values": {
+            "name": "YesAnswer",
+            "booleanValue": true,
+            "textValue": {
+                "en": {
+                    "US": "Yes"
+                }
+            },
+            "identifier": "019b2267-c63f-7f05-b580-f6224493509c"
+        }
+    },
+    "NoAnswer": {
+        "prototype": "data/model/questionnaire/answer",
+        "values": {
+            "name": "NoAnswer",
+            "booleanValue": false,
+            "textValue": {
+                "en": {
+                    "US": "No"
+                }
+            },
+            "identifier": "019b2267-c63f-7970-812c-e96d9bf7d56e"
+        }
+    },
+    "UnsureAnswer": {
+        "prototype": "data/model/questionnaire/answer",
+        "values": {
+            "name": "UnsureAnswer",
+            "textValue": {
+                "en": {
+                    "US": "Unsure"
+                }
+            },
+            "identifier": "01a03a09-b740-7cd4-8963-a39ea32a6c68"
+        }
+    }
+}
