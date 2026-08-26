@@ -16,6 +16,7 @@
         "prototype": "data/model/questionnaire/answer",
         "values": {
             "name": "YesAnswer",
+            "booleanValue": true,
             "textValue": {
                 "en": {
                     "US": "Yes"
@@ -28,6 +29,7 @@
         "prototype": "data/model/questionnaire/answer",
         "values": {
             "name": "NoAnswer",
+            "booleanValue": false,
             "textValue": {
                 "en": {
                     "US": "No"
