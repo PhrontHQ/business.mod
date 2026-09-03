@@ -12,17 +12,33 @@
             }
         ]
     },
+    "YesLocalizedString": {
+        "prototype": "mod/data/model/localized-string",
+        "values": {
+            "localization": {
+                "en": {
+                    "US": "Yes"
+                }
+            }
+        }
+    },
     "YesAnswer": {
         "prototype": "data/model/questionnaire/answer",
         "values": {
             "name": "YesAnswer",
             "booleanValue": true,
-            "textValue": {
-                "en": {
-                    "US": "Yes"
-                }
-            },
+            "textValue": {"@":"YesLocalizedString"},
             "identifier": "019b2267-c63f-7f05-b580-f6224493509c"
+        }
+    },
+    "NoLocalizedString": {
+        "prototype": "mod/data/model/localized-string",
+        "values": {
+            "localization": {
+                "en": {
+                    "US": "No"
+                }
+            }
         }
     },
     "NoAnswer": {
@@ -30,23 +46,25 @@
         "values": {
             "name": "NoAnswer",
             "booleanValue": false,
-            "textValue": {
-                "en": {
-                    "US": "No"
-                }
-            },
+            "textValue": {"@":"NoLocalizedString"},
             "identifier": "019b2267-c63f-7970-812c-e96d9bf7d56e"
+        }
+    },
+    "UnsureLocalizedString": {
+        "prototype": "mod/data/model/localized-string",
+        "values": {
+            "localization": {
+                "en": {
+                    "US": "Unsure"
+                }
+            }
         }
     },
     "UnsureAnswer": {
         "prototype": "data/model/questionnaire/answer",
         "values": {
             "name": "UnsureAnswer",
-            "textValue": {
-                "en": {
-                    "US": "Unsure"
-                }
-            },
+            "textValue": {"@":"UnsureLocalizedString"},
             "identifier": "01a03a09-b740-7cd4-8963-a39ea32a6c68"
         }
     }
