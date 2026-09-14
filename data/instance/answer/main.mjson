@@ -9,6 +9,15 @@
             },
             {
                 "@": "UnsureAnswer"
+            },
+            {
+                "@": "UnderOneYearAnswer"
+            },
+            {
+                "@": "UnderTwoYearsAnswer"
+            },
+            {
+                "@": "OverTwoYearsAnswer"
             }
         ]
     },
