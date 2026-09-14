@@ -67,5 +67,59 @@
             "textValue": {"@":"UnsureLocalizedString"},
             "identifier": "01a03a09-b740-7cd4-8963-a39ea32a6c68"
         }
+    },
+    "UnderOneYearLocalizedString": {
+        "prototype": "mod/data/model/localized-string",
+        "values": {
+            "localization": {
+                "en": {
+                    "US": "Under one year"
+                }
+            }
+        }
+    },
+    "UnderOneYearAnswer": {
+        "prototype": "data/model/questionnaire/answer",
+        "values": {
+            "name": "UnderOneYearAnswer",
+            "textValue": {"@":"UnderOneYearLocalizedString"},
+            "identifier": "01a0a229-b531-7264-b947-0d8c755194d8"
+        }
+    },
+    "UnderTwoYearsLocalizedString": {
+        "prototype": "mod/data/model/localized-string",
+        "values": {
+            "localization": {
+                "en": {
+                    "US": "Under two years"
+                }
+            }
+        }
+    },
+    "UnderTwoYearsAnswer": {
+        "prototype": "data/model/questionnaire/answer",
+        "values": {
+            "name": "UnderTwoYearsAnswer",
+            "textValue": {"@":"UnderTwoYearsLocalizedString"},
+            "identifier": "01a0a229-b531-75b1-a8e5-72bea2cb3cde"
+        }
+    },
+    "OverTwoYearsLocalizedString": {
+        "prototype": "mod/data/model/localized-string",
+        "values": {
+            "localization": {
+                "en": {
+                    "US": "Over two years"
+                }
+            }
+        }
+    },
+    "OverTwoYearsAnswer": {
+        "prototype": "data/model/questionnaire/answer",
+        "values": {
+            "name": "OverTwoYearsAnswer",
+            "textValue": {"@":"OverTwoYearsLocalizedString"},
+            "identifier": "01a0a229-b531-77e2-96f8-f49d8351260f"
+        }
     }
 }
