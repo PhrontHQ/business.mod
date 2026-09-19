@@ -23,7 +23,7 @@
     "ImagingDeviceDescriptor": {
         "object": "./imaging-device.mjson"
     },
-    "ProntDocumentDescriptor": {
+    "PrintDocumentDescriptor": {
         "object": "./print-document.mjson"
     },
 
@@ -33,7 +33,7 @@
             "name": "activePrintDocument",
             "cardinality": 1,
             "valueType": "object",
-            "valueDescriptor": {"@": "ProntDocumentDescriptor"},
+            "valueDescriptor": {"@": "PrintDocumentDescriptor"},
             "description": "The current document to be printed"
         }
     }
