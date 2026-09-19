@@ -38,8 +38,8 @@
             "isMandatory": true
         }
     },
-    "proficencyLevelDescriptor": {
-        "object": "./party/profile/proficency-level.mjson"
+    "proficiencyLevelDescriptor": {
+        "object": "./party/profile/proficiency-level.mjson"
     },
     "levels": {
         "prototype": "mod/core/meta/property-descriptor",
@@ -47,8 +47,8 @@
             "name": "levels",
             "valueType": "object",
             "cardinality": -1,
-            "valueDescriptor": {"@": "proficencyLevelDescriptor"},
-            "inversePropertyName": "proficencyScale"
+            "valueDescriptor": {"@": "proficiencyLevelDescriptor"},
+            "inversePropertyName": "proficiencyScale"
         }
     }
 }
