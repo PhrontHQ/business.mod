@@ -11,7 +11,8 @@
                 {"@": "displayLogicExpression"},
                 {"@": "maximumNumberOfAnswer"},
                 {"@": "possibleAnswers"},
-                {"@": "respondentQuestionnaireAnswers"}
+                {"@": "respondentQuestionnaireAnswers"},
+                {"@": "notes"}
             ],
             "objectDescriptorModule": {
                 "%":"./questionnaire-question.mjson"
