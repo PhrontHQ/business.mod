@@ -6,7 +6,8 @@
             "propertyDescriptors": [
                 {"@": "order"},
                 {"@": "amount"},
-                {"@": "paymentGateway"}
+                {"@": "paymentGateway"},
+                {"@": "kind"}
             ],
             "objectDescriptorModule": {
                 "%": "./order-transaction.mjson"
