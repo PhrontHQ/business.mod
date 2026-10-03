@@ -1,0 +1,9 @@
+{
+    "root": {
+        "prototype": "mod/core/meta/user-interface-descriptor",
+        "values": {
+            "inspectorComponentModule": {"%": "ui/questionnaire/answer.mod"},
+            "nameExpression": "name"
+        }
+    }
+}

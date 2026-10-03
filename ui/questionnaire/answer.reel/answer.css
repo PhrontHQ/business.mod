@@ -1,0 +1,13 @@
+.Answer {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.Answer-icon:empty {
+    display: none;
+}
+
+.Answer-text {
+    min-width: 0;
+}

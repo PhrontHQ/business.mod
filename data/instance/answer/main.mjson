@@ -31,13 +31,23 @@
             }
         }
     },
+    "AnswerDescriptor": {
+        "object": "data/model/questionnaire/answer.mjson"
+    },
+    "YesAnswerDataIdentifier": {
+        "prototype": "mod/data/model/data-identifier",
+        "values": {
+            "primaryKey": "019b2267-c63f-7f05-b580-f6224493509c",
+            "objectDescriptor": {"@": "AnswerDescriptor"}
+        }
+    },
     "YesAnswer": {
         "prototype": "data/model/questionnaire/answer",
         "values": {
             "name": "YesAnswer",
             "booleanValue": true,
             "textValue": {"@":"YesLocalizedString"},
-            "identifier": "019b2267-c63f-7f05-b580-f6224493509c"
+            "dataIdentifier": {"@":"YesAnswerDataIdentifier"}
         }
     },
     "NoLocalizedString": {
@@ -50,13 +60,20 @@
             }
         }
     },
+    "NoAnswerDataIdentifier": {
+        "prototype": "mod/data/model/data-identifier",
+        "values": {
+            "primaryKey": "019b2267-c63f-7970-812c-e96d9bf7d56e",
+            "objectDescriptor": {"@": "AnswerDescriptor"}
+        }
+    },
     "NoAnswer": {
         "prototype": "data/model/questionnaire/answer",
         "values": {
             "name": "NoAnswer",
             "booleanValue": false,
             "textValue": {"@":"NoLocalizedString"},
-            "identifier": "019b2267-c63f-7970-812c-e96d9bf7d56e"
+            "dataIdentifier": {"@":"NoAnswerDataIdentifier"}
         }
     },
     "UnsureLocalizedString": {
@@ -69,12 +86,19 @@
             }
         }
     },
+    "UnsureAnswerDataIdentifier": {
+        "prototype": "mod/data/model/data-identifier",
+        "values": {
+            "primaryKey": "01a03a09-b740-7cd4-8963-a39ea32a6c68",
+            "objectDescriptor": {"@": "AnswerDescriptor"}
+        }
+    },
     "UnsureAnswer": {
         "prototype": "data/model/questionnaire/answer",
         "values": {
             "name": "UnsureAnswer",
             "textValue": {"@":"UnsureLocalizedString"},
-            "identifier": "01a03a09-b740-7cd4-8963-a39ea32a6c68"
+            "dataIdentifier": {"@":"UnsureAnswerDataIdentifier"}
         }
     },
     "UnderOneYearLocalizedString": {
@@ -87,12 +111,19 @@
             }
         }
     },
+    "UnderOneYearAnswerDataIdentifier": {
+        "prototype": "mod/data/model/data-identifier",
+        "values": {
+            "primaryKey": "01a0a229-b531-7264-b947-0d8c755194d8",
+            "objectDescriptor": {"@": "AnswerDescriptor"}
+        }
+    },
     "UnderOneYearAnswer": {
         "prototype": "data/model/questionnaire/answer",
         "values": {
             "name": "UnderOneYearAnswer",
             "textValue": {"@":"UnderOneYearLocalizedString"},
-            "identifier": "01a0a229-b531-7264-b947-0d8c755194d8"
+            "dataIdentifier": {"@":"UnderOneYearAnswerDataIdentifier"}
         }
     },
     "UnderTwoYearsLocalizedString": {
@@ -105,12 +136,19 @@
             }
         }
     },
+    "UnderTwoYearsAnswerDataIdentifier": {
+        "prototype": "mod/data/model/data-identifier",
+        "values": {
+            "primaryKey": "01a0a229-b531-75b1-a8e5-72bea2cb3cde",
+            "objectDescriptor": {"@": "AnswerDescriptor"}
+        }
+    },
     "UnderTwoYearsAnswer": {
         "prototype": "data/model/questionnaire/answer",
         "values": {
             "name": "UnderTwoYearsAnswer",
             "textValue": {"@":"UnderTwoYearsLocalizedString"},
-            "identifier": "01a0a229-b531-75b1-a8e5-72bea2cb3cde"
+            "dataIdentifier": {"@":"UnderTwoYearsAnswerDataIdentifier"}
         }
     },
     "OverTwoYearsLocalizedString": {
@@ -123,12 +161,19 @@
             }
         }
     },
+    "OverTwoYearsAnswerDataIdentifier": {
+        "prototype": "mod/data/model/data-identifier",
+        "values": {
+            "primaryKey": "01a0a229-b531-77e2-96f8-f49d8351260f",
+            "objectDescriptor": {"@": "AnswerDescriptor"}
+        }
+    },
     "OverTwoYearsAnswer": {
         "prototype": "data/model/questionnaire/answer",
         "values": {
             "name": "OverTwoYearsAnswer",
             "textValue": {"@":"OverTwoYearsLocalizedString"},
-            "identifier": "01a0a229-b531-77e2-96f8-f49d8351260f"
+            "dataIdentifier": {"@":"OverTwoYearsAnswerDataIdentifier"}
         }
     }
 }

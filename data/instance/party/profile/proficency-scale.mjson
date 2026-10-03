@@ -5,8 +5,18 @@
            {"@": "0199f8e0-177e-789d-abbc-e607e1fdc220"}           
         ]
     },
+    "ProficencyScaleDescriptor": {
+        "object": "data/model/party/profile/proficency-scale.mjson"
+    },
+    "ProficencyScaleDataIdentifier": {
+        "prototype": "mod/data/model/data-identifier",
+        "values": {
+            "primaryKey": "0199f8df-c7b4-7cdc-b68e-78042e80fa30",
+            "objectDescriptor": {"@": "ProficencyScaleDescriptor"}
+        }
+    },
     "0199f8df-c7b4-7cdc-b68e-78042e80fa30": {
-        "prototype": "data/model/party/profiule/proficency-scale",
+        "prototype": "data/model/party/profile/proficency-scale",
         "values": {
             "name": {
                 "en": {
@@ -16,7 +26,7 @@
                     "FR": ""
                 }
             },
-            "identifier": "0199f8df-c7b4-7cdc-b68e-78042e80fa30",
+            "dataIdentifier": {"@": "ProficencyScaleDataIdentifier"},
             "levels": [
                 {"@": "CollaborativeRobotDeviceType"}
             ]

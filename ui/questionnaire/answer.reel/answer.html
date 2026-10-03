@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="answer.css">
+    <script type="text/mod-serialization">
+    {
+        "owner": {
+            "values": {
+                "element": {"#": "owner"}
+            }
+        },
+        "text": {
+            "prototype": "mod/ui/text.reel",
+            "values": {
+                "element": {"#": "text"},
+                "value": {"<-": "@owner.object.textValue"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-mod-id="owner" class="Answer">
+        <span data-mod-id="text" class="Answer-text"></span>
+    </div>
+</body>
+</html>
