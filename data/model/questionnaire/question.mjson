@@ -54,7 +54,8 @@
             "valueType": "object",
             "cardinality": 1,
             "inversePropertyName": "subQuestions",
-            "valueDescriptor": {"@": "root"}
+            "valueDescriptor": {"@": "root"},
+            "description": "This should be called parent"
         }
     },
     "subQuestions": {
@@ -64,7 +65,8 @@
             "valueType": "object",
             "cardinality": -1,
             "inversePropertyName": "superQuestion",
-            "valueDescriptor": {"@": "root"}
+            "valueDescriptor": {"@": "root"},
+            "description": "This should be called subquestions, no capital Q, to be consistent with suborganizations in mod. Or vice versa. But be coherent"
         }
     },
    "variables": {
