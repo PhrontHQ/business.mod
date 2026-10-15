@@ -90,7 +90,6 @@
             "name": "preferredNextRoles",
             "valueType": "object",
             "cardinalityRange": {"@": "preferredNextRolesCardinalityRange"},
-            "ownsValue": true,
             "isOrdered": true,
             "valueDescriptor": {"@": "JobRoleDescriptor"},
             "description": "aka career of interest"
