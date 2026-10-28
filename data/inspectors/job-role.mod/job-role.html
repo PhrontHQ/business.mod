@@ -16,6 +16,13 @@
                     "value": {"<->": "@owner.data.name"}
                 }
             },
+            "description": {
+                "prototype": "mod/ui/property-field/multiline-text.mod",
+                "values": {
+                    "element": {"#": "description"},
+                    "value": {"<->": "@owner.data.description"}
+                }
+            },
             "responsibilities": {
                 "prototype": "mod/ui/repetition.mod",
                 "values": {
@@ -132,6 +139,8 @@
         <div class="field">
             <span class="field-label">Title</span>
             <div data-mod-id="title" class="line-item"></div>
+            <span class="field-label">Description</span>
+            <div data-mod-id="description" class="line-item"></div>
             <div class=field-label-row>
                 <span class="field-label">Responsibilities</span>
                 <div data-mod-id="addResponsibility" class="addResponsibility"></div>
