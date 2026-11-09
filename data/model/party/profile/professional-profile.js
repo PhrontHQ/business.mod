@@ -18,9 +18,13 @@ const Montage = require("mod/core/core").Montage;
 exports.ProfessionalProfile = class ProfessionalProfile extends DataObject {
     static {
         Montage.defineProperties(this.prototype, {
-            hostingOrganization: { value: undefined },
-            owner: { value: undefined },
-            url: { value: undefined },
+            careerStatement: { value: undefined },
+            employmentHistory: { value: undefined },
+            coreStrengthAssessments: { value: undefined },
+            competencies: { value: undefined },
+            skillAssessments: { value: undefined },
+            preferredNextRoles: { value: undefined },
+            preferredFutureJobs: { value: undefined },
         });
     }
 };
