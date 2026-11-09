@@ -9,7 +9,7 @@ const Profile = require("mod/data/model/party/profile").Profile,
 
 exports.Profile = Profile;
 
-Montage.defineProperties(Party.prototype, {
+Montage.defineProperties(Profile.prototype, {
     /**
      * @property {Device[]}
      * @public
